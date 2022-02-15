@@ -36,12 +36,9 @@ User.init(
             allowNull: false
          },
 
-         admin_id: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'admin',
-                key: 'id'
-            }
+        admin: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
         }
 
     },
