@@ -14,3 +14,6 @@ const adminAuth = (req, res, next) => {
     }
 }
   module.exports = {withAuth, adminAuth};
+
+
+  //notes: user logged in, session.admin = false; user not logged in, session.admin = undefined;
