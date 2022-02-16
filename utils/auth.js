@@ -6,4 +6,11 @@ const withAuth = (req, res, next) => {
     }
   };
 
-  module.exports = withAuth;
+const adminAuth = (req, res, next) => {
+    if (!req.session.admin) {
+      res.redirect('/home');
+    } else {
+      next();
+    }
+}
+  module.exports = {withAuth, adminAuth};
