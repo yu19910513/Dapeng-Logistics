@@ -4,7 +4,7 @@ async function signupFormHandler(event) {
     const email = document.querySelector('#email-signup').value.trim();
     const password = document.querySelector('#password-signup').value.trim();
     const name = document.querySelector('#name-signup').value.trim();
-    const adminCode = document.querySelector('#admin-signup').vaule.trim();
+    const adminCode = document.querySelector('#admin-signup').value.trim();
     var admin = false
 
     if (adminCode == "tempadmin") {
@@ -26,9 +26,29 @@ async function signupFormHandler(event) {
       // check the response status
       if (response.ok) {
         console.log('success');
-        document.location.replace('/dashboard');
+        document.location.replace('/');
       } else {
         alert('try again')
       }
     }
 }
+
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+        event.preventDefault();
+        signupFormHandler(event)
+      }, false);
+    });
+  }, false);
+})();
