@@ -30,12 +30,12 @@ Order.init(
             type: DataTypes.STRING,
             allowNull: false,
         },
-        bigBoxNumber: {
+        container: {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 1
         },
-        smallBox: {
+        box: {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 1
