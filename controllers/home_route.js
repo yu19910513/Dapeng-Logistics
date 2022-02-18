@@ -26,6 +26,14 @@ router.get('/', withAuth, async (req, res) => {
 
 });
 
+router.get('/login', (req, res) => {
+  if (req.session.loggedIn) {
+    res.redirect('/');
+    return;
+  }
+  res.render('login');
+});
+
 router.get('/neworder/', withAuth, (req, res) => {
     res.render('neworder', { loggedIn: true })
 });

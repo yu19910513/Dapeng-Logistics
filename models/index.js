@@ -5,7 +5,7 @@ User.hasMany(Order, {
     foreignKey: "user_id"
 });
 
-Order.belongTo(User, {
+Order.belongsTo(User, {
     foreignKey: "user_id"
 });
 
