@@ -8,7 +8,7 @@ const withAuth = (req, res, next) => {
 
 const adminAuth = (req, res, next) => {
     if (!req.session.admin) {
-      res.redirect('/home');
+      res.redirect('/');
     } else {
       next();
     }
