@@ -30,7 +30,7 @@ router.get('/neworder/', withAuth, (req, res) => {
     res.render('neworder', { loggedIn: true })
 });
 
-router.get('/signup', (req, res) => {
+router.get('/signup/', (req, res) => {
     if (req.session.loggedIn) {
       res.redirect('/');
       return;

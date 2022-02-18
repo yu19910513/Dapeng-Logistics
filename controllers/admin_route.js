@@ -26,9 +26,5 @@ router.get('/admin', adminAuth, async (req, res) => {
 
   });
 
-  router.get('/create/', withAuth, (req, res) => {
-          res.render('create-post', { loggedIn: true })
-    });
-
 
   module.exports = router
