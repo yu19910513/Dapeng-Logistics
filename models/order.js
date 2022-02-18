@@ -24,6 +24,7 @@ Order.init(
         date: {
            type: DataTypes.STRING,
            allowNull: false,
+           defaultValue: new Date()
         },
         description: {
             type: DataTypes.STRING,

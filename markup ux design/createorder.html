@@ -17,15 +17,15 @@
             <div class="uk-navbar-center-left"><div>
                 <ul class="uk-navbar-nav">
                     <li class="uk-active">
-                        <a href="#">Client</a>
+                        <a href="./inventorypage.html">Client</a>
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
-                                <li class="uk-active"><a href="#">Create an order</a></li>
+                                <li class="uk-active"><a href="#">Create an order 📦</a></li>
                             </ul>
                         </div>
                     </li>
                     <li>
-                        <a href="#">Admin</a>
+                        <a href="./adminpage.html">Admin</a>
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
                                 <li class="uk-active"><a href="#">China</a></li>
@@ -49,26 +49,51 @@
         <div class="row justify-content-md-center">
     <form class="col-6">
         <div class="form-group">
-          <label for="exampleInputEmail1">Box number</label>
+          <label for="exampleInputEmail1">Box number 物流代码</label>
           <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="box number">
           <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
         </div>
         <div class="form-group">
-          <label for="exampleInputPassword1">Account</label>
+          <label for="exampleInputPassword1">Account 隶属帐户</label>
           <input type="text" class="form-control" id="exampleInputPassword1" placeholder="account">
         </div>
+
         <div class="form-group">
-            <label for="exampleInputPassword1">Description</label>
+            <label for="exampleInputPassword1">Description 细目</label>
             <input type="text" class="form-control" id="exampleInputPassword1" placeholder="item description">
           </div>
-        <div class="form-check">
+
+          <div class="row">
+            <div class="col">
+            <label for="exampleInputPassword1">Length 长</label>
+              <input type="text" class="form-control" placeholder="___ inch">
+            </div>
+            <div class="col">
+                <label for="exampleInputPassword1">Width 宽</label>
+              <input type="text" class="form-control" placeholder="___ inch">
+            </div>
+            <div class="col">
+                <label for="exampleInputPassword1">Height 高</label>
+                <input type="text" class="form-control" placeholder="___ inch">
+              </div>
+          </div>
+
+          <div class="col-5">
+            <label for="exampleInputPassword1"># Container 箱总数</label>
+              <input type="text" class="form-control" placeholder="number only">
+
+                <label for="exampleInputPassword1"># Box 盒总数</label>
+                  <input type="text" class="form-control" placeholder="number only">
+                </div>
+        <!-- <div class="form-check">
           <input type="checkbox" class="form-check-input" id="exampleCheck1">
           <label class="form-check-label" for="exampleCheck1">Check me out</label>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        </div> -->
+        <button type="submit" class="btn btn-primary mt-2"><a class="text-white" href="./inventorypage.html">Submit</a></button>
       </form>
       </div>
       </div>
+
       <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
 </body>
