@@ -24,7 +24,7 @@ router.get('/', withAuth, async (req, res) => {
         ]
       });
       const orders = orderData.map(order => order.get({ plain: true }));
-      res.render('home', { orders, loggedIn: true });
+      res.render('home', { orders, loggedIn: true, admin: req.session.admin });
 
     } catch (err) {
       console.log(err);
