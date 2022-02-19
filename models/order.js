@@ -44,7 +44,7 @@ Order.init(
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        wideth: {
+        width: {
             type: DataTypes.INTEGER,
             allowNull: false
         },

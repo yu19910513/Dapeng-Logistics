@@ -9,13 +9,20 @@ router.get('/', withAuth, async (req, res) => {
         where: {
           user_id: req.session.user_id
         },
-        // attributes: [
-        //   'id',
-        //   'name',
-        //   'content'
-        // ]
+        attributes: [
+          'id',
+          'boxNumber',
+          'account',
+          'date',
+          'description',
+          'container',
+          'box',
+          'length',
+          'width',
+          'height',
+          'status'
+        ]
       });
-
       const orders = orderData.map(order => order.get({ plain: true }));
       res.render('home', { orders, loggedIn: true });
 
