@@ -12,6 +12,7 @@ const orderData = [
         width: 3,
         height: 4,
         status:0,
+        origin: 3,
         user_id: 1
     },
     {
@@ -25,6 +26,7 @@ const orderData = [
         width: 4,
         height: 5,
         status:1,
+        origin: 3,
         user_id: 2
     },
     {
@@ -38,6 +40,7 @@ const orderData = [
         width: 1,
         height: 1,
         status:2,
+        origin: 1,
         user_id: 2
     },
     {
@@ -51,6 +54,7 @@ const orderData = [
         width: 2,
         height: 3,
         status:0,
+        origin: 1,
         user_id: 2
     },
 ]
