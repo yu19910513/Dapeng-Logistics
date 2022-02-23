@@ -9,7 +9,7 @@ async function signupFormHandler(event) {
     var admin = false;
 
     if (adminCode == "tempadmin") {
-        return admin = true
+      admin = true
     };
 
     if (email && password && name) {
@@ -19,10 +19,11 @@ async function signupFormHandler(event) {
           name,
           email,
           password,
+          wechat,
           admin
         }),
         headers: { 'Content-Type': 'application/json' }
-      }); console.log(email, password, name, admin);
+      }); console.log(email, password, name, admin, wechat);
 
       // check the response status
       if (response.ok) {

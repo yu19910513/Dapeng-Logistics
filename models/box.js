@@ -48,6 +48,10 @@ Box.init(
             allowNull: false,
             defaultValue: 1
         },
+        sku: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
 // dimension data
         length: {
             type: DataTypes.INTEGER,
