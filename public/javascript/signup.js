@@ -8,7 +8,7 @@ async function signupFormHandler(event) {
     var admin = false
 
     if (adminCode == "tempadmin") {
-        return admin = true
+        admin = true
     };
 
     if (email && password && name) {
