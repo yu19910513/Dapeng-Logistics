@@ -28,11 +28,6 @@ Box.init(
         },
 
 //time data
-        pending_date: {
-           type: DataTypes.STRING,
-           allowNull: false,
-           defaultValue: new Date()
-        },
         received_date: {
             type: DataTypes.STRING,
             allowNull: true

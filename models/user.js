@@ -25,7 +25,7 @@ User.init(
             allowNull: false,
         },
 
-        login_id: {
+        wechat: {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
