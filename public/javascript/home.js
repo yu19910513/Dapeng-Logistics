@@ -13,5 +13,11 @@ function accountList() {
     });
 
 };
-
 accountList();
+
+function saveAccount() {
+    var selectedOption = document.querySelector('#accountList').value.trim();
+    localStorage.setItem('account', selectedOption);
+}
+
+document.querySelector("#account_selection").addEventListener("click", saveAccount);

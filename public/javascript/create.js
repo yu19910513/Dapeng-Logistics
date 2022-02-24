@@ -7,3 +7,9 @@
 var asn = "ASN"+String(new Date().valueOf()).substring(3, 13);
 document.querySelector('#new_asn').setAttribute("value", asn);
 localStorage.setItem('asn',asn);
+
+const account = document.querySelector('#new_account');
+const savedAccount = localStorage.getItem('account');
+if (savedAccount != "none of the above") {
+    account.setAttribute('value', savedAccount);
+};
