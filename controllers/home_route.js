@@ -46,7 +46,6 @@ router.get('/', withAuth, async (req, res) => {
       });
       const boxes = boxData.map(box => box.get({ plain: true }));
       res.render('home', { boxes, loggedIn: true, admin: req.session.admin });
-
     } catch (err) {
       console.log(err);
       res.status(500).json(err);

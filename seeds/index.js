@@ -1,5 +1,7 @@
-const seedOrders = require('./order-seed');
+const seedBoxes = require('./box-seed');
 const seedUsers = require('./user-seed');
+const seedAccounts = require('./account-seed');
+const seedBatches = require('./batch-seed');
 
 const sequelize = require('../config/connection');
 
@@ -10,8 +12,14 @@ const seedAll = async () => {
   await seedUsers();
     console.log('\n----- USERS SEEDED -----\n');
 
-  await seedOrders();
-    console.log('\n----- ORDERS SEEDED -----\n');
+  // await seedBoxes();
+  //   console.log('\n----- BOXES SEEDED -----\n');
+
+    await seedAccounts();
+    console.log('\n----- ACCOUNTS SEEDED -----\n');
+
+    await seedBatches();
+    console.log('\n----- BATCHES SEEDED -----\n');
 
   process.exit(0);
 };
