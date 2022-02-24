@@ -12,6 +12,7 @@ router.get('/account', withAuth, async (req, res) => {
     attributes: [
       'id',
       'name',
+      'prefix'
     ]
   });
   const accounts = accountDB.map(account => account.get({plain: true}));

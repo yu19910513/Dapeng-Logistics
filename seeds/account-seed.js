@@ -3,21 +3,25 @@ const { Account } = require('../models');
 const accountData = [
     {
         name: "Test",
-        user_id: 2
+        user_id: 2,
+        prefix: "tst"
 
     },
     {
         name: "Exam",
-        user_id: 2
+        user_id: 2,
+        prefix: "tst"
 
     },
     {
         name: "Rex",
-        user_id: 2
+        user_id: 2,
+        prefix: "rex"
     },
     {
         name: "Something",
-        user_id: 1
+        user_id: 1,
+        prefix: "som"
     },
 ]
 
