@@ -1,44 +1,96 @@
 <div class="container">
         <div class="row justify-content-md-center">
+
     <form class="col-6">
-        <div class="form-group">
-          <label for="exampleInputEmail1">Box number 物流代码</label>
-          <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="box number">
-        </div>
-        <div class="form-group">
-          <label for="exampleInputPassword1">Account 隶属帐户</label>
-          <input type="text" class="form-control" id="exampleInputPassword1" placeholder="account">
-        </div>
-
-        <div class="form-group">
-            <label for="exampleInputPassword1">Description 细目</label>
-            <input type="text" class="form-control" id="exampleInputPassword1" placeholder="item description">
-          </div>
-
-          <div class="row">
-            <div class="col">
-            <label for="exampleInputPassword1">Length 长</label>
-              <input type="text" class="form-control" placeholder="___ inch">
-            </div>
-            <div class="col">
-                <label for="exampleInputPassword1">Width 宽</label>
-              <input type="text" class="form-control" placeholder="___ inch">
-            </div>
-            <div class="col">
-                <label for="exampleInputPassword1">Height 高</label>
-                <input type="text" class="form-control" placeholder="___ inch">
-              </div>
-          </div>
-
-          <div class="col-5">
-            <label for="exampleInputPassword1"># Container 箱总数</label>
-              <input type="text" class="form-control" placeholder="number only">
-
-                <label for="exampleInputPassword1"># Box 盒总数</label>
-                  <input type="text" class="form-control" placeholder="number only">
+                <div class="form-group">
+                    <label for="asn">ASN</label>
+                    <input type="text" class="form-control" id="new_asn" value="" disabled>
                 </div>
 
-        <button type="submit" class="btn btn-primary mt-2"><a class="text-white" href="#">Submit</a></button>
-      </form>
+                <div class="form-group">
+                    <label for="account">Account</label>
+                    <input type="text" class="form-control" id="new_account" value="" placeholder="create a new account" disabled>
+                </div>
+                <div class="form-group col-6">
+                    <label for="prefix">Prefix</label>
+                    <input type="text" class="form-control" id="new_prefix" value="" placeholder="up to 3-letter prefix" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <input type="text" class="form-control" id="new_des" placeholder="">
+                </div>
+
+                <div class="form-group">
+                    <label for="sku">SKU</label>
+                    <input type="text" class="form-control" id="new_sku" placeholder="">
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                    <label for="length">Length</label>
+                      <input type="number" class="form-control" id="new_len" placeholder="">
+                    </div>
+                    <div class="col">
+                        <label for="width">Width</label>
+                      <input type="number" class="form-control" id="new_wid" placeholder="">
+                    </div>
+                    <div class="col">
+                        <label for="height">Height</label>
+                        <input type="number" class="form-control" id="new_hei" placeholder="">
+                    </div>
+                     <div class="col">
+                        <label for="weight">Weight</label>
+                        <input type="number" class="form-control" id="new_wei" placeholder="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="total">Total Box 箱总数</label>
+                    <input type="number" class="form-control" id="new_tot" placeholder="">
+                </div>
+
+                <div class="form-group">
+                    <label for="qty_per_box">Quantity per Box</label>
+                    <input type="text" class="form-control" id="new_qty" placeholder="">
+                </div>
+
+                <button type="submit" id="order_pre-check" class="btn btn-primary mt-2"><a class="text-white" href="#precheck-selection" uk-toggle>Pre-check</a></button>
+
+                <div id="precheck-selection" class="uk-modal-container" uk-modal>
+                <div class="uk-modal-dialog">
+                     <button class="uk-modal-close-default" type="button" uk-close></button>
+                 <div class="uk-modal-header">
+                    <h2 class="uk-modal-title">Pre-check table</h2>
+                 </div>
+                    <div id="fixedInfo"></div>
+                <div class="uk-modal-body">
+                    <div id="table" class="table-editable">
+                        <table class="table" id="ordertable">
+                            <tr>
+                                <th>Box Number</th>
+                                <th>Item Description</th>
+                                <th>SKU</th>
+                                <th>Quantity per Box</th>
+                                <th>Box</th>
+                                <th>of Boxes</th>
+                                <th>Weight(kg)</th>
+                                <th>Length(cm)</th>
+                                <th>Width(cm)</th>
+                                <th>Height(cm)</th>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+
+                <div class="uk-modal-footer uk-text-right">
+                    <button class="uk-button uk-button-default uk-modal-close" onclick="reset()">Cancel</button>
+                    <button class="uk-button uk-button-primary" type="button" id="export-btn" >Export Data</button>
+                </div>
+                </div>
+                </div>
+              </form>
       </div>
       </div>
+
+<script src="javascript/create.js" defer></script>

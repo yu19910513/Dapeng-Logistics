@@ -1,13 +1,53 @@
 const User = require('./user');
-const Order = require('./order');
+const Box = require('./box');
+const Account = require('./account');
+const Batch = require('./batch');
 
-User.hasMany(Order, {
+
+User.hasMany(Account, {
     foreignKey: "user_id"
 });
-
-Order.belongsTo(User, {
+User.hasMany(Batch, {
     foreignKey: "user_id"
+});
+User.hasMany(Box, {
+    foreignKey: "user_id"
+});
+///////////////
+Account.hasMany(Batch, {
+    foreignKey: "account_id"
+});
+Account.hasMany(Box, {
+    foreignKey: "account_id"
+});
+///////////////
+Batch.hasMany(Box, {
+    foreignKey: "batch_id"
 });
 
 
-module.exports = {User, Order};
+
+Account.belongsTo(User, {
+    foreignKey: "user_id"
+});
+Batch.belongsTo(User, {
+    foreignKey: "user_id"
+});
+Box.belongsTo(User, {
+    foreignKey: "user_id"
+});
+/////////////////
+Batch.belongsTo(Account, {
+    foreignKey: "account_id"
+});
+Box.belongsTo(Account, {
+    foreignKey: "account_id"
+});
+/////////////////
+Box.belongsTo(Batch, {
+    foreignKey: "batch_id"
+});
+
+
+
+module.exports = {User, Account, Batch, Box};

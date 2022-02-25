@@ -1,31 +1,51 @@
 const router = require('express').Router();
 const sequelize = require('../config/connection');
-const { User, Order } = require('../models');
+const {User, Account, Batch, Box} = require('../models');
 const {withAuth, adminAuth} = require('../utils/auth');
 
 router.get('/', withAuth, async (req, res) => {
     try {
-      const orderData = await Order.findAll({
+      const boxData = await Box.findAll({
         where: {
           user_id: req.session.user_id
         },
         attributes: [
           'id',
-          'boxNumber',
-          'account',
-          'date',
+          'box_number',
           'description',
-          'container',
-          'box',
+          'cost',
+          'received_date',
+          'shipped_date',
+          'order',
+          'qty_per_box',
           'length',
           'width',
           'height',
-          'status'
+          'weight',
+          'volume',
+          'status',
+          'origin',
+          'sku'
+        ],
+        include: [
+          {
+            model: Batch,
+            attributes: [
+              'asn',
+              'pending_date',
+              'total_box'
+            ]
+          },
+          {
+            model: Account,
+            attributes: [
+              'name'
+            ]
+          }
         ]
       });
-      const orders = orderData.map(order => order.get({ plain: true }));
-      res.render('home', { orders, loggedIn: true, admin: req.session.admin });
-
+      const boxes = boxData.map(box => box.get({ plain: true }));
+      res.render('home', { boxes, loggedIn: true, admin: req.session.admin });
     } catch (err) {
       console.log(err);
       res.status(500).json(err);

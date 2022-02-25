@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const sequelize = require('../config/connection');
-const { User, Order } = require('../models');
+const {User, Account, Batch, Box} = require('../models');
 const {withAuth, adminAuth} = require('../utils/auth');
 
 
@@ -8,16 +8,54 @@ const {withAuth, adminAuth} = require('../utils/auth');
 //admin view
 router.get('/admin', adminAuth, async (req, res) => {
     try {
-      const postData = await Order.findAll({
+      const userData = await User.findAll({
         attributes: [
           'id',
           'name',
-          'content'
+          'email',
+          'wechat'
+        ],
+        include: [
+          {
+            model: Account,
+            attributes: [
+              'name'
+            ]
+          },
+          {
+            model: Batch,
+            attributes: [
+              'asn',
+              'pending_date',
+              'total_box'
+            ]
+          },
+          {
+            model: Box,
+            attributes: [
+              'id',
+              'box_number',
+              'description',
+              'cost',
+              'received_date',
+              'shipped_date',
+              'order',
+              'qty_per_box',
+              'length',
+              'width',
+              'height',
+              'weight',
+              'volume',
+              'status',
+              'origin',
+              'sku'
+            ]
+          }
         ]
       });
 
-      const posts = postData.map(post => post.get({ plain: true }));
-      res.render('dashboard', { posts, loggedIn: true });
+      const users = userData.map(user => user.get({ plain: true }));
+      res.render('admin', { users, loggedIn: true });
 
     } catch (err) {
       console.log(err);

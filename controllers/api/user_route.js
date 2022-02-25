@@ -1,7 +1,30 @@
 const router = require('express').Router();
-const { User } = require('../../models');
+const {User, Account, Batch, Box} = require('../../models');
+const {withAuth, adminAuth} = require('../../utils/auth');
 
-//SIGN-UP FUNCTION <==> SIGNUP.JS
+
+router.get('/account', withAuth, async (req, res) => {
+  try {
+  const accountDB = await Account.findAll({
+    where: {
+      user_id: req.session.user_id
+    },
+    attributes: [
+      'id',
+      'name',
+      'prefix'
+    ]
+  });
+  const accounts = accountDB.map(account => account.get({plain: true}));
+  res.json(accounts);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+
+
 router.post('/', (req, res) => {
   User.create({
     name: req.body.name,

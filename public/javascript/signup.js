@@ -4,11 +4,12 @@ async function signupFormHandler(event) {
     const email = document.querySelector('#email-signup').value.trim();
     const password = document.querySelector('#password-signup').value.trim();
     const name = document.querySelector('#name-signup').value.trim();
+    const wechat = document.querySelector('#wechat-signup').value.trim();
     const adminCode = document.querySelector('#admin-signup').value.trim();
-    var admin = false
+    var admin = false;
 
     if (adminCode == "tempadmin") {
-        admin = true
+      admin = true
     };
 
     if (email && password && name) {
@@ -18,10 +19,11 @@ async function signupFormHandler(event) {
           name,
           email,
           password,
+          wechat,
           admin
         }),
         headers: { 'Content-Type': 'application/json' }
-      }); console.log(email, password, name, admin);
+      }); console.log(email, password, name, admin, wechat);
 
       // check the response status
       if (response.ok) {
