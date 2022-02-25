@@ -20,6 +20,11 @@
                     <input type="text" class="form-control" id="new_des" placeholder="">
                 </div>
 
+                <div class="form-group">
+                    <label for="sku">SKU</label>
+                    <input type="text" class="form-control" id="new_sku" placeholder="">
+                </div>
+
                 <div class="row">
                     <div class="col">
                     <label for="length">Length</label>
@@ -44,9 +49,48 @@
                     <input type="number" class="form-control" id="new_tot" placeholder="">
                 </div>
 
-                <button type="submit" id="order_pre-check" class="btn btn-primary mt-2"><a class="text-white" href="#">Submit</a></button>
+                <div class="form-group">
+                    <label for="qty_per_box">Quantity per Box</label>
+                    <input type="text" class="form-control" id="new_qty" placeholder="">
+                </div>
+
+                <button type="submit" id="order_pre-check" class="btn btn-primary mt-2"><a class="text-white" href="#precheck-selection" uk-toggle>Pre-check</a></button>
+
+                <div id="precheck-selection" class="uk-modal-container" uk-modal>
+                <div class="uk-modal-dialog">
+                     <button class="uk-modal-close-default" type="button" uk-close></button>
+                 <div class="uk-modal-header">
+                    <h2 class="uk-modal-title">Pre-check table</h2>
+                 </div>
+                    <div id="fixedInfo"></div>
+                <div class="uk-modal-body">
+                    <div id="table" class="table-editable">
+                        <table class="table" id="ordertable">
+                            <tr>
+                                <th>Box Number</th>
+                                <th>Item Description</th>
+                                <th>SKU</th>
+                                <th>Quantity per Box</th>
+                                <th>Box</th>
+                                <th>of Boxes</th>
+                                <th>Weight(kg)</th>
+                                <th>Length(cm)</th>
+                                <th>Width(cm)</th>
+                                <th>Height(cm)</th>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+
+                <div class="uk-modal-footer uk-text-right">
+                    <button class="uk-button uk-button-default uk-modal-close" onclick="reset()">Cancel</button>
+                    <button class="uk-button uk-button-primary" type="button" id="export-btn" >Export Data</button>
+                </div>
+                </div>
+                </div>
               </form>
       </div>
       </div>
 
-<script src="javascript/create.js"></script>
+<script src="javascript/create.js" defer></script>
