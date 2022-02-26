@@ -5,7 +5,7 @@ const {withAuth, adminAuth} = require('../../utils/auth');
 router.post('/', withAuth, (req, res) => {
   Box.create({
     box_number: req.body.box_number,
-    bacth_id: req.body.bacth_id,
+    batch_id: req.body.batch_id,
     account_id: req.body.account_id,
     user_id: req.session.user_id,
     description: req.body.description,

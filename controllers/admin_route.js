@@ -6,7 +6,7 @@ const {withAuth, adminAuth} = require('../utils/auth');
 
 
 //admin view
-router.get('/admin', adminAuth, async (req, res) => {
+router.get('/', adminAuth, async (req, res) => {
     try {
       const userData = await User.findAll({
         attributes: [

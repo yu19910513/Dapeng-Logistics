@@ -21,11 +21,21 @@
 
             <div class="uk-navbar-center-left"><div>
                 <ul class="uk-navbar-nav">
-                    <li class="uk-active">
-                        <a href="/">Client</a>
+{{#if admin}}
+                    <li class="admin_nav">
+                        <a href="/admin">Admin</a>
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
-                                 <li class="uk-active"><a class="uk-button uk-button-default" href="#createneworder" uk-toggle>Create an order 📦</a></li>
+                                <li class="uk-active"><a href="#">China</a></li>
+                                <li><a href="#">Amazon</a></li>
+                                <li><a href="#">Return</a></li>
+                            </ul>
+                        </div>
+                    </li>
+{{else}}
+                    <li class="uk-active">
+                        <a href="/">Home</a>
+                                 <li class="create_order" href="#createneworder" uk-toggle><a class="uk-button uk-button-default" href="#createneworder" uk-toggle>Create an order</a></li>
 
                                 <div id="createneworder" uk-modal>
                                     <div class="uk-modal-dialog">
@@ -51,19 +61,6 @@
                                         </form>
                                     </div>
                                 </div>
-                            </ul>
-                        </div>
-                    </li>
-{{#if admin}}
-                    <li class="admin_nav">
-                        <a href="/admin">Admin</a>
-                        <div class="uk-navbar-dropdown">
-                            <ul class="uk-nav uk-navbar-dropdown-nav">
-                                <li class="uk-active"><a href="#">China</a></li>
-                                <li><a href="#">Amazon</a></li>
-                                <li><a href="#">Return</a></li>
-                            </ul>
-                        </div>
                     </li>
 {{/if}}
                 </ul>

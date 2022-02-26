@@ -49,7 +49,8 @@ router.post('/', (req, res) => {
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
-    admin: req.body.admin
+    admin: req.body.admin,
+    wechat: req.body.wechat
   })
   .then(userDB => {
     req.session.save(() => {

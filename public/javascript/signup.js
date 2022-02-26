@@ -28,7 +28,11 @@ async function signupFormHandler(event) {
       // check the response status
       if (response.ok) {
         console.log('success');
-        document.location.replace('/');
+        if (admin) {
+          document.location.replace('/admin')
+        } else {
+          document.location.replace('/');
+        }
       } else {
         alert('try again')
       }

@@ -39,6 +39,10 @@ const fixedInfo = document.getElementById('fixedInfo');
 
 
 function precheck() {
+   if (prefix.value.length>4 || prefix.value.length<2) {
+       alert('Prefix is limited for 2-3 letters');
+       return;
+   }
     fixedInfo.innerHTML = 'Account:' + account.value + "</br>" + 'ASN:' + asn + "</br>" + 'Pending Date: ' + pending_date;
     const desscription = document.querySelector('#new_des').value;
     const length = document.querySelector('#new_len').value;
@@ -48,10 +52,11 @@ function precheck() {
     const qty_per_box = document.querySelector('#new_qty').value;
     const sku = document.querySelector('#new_sku').value;
     const total_box = document.querySelector('#new_tot').value.trim();
+    const pre_digcode = parseInt(String(new Date().valueOf()).substring(6, 13));
     localStorage.setItem('total_box',total_box);
     for (let i = 1; i <= total_box; i++) {
-        const digcode = parseInt(String(new Date().valueOf()).substring(6, 13)) + i;
-        const pre_number = 'SW' + prefix.value + digcode
+        const digcode = pre_digcode + i;
+        const pre_number = 'SW' + prefix.value.toUpperCase() + digcode
         const box_number = pre_number.replace(/\s/g, '');
         const box = new Box(account.value, prefix.value, asn, desscription, length, weight, height, width, total_box, i, qty_per_box, sku)
         var table = document.querySelector('#ordertable');
@@ -167,6 +172,7 @@ function findAccountId() {
 };
 
 function boxInsertExistedAccount() {
+    console.log(batch_map.get(asn));
     var dataTable = document.getElementById( "ordertable" );
     for ( var i = 1; i < dataTable.rows.length; i++ ) {
         const orderdata = {
@@ -215,7 +221,7 @@ function exportData() {
     if (savedAccount != "Create New Account") {
         loadingBatch1({asn, pending_date, total_box, savedAccount_id});
         }else {
-        loadingAccount({name: account.value, prefix: prefix.value});
+        loadingAccount({name: account.value, prefix: prefix.value.toUpperCase()});
     }
 }
 

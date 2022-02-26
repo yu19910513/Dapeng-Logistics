@@ -7,7 +7,7 @@ function accountList() {
     }).then(function (data) {
         for (let i = 0; i < data.length; i++) {
             const option = document.createElement('option');
-            option.innerHTML = data[i].name + " (prefix: "+ data[i].prefix + ")";
+            option.innerHTML = data[i].name + " (prefix: "+ data[i].prefix.toUpperCase() + ")";
             document.querySelector('#accountList').appendChild(option);
             map.set(data[i].name, data[i].id);
         }
