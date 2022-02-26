@@ -184,6 +184,8 @@ function boxInsertExistedAccount() {
         };
         loadingBox(orderdata)
     }
+    alert('Orders Placed!');
+    document.location.replace('/');
 };
 
 function boxInsertNewAccount() {
@@ -204,6 +206,8 @@ function boxInsertNewAccount() {
         };
         loadingBox(newBox)
     }
+    alert('Orders Placed!');
+    document.location.replace('/');
 };
 
 function exportData() {
