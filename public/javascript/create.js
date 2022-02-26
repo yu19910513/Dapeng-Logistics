@@ -1,13 +1,9 @@
-//need to use fetch get to get account
-// then use local storage
-//use for loop to generate amount of table for amount of boxes
-// generate asn and box number front end
-// local storeage till confirm then post to server
-
-var asn = "ASN"+String(new Date().valueOf()).substring(3, 13);
+const today = new Date();
+const pending_date = today.toLocaleDateString("en-US");
+const asn = "ASN"+String(new Date().valueOf()).substring(3, 13);
 document.querySelector('#new_asn').setAttribute("value", asn);
 localStorage.setItem('asn',asn);
-
+const savedAccount_id = parseInt(localStorage.getItem('account_id'));
 const account = document.querySelector('#new_account');
 const prefix = document.querySelector('#new_prefix');
 const savedAccount = localStorage.getItem('account');
@@ -38,13 +34,12 @@ class Box{
         this.sku = sku;
     }
 }
-
-
 const fixedInfo = document.getElementById('fixedInfo');
-fixedInfo.innerHTML = 'Account:' + savedAccount + "</br>" + 'ASN:' + asn + "</br>" + 'Pending Date: ' + new Date();
+
 
 
 function precheck() {
+    fixedInfo.innerHTML = 'Account:' + account.value + "</br>" + 'ASN:' + asn + "</br>" + 'Pending Date: ' + pending_date;
     const desscription = document.querySelector('#new_des').value;
     const length = document.querySelector('#new_len').value;
     const width = document.querySelector('#new_wid').value;
@@ -53,12 +48,12 @@ function precheck() {
     const qty_per_box = document.querySelector('#new_qty').value;
     const sku = document.querySelector('#new_sku').value;
     const total_box = document.querySelector('#new_tot').value.trim();
+    localStorage.setItem('total_box',total_box);
     for (let i = 1; i <= total_box; i++) {
         const digcode = parseInt(String(new Date().valueOf()).substring(6, 13)) + i;
-        const pre_number = 'SW' + savedPrefix + digcode
+        const pre_number = 'SW' + prefix.value + digcode
         const box_number = pre_number.replace(/\s/g, '');
-        const box = new Box(savedAccount, savedPrefix, asn, desscription, length, weight, height, width, total_box, i, qty_per_box, sku)
-        console.log(box);
+        const box = new Box(account.value, prefix.value, asn, desscription, length, weight, height, width, total_box, i, qty_per_box, sku)
         var table = document.querySelector('#ordertable');
         var tag = document.createElement('tr');
         tag.setAttribute('id',`order#${i}`);
@@ -115,6 +110,7 @@ function precheck() {
 
         table.appendChild(tag);
     };
+
 }
 
 document.getElementById('order_pre-check').addEventListener('click', precheck);
@@ -122,37 +118,162 @@ document.getElementById('order_pre-check').addEventListener('click', precheck);
 function reset() {
     location.reload();
 }
-// var user = JSON.parse(localStorage.getItem('user'));
 
-// If we need to delete all entries of the store we can simply do:
+var batch_map = new Map();
+var account_map = new Map();
 
-// localStorage.clear();
+function findBatchId1() {
+    fetch(`/api/user/batch`, {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        for (let i = 0; i < data.length; i++) {
+            batch_map.set(data[i].asn, data[i].id);
+        };
+        console.log(batch_map.get(asn));
+        boxInsertExistedAccount()
+    });
+};
 
-// $BTN.click(function () {
-//     var $rows = $TABLE.find("tr:not(:hidden)");
-//     var headers = [];
-//     var data = [];
+function findBatchId() {
+    fetch(`/api/user/batch`, {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        for (let i = 0; i < data.length; i++) {
+            batch_map.set(data[i].asn, data[i].id);
+        };
+        console.log(batch_map.get(asn));
+        boxInsertNewAccount()
+    });
+};
 
-//     // Get the headers (add special header logic here)
-//     $($rows.shift())
-//       .find("th:not(:empty)")
-//       .each(function () {
-//         headers.push($(this).text().toLowerCase());
-//       });
 
-//     // Turn all existing rows into a loopable array
-//     $rows.each(function () {
-//       var $td = $(this).find("td");
-//       var h = {};
+function findAccountId() {
+    fetch(`/api/user/account`, {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        for (let j = 0; j < data.length; j++) {
+            account_map.set(data[j].name, data[j].id);
+        }
+        const account_id = account_map.get(account.value);
+        const total_box = parseInt(localStorage.getItem('total_box'));
+        loadingBatch({asn, pending_date, total_box, account_id})
+    });
+};
 
-//       // Use the headers from earlier to name our hash keys
-//       headers.forEach(function (header, i) {
-//         h[header] = $td.eq(i).text();
-//       });
+function boxInsertExistedAccount() {
+    var dataTable = document.getElementById( "ordertable" );
+    for ( var i = 1; i < dataTable.rows.length; i++ ) {
+        const orderdata = {
+            batch_id: batch_map.get(asn),
+            account_id: savedAccount_id,
+            box_number: dataTable.rows[i].cells[0].innerHTML,
+            description: dataTable.rows[i].cells[1].innerHTML,
+            sku: dataTable.rows[i].cells[2].innerHTML,
+            qty_per_box: parseInt(dataTable.rows[i].cells[3].innerHTML),
+            order: parseInt(dataTable.rows[i].cells[4].innerHTML),
+            weight: parseInt(dataTable.rows[i].cells[6].innerHTML),
+            length: parseInt(dataTable.rows[i].cells[7].innerHTML),
+            width: parseInt(dataTable.rows[i].cells[8].innerHTML),
+            height: parseInt(dataTable.rows[i].cells[9].innerHTML)
+        };
+        loadingBox(orderdata)
+    }
+};
 
-//       data.push(h);
-//     });
+function boxInsertNewAccount() {
+    var dataTable = document.getElementById( "ordertable" );
+    for ( var i = 1; i < dataTable.rows.length; i++ ) {
+       const newBox = {
+            batch_id: batch_map.get(asn),
+            account_id: account_map.get(account.value),
+            box_number: dataTable.rows[i].cells[0].innerHTML,
+            description: dataTable.rows[i].cells[1].innerHTML,
+            sku: dataTable.rows[i].cells[2].innerHTML,
+            qty_per_box: parseInt(dataTable.rows[i].cells[3].innerHTML),
+            order: parseInt(dataTable.rows[i].cells[4].innerHTML),
+            weight: parseInt(dataTable.rows[i].cells[6].innerHTML),
+            length: parseInt(dataTable.rows[i].cells[7].innerHTML),
+            width: parseInt(dataTable.rows[i].cells[8].innerHTML),
+            height: parseInt(dataTable.rows[i].cells[9].innerHTML)
+        };
+        loadingBox(newBox)
+    }
+};
 
-//     // Output the result
-//     $EXPORT.text(JSON.stringify(data));
-//   });
+function exportData() {
+    const total_box = parseInt(localStorage.getItem('total_box'));
+    if (savedAccount != "Create New Account") {
+        loadingBatch1({asn, pending_date, total_box, savedAccount_id});
+        }else {
+        loadingAccount({name: account.value, prefix: prefix.value});
+    }
+}
+
+async function loadingBox(data) {
+
+        const response = await fetch('/api/box', {
+            method: 'post',
+            body: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' }
+          });
+          if (response.ok) {
+            console.log('order placed successfully!')
+          } else {
+            alert('try again')
+          }
+
+}
+
+async function loadingBatch1(data) {
+     const response = await fetch('/api/batch', {
+         method: 'post',
+         body: JSON.stringify(data),
+         headers: { 'Content-Type': 'application/json' }
+       });
+
+       if (response.ok) {
+        console.log("batch inserted");
+        findBatchId1()
+       } else {
+         alert('try again')
+       }
+
+ }
+
+ async function loadingBatch(data) {
+    const response = await fetch('/api/batch/new', {
+        method: 'post',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (response.ok) {
+       console.log("batch inserted");
+       findBatchId()
+      } else {
+        alert('try again')
+      }
+
+}
+
+ async function loadingAccount(data) {
+     const response = await fetch('/api/account', {
+         method: 'post',
+         body: JSON.stringify(data),
+         headers: { 'Content-Type': 'application/json' }
+       });
+
+       if (response.ok) {
+        console.log("account inserted");
+        findAccountId()
+       } else {
+         alert('try again')
+    }
+
+ }

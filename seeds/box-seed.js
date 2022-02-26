@@ -44,6 +44,7 @@ const boxData = [
         received_date: "1/21/2022",
         shipped_date: "2/20/2022",
         cost: 0,
+        tracking: '234567654345678hjklkjh',
         origin: 3,
         user_id: 2,
         batch_id: 3,

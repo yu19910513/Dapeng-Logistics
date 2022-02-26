@@ -26,6 +26,10 @@ Box.init(
             type: DataTypes.INTEGER,
             allowNull: true
         },
+        tracking: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
 
 //time data
         received_date: {

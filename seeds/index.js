@@ -12,14 +12,14 @@ const seedAll = async () => {
   await seedUsers();
     console.log('\n----- USERS SEEDED -----\n');
 
-  // await seedBoxes();
-  //   console.log('\n----- BOXES SEEDED -----\n');
-
     await seedAccounts();
     console.log('\n----- ACCOUNTS SEEDED -----\n');
 
     await seedBatches();
     console.log('\n----- BATCHES SEEDED -----\n');
+
+    await seedBoxes();
+    console.log('\n----- BOXES SEEDED -----\n');
 
   process.exit(0);
 };

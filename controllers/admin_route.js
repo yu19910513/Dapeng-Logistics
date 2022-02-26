@@ -48,7 +48,8 @@ router.get('/admin', adminAuth, async (req, res) => {
               'volume',
               'status',
               'origin',
-              'sku'
+              'sku',
+              'tracking'
             ]
           }
         ]

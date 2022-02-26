@@ -1,4 +1,4 @@
-
+var map = new Map();
 function accountList() {
     fetch(`/api/user/account`, {
         method: 'GET'
@@ -9,20 +9,22 @@ function accountList() {
             const option = document.createElement('option');
             option.innerHTML = data[i].name + " (prefix: "+ data[i].prefix + ")";
             document.querySelector('#accountList').appendChild(option);
+            map.set(data[i].name, data[i].id);
         }
     });
-
 };
 accountList();
 
+
 function saveAccount() {
     var selectedOption = document.querySelector('#accountList').value;
+
     if(selectedOption != 'Create New Account'){
         var accountSaved = selectedOption.split(' (prefix:');
         var prefixSaved = accountSaved[1].split(')');
-        console.log(prefixSaved);
         localStorage.setItem('account', accountSaved[0]);
-        localStorage.setItem('prefix', prefixSaved[0])
+        localStorage.setItem('prefix', prefixSaved[0]);
+        localStorage.setItem('account_id', map.get(accountSaved[0]));
     } else {
         localStorage.setItem('account', selectedOption);
     }

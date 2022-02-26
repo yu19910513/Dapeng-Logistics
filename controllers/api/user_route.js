@@ -2,7 +2,6 @@ const router = require('express').Router();
 const {User, Account, Batch, Box} = require('../../models');
 const {withAuth, adminAuth} = require('../../utils/auth');
 
-
 router.get('/account', withAuth, async (req, res) => {
   try {
   const accountDB = await Account.findAll({
@@ -23,7 +22,27 @@ router.get('/account', withAuth, async (req, res) => {
   }
 });
 
-
+router.get('/batch', withAuth, async (req, res) => {
+  try {
+  const batchDB = await Batch.findAll({
+    where: {
+      user_id: req.session.user_id
+    },
+    attributes: [
+      'id',
+      'asn',
+      'pending_date',
+      'total_box',
+      'account_id'
+    ]
+  });
+  const batches = batchDB.map(batch => batch.get({plain: true}));
+  res.json(batches);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
 
 router.post('/', (req, res) => {
   User.create({
