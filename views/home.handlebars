@@ -1,8 +1,8 @@
 <div class="uk-overflow-auto">
-        <table class="uk-table uk-table-small uk-table-divider">
+        <table class="uk-table uk-table-small uk-table-divider" id="myTable">
             <thead>
                 <tr>
-                    <th>Account</th>
+                    <th onclick="sortAccount()">Account</th>
                     <th>Box number</th>
                     <th>Item Description</th>
                     <th>Box</th>
@@ -10,7 +10,7 @@
                     <th>Qty per Box</th>
                     <th>SKU</th>
                     <th>Volume</th>
-                    <th>Date</th>
+                    <th onclick="sortDate()">Date</th>
                     <th>Tracking</th>
                 </tr>
             </thead>
@@ -27,3 +27,5 @@
             </tbody>
         </table>
     </div>
+
+<script src="javascript/client.js"></script>
