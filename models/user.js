@@ -27,8 +27,7 @@ User.init(
 
         wechat: {
             type: DataTypes.STRING,
-            allowNull: false,
-            unique: true,
+            allowNull: true,
         },
 
         email: {
