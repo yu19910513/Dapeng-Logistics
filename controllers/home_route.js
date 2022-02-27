@@ -45,12 +45,62 @@ router.get('/', withAuth, async (req, res) => {
         ]
       });
       const boxes = boxData.map(box => box.get({ plain: true }));
-      res.render('home', { boxes, loggedIn: true, admin: req.session.admin });
+      res.render('home', { boxes, loggedIn: true, admin: req.session.admin, name: req.session.name });
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
     }
 
+});
+
+router.get('/request', withAuth, async (req, res) => {
+  try {
+    const boxData = await Box.findAll({
+      where: {
+        user_id: req.session.user_id,
+        status: 1
+      },
+      attributes: [
+        'id',
+        'box_number',
+        'description',
+        'cost',
+        'received_date',
+        'shipped_date',
+        'order',
+        'qty_per_box',
+        'length',
+        'width',
+        'height',
+        'weight',
+        'volume',
+        'status',
+        'origin',
+        'sku'
+      ],
+      include: [
+        {
+          model: Batch,
+          attributes: [
+            'asn',
+            'pending_date',
+            'total_box'
+          ]
+        },
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        }
+      ]
+    });
+    const boxes = boxData.map(box => box.get({ plain: true }));
+    res.render('request', { boxes, loggedIn: true, admin: req.session.admin, name: req.session.name });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
 router.get('/login', (req, res) => {

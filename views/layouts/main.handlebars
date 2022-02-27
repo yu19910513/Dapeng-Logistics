@@ -35,8 +35,9 @@
 {{else}}
                     <li class="uk-active">
                         <a href="/">Home</a>
-                                 <li class="create_order" href="#createneworder" uk-toggle><a class="uk-button uk-button-default" href="#createneworder" uk-toggle>Create an order</a></li>
+                    </li>
 
+                    <li class="create_order"><a href="#createneworder" uk-icon="icon: file-edit" uk-toggle>New Shipment</a></li>
                                 <div id="createneworder" uk-modal>
                                     <div class="uk-modal-dialog">
                                         <button class="uk-modal-close-default" type="button" uk-close></button>
@@ -53,7 +54,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <p>Please select "Create New Account" if you'd like to create a new account</p>
+                                            <footer>Please select "Create New Account" if you'd like to create a new account</footer>
                                         <div class="uk-modal-footer uk-text-right">
                                             <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
                                             <button class="uk-button uk-button-primary" id="account_selection" type="submit"><a href="/neworder">Continue</a></button>
@@ -61,7 +62,8 @@
                                         </form>
                                     </div>
                                 </div>
-                    </li>
+
+                    <li><a href="/request" uk-icon="icon: move">Request</a></li>
 {{/if}}
                 </ul>
             </div></div>
