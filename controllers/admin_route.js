@@ -56,7 +56,7 @@ router.get('/', adminAuth, async (req, res) => {
       });
 
       const users = userData.map(user => user.get({ plain: true }));
-      res.render('admin', { users, loggedIn: true });
+      res.render('admin', { users, loggedIn: true, admin: req.session.admin});
 
     } catch (err) {
       console.log(err);

@@ -1,16 +1,8 @@
-async function signupFormHandler(event) {
-    event.preventDefault();
-
+async function signupFormHandler(admin) {
     const email = document.querySelector('#email-signup').value.trim();
     const password = document.querySelector('#password-signup').value.trim();
     const name = document.querySelector('#name-signup').value.trim();
     const wechat = document.querySelector('#wechat-signup').value.trim();
-    const adminCode = document.querySelector('#admin-signup').value.trim();
-    var admin = false;
-
-    if (adminCode == "tempadmin") {
-      admin = true
-    };
 
     if (email && password && name) {
       const response = await fetch('/api/user', {
@@ -39,6 +31,18 @@ async function signupFormHandler(event) {
     }
 }
 
+function eligibility(event) {
+  event.preventDefault();
+  const adminCode = document.querySelector('#admin-signup').value.trim();
+  var admin = false;
+  if (adminCode == 'tempadmin') {
+    admin = true;
+    signupFormHandler(admin);
+  } else if (adminCode == 'tempclient') {
+    signupFormHandler(admin);
+  } else {alert('Your eligibility code is invalid; please try again.')};
+}
+
 (function() {
   'use strict';
   window.addEventListener('load', function() {
@@ -53,7 +57,7 @@ async function signupFormHandler(event) {
         }
         form.classList.add('was-validated');
         event.preventDefault();
-        signupFormHandler(event)
+        eligibility(event);
       }, false);
     });
   }, false);
