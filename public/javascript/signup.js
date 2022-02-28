@@ -34,7 +34,7 @@ async function signupFormHandler(event) {
           document.location.replace('/');
         }
       } else {
-        alert('try again')
+        alert('This email is already registered with an existed account')
       }
     }
 }
