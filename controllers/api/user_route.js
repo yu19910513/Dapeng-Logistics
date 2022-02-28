@@ -44,26 +44,24 @@ router.get('/batch', withAuth, async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
-  try {
-  const userDB = await User.create({
+router.post('/', (req, res) => {
+  User.create({
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
     admin: req.body.admin,
     wechat: req.body.wechat
-  });
-  const user = userDB => {
+  })
+  .then(userDB => {
     req.session.save(() => {
       req.session.user_id = userDB.id;
       req.session.name = userDB.name;
       req.session.loggedIn = true;
       req.session.admin = userDB.admin;
-    })
-  };res.json(user);
-  } catch (err) {
-    res.status(500).json(err);
-  }
+
+      res.json(userDB);
+    });
+  });
 });
 
 // LOGIN FUNCTION <==> LOGIN.JS

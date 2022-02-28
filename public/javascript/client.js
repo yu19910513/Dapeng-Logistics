@@ -56,3 +56,15 @@ function sortAccount() {
       }
     }
   }
+
+  UIkit.util.on('#js-modal-confirm', 'click', function (e) {
+    e.preventDefault();
+    e.target.blur();
+    UIkit.modal.confirm('confim data here').then(function () {
+      //fatch put data
+        console.log('Confirmed.')
+    }, function () {
+        console.log('Rejected.')
+        return
+    });
+});
