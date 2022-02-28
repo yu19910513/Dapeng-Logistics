@@ -23,7 +23,13 @@
 {{> box-data box }}
 
 {{else}}
+
+{{#if admin}}
+<h3 class="text-center uk-text-bold">Loading admin files...</h3>
+{{else}}
 <h3 class="text-center">NO ORDER WAS FOUND!</h3>
+{{/if}}
+
 {{/each}}
 
             </tbody>
