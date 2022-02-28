@@ -47,7 +47,7 @@ router.get('/', adminAuth, async (req, res) => {
               'weight',
               'volume',
               'status',
-              'origin',
+              'location',
               'sku',
               'tracking'
             ]

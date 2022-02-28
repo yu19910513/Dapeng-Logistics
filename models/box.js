@@ -84,7 +84,7 @@ Box.init(
             allowNull: false,
             defaultValue: 0
         },
-        origin: {
+        location: {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 1

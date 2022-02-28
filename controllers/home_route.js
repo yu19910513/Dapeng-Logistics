@@ -24,7 +24,7 @@ router.get('/', withAuth, async (req, res) => {
           'weight',
           'volume',
           'status',
-          'origin',
+          'location',
           'sku'
         ],
         include: [
@@ -75,7 +75,7 @@ router.get('/request', withAuth, async (req, res) => {
         'weight',
         'volume',
         'status',
-        'origin',
+        'location',
         'sku'
       ],
       include: [

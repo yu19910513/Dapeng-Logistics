@@ -20,7 +20,7 @@ const boxData = [
         received_date: "1/21/2022",
         shipped_date: "2/20/2022",
         cost: 0,
-        origin: 3,
+        location: 3,
         user_id: 1,
         batch_id:1,
         account_id:4
@@ -45,7 +45,7 @@ const boxData = [
         shipped_date: "2/20/2022",
         cost: 0,
         tracking: '234567654345678hjklkjh',
-        origin: 3,
+        location: 3,
         user_id: 2,
         batch_id: 3,
         account_id: 2
@@ -69,7 +69,7 @@ const boxData = [
         received_date: "1/21/2022",
         shipped_date: "2/20/2022",
         cost: 0,
-        origin: 1,
+        location: 1,
         user_id: 2,
         batch_id: 4,
         account_id: 3
@@ -93,7 +93,7 @@ const boxData = [
         received_date: "1/21/2022",
         shipped_date: "2/20/2022",
         cost: 0,
-        origin: 1,
+        location: 1,
         user_id: 2,
         batch_id: 2,
         account_id: 1
