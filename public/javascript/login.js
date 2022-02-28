@@ -16,13 +16,13 @@ async function loginFormHandler(event) {
       }); console.log("email: "+ email + ' w/ password: ' + password);
 
       if (response.ok) {
-        document.location.replace('/');
+         document.location.replace('/');
       } else {
         alert("Failed to log in! Please try again with correct login info.\n 密码或帐号有误，请重新输入!");
         location.reload()
       }
     }
-  }
+  };
 
   (function() {
     'use strict';

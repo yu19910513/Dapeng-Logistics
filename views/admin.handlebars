@@ -1,0 +1,37 @@
+{{#if admin}}
+<link rel="stylesheet" href="css/client.css">
+<div class="uk-overflow-auto">
+<p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
+        <table class="uk-table uk-table-small uk-table-divider" id="myTable">
+            <thead>
+                <tr>
+                    <th onclick="sortAccount()">Account</th>
+                    <th>Box number</th>
+                    <th>Item Description</th>
+                    <th>Box</th>
+                    <th>of Box</th>
+                    <th>Qty per Box</th>
+                    <th>SKU</th>
+                    <th>Volume</th>
+                    <th onclick="sortDate()">Date</th>
+                    <th>Tracking</th>
+                </tr>
+            </thead>
+            <tbody>
+
+{{#each boxes as |box|}}
+
+{{> box-data box }}
+
+{{else}}
+<h3 class="text-center">NO ORDER WAS FOUND!</h3>
+{{/each}}
+
+            </tbody>
+        </table>
+    </div>
+
+<script src="javascript/client.js"></script>
+{{else}}
+<img class="uk-align-center" src="https://i0.wp.com/wirthconsulting.org/wp-content/uploads/2018/02/forbidden1.jpg?w=346&ssl=1" alt="">
+{{/if}}

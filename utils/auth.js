@@ -12,7 +12,9 @@ const adminAuth = (req, res, next) => {
     } else {
       next();
     }
-}
+};
+
+
   module.exports = {withAuth, adminAuth};
 
 
