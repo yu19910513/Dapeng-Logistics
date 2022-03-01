@@ -24,6 +24,26 @@ router.post('/', withAuth, (req, res) => {
       });
 });
 
+router.put('/status', withAuth, (req, res) => {
+  Box.update({
+      status: req.body.status},
+      {
+      where: {
+          box_number: req.body.box_number
+      }
+    })
+    .then(dbBoxData => {
+      if (!dbBoxData[0]) {
+        res.status(404).json({ message: 'This Box does not exist!' });
+        return;
+      }
+      res.json(dbBoxData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
 
 
 
