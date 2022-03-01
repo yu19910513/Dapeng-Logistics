@@ -1,5 +1,36 @@
 <div class="uk-overflow-auto">
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
+<div class="uk-margin uk-overflow-auto">
+
+    <nav class="uk-navbar-container" >
+    <div class="uk-navbar-left">
+        <div class="uk-navbar-item">
+            <form>
+        <div uk-form-custom="target: > * > span:first-child">
+            <select>
+                <option value="">Search Param...</option>
+                <option value="0">Account</option>
+                <option value="1">Box Number</option>
+                <option value="6">SKU</option>
+                <option value="8">Date</option>
+                <option value="10">Status</option>
+            </select>
+            <button class="uk-button uk-button-default" type="button" tabindex="-1">
+                <span></span>
+                <span uk-icon="icon: chevron-down"></span>
+            </button>
+        </div>
+    </form>
+    <form class="uk-search uk-search-default">
+        <span uk-search-icon></span>
+        <input class="uk-search-input" id="myInput" type="search" placeholder="Search by box number" onkeyup="filter()">
+    </form>
+</div>
+
+    </div>
+</nav>
+
+</div>
         <table class="uk-table uk-table-small uk-table-divider" id="myTable">
             <thead>
                 <tr>
