@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="css/client.css">
+{{#if admin}}
 <div class="uk-overflow-auto">
 <p class="uk-text-center"><span class="lead">To send out a shipping request of items from Washington warehouse, please selected the boxes from the table and confirm</span></p>
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
@@ -14,7 +14,7 @@
                     <th>of Box</th>
                     <th>Qty per Box</th>
                     <th>SKU</th>
-                    <th>Volume</th>
+                    <th>Location</th>
                     <th onclick="sortTable(8)">Date</th>
                     <th>Status</th>
                 </tr>
@@ -23,14 +23,14 @@
 
 {{#each boxes as |box|}}
 
-{{> select-box box }}
+{{> receiving-box box }}
 
 {{else}}
-<h3 class="text-center">NO ORDER WAS FOUND!</h3>
+<h3 class="text-center">NO PENDING ORDER WAS FOUND!</h3>
 {{/each}}
 
             </tbody>
         </table>
     </div>
-
 <script src="javascript/table.js"></script>
+{{/if}}
