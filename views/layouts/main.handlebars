@@ -22,19 +22,20 @@
             <div class="uk-navbar-center-left"><div>
                 <ul class="uk-navbar-nav">
 {{#if admin}}
-                    <li class="admin_nav">
-                        <a href="/admin">Admin</a>
-                        <div class="uk-navbar-dropdown">
-                            <ul class="uk-nav uk-navbar-dropdown-nav">
-                                <li class="uk-active"><a href="#">China</a></li>
-                                <li><a href="#">Amazon</a></li>
-                                <li><a href="#">Return</a></li>
-                            </ul>
-                        </div>
+                    <li class="uk-active">
+                        <a href="/admin" uk-icon="icon: home">Home</a>
+                    </li>
+
+                    <li>
+                        <a href="/admin_move" uk-icon="icon: move">Pending</a>
+                    </li>
+
+                    <li>
+                        <a href="/receiving" uk-icon="icon: pull">Receiving</a>
                     </li>
 {{else}}
                     <li class="uk-active">
-                        <a href="/">Home</a>
+                        <a href="/" uk-icon="icon: home">Home</a>
                     </li>
 
                     <li class="create_order"><a href="#createneworder" uk-icon="icon: file-edit" uk-toggle>New Shipment</a></li>
@@ -70,7 +71,7 @@
             <a class="uk-navbar-item uk-logo" href="#"><img src="https://dapengwh.com/wp-content/uploads/2021/03/panpan-0-1.png" style="width: 185px;" alt="logo"></a>
             <div class="uk-navbar-center-right"><div>
                 <ul class="uk-navbar-nav">
-                    <li><a class="logout">Log Out</a></li>
+                    <li><a class="logout" uk-icon="icon: sign-out">Log Out</a></li>
                 </ul>
             </div></div>
         </div>

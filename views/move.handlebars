@@ -1,9 +1,12 @@
 {{#if admin}}
 <div class="uk-overflow-auto">
+<p class="uk-text-center"><span class="lead">To send out a shipping request of items from Washington warehouse, please selected the boxes from the table and confirm</span></p>
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
+      <a id="js-modal-confirm" class="uk-button uk-button-default uk-align-right uk-margin-small-right uk-text-bold" value="Get Selected" onclick="GetSelected()">Confirm</a>
         <table class="uk-table uk-table-small uk-table-divider" id="myTable">
             <thead>
                 <tr>
+                    <th></th>
                     <th onclick="sortAccount()">Account</th>
                     <th>Box number</th>
                     <th>Item Description</th>
@@ -11,26 +14,25 @@
                     <th>of Box</th>
                     <th>Qty per Box</th>
                     <th>SKU</th>
-                    <th>Volume</th>
+                    <th>Location</th>
                     <th onclick="sortDate()">Date</th>
-                    <th>Tracking</th>
                     <th>Status</th>
+                    <th>Tracking</th>
+                    <th>File</th>
                 </tr>
             </thead>
             <tbody>
 
 {{#each boxes as |box|}}
 
-{{> box-data box }}
+{{> move-box box }}
 
 {{else}}
-<h3 class="text-center">NO ORDER WAS FOUND!</h3>
+<h3 class="text-center">NO REQUEST WAS FOUND!</h3>
 {{/each}}
 
             </tbody>
         </table>
     </div>
 <script src="javascript/table.js"></script>
-{{else}}
-<img class="uk-align-center" src="https://i0.wp.com/wirthconsulting.org/wp-content/uploads/2018/02/forbidden1.jpg?w=346&ssl=1" alt="">
 {{/if}}

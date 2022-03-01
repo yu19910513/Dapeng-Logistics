@@ -52,6 +52,14 @@ for (i = 1; i < (rows.length + 1); i++){
   var data_status = rows[i].getElementsByTagName('td');
     if (data_status[10].innerHTML == 1) {
       rows[i].getElementsByTagName("td")[10].innerHTML = "Received"
+    } else if (data_status[10].innerHTML == 2) {
+      rows[i].getElementsByTagName("td")[10].innerHTML = "Requested"
+    } else if (data_status[10].innerHTML == 3) {
+      rows[i].getElementsByTagName("td")[10].innerHTML = "Shipped"
+    } else if (data_status[10].innerHTML == 4) {
+      rows[i].getElementsByTagName("td")[10].innerHTML = "Archived"
+    } else {
+      rows[i].getElementsByTagName("td")[10].innerHTML = "Pending"
     }
 }
 
@@ -83,17 +91,28 @@ function GetSelected() {
                 confirmation.order = row.cells[4].innerHTML;
                 confirmation.total_box = row.cells[5].innerHTML;
                 confirmation.qty_per_box = row.cells[6].innerHTML;
+                confirmation.status = row.cells[10].innerHTML;
                 confirmationArr.push(confirmation)
             }
       };
       editStatus(confirmationArr)
-}
+};
 
 async function editStatus(event) {
   // event.preventDefault();
   for (let i = 0; i < event.length; i++) {
     const box_number = event[i].box_number
-    const status = 2
+    var status = event[i].status
+    console.log(status);
+    if(status == 'Pending'){
+        status = 1
+      } else if (status == 'Received') {
+        status = 2
+      } else if (status == 'Requested') {
+        status = 3
+      } else {
+        status = 4
+      }
     const response = await fetch(`/api/box/status`, {
       method: 'PUT',
       body: JSON.stringify({
@@ -105,9 +124,12 @@ async function editStatus(event) {
       }
     });
     if (response.ok) {
-      document.location.replace('/');
+      alert('Status updated successfully!')
+      document.location.reload();
     } else {
       alert(response.statusText);
     }
   }
+
+
 }

@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="css/client.css">
 <div class="uk-overflow-auto">
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
         <table class="uk-table uk-table-small uk-table-divider" id="myTable">
@@ -14,6 +13,7 @@
                     <th>Volume</th>
                     <th onclick="sortDate()">Date</th>
                     <th>Tracking</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,7 +36,7 @@
         </table>
     </div>
 
-<script src="javascript/client.js"></script>
+<script src="javascript/table.js"></script>
 
 {{#if admin}}
 <script src="javascript/admin_redirect.js"></script>
