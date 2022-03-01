@@ -4,8 +4,15 @@
 
     <nav class="uk-navbar-container" >
     <div class="uk-navbar-left">
-        <div class="uk-navbar-item">
-            <form>
+        <div class="uk-navbar-item uk-align-center">
+            <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+                <label><input class="uk-radio" type="radio" value='1' name="radio2" onclick="status_trigger(1)" checked>All</label>
+                <label><input class="uk-radio" type="radio" value='2' name="radio2" onclick="status_trigger(2)">Pending</label>
+                <label><input class="uk-radio" type="radio" value='3' name="radio2" onclick="status_trigger(3)">Received</label>
+                <label><input class="uk-radio" type="radio" value='4' name="radio2" onclick="status_trigger(4)">Requested</label>
+                <label><input class="uk-radio" type="radio" value='5' name="radio2" onclick="status_trigger(5)">Shipped</label>
+            </div>
+            {{!-- <form>
         <div uk-form-custom="target: > * > span:first-child">
             <select>
                 <option value="">Search Param...</option>
@@ -20,8 +27,8 @@
                 <span uk-icon="icon: chevron-down"></span>
             </button>
         </div>
-    </form>
-    <form class="uk-search uk-search-default">
+    </form> --}}
+    <form class="uk-search uk-search-default uk-align-center">
         <span uk-search-icon></span>
         <input class="uk-search-input" id="myInput" type="search" placeholder="Search by box number" onkeyup="filter()">
     </form>

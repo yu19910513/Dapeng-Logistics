@@ -132,3 +132,42 @@ function filter() {
     }
   }
 }
+
+function status_trigger(n) {
+  if (n == 2) {
+    const pending = 'Pending';
+    filter_status(pending)
+  } else if (n == 3) {
+    const received = 'Received';
+    filter_status(received)
+  } else if (n == 4) {
+    const requested = 'Requested';
+    filter_status(requested)
+  } else if (n == 5) {
+    const shipped = 'Shipped';
+    filter_status(shipped)
+  } else {
+    location.reload()
+  }
+}
+
+
+function filter_status(txt) {
+  var filter, table, tr, td, i, txtValue;
+  console.log(txt);
+  filter = txt.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[10];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
