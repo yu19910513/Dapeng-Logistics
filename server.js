@@ -18,7 +18,7 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const sess = {
   secret: 'dapeng',
   cookie: {
-    maxAge: 86400,
+    maxAge: 864000,
   },
   resave: true,
   rolling: true,

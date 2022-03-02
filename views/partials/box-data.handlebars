@@ -8,18 +8,44 @@
       <td>{{sku}}</td>
       <td>{{volume}}</td>
       {{#if shipped_date}}
-         <td>{{shipped_date}}</td>
+         <td class="dropdown">{{shipped_date}}
+         <div class="dropdown-content">
+            <div href="#">pending: {{batch.pending_date}}</div>
+            <div href="#">received :{{received_date}}</div>
+            <div href="#">requested: {{requested_date}}</div>
+            <div href="#">shipped: {{shipped_date}}</div>
+         </div></td>
       {{else}}
             {{#if requested_date}}
-               <td>{{requested_date}}</td>
+               <td class="dropdown">{{requested_date}}
+               <div class="dropdown-content">
+                 <div href="#">pending: {{batch.pending_date}}</div>
+                 <div href="#">received :{{received_date}}</div>
+                 <div href="#">requested: {{requested_date}}</div>
+                 <div href="#">shipped: {{shipped_date}}</div>
+               </div></td>
             {{else}}
                   {{#if received_date}}
-                     <td>{{received_date}}</td>
+                     <td class="dropdown">{{received_date}}
+                     <div class="dropdown-content">
+                       <div href="#">pending: {{batch.pending_date}}</div>
+                       <div href="#">received :{{received_date}}</div>
+                       <div href="#">requested: {{requested_date}}</div>
+                       <div href="#">shipped: {{shipped_date}}</div>
+                     </div></td>
                   {{else}}
-                     <td>{{batch.pending_date}}</td>
+                     <td class="dropdown">{{batch.pending_date}}
+                     <div class="dropdown-content">
+                       <div href="#">pending: {{batch.pending_date}}</div>
+                       <div href="#">received :{{received_date}}</div>
+                       <div href="#">requested: {{requested_date}}</div>
+                       <div href="#">shipped: {{shipped_date}}</div>
+                     </div></td>
                   {{/if}}
             {{/if}}
       {{/if}}
       <td>{{tracking}}</td>
       <td>{{status}}</td>
     </tr>
+
+<link rel="stylesheet" href="css/table.css">
