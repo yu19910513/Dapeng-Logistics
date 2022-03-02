@@ -41,26 +41,29 @@
                     <li class="create_order" onclick="accountList()"><a href="#createneworder" uk-icon="icon: plus" uk-toggle>New Shipment</a></li>
                                 <div id="createneworder" uk-modal>
                                     <div class="uk-modal-dialog">
-                                        <button class="uk-modal-close-default" type="button" uk-close></button>
-                                        <div class="uk-modal-header">
-                                            <h2 class="uk-modal-title">Select/Create Account</h2>
-                                        </div>
-                                        <form class="uk-form-horizontal uk-margin-large">
 
+                                        <button class="uk-modal-close-default" type="button" uk-close></button>
+
+                                        <div class="uk-modal-header uk-background-muted">
+                                            <h4 class="uk-modal-title uk-text-center">Account Option</h4>
+                                        </div>
+                                            <p class="uk-margin-small-left">Before creating a new shipment, please select an existed account where the new order will be assigned to. If you would like to create a new account, select "Create New Account" and continue.</p>
+                                        <form class="uk-form-horizontal uk-margin-small uk-margin-small-left">
                                             <div class="uk-margin">
-                                                <label class="uk-form-label" for="form-horizontal-select">Select an existed account</label>
-                                                <div class="uk-form-controls">
+                                                <label class="uk-form-label" for="form-horizontal-select"><span uk-icon="icon: user"></span>USER: {{name}}</label>
+                                                <div class="uk-form-controls uk-form-width-medium">
                                                     <select class="uk-select accountList" id="accountList">
                                                         <option>Create New Account</option>
                                                     </select>
                                                 </div>
                                             </div>
-                                            <footer>Please select "Create New Account" if you'd like to create a new account</footer>
-                                        <div class="uk-modal-footer uk-text-right">
-                                            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
-                                            <button class="uk-button uk-button-primary" id="account_selection" type="submit"><a href="/neworder">Continue</a></button>
-                                        </div>
+
+                                            <div class="uk-modal-footer uk-text-right">
+                                                <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+                                                <button class="uk-button uk-button-primary" id="account_selection" type="submit"><a uk-icon="icon:  arrow-right" href="/neworder">Continue</a></button>
+                                            </div>
                                         </form>
+
                                     </div>
                                 </div>
 
