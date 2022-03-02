@@ -2,16 +2,16 @@ var table = document.getElementById("myTable");
 var rows = table.rows;
 for (i = 1; i < (rows.length + 1); i++){
   var data_status = rows[i].getElementsByTagName('td');
-    if (data_status[10].innerHTML == 1) {
-      rows[i].getElementsByTagName("td")[10].innerHTML = "Received"
-    } else if (data_status[10].innerHTML == 2) {
-      rows[i].getElementsByTagName("td")[10].innerHTML = "Requested"
-    } else if (data_status[10].innerHTML == 3) {
-      rows[i].getElementsByTagName("td")[10].innerHTML = "Shipped"
-    } else if (data_status[10].innerHTML == 4) {
-      rows[i].getElementsByTagName("td")[10].innerHTML = "Archived"
+    if (data_status[11].innerHTML == 1) {
+      rows[i].getElementsByTagName("td")[11].innerHTML = "Received"
+    } else if (data_status[11].innerHTML == 2) {
+      rows[i].getElementsByTagName("td")[11].innerHTML = "Requested"
+    } else if (data_status[11].innerHTML == 3) {
+      rows[i].getElementsByTagName("td")[11].innerHTML = "Shipped"
+    } else if (data_status[11].innerHTML == 4) {
+      rows[i].getElementsByTagName("td")[11].innerHTML = "Archived"
     } else {
-      rows[i].getElementsByTagName("td")[10].innerHTML = "Pending"
+      rows[i].getElementsByTagName("td")[11].innerHTML = "Pending"
     }
 };
 
@@ -26,13 +26,15 @@ function GetSelected() {
             var confirmation = new Object
             if (checkBoxes[i].checked) {
                 var row = checkBoxes[i].parentNode.parentNode;
-                confirmation.account = row.cells[1].innerHTML;
-                confirmation.box_number = row.cells[2].innerHTML;
-                confirmation.description = row.cells[3].innerHTML;
-                confirmation.order = row.cells[4].innerHTML;
-                confirmation.total_box = row.cells[5].innerHTML;
-                confirmation.qty_per_box = row.cells[6].innerHTML;
-                confirmation.status = row.cells[10].innerHTML;
+                confirmation.user = row.cells[1].innerHTML;
+                confirmation.account = row.cells[2].innerHTML;
+                confirmation.box_number = row.cells[3].innerHTML;
+                confirmation.description = row.cells[4].innerHTML;
+                confirmation.order = row.cells[5].innerHTML;
+                confirmation.total_box = row.cells[6].innerHTML;
+                confirmation.qty_per_box = row.cells[7].innerHTML;
+                confirmation.date = row.cells[10].innerHTML;
+                confirmation.status = row.cells[11].innerHTML;
                 confirmationArr.push(confirmation)
             }
       };
@@ -41,15 +43,19 @@ function GetSelected() {
 
 async function editStatus(event) {
   for (let i = 0; i < event.length; i++) {
-    const box_number = event[i].box_number
+    const box_number = event[i].box_number;
     var status = event[i].status;
+    var received_date = event[i].date;
+    var shipped_date = null;
     console.log(status);
     if(status == 'Pending'){
-        status = 1;
+        status = 1
+        received_date = new Date().toLocaleDateString("en-US");
       } else if (status == 'Received') {
-        status = 2;
+        status = 2
       } else if (status == 'Requested') {
-        status = 3;
+        status = 3
+        shipped_date = new Date().toLocaleDateString("en-US");
       } else {
         status = 4
       }
@@ -57,7 +63,9 @@ async function editStatus(event) {
       method: 'PUT',
       body: JSON.stringify({
           box_number,
-          status
+          status,
+          received_date,
+          shipped_date
       }),
       headers: {
           'Content-Type': 'application/json'
@@ -105,27 +113,7 @@ function sortTable(n) {
       }
     }
   }
-}
-
-// function filter(n) {
-//   var input, filter, table, tr, td, i, txtValue;
-//   input = document.getElementById("myInput");
-//   filter = input.value.toUpperCase();
-//   table = document.getElementById("myTable");
-//   tr = table.getElementsByTagName("tr");
-
-//   for (i = 0; i < tr.length; i++) {
-//     td = tr[i].getElementsByTagName("td")[n];
-//     if (td) {
-//       txtValue = td.textContent || td.innerText;
-//       if (txtValue.toUpperCase().indexOf(filter) > -1) {
-//         tr[i].style.display = "";
-//       } else {
-//         tr[i].style.display = "none";
-//       }
-//     }
-//   }
-// }
+};
 
 function status_trigger(n) {
   if (n == 2) {

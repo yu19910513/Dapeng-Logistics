@@ -89,6 +89,10 @@ Box.init(
             allowNull: false,
             defaultValue: 1
         },
+        file: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
 
 // forighn key data
         batch_id: {

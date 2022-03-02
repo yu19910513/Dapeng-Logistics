@@ -4,24 +4,25 @@
         <table class="uk-table uk-table-small uk-table-divider" id="myTable">
             <thead>
                 <tr>
-                    <th onclick="sortTable(0)">Account</th>
+                    <th onclick="sortTable(0)">User</th>
+                    <th onclick="sortTable(1)">Account</th>
                     <th>Box number</th>
-                    <th>Item Description</th>
+                    <th onclick="sortTable(3)">Item Description</th>
                     <th>Box</th>
                     <th>of Box</th>
                     <th>Qty per Box</th>
                     <th>SKU</th>
                     <th>Volume</th>
-                    <th onclick="sortTable(8)">Date</th>
+                    <th onclick="sortTable(9)">Date</th>
                     <th>Tracking</th>
-                    <th onclick="sortTable(10)">Status</th>
+                    <th onclick="sortTable(11)">Status</th>
                 </tr>
             </thead>
             <tbody>
 
 {{#each boxes as |box|}}
 
-{{> box-data box }}
+{{> admin_box-data box }}
 
 {{else}}
 <h3 class="text-center">NO ORDER WAS FOUND!</h3>
@@ -30,7 +31,7 @@
             </tbody>
         </table>
     </div>
-<script src="javascript/table.js"></script>
+<script src="javascript/admin_table.js"></script>
 {{else}}
 <script src="javascript/client_redirect.js"></script>
 <img class="uk-align-center" src="https://i0.wp.com/wirthconsulting.org/wp-content/uploads/2018/02/forbidden1.jpg?w=346&ssl=1" alt="">

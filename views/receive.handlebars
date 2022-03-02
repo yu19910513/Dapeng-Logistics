@@ -7,16 +7,17 @@
             <thead>
                 <tr>
                     <th></th>
-                    <th onclick="sortTable(0)">Account</th>
-                    <th>Box number</th>
-                    <th>Item Description</th>
+                    <th onclick="sortTable(1)">User</th>
+                    <th onclick="sortTable(2)">Account</th>
+                    <th onclick="sortTable(3)">Box number</th>
+                    <th onclick="sortTable(4)">Item Description</th>
                     <th>Box</th>
                     <th>of Box</th>
                     <th>Qty per Box</th>
                     <th>SKU</th>
-                    <th>Location</th>
-                    <th onclick="sortTable(8)">Date</th>
-                    <th>Status</th>
+                    <th onclick="sortTable(9)">Location</th>
+                    <th onclick="sortTable(10)">Date</th>
+                    <th onclick="sortTable(11)">Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,7 +33,7 @@
             </tbody>
         </table>
     </div>
-<script src="javascript/table.js"></script>
+<script src="javascript/admin_table.js"></script>
 {{else}}
 <script src="javascript/client_redirect.js"></script>
 {{/if}}

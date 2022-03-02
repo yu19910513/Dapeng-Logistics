@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/yu19910513/Dapeng-Logistics#readme",
   "dependencies": {
+    "aws-sdk": "^2.1084.0",
     "bcrypt": "^5.0.1",
     "connect-session-sequelize": "^7.1.1",
     "dotenv": "^10.0.0",

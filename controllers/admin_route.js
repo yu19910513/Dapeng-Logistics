@@ -23,7 +23,8 @@ router.get('/', withAuth, async (req, res) => {
         'volume',
         'status',
         'location',
-        'sku'
+        'sku',
+        // 'file'
       ],
       include: [
         {
@@ -52,7 +53,14 @@ router.get('/', withAuth, async (req, res) => {
       ]
     });
     const boxes = boxData.map(box => box.get({ plain: true }));
-    res.render('admin', { boxes, loggedIn: true, admin: req.session.admin, name: req.session.name });
+    res.render('admin', {
+      boxes,
+      loggedIn: true,
+      admin: req.session.admin,
+      name: req.session.name,
+      shipped_date: req.body.shipped_date,
+      received_date: req.body.received_date
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
