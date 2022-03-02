@@ -13,8 +13,6 @@ function accountList() {
         }
     });
 };
-accountList();
-
 
 function saveAccount() {
     var selectedOption = document.querySelector('#accountList').value;

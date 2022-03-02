@@ -39,7 +39,6 @@ function GetSelected() {
 };
 
 async function editStatus(event) {
-  // event.preventDefault();
   for (let i = 0; i < event.length; i++) {
     const box_number = event[i].box_number
     var status = event[i].status
@@ -63,17 +62,17 @@ async function editStatus(event) {
           'Content-Type': 'application/json'
       }
     });
-    if (response.ok) {
-      alert('Status updated successfully!')
-      document.location.reload();
-    } else {
-      alert(response.statusText);
-    }
+    // if (response.ok) {
+    //   alert('Status updated successfully!')
+    //   document.location.reload();
+    // } else {
+    //   alert(response.statusText);
+    // }
   }
-
+  alert('Status updated successfully!')
+  document.location.reload();
 
 }
-
 
 
 function sortTable(n) {
@@ -113,25 +112,25 @@ function sortTable(n) {
   }
 }
 
-function filter() {
-  var input, filter, table, tr, td, i, txtValue;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("myTable");
-  tr = table.getElementsByTagName("tr");
+// function filter(n) {
+//   var input, filter, table, tr, td, i, txtValue;
+//   input = document.getElementById("myInput");
+//   filter = input.value.toUpperCase();
+//   table = document.getElementById("myTable");
+//   tr = table.getElementsByTagName("tr");
 
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[1];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
-      }
-    }
-  }
-}
+//   for (i = 0; i < tr.length; i++) {
+//     td = tr[i].getElementsByTagName("td")[n];
+//     if (td) {
+//       txtValue = td.textContent || td.innerText;
+//       if (txtValue.toUpperCase().indexOf(filter) > -1) {
+//         tr[i].style.display = "";
+//       } else {
+//         tr[i].style.display = "none";
+//       }
+//     }
+//   }
+// }
 
 function status_trigger(n) {
   if (n == 2) {
@@ -149,8 +148,7 @@ function status_trigger(n) {
   } else {
     location.reload()
   }
-}
-
+};
 
 function filter_status(txt) {
   var filter, table, tr, td, i, txtValue;
@@ -170,4 +168,4 @@ function filter_status(txt) {
       }
     }
   }
-}
+};

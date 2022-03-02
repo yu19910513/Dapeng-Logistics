@@ -12,33 +12,16 @@
                 <label><input class="uk-radio" type="radio" value='4' name="radio2" onclick="status_trigger(4)">Requested</label>
                 <label><input class="uk-radio" type="radio" value='5' name="radio2" onclick="status_trigger(5)">Shipped</label>
             </div>
-            {{!-- <form>
-        <div uk-form-custom="target: > * > span:first-child">
-            <select>
-                <option value="">Search Param...</option>
-                <option value="0">Account</option>
-                <option value="1">Box Number</option>
-                <option value="6">SKU</option>
-                <option value="8">Date</option>
-                <option value="10">Status</option>
-            </select>
-            <button class="uk-button uk-button-default" type="button" tabindex="-1">
-                <span></span>
-                <span uk-icon="icon: chevron-down"></span>
-            </button>
-        </div>
-    </form> --}}
     <form class="uk-search uk-search-default uk-align-center">
         <span uk-search-icon></span>
-        <input class="uk-search-input" id="myInput" type="search" placeholder="Search by box number" onkeyup="filter()">
+        <input class="uk-search-input form-control search-input" type="search" placeholder="Search" data-table="myTable">
     </form>
-</div>
-
+    </div>
     </div>
 </nav>
 
 </div>
-        <table class="uk-table uk-table-small uk-table-divider" id="myTable">
+        <table class="uk-table uk-table-small uk-table-divider myTable" id="myTable">
             <thead>
                 <tr>
                     <th onclick="sortTable(0)">Account</th>
@@ -73,9 +56,47 @@
             </tbody>
         </table>
     </div>
+<script>
+        (function(document) {
+            'use strict';
 
+            var TableFilter = (function(myArray) {
+                var search_input;
+
+                function _onInputSearch(e) {
+                    search_input = e.target;
+                    var tables = document.getElementsByClassName(search_input.getAttribute('data-table'));
+                    myArray.forEach.call(tables, function(table) {
+                        myArray.forEach.call(table.tBodies, function(tbody) {
+                            myArray.forEach.call(tbody.rows, function(row) {
+                                var text_content = row.textContent.toLowerCase();
+                                var search_val = search_input.value.toLowerCase();
+                                row.style.display = text_content.indexOf(search_val) > -1 ? '' : 'none';
+                            });
+                        });
+                    });
+                }
+
+                return {
+                    init: function() {
+                        var inputs = document.getElementsByClassName('search-input');
+                        myArray.forEach.call(inputs, function(input) {
+                            input.oninput = _onInputSearch;
+                        });
+                    }
+                };
+            })(Array.prototype);
+
+            document.addEventListener('readystatechange', function() {
+                if (document.readyState === 'complete') {
+                    TableFilter.init();
+                }
+            });
+
+        })(document);
+    </script>
 <script src="javascript/table.js"></script>
-
+<script src="javascript/home.js"></script>
 {{#if admin}}
 <script src="javascript/admin_redirect.js"></script>
 {{/if}}
