@@ -11,11 +11,15 @@
       {{#if shipped_date}}
          <td>{{shipped_date}}</td>
       {{else}}
-             {{#if received_date}}
-               <td>{{received_date}}</td>
-             {{else}}
+            {{#if requested_date}}
+               <td>{{requested_date}}</td>
+            {{else}}
+                  {{#if received_date}}
+                     <td>{{received_date}}</td>
+                  {{else}}
                      <td>{{batch.pending_date}}</td>
-               {{/if}}
+                  {{/if}}
+            {{/if}}
       {{/if}}
       <td>{{tracking}}</td>
       <td>{{status}}</td>

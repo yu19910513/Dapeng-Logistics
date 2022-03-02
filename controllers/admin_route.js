@@ -12,6 +12,7 @@ router.get('/', withAuth, async (req, res) => {
         'box_number',
         'description',
         'cost',
+        'requested_date',
         'received_date',
         'shipped_date',
         'order',
@@ -24,7 +25,8 @@ router.get('/', withAuth, async (req, res) => {
         'status',
         'location',
         'sku',
-        // 'file'
+        'file',
+        'file_2',
       ],
       include: [
         {
@@ -59,7 +61,8 @@ router.get('/', withAuth, async (req, res) => {
       admin: req.session.admin,
       name: req.session.name,
       shipped_date: req.body.shipped_date,
-      received_date: req.body.received_date
+      received_date: req.body.received_date,
+      requested_date: req.body.requested_date
     });
   } catch (err) {
     console.log(err);

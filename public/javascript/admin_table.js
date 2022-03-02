@@ -18,7 +18,7 @@ for (i = 1; i < (rows.length + 1); i++){
 
 
 
-function GetSelected() {
+function GetSelected(n) {
   var confirmationArr = [];
   var table = document.getElementById("myTable");
   var checkBoxes = table.getElementsByTagName("input");
@@ -38,34 +38,25 @@ function GetSelected() {
                 confirmationArr.push(confirmation)
             }
       };
-      editStatus(confirmationArr)
+
+  if(n == 0) {
+    editStatus0(confirmationArr)
+  } else {
+     editStatus2(confirmationArr)
+  }
 };
 
-async function editStatus(event) {
+async function editStatus0(event) {
   for (let i = 0; i < event.length; i++) {
     const box_number = event[i].box_number;
-    var status = event[i].status;
-    var received_date = event[i].date;
-    var shipped_date = null;
-    console.log(status);
-    if(status == 'Pending'){
-        status = 1
-        received_date = new Date().toLocaleDateString("en-US");
-      } else if (status == 'Received') {
-        status = 2
-      } else if (status == 'Requested') {
-        status = 3
-        shipped_date = new Date().toLocaleDateString("en-US");
-      } else {
-        status = 4
-      }
-    const response = await fetch(`/api/box/status`, {
+    var status = 1;
+    var received_date = new Date().toLocaleDateString("en-US");
+    const response = await fetch(`/api/box/status_admin_receiving`, {
       method: 'PUT',
       body: JSON.stringify({
           box_number,
           status,
-          received_date,
-          shipped_date
+          received_date
       }),
       headers: {
           'Content-Type': 'application/json'
@@ -77,6 +68,27 @@ async function editStatus(event) {
 
 }
 
+async function editStatus2(event) {
+  for (let i = 0; i < event.length; i++) {
+    const box_number = event[i].box_number;
+        var status = 3;
+        var shipped_date = new Date().toLocaleDateString("en-US");
+    const response = await fetch(`/api/box/status_admin_shipping`, {
+      method: 'PUT',
+      body: JSON.stringify({
+          box_number,
+          status,
+          shipped_date
+      }),
+      headers: {
+          'Content-Type': 'application/json'
+      }
+    });
+  }
+  alert('Status updated successfully!')
+  document.location.reload();
+
+}
 
 function sortTable(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;

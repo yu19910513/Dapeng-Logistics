@@ -21,12 +21,24 @@ Account.init(
           type: DataTypes.STRING,
           allowNull: false
         },
+        custom_1: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        custom_2: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        custom_3: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
         user_id: {
           type: DataTypes.INTEGER,
           references: {
           model: 'user',
           key: 'id'
-        }
+        },
       }
     },
     {

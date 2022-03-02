@@ -47,6 +47,18 @@ User.init(
         admin: {
             type: DataTypes.BOOLEAN,
             defaultValue: false
+        },
+        custom_1: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        custom_2: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        custom_3: {
+            type: DataTypes.STRING,
+            allowNull: true
         }
 
     },

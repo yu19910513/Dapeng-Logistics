@@ -30,8 +30,16 @@ Box.init(
             type: DataTypes.STRING,
             allowNull: true
         },
+        old_tracking: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
 
 //time data
+        requested_date: {
+            type: DataTypes.STRING,
+            allowNull: true
+         },
         received_date: {
             type: DataTypes.STRING,
             allowNull: true
@@ -40,7 +48,6 @@ Box.init(
             type: DataTypes.STRING,
             allowNull: true
          },
-
 //qty data
         order: {
             type: DataTypes.INTEGER,
@@ -93,7 +100,22 @@ Box.init(
             type: DataTypes.STRING,
             allowNull: true
         },
-
+        file_2: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        custom_1: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        custom_2: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        custom_3: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
 // forighn key data
         batch_id: {
           type: DataTypes.INTEGER,

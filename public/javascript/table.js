@@ -42,6 +42,7 @@ function GetSelected() {
 async function editStatus(event) {
   for (let i = 0; i < event.length; i++) {
     const box_number = event[i].box_number
+    var requested_date = new Date().toLocaleDateString("en-US");
     var status = event[i].status;
     console.log(status);
     if(status == 'Pending'){
@@ -53,11 +54,12 @@ async function editStatus(event) {
       } else {
         status = 4
       }
-    const response = await fetch(`/api/box/status`, {
+    const response = await fetch(`/api/box/status_client`, {
       method: 'PUT',
       body: JSON.stringify({
           box_number,
-          status
+          status,
+          requested_date
       }),
       headers: {
           'Content-Type': 'application/json'

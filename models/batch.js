@@ -33,6 +33,19 @@ Batch.init(
             defaultValue: 1
         },
 
+        custom_1: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        custom_2: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        custom_3: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+
 // forighn key data
         user_id: {
           type: DataTypes.INTEGER,

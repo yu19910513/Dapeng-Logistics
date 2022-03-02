@@ -48,10 +48,32 @@ router.post('/', withAuth, (req, res) => {
       });
 });
 
-router.put('/status', withAuth, (req, res) => {
+router.put('/status_admin_receiving', withAuth, (req, res) => {
   Box.update({
       status: req.body.status,
-      received_date: req.body.received_date,
+      received_date: req.body.received_date
+    },
+      {
+      where: {
+          box_number: req.body.box_number
+      }
+    })
+    .then(dbBoxData => {
+      if (!dbBoxData[0]) {
+        res.status(404).json({ message: 'This Box does not exist!' });
+        return;
+      }
+      res.json(dbBoxData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+router.put('/status_admin_shipping', withAuth, (req, res) => {
+  Box.update({
+      status: req.body.status,
       shipped_date: req.body.shipped_date
     },
       {
@@ -72,7 +94,28 @@ router.put('/status', withAuth, (req, res) => {
     });
 });
 
-
+router.put('/status_client', withAuth, (req, res) => {
+  Box.update({
+      status: req.body.status,
+      requested_date: req.body.requested_date
+    },
+      {
+      where: {
+          box_number: req.body.box_number
+      }
+    })
+    .then(dbBoxData => {
+      if (!dbBoxData[0]) {
+        res.status(404).json({ message: 'This Box does not exist!' });
+        return;
+      }
+      res.json(dbBoxData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
 
 
   module.exports = router;
