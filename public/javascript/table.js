@@ -16,7 +16,27 @@ for (i = 1; i < (rows.length + 1); i++){
 };
 
 
+function show_all() {
+  var table, tr, td, i, txtValue, a, b, c, d;
+  a = "received".toUpperCase();
+  b = "requested".toUpperCase();
+  c = "pending".toUpperCase();
+  d = "shipped".toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
 
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[10];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(a) > -1 || txtValue.toUpperCase().indexOf(b) > -1 || txtValue.toUpperCase().indexOf(c) > -1 || txtValue.toUpperCase().indexOf(d) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+};
 
 function GetSelected() {
   var confirmationArr = [];
@@ -143,10 +163,12 @@ function status_trigger(n) {
     const shipped = 'Shipped';
     filter_status(shipped)
   } else if (n == 6) {
-    const inventory = 'inventory';
-    filter_status(inventory)
+    const received = 'Received';
+    const requested = 'Requested';
+    filter_status_i(received, requested)
   } else {
-    location.reload()
+    location.reload();
+    // show_all();
   }
 };
 
@@ -169,3 +191,33 @@ function filter_status(txt) {
     }
   }
 };
+
+function filter_status_i(txt, txt_2) {
+  var filter, filter_2, table, tr, td, i, txtValue;
+  filter = txt.toUpperCase();
+  filter_2 = txt_2.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[10];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1 || txtValue.toUpperCase().indexOf(filter_2) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  };
+  reset_filter();
+};
+
+
+function reset_filter() {
+ const radiolist =  document.getElementsByTagName('input');
+ for (let i = 0; i < radiolist.length; i++) {
+   if (radiolist[i].type.toLowerCase() == 'radio') {
+    radiolist[i].checked = false;
+   }
+ }
+}
