@@ -142,6 +142,9 @@ function status_trigger(n) {
   } else if (n == 5) {
     const shipped = 'Shipped';
     filter_status(shipped)
+  } else if (n == 6) {
+    const inventory = 'inventory';
+    filter_status(inventory)
   } else {
     location.reload()
   }
