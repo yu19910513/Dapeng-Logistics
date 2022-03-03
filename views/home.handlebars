@@ -1,25 +1,27 @@
 <div class="uk-overflow-auto">
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
 <div class="uk-margin uk-overflow-auto">
-
+<div class="uk-margin">
     <nav class="uk-navbar-container" >
-    <div class="uk-navbar-left">
-        <div class="uk-navbar-item uk-align-center">
-            <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+        <div class="uk-navbar-right uk-child-width-expand@s">
+            <div class="uk-navbar-item">
+            <div class="uk-grid-small uk-child-width-auto uk-grid">
                 <label><input class="uk-radio" type="radio" value='1' name="radio2" onclick="status_trigger(1)" checked>All</label>
                 <label><input class="uk-radio" type="radio" value='2' name="radio2" onclick="status_trigger(2)">Pending</label>
                 <label><input class="uk-radio" type="radio" value='3' name="radio2" onclick="status_trigger(3)">Received</label>
                 <label><input class="uk-radio" type="radio" value='4' name="radio2" onclick="status_trigger(4)">Requested</label>
                 <label><input class="uk-radio" type="radio" value='5' name="radio2" onclick="status_trigger(5)">Shipped</label>
             </div>
-    <form class="uk-search uk-search-default uk-align-center">
+            </div>
+            <div class="uk-navbar-item">
+    <form class="uk-search uk-search-default">
         <span uk-search-icon></span>
         <input class="uk-search-input form-control search-input" type="search" placeholder="Search" data-table="myTable">
     </form>
+            </div>
+        </div>
+    </nav>
     </div>
-    </div>
-</nav>
-
 </div>
         <table class="uk-table uk-table-small uk-table-divider myTable" id="myTable">
             <thead>

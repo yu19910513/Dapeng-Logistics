@@ -153,7 +153,7 @@ function filter_status(txt) {
   tr = table.getElementsByTagName("tr");
 
   for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[10];
+    td = tr[i].getElementsByTagName("td")[11];
     if (td) {
       txtValue = td.textContent || td.innerText;
       if (txtValue.toUpperCase().indexOf(filter) > -1) {

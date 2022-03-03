@@ -39,10 +39,12 @@ const fixedInfo = document.getElementById('fixedInfo');
 
 
 function precheck() {
-   if (prefix.value.length>4 || prefix.value.length<2) {
+   if (prefix.value.length > 4 || prefix.value.length < 2) {
        alert('Prefix is limited for 2-3 letters');
        return;
-   }
+   } else if (prefix.value.length == 2) {
+        prefix.value = prefix.value + "0"
+   };
     fixedInfo.innerHTML = 'Account:' + account.value + "</br>" + 'ASN:' + asn + "</br>" + 'Pending Date: ' + pending_date;
     const desscription = document.querySelector('#new_des').value;
     const length = document.querySelector('#new_len').value;

@@ -27,12 +27,13 @@
                     </li>
 
                     <li>
-                        <a href="/admin_move" uk-icon="icon: move">Client Request</a>
+                        <a href="/admin_move" uk-icon="icon: comments">Client Request</a>
                     </li>
 
                     <li>
                         <a href="/admin_receiving" uk-icon="icon: pull">Receiving</a>
                     </li>
+
 {{else}}
                     <li class="uk-active">
                         <a href="/" uk-icon="icon: home">Home</a>
@@ -74,6 +75,15 @@
             <a class="uk-navbar-item uk-logo" href="#"><img src="https://dapengwh.com/wp-content/uploads/2021/03/panpan-0-1.png" style="width: 185px;" alt="logo"></a>
             <div class="uk-navbar-center-right"><div>
                 <ul class="uk-navbar-nav">
+{{#if admin}}
+                    <li>
+                        <a href="/admin_amazon">Amazon<span class="uk-icon uk-icon-image" style="background-image: url(img/Amazon_icon.svg);"></span></a>
+                    </li>
+
+                    <li>
+                        <a href="/admin_return" uk-icon="icon: refresh" >Return</a>
+                    </li>
+{{/if}}
                     <li><a class="logout" uk-icon="icon: sign-out">Log Out</a></li>
                 </ul>
             </div></div>
