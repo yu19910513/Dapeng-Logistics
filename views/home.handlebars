@@ -6,7 +6,7 @@
         <div class="uk-navbar-right uk-child-width-expand@s">
             <div class="uk-navbar-item">
             <div class="uk-grid-small uk-child-width-auto uk-grid">
-                <label><input id="radio" class="uk-radio" type="radio" value='1' name="radio2" onclick="status_trigger(1)" checked>All</label>
+                <label><input id="radio" class="uk-radio" type="radio" value='1' name="radio2" onclick="status_trigger(1)">All</label>
                 <label><input id="radio" class="uk-radio" type="radio" value='2' name="radio2" onclick="status_trigger(2)">Pending</label>
                 <label><input id="radio" class="uk-radio" type="radio" value='3' name="radio2" onclick="status_trigger(3)">Received</label>
                 <label><input id="radio" class="uk-radio" type="radio" value='4' name="radio2" onclick="status_trigger(4)">Requested</label>
@@ -14,7 +14,7 @@
             </div>
             </div>
             <div class="uk-navbar-item">
-            <button type="button" class="btn btn-primary" onclick="status_trigger(6)">
+            <button type="button" id='inventory_btn' class="btn btn-primary" onclick="status_trigger(6)">
                 Inventory<span class="badge badge-light" id="numberOfInventory"></span>
                         <span class="sr-only">Items</span>
             </button>

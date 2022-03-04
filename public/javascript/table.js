@@ -17,27 +17,27 @@ for (i = 1; i < (rows.length + 1); i++){
 };
 
 
-// function show_all() {
-//   var table, tr, td, i, txtValue, a, b, c, d;
-//   a = "received".toUpperCase();
-//   b = "requested".toUpperCase();
-//   c = "pending".toUpperCase();
-//   d = "shipped".toUpperCase();
-//   table = document.getElementById("myTable");
-//   tr = table.getElementsByTagName("tr");
+function show_all() {
+  var table, tr, td, i, txtValue, a, b, c, d;
+  a = "received".toUpperCase();
+  b = "requested".toUpperCase();
+  c = "pending".toUpperCase();
+  d = "shipped".toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
 
-//   for (i = 0; i < tr.length; i++) {
-//     td = tr[i].getElementsByTagName("td")[10];
-//     if (td) {
-//       txtValue = td.textContent || td.innerText;
-//       if (txtValue.toUpperCase().indexOf(a) > -1 || txtValue.toUpperCase().indexOf(b) > -1 || txtValue.toUpperCase().indexOf(c) > -1 || txtValue.toUpperCase().indexOf(d) > -1) {
-//         tr[i].style.display = "";
-//       } else {
-//         tr[i].style.display = "none";
-//       }
-//     }
-//   }
-// };
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[10];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(a) > -1 || txtValue.toUpperCase().indexOf(b) > -1 || txtValue.toUpperCase().indexOf(c) > -1 || txtValue.toUpperCase().indexOf(d) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+};
 
 function GetSelected() {
   var confirmationArr = [];
@@ -168,8 +168,7 @@ function status_trigger(n) {
     const requested = 'Requested';
     filter_status_i(received, requested)
   } else {
-    location.reload();
-    // show_all();
+    show_all();
   }
 };
 
