@@ -195,9 +195,9 @@ function boxInsertExistedAccount() {
         arr.push(orderdata.box_number);
         loadingBox(orderdata)
     };
-    barcode(arr);
     alert('Orders Placed!');
-    document.location.replace('/');
+    barcode(arr);
+    // document.location.replace('/');
 };
 
 function boxInsertNewAccount() {
@@ -220,9 +220,9 @@ function boxInsertNewAccount() {
         new_account_arr.push(newBox.box_number);
         loadingBox(newBox)
     }
-    barcode(new_account_arr);
     alert('Orders Placed!');
-    document.location.replace('/');
+    barcode(new_account_arr);
+    // document.location.replace('/');
 };
 
 function exportData() {
@@ -305,32 +305,37 @@ async function loadingBatch1(data) {
  ///////////////////barcode+pdf/////////////////
 
 function barcode(arr) {
-    var img_arr = [];
-    var txt_arr = [];
+    const bar = document.getElementsByClassName('barcode');
+    console.log(arr);
     for (let i = 0; i < arr.length; i++) {
     var url = `http://bwipjs-api.metafloor.com/?bcid=code128&text=${arr[i]}`;
     var txt = arr[i];
-    img_arr.push(url)
-    txt_arr.push(txt)
+    var img = document.createElement('img');
+    img.src = url
+    var header = document.createElement('li')
+    img.setAttribute("class", 'uk-card uk-card-default uk-card-body')
+    header.innerHTML = txt;
+    bar[0].appendChild(header);
+    bar[0].appendChild(img);
     };
-    console.log(txt_arr);
-    savePdf(img_arr, txt_arr)
 }
 
-
-
-function generatePdf(imageUrls, txts) {
-  const doc = new jsPDF();
-  for (let i = 0; i < imageUrls.length; i++) {
-      doc.addImage(imageUrls[i], "JPEG", 5, 5, 0, 0);
-      doc.addPage();
-  };
-  return doc;
+function done() {
+    window.location.replace('/');
 }
 
+// function generatePdf(imageUrls, txts) {
+//   const doc = new jsPDF();
+//   for (let i = 0; i < imageUrls.length; i++) {
+//       doc.addImage(imageUrls[i], "JPEG", 5, 5, 0, 0);
+//       doc.addPage();
+//   };
+//   return doc;
+// }
 
-async function savePdf(arr) {
-  const multiPng = await generatePdf(arr);
-  const dataURLString = multiPng.output("dataurlstring", "shipping_barcode.pdf");
-  multiPng.output("save", "shipping_barcode.pdf");
-}
+
+// async function savePdf(arr) {
+//   const multiPng = await generatePdf(arr);
+//   const dataURLString = multiPng.output("dataurlstring", "shipping_barcode.pdf");
+//   multiPng.output("save", "shipping_barcode.pdf");
+// }

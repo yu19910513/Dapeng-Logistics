@@ -84,14 +84,30 @@
                 </div>
 
                 <div class="uk-modal-footer uk-text-right">
-                    <button class="uk-button uk-button-default uk-modal-close" onclick="reset()">Cancel</button>
-                    <button class="uk-button uk-button-primary" type="button" id="export-btn" onclick="exportData()" >Export Data</button>
+                    <button class="btn btn-secondary mt-2 uk-modal-close" onclick="reset()">Cancel</button>
+
+                    <a class="btn btn-primary mt-2 text-white" id="export-btn" onclick="exportData()" href="#modal-full" uk-toggle >Export Data</a>
+                    <div id="modal-full" class="uk-modal-full" uk-modal>
+                        <div class="uk-modal-dialog">
+                            <button class="uk-modal-close-full uk-close-large" type="button" uk-close></button>
+                            <div class="uk-flex uk-flex-center">
+                                        <div class="uk-padding-small">
+                                            <div class="barcode">
+
+                                            </div>
+                                        </div>
+                                                <div class="uk-modal-footer uk-text-right">
+                                    <button class="uk-button uk-button-default uk-modal-close" onclick="done()">Done</button>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 </div>
                 </div>
               </form>
       </div>
       </div>
-
 <script src="javascript/create.js" defer></script>
 <script src="javascript/home.js"></script>
