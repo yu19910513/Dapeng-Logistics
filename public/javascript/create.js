@@ -1,4 +1,4 @@
-
+const { jsPDF } = window.jspdf;
 const today = new Date();
 const pending_date = today.toLocaleDateString("en-US");
 const asn = "ASN"+String(new Date().valueOf()).substring(3, 13);
@@ -192,14 +192,16 @@ function boxInsertExistedAccount() {
             width: parseInt(dataTable.rows[i].cells[8].innerHTML),
             height: parseInt(dataTable.rows[i].cells[9].innerHTML)
         };
-        arr.push(orderdata);
+        arr.push(orderdata.box_number);
         loadingBox(orderdata)
     };
+    barcode(arr);
     alert('Orders Placed!');
     document.location.replace('/');
 };
 
 function boxInsertNewAccount() {
+    var new_account_arr = [];
     var dataTable = document.getElementById( "ordertable" );
     for ( var i = 1; i < dataTable.rows.length; i++ ) {
        const newBox = {
@@ -215,8 +217,10 @@ function boxInsertNewAccount() {
             width: parseInt(dataTable.rows[i].cells[8].innerHTML),
             height: parseInt(dataTable.rows[i].cells[9].innerHTML)
         };
+        new_account_arr.push(newBox.box_number);
         loadingBox(newBox)
     }
+    barcode(new_account_arr);
     alert('Orders Placed!');
     document.location.replace('/');
 };
@@ -292,3 +296,41 @@ async function loadingBatch1(data) {
     }
 
  }
+
+
+
+
+
+
+ ///////////////////barcode+pdf/////////////////
+
+function barcode(arr) {
+    var img_arr = [];
+    var txt_arr = [];
+    for (let i = 0; i < arr.length; i++) {
+    var url = `http://bwipjs-api.metafloor.com/?bcid=code128&text=${arr[i]}`;
+    var txt = arr[i];
+    img_arr.push(url)
+    txt_arr.push(txt)
+    };
+    console.log(txt_arr);
+    savePdf(img_arr, txt_arr)
+}
+
+
+
+function generatePdf(imageUrls, txts) {
+  const doc = new jsPDF();
+  for (let i = 0; i < imageUrls.length; i++) {
+      doc.addImage(imageUrls[i], "JPEG", 5, 5, 0, 0);
+      doc.addPage();
+  };
+  return doc;
+}
+
+
+async function savePdf(arr) {
+  const multiPng = await generatePdf(arr);
+  const dataURLString = multiPng.output("dataurlstring", "shipping_barcode.pdf");
+  multiPng.output("save", "shipping_barcode.pdf");
+}
