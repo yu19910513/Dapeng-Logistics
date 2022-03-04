@@ -48,4 +48,4 @@ function number_item () {
     numberOfItem.innerHTML = arr.length
 
   }
-  setInterval (number_item(), 1000)
+setInterval (number_item(), 1000)

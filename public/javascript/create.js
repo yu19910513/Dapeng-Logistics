@@ -1,3 +1,4 @@
+
 const today = new Date();
 const pending_date = today.toLocaleDateString("en-US");
 const asn = "ASN"+String(new Date().valueOf()).substring(3, 13);
@@ -174,6 +175,7 @@ function findAccountId() {
 };
 
 function boxInsertExistedAccount() {
+    var arr = [];
     console.log(batch_map.get(asn));
     var dataTable = document.getElementById( "ordertable" );
     for ( var i = 1; i < dataTable.rows.length; i++ ) {
@@ -190,8 +192,9 @@ function boxInsertExistedAccount() {
             width: parseInt(dataTable.rows[i].cells[8].innerHTML),
             height: parseInt(dataTable.rows[i].cells[9].innerHTML)
         };
+        arr.push(orderdata);
         loadingBox(orderdata)
-    }
+    };
     alert('Orders Placed!');
     document.location.replace('/');
 };
