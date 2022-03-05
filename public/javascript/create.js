@@ -175,7 +175,7 @@ function findAccountId() {
 };
 
 function boxInsertExistedAccount() {
-    var arr = [];
+    // var arr = [];
     console.log(batch_map.get(asn));
     var dataTable = document.getElementById( "ordertable" );
     for ( var i = 1; i < dataTable.rows.length; i++ ) {
@@ -192,16 +192,16 @@ function boxInsertExistedAccount() {
             width: parseInt(dataTable.rows[i].cells[8].innerHTML),
             height: parseInt(dataTable.rows[i].cells[9].innerHTML)
         };
-        arr.push(orderdata.box_number);
+        // arr.push(orderdata.box_number);
         loadingBox(orderdata)
     };
     alert('Orders Placed!');
     // barcode(arr);
-    window.location.replace('/shipping_barcode');
+    window.location.replace(`/batch/${batch_map.get(asn)}`);
 };
 
 function boxInsertNewAccount() {
-    var new_account_arr = [];
+    // var new_account_arr = [];
     var dataTable = document.getElementById( "ordertable" );
     for ( var i = 1; i < dataTable.rows.length; i++ ) {
        const newBox = {
@@ -217,12 +217,12 @@ function boxInsertNewAccount() {
             width: parseInt(dataTable.rows[i].cells[8].innerHTML),
             height: parseInt(dataTable.rows[i].cells[9].innerHTML)
         };
-        new_account_arr.push(newBox.box_number);
+        // new_account_arr.push(newBox.box_number);
         loadingBox(newBox)
     }
     alert('Orders Placed!');
     // barcode(new_account_arr);
-    document.location.replace('/');
+    window.location.replace(`/batch/${batch_map.get(asn)}`)
 };
 
 function exportData() {
@@ -304,21 +304,21 @@ async function loadingBatch1(data) {
 
  ///////////////////barcode+pdf/////////////////
 
-function barcode(arr) {
-    const bar = document.getElementsByClassName('barcode');
-    console.log(arr);
-    for (let i = 0; i < arr.length; i++) {
-    var url = `http://bwipjs-api.metafloor.com/?bcid=code128&text=${arr[i]}`;
-    var txt = arr[i];
-    var img = document.createElement('img');
-    img.src = url
-    var header = document.createElement('li')
-    img.setAttribute("class", 'uk-card uk-card-default uk-card-body')
-    header.innerHTML = txt;
-    bar[0].appendChild(header);
-    bar[0].appendChild(img);
-    };
-}
+// function barcode(arr) {
+//     const bar = document.getElementsByClassName('barcode');
+//     console.log(arr);
+//     for (let i = 0; i < arr.length; i++) {
+//     var url = `http://bwipjs-api.metafloor.com/?bcid=code128&text=${arr[i]}`;
+//     var txt = arr[i];
+//     var img = document.createElement('img');
+//     img.src = url
+//     var header = document.createElement('li')
+//     img.setAttribute("class", 'uk-card uk-card-default uk-card-body')
+//     header.innerHTML = txt;
+//     bar[0].appendChild(header);
+//     bar[0].appendChild(img);
+//     };
+// }
 
 // function done() {
 //     window.location.replace('/');

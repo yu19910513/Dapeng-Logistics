@@ -1,7 +1,7 @@
    <tr>
       <td>{{user.name}}</td>
       <td>{{account.name}}</td>
-      <td>{{box_number}}</td>
+      <td><a href="http://bwipjs-api.metafloor.com/?bcid=code128&text={{box_number}}">{{box_number}}</a></td>
       <td>{{description}}</td>
       <td>{{order}}</td>
       <td>{{batch.total_box}}</td>
@@ -11,7 +11,7 @@
       {{#if shipped_date}}
          <td class="dropdown">{{shipped_date}}
          <div class="dropdown-content">
-            <div href="#"><a href="http://bwipjs-api.metafloor.com/?bcid=code128&text={{box_number}}">pending: {{batch.pending_date}}</a></div>
+            <div href="#"><a href="/admin/batch/{{batch_id}}">pending: {{batch.pending_date}}</a></div>
             <div href="#">received: {{received_date}}</div>
             <div href="#">requested: {{requested_date}}</div>
             <div href="#">shipped: {{shipped_date}}</div>
@@ -20,7 +20,7 @@
             {{#if requested_date}}
                <td class="dropdown">{{requested_date}}
                <div class="dropdown-content">
-                 <div href="#"><a href="http://bwipjs-api.metafloor.com/?bcid=code128&text={{box_number}}">pending: {{batch.pending_date}}</a></div>
+                 <div href="#"><a href="/admin/batch/{{batch_id}}">pending: {{batch.pending_date}}</a></div>
                  <div href="#">received: {{received_date}}</div>
                  <div href="#">requested: {{requested_date}}</div>
                  <div href="#">shipped: {{shipped_date}}</div>
@@ -29,7 +29,7 @@
                   {{#if received_date}}
                      <td class="dropdown">{{received_date}}
                      <div class="dropdown-content">
-                       <div href="#"><a href="http://bwipjs-api.metafloor.com/?bcid=code128&text={{box_number}}">pending: {{batch.pending_date}}</a></div>
+                       <div href="#"><a href="/admin/batch/{{batch_id}}">pending: {{batch.pending_date}}</a></div>
                        <div href="#">received: {{received_date}}</div>
                        <div href="#">requested: {{requested_date}}</div>
                        <div href="#">shipped: {{shipped_date}}</div>
@@ -37,7 +37,7 @@
                   {{else}}
                      <td class="dropdown">{{batch.pending_date}}
                      <div class="dropdown-content">
-                       <div href="#"><a href="http://bwipjs-api.metafloor.com/?bcid=code128&text={{box_number}}">pending: {{batch.pending_date}}</a></div>
+                       <div href="#"><a href="/admin/batch/{{batch_id}}">pending: {{batch.pending_date}}</a></div>
                        <div href="#">received: {{received_date}}</div>
                        <div href="#">requested: {{requested_date}}</div>
                        <div href="#">shipped: {{shipped_date}}</div>

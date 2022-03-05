@@ -97,7 +97,6 @@ router.post('/login', (req, res) => {
       req.session.name = userDB.name;
       req.session.loggedIn = true;
       req.session.admin = userDB.admin;
-      req.session.batch_id = null;
 
       res.json({ user: userDB, message: 'You are now logged in!' });
     });

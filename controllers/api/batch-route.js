@@ -12,9 +12,7 @@ router.post('/', withAuth, (req, res) => {
       total_box: req.body.total_box
     })
       .then(dbBatchData => {
-        req.session.save(() => {
-          req.session.batch_id = dbBatchData.id;
-          res.json(dbBatchData)})
+          res.json(dbBatchData)
         })
       .catch(err => {
         console.log(err);
@@ -33,9 +31,7 @@ router.post('/new', withAuth, (req, res) => {
     total_box: req.body.total_box
   })
   .then(dbBatchData => {
-    req.session.save(() => {
-      req.session.batch_id = dbBatchData.id;
-      res.json(dbBatchData)})
+      res.json(dbBatchData)
     })
     .catch(err => {
       console.log(err);
