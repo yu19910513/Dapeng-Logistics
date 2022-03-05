@@ -196,8 +196,8 @@ function boxInsertExistedAccount() {
         loadingBox(orderdata)
     };
     alert('Orders Placed!');
-    barcode(arr);
-    // document.location.replace('/');
+    // barcode(arr);
+    window.location.replace('/shipping_barcode');
 };
 
 function boxInsertNewAccount() {
@@ -221,8 +221,8 @@ function boxInsertNewAccount() {
         loadingBox(newBox)
     }
     alert('Orders Placed!');
-    barcode(new_account_arr);
-    // document.location.replace('/');
+    // barcode(new_account_arr);
+    document.location.replace('/');
 };
 
 function exportData() {
@@ -320,9 +320,9 @@ function barcode(arr) {
     };
 }
 
-function done() {
-    window.location.replace('/');
-}
+// function done() {
+//     window.location.replace('/');
+// }
 
 // function generatePdf(imageUrls, txts) {
 //   const doc = new jsPDF();

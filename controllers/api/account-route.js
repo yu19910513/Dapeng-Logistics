@@ -2,6 +2,7 @@ const router = require('express').Router();
 const {User, Account, Batch, Box} = require('../../models');
 const {withAuth, adminAuth} = require('../../utils/auth');
 
+//create new account
 router.post('/', withAuth, (req, res) => {
     Account.create({
         user_id: req.session.user_id,

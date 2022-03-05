@@ -3,7 +3,7 @@ const sequelize = require('../config/connection');
 const {User, Account, Batch, Box} = require('../models');
 const {withAuth, adminAuth} = require('../utils/auth');
 
-
+//admin page
 router.get('/', withAuth, async (req, res) => {
   try {
     const boxData = await Box.findAll({

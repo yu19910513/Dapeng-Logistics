@@ -2,6 +2,7 @@ const router = require('express').Router();
 const {User, Account, Batch, Box} = require('../../models');
 const {withAuth, adminAuth} = require('../../utils/auth');
 
+//create new batch under the existed account
 router.post('/', withAuth, (req, res) => {
     Batch.create({
       user_id: req.session.user_id,
@@ -10,13 +11,19 @@ router.post('/', withAuth, (req, res) => {
       pending_date: req.body.pending_date,
       total_box: req.body.total_box
     })
-      .then(dbBatchData => res.json(dbBatchData))
+      .then(dbBatchData => {
+        req.session.save(() => {
+          req.session.batch_id = dbBatchData.id;
+          res.json(dbBatchData)})
+        })
       .catch(err => {
         console.log(err);
         res.status(500).json(err);
+
       });
 });
 
+//create new batch under newly created account
 router.post('/new', withAuth, (req, res) => {
   Batch.create({
     user_id: req.session.user_id,
@@ -25,7 +32,11 @@ router.post('/new', withAuth, (req, res) => {
     pending_date: req.body.pending_date,
     total_box: req.body.total_box
   })
-    .then(dbBatchData => res.json(dbBatchData))
+  .then(dbBatchData => {
+    req.session.save(() => {
+      req.session.batch_id = dbBatchData.id;
+      res.json(dbBatchData)})
+    })
     .catch(err => {
       console.log(err);
       res.status(500).json(err);

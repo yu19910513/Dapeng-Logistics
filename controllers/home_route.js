@@ -1,8 +1,10 @@
 const router = require('express').Router();
+const { route } = require('.');
 const sequelize = require('../config/connection');
 const {User, Account, Batch, Box} = require('../models');
 const {withAuth, adminAuth} = require('../utils/auth');
 
+//client page
 router.get('/', withAuth, async (req, res) => {
     try {
       const boxData = await Box.findAll({
@@ -64,6 +66,7 @@ router.get('/', withAuth, async (req, res) => {
 
 });
 
+//client request page
 router.get('/request', withAuth, async (req, res) => {
   try {
     const boxData = await Box.findAll({
@@ -117,7 +120,7 @@ router.get('/request', withAuth, async (req, res) => {
   }
 });
 
-
+//log in page
 router.get('/login', (req, res) => {
   if (req.session.loggedIn) {
     res.redirect('/');
@@ -126,10 +129,12 @@ router.get('/login', (req, res) => {
   res.render('login');
 });
 
+//client new order page
 router.get('/neworder/', withAuth, (req, res) => {
     res.render('neworder', { loggedIn: true })
 });
 
+//user signup page
 router.get('/signup/', (req, res) => {
     if (req.session.loggedIn) {
       res.redirect('/');
@@ -138,6 +143,7 @@ router.get('/signup/', (req, res) => {
     res.render('signup');
 });
 
+//admin request-handling page
 router.get('/admin_move', withAuth, async (req, res) => {
     try {
       const boxData = await Box.findAll({
@@ -200,6 +206,7 @@ router.get('/admin_move', withAuth, async (req, res) => {
 
 });
 
+//admin receving page
 router.get('/admin_receiving', withAuth, async (req, res) => {
   try {
     const boxData = await Box.findAll({
@@ -262,5 +269,63 @@ router.get('/admin_receiving', withAuth, async (req, res) => {
 
 });
 
+//client get shipping barcode page after placing an order
+router.get('/shipping_barcode', withAuth, async (req, res) => {
+  try {
+    const boxData = await Box.findAll({
+      where: {
+        batch_id: req.session.batch_id
+      },
+      attributes: [
+        'id',
+        'box_number',
+        'description',
+        'cost',
+        'received_date',
+        'requested_date',
+        'shipped_date',
+        'order',
+        'qty_per_box',
+        'length',
+        'width',
+        'height',
+        'weight',
+        'volume',
+        'status',
+        'location',
+        'sku',
+        'file',
+        'file_2',
+      ],
+      include: [
+        {
+          model: Batch,
+          attributes: [
+            'asn',
+            'pending_date',
+            'total_box'
+          ]
+        },
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        }
+      ]
+    });
+    const boxes = boxData.map(box => box.get({ plain: true }));
+    res.render('shipping_label', {
+      boxes,
+      loggedIn: true,
+      admin: req.session.admin,
+      name: req.session.name
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+
+});
 
   module.exports = router

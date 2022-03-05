@@ -2,6 +2,7 @@ const router = require('express').Router();
 const {User, Account, Batch, Box} = require('../../models');
 const {withAuth, adminAuth} = require('../../utils/auth');
 
+//get account info and send back to in-browawer js
 router.get('/account', withAuth, async (req, res) => {
   try {
   const accountDB = await Account.findAll({
@@ -22,6 +23,7 @@ router.get('/account', withAuth, async (req, res) => {
   }
 });
 
+//get bactch info and send back to in-browawer js
 router.get('/batch', withAuth, async (req, res) => {
   try {
   const batchDB = await Batch.findAll({
@@ -44,6 +46,7 @@ router.get('/batch', withAuth, async (req, res) => {
   }
 });
 
+//create user info
 router.post('/', (req, res) => {
   try {
     User.create({
@@ -94,6 +97,7 @@ router.post('/login', (req, res) => {
       req.session.name = userDB.name;
       req.session.loggedIn = true;
       req.session.admin = userDB.admin;
+      req.session.batch_id = null;
 
       res.json({ user: userDB, message: 'You are now logged in!' });
     });

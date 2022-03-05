@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const { route } = require('.');
 const {User, Account, Batch, Box} = require('../../models');
 const {withAuth, adminAuth} = require('../../utils/auth');
 // const fs = require('fs');
@@ -25,7 +26,7 @@ const {withAuth, adminAuth} = require('../../utils/auth');
 // };
 
 
-
+//create new boxes
 router.post('/', withAuth, (req, res) => {
   Box.create({
     box_number: req.body.box_number,
@@ -48,6 +49,7 @@ router.post('/', withAuth, (req, res) => {
       });
 });
 
+//update status from pending to receiving
 router.put('/status_admin_receiving', withAuth, (req, res) => {
   Box.update({
       status: req.body.status,
@@ -71,6 +73,7 @@ router.put('/status_admin_receiving', withAuth, (req, res) => {
     });
 });
 
+//update status from requested to shipped
 router.put('/status_admin_shipping', withAuth, (req, res) => {
   Box.update({
       status: req.body.status,
@@ -94,6 +97,7 @@ router.put('/status_admin_shipping', withAuth, (req, res) => {
     });
 });
 
+//update status from received to requested
 router.put('/status_client', withAuth, (req, res) => {
   Box.update({
       status: req.body.status,
