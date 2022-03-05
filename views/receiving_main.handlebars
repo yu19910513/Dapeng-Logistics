@@ -1,0 +1,14 @@
+
+{{#if admin}}
+<p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
+<div class="uk-flex uk-flex-center@m uk-flex-right@l uk-margin-small-right">
+<a href="/admin_receiving" class="uk-button-small uk-button-default">Manual Receiving</a>
+</div>
+
+<div  class="uk-text-center">
+<h1>*** auto/scan receiving will be here soon ***</h1>
+<p>Jilbear, manual receving function is on the upper-right corner!<br> You may test it out as much as you would like; the auto/scan receiving will heavily depend on the root code of manual receving</p>
+</div>
+{{else}}
+<script src="javascript/client_redirect.js"></script>
+{{/if}}
