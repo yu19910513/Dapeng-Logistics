@@ -1,7 +1,17 @@
     <div>
-        <div class="uk-card uk-card-body uk-align-left uk-card-small uk-margin-large-left">
-            <p class="uk-text-center"><b>{{order}}</b> of {{batch.total_box}} | Item Qty: {{qty_per_box}}</p>
-            <h3 class="uk-card-title uk-text-center">{{box_number}}</h3>
+        <div class="uk-card uk-card-body uk-align-left uk-card-small uk-margin-large-left text-center">
+            <h3>{{description}}</h3>
+            <p>ACCT: {{account.name}}</p>
+            <h4>SKU: {{sku}}</h4>
+            <p>{{length}}*{{height}}*{{weight}}   {{weight}}KG   {{qty_per_box}}PCS</p>
+            <h1 class="uk-text-center"><b>{{order}}/{{batch.total_box}}</b></h1>
             <img class="uk-card-body" src="http://bwipjs-api.metafloor.com/?bcid=code128&text={{box_number}}">
+              <h3 class="uk-card-title uk-text-center">{{box_number}}</h3>
             </div>
     </div>
+
+
+
+
+
+{{!-- https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example --}}
