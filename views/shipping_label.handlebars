@@ -15,6 +15,14 @@
 <h3 class="text-center">NO ORDER WAS FOUND!</h3>
 {{/each}}
 
+<a id="saveAsPdfBtn" href="https://www.sejda.com/html-to-pdf">Save as PDF</a>
+<script>
+document.getElementById('saveAsPdfBtn').addEventListener('click', function(e){
+  var pageUrl = encodeURIComponent(window.location.href);
+  window.open('https://www.sejda.com/html-to-pdf?save-link=' + pageUrl);
+  e.preventDefault();
+});
+</script>
 <script>
     function done() {
         window.location.replace('/')
