@@ -21,3 +21,9 @@
         window.location.replace('/')
     }
 </script>
+
+{{#if admin}}
+<script src="javascript/admin_hom.js"></script>
+{{else}}
+<script src="javascript/home.js"></script>
+{{/if}}
