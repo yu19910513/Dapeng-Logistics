@@ -1,16 +1,19 @@
-    <div>
-        <div class="uk-card uk-card-body uk-align-left uk-card-small uk-margin-large-left text-center">
-            <h3>{{description}}</h3>
-            <p>ACCT: {{account.name}}</p>
-            <h4>SKU: {{sku}}</h4>
-            <p>{{length}}*{{height}}*{{weight}}   {{weight}}KG   {{qty_per_box}}PCS</p>
-            <h1 class="uk-text-center"><b>{{order}}/{{batch.total_box}}</b></h1>
-            <img class="uk-card-body" src="http://bwipjs-api.metafloor.com/?bcid=code128&text={{box_number}}">
-              <h3 class="uk-card-title uk-text-center">{{box_number}}</h3>
-            </div>
+<div class="card border-dark mb-4 text-center" style="width: 4in; height: 4in">
+    <div class="card-body">
+            <b>{{description}}</b>
+            <p>{{account.name}}</p>
+            <h5 class="card-text">{{sku}}</h5>
+            {{length}} x {{height}} x {{weight}}, {{weight}}KG, {{qty_per_box}}PCS
+            <h1 class="card-text" style="font-size:250%"><b><big>{{order}}/{{batch.total_box}}</big></b></h1>
     </div>
 
+    <div class="col-4 align-self-center">
+        made in China
+        <img class="rounded" src="http://bwipjs-api.metafloor.com/?bcid=code128&text={{box_number}}" alt="Card image cap" >
+    </div>
 
+    <h1 class="card-text" style="font-size:280%"><b>{{box_number}}</b></h1>
+</div>
 
 
 
