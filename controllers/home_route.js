@@ -333,7 +333,7 @@ router.get('/admin_receiving_main', withAuth, async (req, res) => {
 });
 
 //barcode generation per batch id
-router.get('/batch/:id', withAuth, async (req, res) => {
+router.get('/batch/:id', async (req, res) => {
   try {
     const boxData = await Box.findAll({
       where: {
@@ -392,6 +392,65 @@ router.get('/batch/:id', withAuth, async (req, res) => {
     res.status(500).json(err);
   }
   })
+// router.get('/batch/:id', withAuth, async (req, res) => {
+//   try {
+//     const boxData = await Box.findAll({
+//       where: {
+//         batch_id: req.params.id,
+//         user_id: req.session.user_id
+//       },
+//         attributes: [
+//       'id',
+//       'box_number',
+//       'description',
+//       'cost',
+//       'received_date',
+//       'requested_date',
+//       'shipped_date',
+//       'order',
+//       'qty_per_box',
+//       'length',
+//       'width',
+//       'height',
+//       'weight',
+//       'volume',
+//       'status',
+//       'location',
+//       'sku',
+//       'file',
+//       'file_2',
+//         ],
+//           include: [
+//         {
+//         model: Batch,
+//         attributes:
+//         [
+//           'asn',
+//           'pending_date',
+//           'total_box'
+//           ]},
+//         {
+//           model: Account,
+//           attributes: [
+//             'name'
+//           ]
+//         }
+//           ]
+//     })
+//     const boxes = boxData.map(box => box.get({ plain: true }));
+//     res.render('shipping_label', {
+//       boxes,
+//       loggedIn: true,
+//       admin: req.session.admin,
+//       name: req.session.name,
+//       account: boxes[0].account.name,
+//       date: boxes[0].batch.pending_date
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json(err);
+//   }
+//   })
 //client get shipping barcode page after placing an order
 // router.get('/shipping_barcode', withAuth, async (req, res) => {
 //   try {
