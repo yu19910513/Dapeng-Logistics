@@ -6,11 +6,11 @@
       <td>{{batch.total_box}}</td>
       <td>{{qty_per_box}}</td>
       <td>{{sku}}</td>
-      <td><a href="/batch/{{batch_id}}" uk-icon="print"></a></td>
+      <td>{{batch.asn}}<a href="/batch/{{batch_id}}" uk-icon="print"></a></td>
       {{#if shipped_date}}
          <td class="dropdown">{{shipped_date}}
          <div class="dropdown-content">
-            <div href="#"><a href="/batch/{{batch_id}}">pending: {{batch.pending_date}}</a></div>
+            <div href="#">pending: {{batch.pending_date}}</div>
             <div href="#">received: {{received_date}}</div>
             <div href="#">requested: {{requested_date}}</div>
             <div href="#">shipped: {{shipped_date}}</div>
@@ -19,7 +19,7 @@
             {{#if requested_date}}
                <td class="dropdown">{{requested_date}}
                <div class="dropdown-content">
-                 <div href="#"><a href="/batch/{{batch_id}}">pending: {{batch.pending_date}}</a></div>
+                 <div href="#">pending: {{batch.pending_date}}</div>
                  <div href="#">received: {{received_date}}</div>
                  <div href="#">requested: {{requested_date}}</div>
                  <div href="#">shipped: {{shipped_date}}</div>
@@ -28,7 +28,7 @@
                   {{#if received_date}}
                      <td class="dropdown">{{received_date}}
                      <div class="dropdown-content">
-                       <div href="#"><a href="/batch/{{batch_id}}">pending: {{batch.pending_date}}</a></div>
+                       <div href="#">pending: {{batch.pending_date}}</div>
                        <div href="#">received: {{received_date}}</div>
                        <div href="#">requested: {{requested_date}}</div>
                        <div href="#">shipped: {{shipped_date}}</div>
@@ -36,7 +36,7 @@
                   {{else}}
                      <td class="dropdown">{{batch.pending_date}}
                      <div class="dropdown-content">
-                       <div href="#"><a href="/batch/{{batch_id}}">pending: {{batch.pending_date}}</a></div>
+                       <div href="#">pending: {{batch.pending_date}}</div>
                        <div href="#">received: {{received_date}}</div>
                        <div href="#">requested: {{requested_date}}</div>
                        <div href="#">shipped: {{shipped_date}}</div>
@@ -50,8 +50,5 @@
 <link rel="stylesheet" href="css/table.css">
 <script type="text/javascript">
 
-$(document).ready(function () {
-    window.print();
-});
 
 </script>
