@@ -1,15 +1,16 @@
 
 {{#if admin}}
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
+
 <div class="uk-flex uk-flex-center@m uk-flex-right@l uk-margin-small-right">
 <a href="/admin_receiving" class="uk-button-small uk-button-default">Manual Receiving</a>
 </div>
 
-<div class="input-group mb-3">
+<div class="input-group mb-3 container">
   <div class="input-group-prepend">
-    <span class="input-group-text" id="basic-addon1">R</span>
+    <span class="input-group-text" id="basic-addon1">AUTO</span>
   </div>
-  <input type="text" class="form-control" id="scanned_item" placeholder="box number scan" aria-label="Username" aria-describedby="basic-addon1" onkeyup="update()">
+  <input type="text" class="form-control" id="scanned_item" placeholder="SCAN TO RECEIVE" aria-label="Username" aria-describedby="basic-addon1" onkeyup="update()">
 </div>
 
 <div  class="uk-text-center">
@@ -20,3 +21,13 @@
 {{else}}
 <script src="javascript/client_redirect.js"></script>
 {{/if}}
+
+
+
+{{!-- <audio id="xyz" src="whatever_you_want.mp3" preload="auto"></audio>
+
+if(x > 10)
+{
+    document.getElementById('xyz').play();
+    alert("Thank you!");
+} --}}

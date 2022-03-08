@@ -1,6 +1,7 @@
 function update() {
     var scan_item = document.getElementById('scanned_item').value;
     if (scan_item.length == 12 && scan_item[0] == 'S' && scan_item[1] == 'W') {
+        localStorage.set('scanned_item', scan_item);
         auto_receive(scan_item)
     }
 }
