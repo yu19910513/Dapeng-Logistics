@@ -8,6 +8,7 @@ router.get('/', withAuth, async (req, res) => {
   try {
     const boxData = await Box.findAll({
       attributes: [
+        'tracking',
         'batch_id',
         'id',
         'box_number',
