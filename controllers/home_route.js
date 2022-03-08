@@ -397,6 +397,16 @@ router.get('/admin_receiving_main', withAuth, async (req, res) => {
 });
 
 
+router.get('/box_location', withAuth, async (req, res) => {
+  try {
+    res.render('box_location', {loggedIn: true, admin: req.session.admin, name: req.session.name });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+
+});
+
 //client get shipping barcode page after placing an order
 // router.get('/shipping_barcode', withAuth, async (req, res) => {
 //   try {
