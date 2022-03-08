@@ -54,7 +54,7 @@ function precheck() {
     const qty_per_box = document.querySelector('#new_qty').value;
     const sku = document.querySelector('#new_sku').value;
     const total_box = document.querySelector('#new_tot').value.trim();
-    const pre_digcode = parseInt(String(new Date().valueOf()).substring(6, 13));
+    const pre_digcode = parseInt(String(new Date().valueOf()).substring(0, 7));
     localStorage.setItem('total_box',total_box);
     for (let i = 1; i <= total_box; i++) {
         const digcode = pre_digcode + i;

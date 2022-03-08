@@ -5,10 +5,18 @@
 <a href="/admin_receiving" class="uk-button-small uk-button-default">Manual Receiving</a>
 </div>
 
+<div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="basic-addon1">R</span>
+  </div>
+  <input type="text" class="form-control" id="scanned_item" placeholder="box number scan" aria-label="Username" aria-describedby="basic-addon1" onkeyup="update()">
+</div>
+
 <div  class="uk-text-center">
 <h1>*** auto/scan receiving will be here soon ***</h1>
 <p>Jilbear, manual receving function is on the upper-right corner!<br> You may test it out as much as you would like; the auto/scan receiving will heavily depend on the root code of manual receving</p>
 </div>
+<script src="javascript/auto_receive.js"></script>
 {{else}}
 <script src="javascript/client_redirect.js"></script>
 {{/if}}
