@@ -96,6 +96,28 @@ router.put('/status_admin_receiving_t', withAuth, (req, res) => {
     });
 });
 
+router.put('/admin_relocating', withAuth, (req, res) => {
+  Box.update({
+      location: req.body.location_b
+    },
+      {
+      where: {
+          box_number: req.body.box_number
+      }
+    })
+    .then(dbBoxData => {
+      if (!dbBoxData[0]) {
+        res.status(404).json({ message: 'This Box does not exist!' });
+        return;
+      }
+      res.json(dbBoxData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
 //update status from requested to shipped
 router.put('/status_admin_shipping', withAuth, (req, res) => {
   Box.update({

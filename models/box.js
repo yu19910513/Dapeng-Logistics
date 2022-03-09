@@ -92,8 +92,8 @@ Box.init(
             defaultValue: 0
         },
         location: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
+            type: DataTypes.STRING,
+            allowNull: true,
             defaultValue: 1
         },
         file: {
