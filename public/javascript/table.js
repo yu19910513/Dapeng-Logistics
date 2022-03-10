@@ -1,4 +1,5 @@
 const { jsPDF } = window.jspdf;
+var loader = document.getElementById('loader');
 var table = document.getElementById("myTable");
 var rows = table.rows;
 for (i = 1; i < (rows.length + 1); i++){
@@ -49,6 +50,7 @@ function validation_request() {
   if (!file && !check_label.checked) {
     alert('The shipping label is missing! Please attach a pdf file and try again!')
   } else {
+    loader.style.display = '';
     GetSelected()
   }
 };
@@ -65,6 +67,7 @@ async function upload_file(e) {
   });
   if (response.ok) {
     console.log(response);
+    loader.style.display = 'none';
     alert('Status updated successfully!');
     document.location.reload();
   } else {

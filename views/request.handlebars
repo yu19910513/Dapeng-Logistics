@@ -1,4 +1,4 @@
-
+<link rel="stylesheet" href="css/loader.css">
 <div class="uk-overflow-auto">
 <p class="uk-text-center"><span class="lead">To send out a shipping request of item(s) from Washington warehouse, please select the box(es) from the table and confirm</span></p>
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
@@ -32,8 +32,10 @@
         </div>
     </div>
 </nav>
-
-
+<div id="loader" style="display: none;">
+    <h1 class="text-center">Uploading...</h1>
+    <div class="loader container"></div>
+</div>
          <table class="uk-table uk-table-small uk-table-divider myTable" id="myTable">
             <thead>
                 <tr>
