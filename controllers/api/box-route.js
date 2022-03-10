@@ -158,7 +158,10 @@ router.post('/upload', upload.single('file'), async (req, res) => {
   const result = await uploadFile(file);
   await unlinkFile(file.path);
   const key = result.Key;
-  console.log(result.Location);
+  // console.log(result.Location);
+  // req.session.reload(() => {
+  //   req.session.key = key
+  // });
   res.send({pdfPath: `/pdf/${key}`})
 })
 
