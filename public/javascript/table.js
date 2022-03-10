@@ -39,6 +39,40 @@ function show_all() {
   }
 };
 
+function clear_file() {
+  document.getElementById('label').value = null;
+}
+
+function validation_request() {
+  var file = document.getElementById('label').files[0];
+  var check_label = document.getElementById('label_not_required')
+  if (!file && !check_label.checked) {
+    alert('The shipping label is missing! Please attach a pdf file and try again!')
+  } else {
+    // GetSelected(file)
+    upload_file(file)
+  }
+};
+
+async function upload_file(file) {
+  let formData = new FormData();
+  formData.append('file', file)
+
+  const response = await fetch(`/api/box/upload`, {
+    method: 'POST',
+    body: formData,
+    // headers: {
+    //   'Content-Type': 'multipart/form-data'
+    // },
+  });
+  if (response.ok) {
+    console.log(response);
+    GetSelected()
+  } else {
+    alert(response.statusText);
+  }
+}
+
 function GetSelected() {
   var confirmationArr = [];
   var table = document.getElementById("myTable");
@@ -57,7 +91,12 @@ function GetSelected() {
                 confirmationArr.push(confirmation)
             }
       };
-      editStatus(confirmationArr)
+      if (confirmationArr.length) {
+        editStatus(confirmationArr)
+      } else {
+        alert('You need to select at least one box!')
+      }
+
 };
 
 async function editStatus(event) {
@@ -86,8 +125,8 @@ async function editStatus(event) {
           'Content-Type': 'application/json'
       }
     });
-  }
-  alert('Status updated successfully!')
+  };
+  alert('Status updated successfully!');
   document.location.reload();
 
 }

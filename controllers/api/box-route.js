@@ -2,28 +2,14 @@ const router = require('express').Router();
 const { route } = require('.');
 const {User, Account, Batch, Box} = require('../../models');
 const {withAuth, adminAuth} = require('../../utils/auth');
-// const fs = require('fs');
-// const AWS = require('aws-sdk');
-// const s3 = new AWS.S3({
-//   accessKeyId: process.env.AWS_ACCESS_KEY,
-//   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-// });
 
-// const uploadFile = async (file) => {
-//   fs.readFile(file, (err, data) => {
-//      if (err) throw err;
-//      const params = {
-//          Bucket: 'dql', // pass your bucket name
-//          Key: file, // file will be saved as testBucket/contacts.csv
-//          Body: JSON.stringify(data, null, 2),
-//          ACL: 'public-read'
-//      };
-//      const result = await s3.upload(params, function(s3Err, data) {
-//          if (s3Err) throw s3Err
-//          console.log(`File uploaded successfully at ${data.Location}`)
-//      });
-//   });
-// };
+const multer = require('multer');
+const upload = multer({dest: 'uploads/'});
+const { uploadFile, getFile} = require('../../utils/s3');
+const fs = require('fs');
+const util = require('util');
+const { log } = require('console');
+const unlinkFile = util.promisify(fs.unlink)
 
 
 //create new boxes
@@ -146,7 +132,8 @@ router.put('/status_admin_shipping', withAuth, (req, res) => {
 router.put('/status_client', withAuth, (req, res) => {
   Box.update({
       status: req.body.status,
-      requested_date: req.body.requested_date
+      requested_date: req.body.requested_date,
+      // file: req.session.key
     },
       {
       where: {
@@ -165,6 +152,17 @@ router.put('/status_client', withAuth, (req, res) => {
       res.status(500).json(err);
     });
 });
+
+router.post('/upload', upload.single('file'), async (req, res) => {
+  const file = req.file;
+  const result = await uploadFile(file);
+  await unlinkFile(file.path);
+  const key = result.Key;
+  console.log(result.Location);
+  res.send({pdfPath: `/pdf/${key}`})
+})
+
+
 
 
   module.exports = router;

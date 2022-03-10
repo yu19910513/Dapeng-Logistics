@@ -12,8 +12,23 @@
             </form>
         </div>
 
+
         <div class="uk-navbar-item">
-            <a id="js-modal-confirm" class="uk-button uk-button-primary uk-align-right uk-margin-small-right uk-text-bold" value="Get Selected" onclick="GetSelected()">Confirm</a>
+            <div class="container row">
+            <label class="custom-file-label" for="inputGroupFile01">Shipping Label</label>
+            <input type="file" class="custom-file-input" id="label" accept=".pdf, .doc, .docx">
+            </div>
+        </div>
+
+        <div class="uk-navbar-item">
+            <input class="form-check-input me-2" type="checkbox" value="" id="label_not_required" onclick="clear_file()"/>
+            <label class="form-check-label" for="label_not_required">No label to attach</label>
+        </div>
+
+        <div class="uk-navbar-item">
+            <a id="js-modal-confirm" class="uk-button uk-button-primary uk-align-right uk-margin-small-right uk-text-bold" value="Get Selected" onclick="validation_request()">Confirm</a>
+        </div>
+
         </div>
     </div>
 </nav>

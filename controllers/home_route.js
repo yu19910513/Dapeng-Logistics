@@ -3,6 +3,7 @@ const { route } = require('.');
 const sequelize = require('../config/connection');
 const {User, Account, Batch, Box} = require('../models');
 const {withAuth, adminAuth} = require('../utils/auth');
+const { uploadFile, getFile} = require('../utils/s3');
 
 //client page
 router.get('/', withAuth, async (req, res) => {
@@ -406,6 +407,12 @@ router.get('/box_location', withAuth, async (req, res) => {
   }
 
 });
+
+router.get('/pdf/:key', (req, res) => {
+  const key = req.params.key;
+  const readStream = getFile(key);
+  readStream.pipe(res)
+})
 
 //client get shipping barcode page after placing an order
 // router.get('/shipping_barcode', withAuth, async (req, res) => {
