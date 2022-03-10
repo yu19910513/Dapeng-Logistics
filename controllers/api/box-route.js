@@ -133,7 +133,7 @@ router.put('/status_client', withAuth, (req, res) => {
   Box.update({
       status: req.body.status,
       requested_date: req.body.requested_date,
-      // file: req.session.key
+      custom_1: req.body.custom_1
     },
       {
       where: {
@@ -155,15 +155,29 @@ router.put('/status_client', withAuth, (req, res) => {
 
 router.post('/upload', upload.single('file'), async (req, res) => {
   const file = req.file;
+  const info = req.body.custom_1
   const result = await uploadFile(file);
   await unlinkFile(file.path);
   const key = result.Key;
-  // console.log(result.Location);
-  // req.session.reload(() => {
-  //   req.session.key = key
-  // });
+  Box.update({
+      file: key
+  }, {
+   where: {
+    custom_1: info
+   }
+  })
+  .then(dbBoxData => {
+  if (!dbBoxData[0]) {
+    res.status(404).json({ message: 'This Box does not exist!' });
+    return;
+  }
   res.send({pdfPath: `/pdf/${key}`})
-})
+  })
+.catch(err => {
+  console.log(err);
+  res.status(500).json(err);
+});
+});
 
 
 

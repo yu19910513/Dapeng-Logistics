@@ -49,25 +49,24 @@ function validation_request() {
   if (!file && !check_label.checked) {
     alert('The shipping label is missing! Please attach a pdf file and try again!')
   } else {
-    // GetSelected(file)
-    upload_file(file)
+    GetSelected()
   }
 };
 
-async function upload_file(file) {
+async function upload_file(e) {
+  var file = document.getElementById('label').files[0];
   let formData = new FormData();
-  formData.append('file', file)
+  formData.append('file', file);
+  formData.append('custom_1',e)
 
   const response = await fetch(`/api/box/upload`, {
     method: 'POST',
-    body: formData,
-    // headers: {
-    //   'Content-Type': 'multipart/form-data'
-    // },
+    body: formData
   });
   if (response.ok) {
     console.log(response);
-    GetSelected()
+    alert('Status updated successfully!');
+    document.location.reload();
   } else {
     alert(response.statusText);
   }
@@ -100,6 +99,7 @@ function GetSelected() {
 };
 
 async function editStatus(event) {
+  var custom_1 = new Date().valueOf() + 1;
   for (let i = 0; i < event.length; i++) {
     const box_number = event[i].box_number
     var requested_date = new Date().toLocaleDateString("en-US");
@@ -119,15 +119,16 @@ async function editStatus(event) {
       body: JSON.stringify({
           box_number,
           status,
-          requested_date
+          requested_date,
+          custom_1
       }),
       headers: {
           'Content-Type': 'application/json'
       }
     });
   };
-  alert('Status updated successfully!');
-  document.location.reload();
+
+  upload_file(custom_1)
 
 }
 
