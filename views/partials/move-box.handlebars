@@ -12,5 +12,9 @@
                     <td>{{location}}</td>
                     <td>{{requested_date}}</td>
                     <td>{{status}}</td>
+                    {{#if file}}
                     <td><a href="/pdf/{{file}}" uk-icon="cloud-download"></a></td>
+                    {{else}}
+                    <td><span uk-icon="close"></span></td>
+                    {{/if}}
             </tr>

@@ -57,21 +57,27 @@ function validation_request() {
 
 async function upload_file(e) {
   var file = document.getElementById('label').files[0];
-  let formData = new FormData();
-  formData.append('file', file);
-  formData.append('custom_1',e)
+  if (file) {
+    let formData = new FormData();
+    formData.append('file', file);
+    formData.append('custom_1',e)
 
-  const response = await fetch(`/api/box/upload`, {
-    method: 'POST',
-    body: formData
-  });
-  if (response.ok) {
-    console.log(response);
-    loader.style.display = 'none';
-    alert('Status updated successfully!');
-    document.location.reload();
+    const response = await fetch(`/api/box/upload`, {
+      method: 'POST',
+      body: formData
+    });
+    if (response.ok) {
+      console.log(response);
+      loader.style.display = 'none';
+      alert('Status updated successfully!');
+      document.location.reload();
+    } else {
+      alert(response.statusText);
+    }
   } else {
-    alert(response.statusText);
+    loader.style.display = 'none';
+    alert('Status updated successfully! No file was attached.');
+    document.location.reload();
   }
 }
 

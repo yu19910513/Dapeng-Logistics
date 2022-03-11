@@ -413,6 +413,7 @@ router.get('/admin_move_main', withAuth, async (req, res) => {
       },
       attributes: [
         'id',
+        'custom_1',
         'box_number',
         'description',
         'cost',
@@ -460,8 +461,8 @@ router.get('/admin_move_main', withAuth, async (req, res) => {
     });
     const boxes = boxData.map(box => box.get({ plain: true }));
     const result = boxes.reduce(function (r, a) {
-      r[a.file] = r[a.file] || [];
-      r[a.file].push(a);
+      r[a.custom_1] = r[a.custom_1] || [];
+      r[a.custom_1].push(a);
       return r;
     }, Object.create(null));
     const data = Object.values(result);

@@ -1,12 +1,23 @@
 
-<div class="card col-4">
-    <h5 class="card-title">Request from {{0.user.name}}</h5>
+<div class="px-1 py-1 col-4 ">
+<div class="card bg-light">
+    <h5 class="card-title mt-3">Request from {{0.user.name}}</h5>
+    <p>Requested Date: {{0.requested_date}}</p>
  <div class="card-body">
-        <a href="/pdf/{{0.file}}" class="btn btn-secondary">pdf file</a>
-        <a href="#" class="btn btn-primary">proceed</a>
+     {{#if 0.file}}
+        <a href="/pdf/{{0.file}}" class="btn btn-success btn-sm">PDF File</a>
+        <a href="" class="btn btn-secondary btn-sm">Notes</a>
+    {{else}}
+        <a href="" class="btn btn-danger btn-sm">No File</a>
+        <a href="" class="btn btn-secondary btn-sm">Notes</a>
+    {{/if}}
 </div>
 
- <table class="uk-table uk-table-small uk-table-divider myTable" id="myTable">
+<ul uk-accordion="multiple: true">
+    <li class="uk-close">
+        <a class="uk-accordion-title" href="#"></a>
+        <div class="uk-accordion-content">
+         <table class="uk-table uk-table-small uk-table-divider myTable" id="myTable">
             <thead>
                 <tr>
                     <th>Box Number</th>
@@ -15,11 +26,16 @@
                 </tr>
             </thead>
             <tbody>
-    {{#each this as |obj|}}
-        {{> card-content obj }}
-    {{/each}}
-<tbody>
-    </table>
+                {{#each this as |obj|}}
+                    {{> card-content obj }}
+                {{/each}}
+            <tbody>
+         </table>
+         <a href="#" class="btn btn-primary btn-sm">Proceed</a>
+        </div>
+    </li>
+</ul>
 
 
+</div>
 </div>
