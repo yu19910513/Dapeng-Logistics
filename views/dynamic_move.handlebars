@@ -8,85 +8,15 @@
 <div class="container">
 <div class="row">
 
-<div class="card col-4">
-  <div class="card-body">
-        <h5 class="card-title">Request #1 from {User}</h5>
-        <p class="card-text">Box_Number | Location</p>
-  </div>
 
-   <ul class="list-group list-group-flush">
-        <li class="list-group-item"># | A2-1</li>
-        <li class="list-group-item"># | A2-1</li>
-        <li class="list-group-item"># | A2-1</li>
-  </ul>
-
-    <div class="card-body">
-        <a href="#" class="btn btn-secondary">pdf file</a>
-        <a href="#" class="btn btn-primary">proceed</a>
-    </div>
-
-</div>
-
-<div class="card col-4">
-  <div class="card-body">
-        <h5 class="card-title">Request #2 from {User}</h5>
-        <p class="card-text">Box_Number | Location</p>
-  </div>
-
-   <ul class="list-group list-group-flush">
-        <li class="list-group-item"># | A2-1</li>
-        <li class="list-group-item"># | A2-1</li>
-        <li class="list-group-item"># | A2-1</li>
-  </ul>
-
-    <div class="card-body">
-        <a href="#" class="btn btn-secondary">pdf file</a>
-        <a href="#" class="btn btn-primary">proceed</a>
-    </div>
-
-</div>
-
-<div class="card col-4">
-  <div class="card-body">
-        <h5 class="card-title">Request #3 from {User}</h5>
-        <p class="card-text">Box_Number | Location</p>
-  </div>
-
-   <ul class="list-group list-group-flush">
-        <li class="list-group-item"># | A2-1</li>
-        <li class="list-group-item"># | A2-1</li>
-        <li class="list-group-item"># | A2-1</li>
-  </ul>
-
-    <div class="card-body">
-        <a href="#" class="btn btn-secondary">pdf file</a>
-        <a href="#" class="btn btn-primary">proceed</a>
-    </div>
-
-</div>
-
-<div class="card col-4">
-  <div class="card-body">
-        <h5 class="card-title">Request #4 from {User}</h5>
-        <p class="card-text">Box_Number | Location</p>
-  </div>
-
-   <ul class="list-group list-group-flush">
-        <li class="list-group-item"># | A2-1</li>
-        <li class="list-group-item"># | A2-1</li>
-        <li class="list-group-item"># | A2-1</li>
-  </ul>
-
-    <div class="card-body">
-        <a href="#" class="btn btn-secondary">pdf file</a>
-        <a href="#" class="btn btn-primary">proceed</a>
-    </div>
-
-</div>
+  {{#each data as |box|}}
+    {{> requested-card box }}
+  {{/each}}
 
 
 </div>
 </div>
+
 
 
 <script src="javascript/admin_ship.js"></script>

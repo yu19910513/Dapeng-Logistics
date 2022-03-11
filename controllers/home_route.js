@@ -397,14 +397,82 @@ router.get('/admin_receiving_main', withAuth, async (req, res) => {
 
 });
 
-router.get('/admin_move_main', withAuth, (req, res) => {
+// router.get('/admin_move_main', withAuth, (req, res) => {
+//   try {
+//     res.render('dynamic_move', {loggedIn: true, admin: req.session.admin, name: req.session.name });
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json(err);
+//   }
+// });
+router.get('/admin_move_main', withAuth, async (req, res) => {
   try {
-    res.render('dynamic_move', {loggedIn: true, admin: req.session.admin, name: req.session.name });
+    const boxData = await Box.findAll({
+      where: {
+        status:2
+      },
+      attributes: [
+        'id',
+        'box_number',
+        'description',
+        'cost',
+        'requested_date',
+        'received_date',
+        'shipped_date',
+        'order',
+        'qty_per_box',
+        'length',
+        'width',
+        'height',
+        'weight',
+        'volume',
+        'status',
+        'location',
+        'sku',
+        'file',
+        'file_2'
+      ],
+      include: [
+        {
+          model: Batch,
+          attributes: [
+            'asn',
+            'pending_date',
+            'total_box'
+          ]
+        },
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'id',
+            'name',
+            'email',
+            'wechat'
+          ]
+        }
+      ]
+    });
+    const boxes = boxData.map(box => box.get({ plain: true }));
+    const result = boxes.reduce(function (r, a) {
+      r[a.file] = r[a.file] || [];
+      r[a.file].push(a);
+      return r;
+    }, Object.create(null));
+    const data = Object.values(result);
+    res.render('dynamic_move', { data, loggedIn: true, admin: req.session.admin, name: req.session.name });
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
   }
+
 });
+
 
 router.get('/box_location', withAuth, async (req, res) => {
   try {

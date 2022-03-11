@@ -1,0 +1,25 @@
+
+<div class="card col-4">
+    <h5 class="card-title">Request from {{0.user.name}}</h5>
+ <div class="card-body">
+        <a href="/pdf/{{0.file}}" class="btn btn-secondary">pdf file</a>
+        <a href="#" class="btn btn-primary">proceed</a>
+</div>
+
+ <table class="uk-table uk-table-small uk-table-divider myTable" id="myTable">
+            <thead>
+                <tr>
+                    <th>Box Number</th>
+                    <th>Box Order</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>
+    {{#each this as |obj|}}
+        {{> card-content obj }}
+    {{/each}}
+<tbody>
+    </table>
+
+
+</div>
