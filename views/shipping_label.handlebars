@@ -1,7 +1,10 @@
 <div class="container text-center" id="barcode_btn">
     <h2>Account: <u>{{account}}</u></h2>
     <p>Order was placed on {{date}}</p>
-    <div class="row justify-content-center"> <button type="button" class="btn btn-primary col-1" onclick="done()">Done</button></div>
+    <div class="row justify-content-center">
+        <button type="button" id="done" class="btn btn-primary col-1" onclick="done()">Done</button>
+        <button type="button" id='go_back' class="btn btn-secondary ml-2 col-2" onclick="history.back()" style="display: none;">Go Back</button>
+    </div>
     <p>(Don’t worry! You can always come back to reprint)</p>
 </div>
 
@@ -21,6 +24,8 @@
     function done() {
         window.location.replace('/')
     };
+
+
     window.onload = function() { window.print(); }
 </script>
 

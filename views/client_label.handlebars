@@ -1,0 +1,19 @@
+{{#if admin}}
+<script src="javascript/admin_redirect.js"></script>
+{{else}}
+<p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
+
+<div class="container">
+<div class="row text-center">
+
+
+  {{#each data as |box|}}
+    {{> client_pending-label box }}
+  {{/each}}
+
+
+</div>
+</div>
+
+<script src="javascript/home.js"></script>
+{{/if}}

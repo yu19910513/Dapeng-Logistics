@@ -4,32 +4,42 @@
 <div class="uk-margin">
     <nav class="uk-navbar-container" >
         <div class="uk-navbar-right uk-child-width-expand@s">
+
             <div class="uk-navbar-item">
             <div class="uk-grid-small uk-child-width-auto uk-grid">
                 <label><input id="radio" class="uk-radio" type="radio" value='1' name="radio2" onclick="status_trigger(1)">All</label>
-                <label><input id="radio" class="uk-radio" type="radio" value='2' name="radio2" onclick="status_trigger(2)">Pending/Labeling</label>
+                <label><input id="radio" class="uk-radio" type="radio" value='2' name="radio2" onclick="status_trigger(2)">Pending</label>
                 <label><input id="radio" class="uk-radio" type="radio" value='3' name="radio2" onclick="status_trigger(3)">Received</label>
                 <label><input id="radio" class="uk-radio" type="radio" value='4' name="radio2" onclick="status_trigger(4)">Requested</label>
                 <label><input  id="radio"class="uk-radio" type="radio" value='5' name="radio2" onclick="status_trigger(5)">Shipped</label>
             </div>
             </div>
+
             <div class="uk-navbar-item">
             <button type="button" id='inventory_btn' class="btn btn-primary" onclick="status_trigger(6)">
                 Inventory<span class="badge badge-light" id="numberOfInventory"></span>
                         <span class="sr-only">Items</span>
             </button>
+            <a href="/client_label" class="btn btn-success">Pending Orders</a>
             </div>
+
+            {{!-- <div class="uk-navbar-item">
+                <a href="" class="btn btn-success">Labeling</a>
+            </div> --}}
+
             <div class="uk-navbar-item">
-    <form class="uk-search uk-search-default">
-        <span uk-search-icon></span>
-        <input class="uk-search-input form-control search-input" type="search" placeholder="Search" data-table="myTable">
-    </form>
+                <form class="uk-search uk-search-default">
+                    <span uk-search-icon></span>
+                    <input class="uk-search-input form-control search-input" type="search" placeholder="Search" data-table="myTable">
+                 </form>
             </div>
+
+
         </div>
     </nav>
     </div>
 </div>
-        <table class="uk-table uk-table-small uk-table-divider myTable" id="myTable">
+        <table class="uk-table uk-table-small uk-table-divider myTable text-center" id="myTable">
             <thead>
                 <tr>
                     <th onclick="sortTable(0)">Account</th>

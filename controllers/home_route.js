@@ -466,6 +466,77 @@ router.get('/admin_move_main', withAuth, async (req, res) => {
 
 });
 
+router.get('/client_label', withAuth, async (req, res) => {
+  try {
+    const boxData = await Box.findAll({
+      where: {
+        status:0,
+        user_id: req.session.user_id,
+      },
+      attributes: [
+        'batch_id',
+        'id',
+        'custom_1',
+        'box_number',
+        'description',
+        'cost',
+        'requested_date',
+        'received_date',
+        'shipped_date',
+        'order',
+        'qty_per_box',
+        'length',
+        'width',
+        'height',
+        'weight',
+        'volume',
+        'status',
+        'location',
+        'sku',
+        'file',
+        'file_2'
+      ],
+      include: [
+        {
+          model: Batch,
+          attributes: [
+            'asn',
+            'pending_date',
+            'total_box'
+          ]
+        },
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'id',
+            'name',
+            'email',
+            'wechat'
+          ]
+        }
+      ]
+    });
+    const boxes = boxData.map(box => box.get({ plain: true }));
+    const result = boxes.reduce(function (r, a) {
+      r[a.batch_id] = r[a.batch_id] || [];
+      r[a.batch_id].push(a);
+      return r;
+    }, Object.create(null));
+    const data = Object.values(result);
+    res.render('client_label', { data, loggedIn: true, admin: req.session.admin, name: req.session.name });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+
+});
+
 router.get('/admin_pre_ship', withAuth, (req, res) => {
   try {
     res.render('pre_ship', {loggedIn: true, admin: req.session.admin, name: req.session.name });
