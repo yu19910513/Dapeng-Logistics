@@ -2,7 +2,7 @@
 <div class="uk-overflow-auto">
     <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
     <div class="uk-margin">
-    <nav class="uk-navbar-container" >
+    {{!-- <nav class="uk-navbar-container" > --}}
         <div class="uk-navbar-right uk-child-width-expand@s">
             <div class="uk-navbar-item">
             <div class="uk-grid-small uk-child-width-auto uk-grid">
@@ -14,9 +14,9 @@
             </div>
             </div>
             <div class="uk-navbar-item">
-            <button type="button" id="inventory_btn" class="btn btn-primary" onclick="status_trigger(6)">
-                Inventory<span class="badge badge-light" id="numberOfInventory"></span>
-                        <span class="sr-only">Items</span>
+            <button type="button" id="inventory_btn" class="btn text-primary btn-light btn-lg border-primary shadow-sm" onclick="status_trigger(6)">
+                Inventory: <b><span class="text-primary" id="numberOfInventory"></span></b>
+                        <span class="sr-only">items</span>
             </button>
             </div>
             <div class="uk-navbar-item">
@@ -26,8 +26,9 @@
     </form>
             </div>
         </div>
-    </nav>
+    {{!-- </nav> --}}
     </div>
+
         <table class="uk-table uk-table-small uk-table-divider myTable text-center" id="myTable">
             <thead>
                 <tr>

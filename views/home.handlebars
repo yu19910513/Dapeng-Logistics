@@ -2,7 +2,7 @@
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
 <div class="uk-margin uk-overflow-auto">
 <div class="uk-margin">
-    <nav class="uk-navbar-container" >
+    {{!-- <nav class="uk-navbar-container" > --}}
         <div class="uk-navbar-right uk-child-width-expand@s">
 
             <div class="uk-navbar-item">
@@ -16,11 +16,14 @@
             </div>
 
             <div class="uk-navbar-item">
-            <button type="button" id='inventory_btn' class="btn btn-primary" onclick="status_trigger(6)">
-                Inventory<span class="badge badge-light" id="numberOfInventory"></span>
+            <button type="button" id='inventory_btn' class="btn btn-lg btn-light border-primary text-primary shadow-sm" onclick="status_trigger(6)">
+                Inventory:
+            {{!-- <div class="dropdown-content">
+                <div class="text-dark" href="#">大鹏库存</div>
+            </div> --}}
+                <b><span class="text-primary" id="numberOfInventory"></span></b>
                         <span class="sr-only">Items</span>
             </button>
-            <a href="/client_label" class="btn btn-success">Pending Orders</a>
             </div>
 
             {{!-- <div class="uk-navbar-item">
@@ -36,9 +39,10 @@
 
 
         </div>
-    </nav>
+    {{!-- </nav> --}}
     </div>
 </div>
+
         <table class="uk-table uk-table-small uk-table-divider myTable text-center" id="myTable">
             <thead>
                 <tr>
@@ -50,8 +54,8 @@
                     <th>Qty per Box</th>
                     <th>SKU</th>
                     <th onclick="sortTable(7)">Batch Labels</th>
-                    <th onclick="sortTable(8)">Date</th>
                     <th>Tracking</th>
+                    <th onclick="sortTable(9)">Date</th>
                     <th onclick="sortTable(10)">Status</th>
                 </tr>
             </thead>
@@ -73,6 +77,7 @@
 
             </tbody>
         </table>
+
     </div>
 <script>
         (function(document) {

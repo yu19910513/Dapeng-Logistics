@@ -7,6 +7,7 @@
       <td>{{qty_per_box}}</td>
       <td>{{sku}}</td>
       <td><a href="/batch/{{batch_id}}" uk-icon="print"></a></td>
+      <td>{{tracking}}</td>
       {{#if shipped_date}}
          <td class="dropdown">{{shipped_date}}
          <div class="dropdown-content">
@@ -44,7 +45,6 @@
                   {{/if}}
             {{/if}}
       {{/if}}
-      <td>{{tracking}}</td>
       <td>{{status}}</td>
     </tr>
 <link rel="stylesheet" href="css/table.css">
