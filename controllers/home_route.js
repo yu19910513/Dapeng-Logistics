@@ -397,14 +397,6 @@ router.get('/admin_receiving_main', withAuth, async (req, res) => {
 
 });
 
-// router.get('/admin_move_main', withAuth, (req, res) => {
-//   try {
-//     res.render('dynamic_move', {loggedIn: true, admin: req.session.admin, name: req.session.name });
-//   } catch (err) {
-//     console.log(err);
-//     res.status(500).json(err);
-//   }
-// });
 router.get('/admin_move_main', withAuth, async (req, res) => {
   try {
     const boxData = await Box.findAll({
@@ -474,6 +466,14 @@ router.get('/admin_move_main', withAuth, async (req, res) => {
 
 });
 
+router.get('/admin_pre_ship', withAuth, (req, res) => {
+  try {
+    res.render('pre_ship', {loggedIn: true, admin: req.session.admin, name: req.session.name });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
 
 router.get('/box_location', withAuth, async (req, res) => {
   try {
@@ -490,65 +490,6 @@ router.get('/pdf/:key', (req, res) => {
   const readStream = getFile(key);
   readStream.pipe(res)
 })
-
-//client get shipping barcode page after placing an order
-// router.get('/shipping_barcode', withAuth, async (req, res) => {
-//   try {
-//     const boxData = await Box.findAll({
-//       where: {
-//         batch_id: req.session.batch_id
-//       },
-//       attributes: [
-//         'id',
-//         'box_number',
-//         'description',
-//         'cost',
-//         'received_date',
-//         'requested_date',
-//         'shipped_date',
-//         'order',
-//         'qty_per_box',
-//         'length',
-//         'width',
-//         'height',
-//         'weight',
-//         'volume',
-//         'status',
-//         'location',
-//         'sku',
-//         'file',
-//         'file_2',
-//       ],
-//       include: [
-//         {
-//           model: Batch,
-//           attributes: [
-//             'asn',
-//             'pending_date',
-//             'total_box'
-//           ]
-//         },
-//         {
-//           model: Account,
-//           attributes: [
-//             'name'
-//           ]
-//         }
-//       ]
-//     });
-//     const boxes = boxData.map(box => box.get({ plain: true }));
-//     res.render('shipping_label', {
-//       boxes,
-//       loggedIn: true,
-//       admin: req.session.admin,
-//       name: req.session.name
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     res.status(500).json(err);
-//   }
-
-// });
 
 
   module.exports = router

@@ -171,12 +171,11 @@ router.get('/box', withAuth, async (req, res) => {
       ]
     });
     const boxes = boxData.map(box => box.get({ plain: true }));
-    const result = boxes.reduce(function (r, a) {
+    const data = boxes.reduce(function (r, a) {
       r[a.custom_1] = r[a.custom_1] || [];
       r[a.custom_1].push(a);
       return r;
     }, Object.create(null));
-    const data = Object.values(result);
     res.json(data);
   } catch (err) {
     console.log(err);

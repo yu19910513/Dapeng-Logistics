@@ -1,7 +1,8 @@
 
-<div class="px-1 py-1 col-4 ">
-<div class="card bg-light">
+<div class="px-1 py-1 col-4 " id="requested_card">
+<div class="card bg-light shadow-sm" id="{{0.custom_1}}">
     <h5 class="card-title mt-3">Request from {{0.user.name}}</h5>
+    <h6>Acct: {{0.account.name}}</h6>
     <p>Requested Date: {{0.requested_date}}</p>
  <div class="card-body">
      {{#if 0.file}}
@@ -31,7 +32,7 @@
                 {{/each}}
             <tbody>
          </table>
-         <a href="#" class="btn btn-primary btn-sm">Proceed</a>
+         <a href="#" class="btn btn-primary btn-sm" onclick="pre_ship_scan({{0.custom_1}})">Proceed</a>
         </div>
     </li>
 </ul>

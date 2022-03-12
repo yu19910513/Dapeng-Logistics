@@ -13,7 +13,7 @@
          <div class="dropdown-content">
             <div href="#"><a href="/admin/batch/{{batch_id}}">pending: {{batch.pending_date}}</a></div>
             <div href="#">received: {{received_date}}</div>
-            <div href="#">requested: {{requested_date}}</div>
+            <div href="#"><a href="/pdf/{{file}}">requested: {{requested_date}}</a></div>
             <div href="#">shipped: {{shipped_date}}</div>
          </div></td>
       {{else}}
@@ -22,7 +22,7 @@
                <div class="dropdown-content">
                  <div href="#"><a href="/admin/batch/{{batch_id}}">pending: {{batch.pending_date}}</a></div>
                  <div href="#">received: {{received_date}}</div>
-                 <div href="#">requested: {{requested_date}}</div>
+                 <div href="#"><a href="/pdf/{{file}}">requested: {{requested_date}}</a></div>
                  <div href="#">shipped: {{shipped_date}}</div>
                </div></td>
             {{else}}
@@ -31,7 +31,7 @@
                      <div class="dropdown-content">
                        <div href="#"><a href="/admin/batch/{{batch_id}}">pending: {{batch.pending_date}}</a></div>
                        <div href="#">received: {{received_date}}</div>
-                       <div href="#">requested: {{requested_date}}</div>
+                       <div href="#"><a href="/pdf/{{file}}">requested: {{requested_date}}</a></div>
                        <div href="#">shipped: {{shipped_date}}</div>
                      </div></td>
                   {{else}}
@@ -39,7 +39,7 @@
                      <div class="dropdown-content">
                        <div href="#"><a href="/admin/batch/{{batch_id}}">pending: {{batch.pending_date}}</a></div>
                        <div href="#">received: {{received_date}}</div>
-                       <div href="#">requested: {{requested_date}}</div>
+                       <div href="#"><a href="/pdf/{{file}}">requested: {{requested_date}}</a></div>
                        <div href="#">shipped: {{shipped_date}}</div>
                      </div></td>
                   {{/if}}
