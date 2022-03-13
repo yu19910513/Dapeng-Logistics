@@ -1,10 +1,34 @@
 <link rel="stylesheet" href="css/loader.css">
 <div class="uk-overflow-auto">
-<p class="uk-text-center"><span class="lead">To send out a shipping request of item(s) from Washington warehouse, please select the box(es) from the table, attach the associated file, and confirm</span><br>(Only <b>ONE FILE</b> is allowed per request. Please <a uk-icon="git-fork" class="uk-text-primary" href="https://www.adobe.com/acrobat/online/merge-pdf.html?mv=search&sdid=DZTGZX2P&ef_id=CjwKCAiA4KaRBhBdEiwAZi1zznW31ZEbYP5_983ypcnYvEV8_QCORYXWw-WDxx4fu6Yl4Da36JjyYhoCQWgQAvD_BwE:G:s&s_kwcid=AL!3085!3!559402382069!e!!g!!how%20to%20merge%20pdf%20files!13092672132!120630851685&cmpn=mobile-search&gclid=CjwKCAiA4KaRBhBdEiwAZi1zznW31ZEbYP5_983ypcnYvEV8_QCORYXWw-WDxx4fu6Yl4Da36JjyYhoCQWgQAvD_BwE">merge</a> your files into one comprehensive pdf prior to attaching if you have more than one pdf. )</p>
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
+
+
+
+
+
+
+{{!-- notes --}}
+<div id="modal-sections" uk-modal>
+    <div class="uk-modal-dialog">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header">
+            <h2 class="uk-modal-title">Notes</h2>
+        </div>
+        <div class="uk-modal-body">
+           <textarea class="form-control" id="notes" placeholder="please provide speical instructions if any..." rows="10"></textarea>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+            <button class="uk-button uk-button-primary uk-modal-close" type="button">Save</button>
+        </div>
+    </div>
+</div>
+
+
 
 <nav class="uk-navbar-container" uk-navbar>
     <div class="uk-navbar-center">
+
         <div class="uk-navbar-item">
             <form class="uk-search uk-search-default">
                 <span uk-search-icon></span>
@@ -12,31 +36,38 @@
             </form>
         </div>
 
-
         <div class="uk-navbar-item">
-            <div class="container row">
-            <label class="custom-file-label" for="inputGroupFile01">Shipping Label</label>
-            <input type="file" class="custom-file-input" id="label" accept=".pdf, .doc, .docx">
+            <div class="row">
+            <div class="col">
+                <label  class="text-danger" for="upload">** single file only. please <a href="https://www.adobe.com/acrobat/online/merge-pdf.html?mv=search&sdid=DZTGZX2P&ef_id=CjwKCAiA4KaRBhBdEiwAZi1zznW31ZEbYP5_983ypcnYvEV8_QCORYXWw-WDxx4fu6Yl4Da36JjyYhoCQWgQAvD_BwE:G:s&s_kwcid=AL!3085!3!559402382069!e!!g!!how%20to%20merge%20pdf%20files!13092672132!120630851685&cmpn=mobile-search&gclid=CjwKCAiA4KaRBhBdEiwAZi1zznW31ZEbYP5_983ypcnYvEV8_QCORYXWw-WDxx4fu6Yl4Da36JjyYhoCQWgQAvD_BwE">merge</a> prior to upload</label>
+                  <div class="w-100"></div>
+                <input type="file" class="custom-file-input" id="label" accept=".pdf, .doc, .docx">
+            </div>
+             <div class="w-100"></div>
+            <div class="col">
+                 <input class="form-check-input me-2" type="checkbox" value="" id="label_not_required" onclick="clear_file()"/>
+            <label class="form-check-label" for="label_not_required">No file to attach</label>
+            </div>
             </div>
         </div>
 
         <div class="uk-navbar-item">
-            <input class="form-check-input me-2" type="checkbox" value="" id="label_not_required" onclick="clear_file()"/>
-            <label class="form-check-label" for="label_not_required">No label to attach</label>
+            <a class="btn btn-sm btn-outline-primary" href="#modal-sections" uk-toggle>Attach Notes</a>
         </div>
 
-        <div class="uk-navbar-item">
-            <a id="js-modal-confirm" class="uk-button uk-button-primary uk-align-right uk-margin-small-right uk-text-bold" value="Get Selected" onclick="validation_request()">Confirm</a>
-        </div>
+        <a id="js-modal-confirm" class="btn btn-primary shadow-sm" value="Get Selected" onclick="validation_request()" uk-icon="arrow-right">Complete Request</a>
 
-        </div>
     </div>
 </nav>
+
 <div id="loader" style="display: none;">
     <h1 class="text-center">Uploading...</h1>
     <div class="loader container"></div>
 </div>
-         <table class="uk-table uk-table-small uk-table-divider myTable" id="myTable">
+
+
+    <div class="col">
+        <table class="uk-table uk-table-small uk-table-divider myTable" id="myTable">
             <thead>
                 <tr>
                     <th></th>
@@ -53,18 +84,15 @@
                 </tr>
             </thead>
             <tbody>
-
-{{#each boxes as |box|}}
-
-{{> select-box box }}
-
-{{else}}
-<h3 class="text-center">NO ORDER WAS FOUND!</h3>
-{{/each}}
-
+                {{#each boxes as |box|}}
+                    {{> select-box box }}
+                {{else}}
+                    <h3 class="text-center">NO ORDER WAS FOUND!</h3>
+                {{/each}}
             </tbody>
         </table>
     </div>
+
 <script>
         (function(document) {
             'use strict';

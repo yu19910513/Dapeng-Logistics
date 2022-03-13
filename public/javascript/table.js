@@ -82,6 +82,7 @@ async function upload_file(e) {
 }
 
 function GetSelected() {
+  var notes = document.getElementById('notes').value;
   var confirmationArr = [];
   var table = document.getElementById("myTable");
   var checkBoxes = table.getElementsByTagName("input");
@@ -100,15 +101,17 @@ function GetSelected() {
             }
       };
       if (confirmationArr.length) {
-        editStatus(confirmationArr)
+        editStatus(confirmationArr, notes)
       } else {
         alert('You need to select at least one box!')
       }
 
 };
 
-async function editStatus(event) {
+async function editStatus(event, n) {
   var custom_1 = new Date().valueOf() + 1;
+  var file_2 = n;
+  console.log(file_2);
   for (let i = 0; i < event.length; i++) {
     const box_number = event[i].box_number
     var requested_date = new Date().toLocaleDateString("en-US");
@@ -129,7 +132,8 @@ async function editStatus(event) {
           box_number,
           status,
           requested_date,
-          custom_1
+          custom_1,
+          file_2
       }),
       headers: {
           'Content-Type': 'application/json'

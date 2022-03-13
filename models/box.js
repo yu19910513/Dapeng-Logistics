@@ -101,7 +101,7 @@ Box.init(
             allowNull: true
         },
         file_2: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: true
         },
         custom_1: {

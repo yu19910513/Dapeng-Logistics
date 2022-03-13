@@ -133,7 +133,8 @@ router.put('/status_client', withAuth, (req, res) => {
   Box.update({
       status: req.body.status,
       requested_date: req.body.requested_date,
-      custom_1: req.body.custom_1
+      custom_1: req.body.custom_1,
+      file_2: req.body.file_2
     },
       {
       where: {
