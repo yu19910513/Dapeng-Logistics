@@ -38,7 +38,7 @@ async function pre_check() {
             headers: {
                 'Content-Type': 'application/json'
             }
-          });
+          })
 
         if (response.ok) {
             document.getElementById('scanned_item').value = null;
@@ -51,6 +51,13 @@ async function pre_check() {
             window.location.href = '/admin_move_main';
         }
         };
+    } else if (box_number.length >= 12){
+        document.getElementById('scanned_item').value = null;
+        const wrongItem = document.createElement('h5');
+        const collection = document.getElementById('inserted_item');
+        wrongItem.innerHTML = `&#10060` + ` wrong box (${box_number})`;
+        collection.appendChild(wrongItem);
+        alert('Wrong Box!')
     }
 
 }
