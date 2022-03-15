@@ -560,7 +560,67 @@ router.get('/pdf/:key', (req, res) => {
   const key = req.params.key;
   const readStream = getFile(key);
   readStream.pipe(res)
-})
+});
 
+
+router.get('/box/:id', withAuth, async (req, res) => {
+  try {
+    const boxData = await Box.findAll({
+      where: {
+        box_number: req.params.id,
+        user_id: req.session.user_id
+      },
+        attributes: [
+      'id',
+      'box_number',
+      'description',
+      'cost',
+      'received_date',
+      'requested_date',
+      'shipped_date',
+      'order',
+      'qty_per_box',
+      'length',
+      'width',
+      'height',
+      'weight',
+      'volume',
+      'status',
+      'location',
+      'sku',
+      'file',
+      'file_2',
+        ],
+          include: [
+        {
+        model: Batch,
+        attributes:
+        [
+          'asn',
+          'pending_date',
+          'total_box'
+          ]},
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        }
+          ]
+    })
+    const boxes = boxData.map(box => box.get({ plain: true }));
+    res.render('shipping_label', {
+      boxes,
+      loggedIn: true,
+      admin: req.session.admin,
+      name: req.session.name,
+      account: boxes[0].account.name,
+      date: boxes[0].batch.pending_date
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+  })
 
   module.exports = router
