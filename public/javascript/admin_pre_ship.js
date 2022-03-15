@@ -8,7 +8,11 @@ function boxQuery() {
     }).then(function (data) {
         const custom_1 = localStorage.getItem('pre-ship_item');
         const boxArr = data[custom_1];
-        notes.innerHTML = boxArr[0].file_2;
+        if (!boxArr[0].file_2) {
+            notes.innerHTML = "N/A";
+        } else {
+            notes.innerHTML = boxArr[0].file_2;
+        };
         for (let i = 0; i < boxArr.length; i++) {
         boxNArr.push(boxArr[i].box_number);
         const list = document.createElement('h3');

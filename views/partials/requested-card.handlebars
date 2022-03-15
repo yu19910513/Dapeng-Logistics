@@ -5,6 +5,7 @@
     <h6>Acct: {{0.account.name}}</h6>
     <p>Requested Date: {{0.requested_date}}</p>
  <div class="card-body">
+     <a href="#" class="btn btn-outline-primary btn-sm" onclick="pre_ship_scan({{0.custom_1}})">Proceed</a>
      {{#if 0.file}}
         <a href="/pdf/{{0.file}}" class="btn btn-success btn-sm">PDF File</a>
     {{else}}

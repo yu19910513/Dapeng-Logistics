@@ -101,7 +101,7 @@ Box.init(
             allowNull: true
         },
         file_2: {
-            type: DataTypes.TEXT,
+            type: DataTypes.TEXT('long'),
             allowNull: true
         },
         custom_1: {
