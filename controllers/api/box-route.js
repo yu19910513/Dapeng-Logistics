@@ -82,6 +82,7 @@ router.put('/status_admin_receiving_t', withAuth, (req, res) => {
     });
 });
 
+//update box location
 router.put('/admin_relocating', withAuth, (req, res) => {
   Box.update({
       location: req.body.location_b
@@ -154,6 +155,7 @@ router.put('/status_client', withAuth, (req, res) => {
     });
 });
 
+// upload file to AWS and update file when requested is submitted by client
 router.post('/upload', upload.single('file'), async (req, res) => {
   const file = req.file;
   const info = req.body.custom_1

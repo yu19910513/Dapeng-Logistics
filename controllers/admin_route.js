@@ -4,6 +4,7 @@ const {User, Account, Batch, Box} = require('../models');
 const {withAuth, adminAuth} = require('../utils/auth');
 
 //admin page
+//admin home page
 router.get('/', withAuth, async (req, res) => {
   try {
     const boxData = await Box.findAll({
@@ -50,8 +51,7 @@ router.get('/', withAuth, async (req, res) => {
           attributes: [
             'id',
             'name',
-            'email',
-            'wechat'
+            'email'
           ]
         }
       ]
@@ -73,6 +73,7 @@ router.get('/', withAuth, async (req, res) => {
 
 });
 
+//admin bulk barcode for china shipment
 router.get('/batch/:id', withAuth, async (req, res) => {
   try {
     const boxData = await Box.findAll({
@@ -132,6 +133,7 @@ router.get('/batch/:id', withAuth, async (req, res) => {
   }
 });
 
+//admin single barcode for china shipment
 router.get('/box/:id', withAuth, async (req, res) => {
     try {
       const boxData = await Box.findAll({

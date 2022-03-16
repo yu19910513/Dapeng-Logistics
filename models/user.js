@@ -25,19 +25,16 @@ User.init(
             allowNull: false,
         },
 
-        wechat: {
+        email: {
             type: DataTypes.STRING,
             allowNull: true,
         },
 
-        email: {
+        username: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true,
-            validate: {
-              isEmail: true
-            }
-          },
+            unique: true
+        },
 
         password: {
             type: DataTypes.STRING,

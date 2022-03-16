@@ -5,7 +5,7 @@ const {User, Account, Batch, Box} = require('../models');
 const {withAuth, adminAuth} = require('../utils/auth');
 const { uploadFile, getFile} = require('../utils/s3');
 
-//client page
+//client home page
 router.get('/', withAuth, async (req, res) => {
     try {
       const boxData = await Box.findAll({
@@ -146,7 +146,7 @@ router.get('/signup/', (req, res) => {
     res.render('signup');
 });
 
-//admin request-handling page
+//admin request-handling page (manual)
 router.get('/admin_move', withAuth, async (req, res) => {
     try {
       const boxData = await Box.findAll({
@@ -195,8 +195,7 @@ router.get('/admin_move', withAuth, async (req, res) => {
             attributes: [
               'id',
               'name',
-              'email',
-              'wechat'
+              'email'
             ]
           }
         ]
@@ -259,8 +258,7 @@ router.get('/admin_receiving', withAuth, async (req, res) => {
           attributes: [
             'id',
             'name',
-            'email',
-            'wechat'
+            'email'
           ]
         }
       ]
@@ -335,6 +333,7 @@ router.get('/batch/:id', withAuth, async (req, res) => {
   }
   })
 
+// admin auto receiving page
 router.get('/admin_receiving_main', withAuth, async (req, res) => {
   try {
     const boxData = await Box.findAll({
@@ -382,8 +381,7 @@ router.get('/admin_receiving_main', withAuth, async (req, res) => {
           attributes: [
             'id',
             'name',
-            'email',
-            'wechat'
+            'email'
           ]
         }
       ]
@@ -397,6 +395,7 @@ router.get('/admin_receiving_main', withAuth, async (req, res) => {
 
 });
 
+//admin request-handling page (in cards)
 router.get('/admin_move_main', withAuth, async (req, res) => {
   try {
     const boxData = await Box.findAll({
@@ -445,8 +444,7 @@ router.get('/admin_move_main', withAuth, async (req, res) => {
           attributes: [
             'id',
             'name',
-            'email',
-            'wechat'
+            'email'
           ]
         }
       ]
@@ -466,6 +464,19 @@ router.get('/admin_move_main', withAuth, async (req, res) => {
 
 });
 
+//render single pre-ship scanning page
+router.get('/admin_pre_ship', withAuth, (req, res) => {
+  try {
+    res.render('pre_ship', {loggedIn: true, admin: req.session.admin, name: req.session.name });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+
+
+//client pending order page (in cards)
 router.get('/client_label', withAuth, async (req, res) => {
   try {
     const boxData = await Box.findAll({
@@ -516,8 +527,7 @@ router.get('/client_label', withAuth, async (req, res) => {
           attributes: [
             'id',
             'name',
-            'email',
-            'wechat'
+            'email'
           ]
         }
       ]
@@ -537,15 +547,8 @@ router.get('/client_label', withAuth, async (req, res) => {
 
 });
 
-router.get('/admin_pre_ship', withAuth, (req, res) => {
-  try {
-    res.render('pre_ship', {loggedIn: true, admin: req.session.admin, name: req.session.name });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json(err);
-  }
-});
 
+//redner box-allocation page
 router.get('/box_location', withAuth, async (req, res) => {
   try {
     res.render('box_location', {loggedIn: true, admin: req.session.admin, name: req.session.name });
@@ -556,13 +559,14 @@ router.get('/box_location', withAuth, async (req, res) => {
 
 });
 
+//file url (public) --> may need to add withAuth
 router.get('/pdf/:key', (req, res) => {
   const key = req.params.key;
   const readStream = getFile(key);
   readStream.pipe(res)
 });
 
-
+//client single barcode page
 router.get('/box/:id', withAuth, async (req, res) => {
   try {
     const boxData = await Box.findAll({

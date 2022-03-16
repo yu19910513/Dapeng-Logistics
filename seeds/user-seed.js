@@ -7,14 +7,14 @@ const userData = [
     {
         name: "Rex Yu",
         email: "yu19910513@gmail.com",
-        wechat: "12345",
+        username: "yu19910513",
         password: "$2b$10$HATPVNIyN3RTOdWa3qbC/eWDt4mwINV1.h/jxbcXjKNlVXGFlfdya",
         admin: true
     },
     {
         name: "Rex #2",
         email: "rexyu@uw.edu",
-        wechat: "1234125",
+        username: "rexyu",
         password: '$2b$10$hT/f3byFYnDu5c3ZdfHJiO4TdnTXyVyvnk.XjYAHeisMUFeFRQGdu',
         admin: false
     }

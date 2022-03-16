@@ -54,7 +54,7 @@ router.post('/', (req, res) => {
       email: req.body.email,
       password: req.body.password,
       admin: req.body.admin,
-      wechat: req.body.wechat
+      username: req.body.username
     })
     .then(userDB => {
       req.session.save(() => {
@@ -77,11 +77,11 @@ router.post('/', (req, res) => {
 router.post('/login', (req, res) => {
   User.findOne({
     where: {
-      email: req.body.email
+      username: req.body.username
     }
   }).then(userDB => {
     if (!userDB) {
-      res.status(400).json({ message: 'No user with that email address!' });
+      res.status(400).json({ message: 'No user with that username!' });
       return;
     }
 
@@ -164,8 +164,7 @@ router.get('/box', withAuth, async (req, res) => {
           attributes: [
             'id',
             'name',
-            'email',
-            'wechat'
+            'email'
           ]
         }
       ]

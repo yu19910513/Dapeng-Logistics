@@ -2,20 +2,20 @@ async function signupFormHandler(admin) {
     const email = document.querySelector('#email-signup').value.trim();
     const password = document.querySelector('#password-signup').value.trim();
     const name = document.querySelector('#name-signup').value.trim();
-    const wechat = document.querySelector('#wechat-signup').value.trim();
+    const username = document.querySelector('#username-signup').value.trim();
 
-    if (email && password && name) {
+    if (username && password && name) {
       const response = await fetch('/api/user', {
         method: 'post',
         body: JSON.stringify({
           name,
           email,
           password,
-          wechat,
+          username,
           admin
         }),
         headers: { 'Content-Type': 'application/json' }
-      }); console.log(email, password, name, admin, wechat);
+      }); console.log(email, password, name, admin, username);
 
       // check the response status
       if (response.ok) {
