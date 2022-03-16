@@ -108,6 +108,7 @@ router.put('/admin_relocating', withAuth, (req, res) => {
 //update status from requested to shipped
 router.put('/status_admin_shipping', withAuth, (req, res) => {
   Box.update({
+      location: req.body.location,
       status: req.body.status,
       shipped_date: req.body.shipped_date
     },

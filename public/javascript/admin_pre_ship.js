@@ -30,6 +30,7 @@ boxQuery();
 async function pre_check() {
     const box_number = document.getElementById('scanned_item').value;
     const status = 3;
+    const location = null;
     const shipped_date = new Date().toLocaleDateString("en-US");
     if (boxNArr.includes(box_number)) {
         const response = await fetch(`/api/box/status_admin_shipping`, {
@@ -37,7 +38,8 @@ async function pre_check() {
             body: JSON.stringify({
                 box_number,
                 status,
-                shipped_date
+                shipped_date,
+                location
             }),
             headers: {
                 'Content-Type': 'application/json'
