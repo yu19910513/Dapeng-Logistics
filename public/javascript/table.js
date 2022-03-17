@@ -42,12 +42,15 @@ function show_all() {
 
 function clear_file() {
   document.getElementById('label').value = null;
+  document.getElementById('label_2').value = null;
+  document.getElementById('label_2').style.display = 'none';
 }
 
 function validation_request() {
-  var file = document.getElementById('label').files[0];
+  const file = document.getElementById('label').files[0];
+  const file_2 = document.getElementById('label_2').files[0];
   var check_label = document.getElementById('label_not_required')
-  if (!file && !check_label.checked) {
+  if (!file && !file_2 && !check_label.checked) {
     alert('The shipping label is missing! Please attach a pdf file and try again!')
   } else {
     loader.style.display = '';
@@ -55,10 +58,25 @@ function validation_request() {
   }
 };
 
-async function upload_file(e) {
-  var file = document.getElementById('label').files[0];
-  if (file) {
-    let formData = new FormData();
+function upload_file(e) {
+  const file = document.getElementById('label').files[0];
+  const file_2 = document.getElementById('label_2').files[0];
+
+  if (!file_2) {
+    upload_framwork(file, e)
+  } else if (!file) {
+    upload_framwork(file_2, e)
+  } else if (file && file_2) {
+    upload2F_framwork(file, file_2, e)
+  } else {
+    loader.style.display = 'none';
+    alert('Status updated successfully! No file was attached.');
+    document.location.reload();
+  }
+}
+
+async function upload_framwork(file, e) {
+  let formData = new FormData();
     formData.append('file', file);
     formData.append('custom_1',e)
 
@@ -74,11 +92,41 @@ async function upload_file(e) {
     } else {
       alert(response.statusText);
     }
-  } else {
-    loader.style.display = 'none';
-    alert('Status updated successfully! No file was attached.');
-    document.location.reload();
-  }
+};
+
+async function upload2F_framwork(file, file_2, e) {
+  let formData = new FormData();
+    formData.append('file', file);
+    formData.append('custom_1',e)
+
+    const response = await fetch(`/api/box/upload`, {
+      method: 'POST',
+      body: formData
+    });
+    if (response.ok) {
+      upload2F_framwork_file2(file_2, e)
+    } else {
+      alert(response.statusText);
+    }
+};
+
+async function upload2F_framwork_file2(file, e) {
+  let formData = new FormData();
+    formData.append('file', file);
+    formData.append('custom_1',e)
+
+    const response = await fetch(`/api/box/upload_2`, {
+      method: 'POST',
+      body: formData
+    });
+    if (response.ok) {
+      console.log(response);
+      loader.style.display = 'none';
+      alert('Status updated successfully! Two files uploaded');
+      document.location.reload();
+    } else {
+      alert(response.statusText);
+    }
 }
 
 function GetSelected() {
@@ -277,6 +325,10 @@ function reset_filter() {
 //     generatePDF(img);
 //   });
 
+};
+
+function second_file() {
+  document.getElementById('label_2').style.display = '';
 };
 
 

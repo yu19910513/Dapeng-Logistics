@@ -183,6 +183,32 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 });
 });
 
+//upload the second file to AWS and update custom_2 when requested is submitted by client
+router.post('/upload_2', upload.single('file'), async (req, res) => {
+  const file = req.file;
+  const info = req.body.custom_1
+  const result = await uploadFile(file);
+  await unlinkFile(file.path);
+  const key = result.Key;
+  Box.update({
+      custom_2: key
+  }, {
+   where: {
+    custom_1: info
+   }
+  })
+  .then(dbBoxData => {
+  if (!dbBoxData[0]) {
+    res.status(404).json({ message: 'This Box does not exist!' });
+    return;
+  }
+  res.send({pdfPath: `/pdf/${key}`})
+  })
+.catch(err => {
+  console.log(err);
+  res.status(500).json(err);
+});
+});
 
 
   module.exports = router;

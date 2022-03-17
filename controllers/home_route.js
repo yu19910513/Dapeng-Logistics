@@ -405,6 +405,7 @@ router.get('/admin_move_main', withAuth, async (req, res) => {
       attributes: [
         'id',
         'custom_1',
+        'custom_2',
         'box_number',
         'description',
         'cost',
@@ -456,7 +457,7 @@ router.get('/admin_move_main', withAuth, async (req, res) => {
       return r;
     }, Object.create(null));
     const data = Object.values(result);
-    res.render('dynamic_move', { data, loggedIn: true, admin: req.session.admin, name: req.session.name });
+    res.render('dynamic_move', { data, loggedIn: true, admin: req.session.admin, name: req.session.name});
   } catch (err) {
     console.log(err);
     res.status(500).json(err);

@@ -8,18 +8,37 @@
 
 
 {{!-- notes --}}
-<div id="modal-sections" uk-modal>
+<div id="modal-notes" uk-modal>
     <div class="uk-modal-dialog">
         <button class="uk-modal-close-default" type="button" uk-close></button>
         <div class="uk-modal-header text-center">
             <h2 class="uk-modal-title">Notes</h2>
-            {{!-- <small class="text-secondary">character limit: <u><b>255</b> chars</u></small> --}}
         </div>
         <div class="uk-modal-body">
            <textarea class="form-control" id="notes" placeholder="please provide speical instructions if any..." rows="10"></textarea>
         </div>
         <div class="uk-modal-footer uk-text-right">
             <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+            <button class="uk-button uk-button-primary uk-modal-close" type="button">Save</button>
+        </div>
+    </div>
+</div>
+
+{{!-- file --}}
+<div id="modal-files" uk-modal>
+    <div class="uk-modal-dialog">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header text-center">
+            <h2 class="uk-modal-title">Select PDFs</h2>
+            <input class="form-check-input me-2" type="checkbox" value="" id="label_not_required" onclick="clear_file()"/>
+            <label class="form-check-label text-danger" for="label_not_required"><small><u>No file to attach</u></small></label>
+        </div>
+        <div class="uk-modal-body">
+            <input type="file" class="custom-file-input" id="label" accept=".pdf, .doc, .docx" onclick="second_file()">
+            <input type="file" class="mt-2 custom-file-input" id="label_2" accept=".pdf, .doc, .docx" style="display: none;">
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button" onclick="clear_file()">Clear</button>
             <button class="uk-button uk-button-primary uk-modal-close" type="button">Save</button>
         </div>
     </div>
@@ -38,22 +57,8 @@
         </div>
 
         <div class="uk-navbar-item">
-            <div class="row">
-            <div class="col">
-                <label  class="text-danger" for="upload">** single file only. please <a href="https://www.adobe.com/acrobat/online/merge-pdf.html?mv=search&sdid=DZTGZX2P&ef_id=CjwKCAiA4KaRBhBdEiwAZi1zznW31ZEbYP5_983ypcnYvEV8_QCORYXWw-WDxx4fu6Yl4Da36JjyYhoCQWgQAvD_BwE:G:s&s_kwcid=AL!3085!3!559402382069!e!!g!!how%20to%20merge%20pdf%20files!13092672132!120630851685&cmpn=mobile-search&gclid=CjwKCAiA4KaRBhBdEiwAZi1zznW31ZEbYP5_983ypcnYvEV8_QCORYXWw-WDxx4fu6Yl4Da36JjyYhoCQWgQAvD_BwE">merge</a> prior to upload</label>
-                  <div class="w-100"></div>
-                <input type="file" class="custom-file-input" id="label" accept=".pdf, .doc, .docx">
-            </div>
-             <div class="w-100"></div>
-            <div class="col">
-                 <input class="form-check-input me-2" type="checkbox" value="" id="label_not_required" onclick="clear_file()"/>
-            <label class="form-check-label" for="label_not_required">No file to attach</label>
-            </div>
-            </div>
-        </div>
-
-        <div class="uk-navbar-item">
-            <a class="btn btn-sm btn-outline-primary" href="#modal-sections" uk-toggle>Attach Notes</a>
+            <a class="btn btn-sm btn-outline-danger" href="#modal-files" uk-toggle>Attach File</a>
+            <a class="btn btn-sm btn-outline-success" href="#modal-notes" uk-toggle>Attach Notes</a>
         </div>
 
         <a id="js-modal-confirm" class="btn btn-primary shadow-sm" value="Get Selected" onclick="validation_request()" uk-icon="arrow-right">Complete Request</a>
