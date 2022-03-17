@@ -151,6 +151,7 @@ function GetSelected() {
       if (confirmationArr.length) {
         editStatus(confirmationArr, notes)
       } else {
+        loader.style.display = 'none';
         alert('You need to select at least one box!')
       }
 
