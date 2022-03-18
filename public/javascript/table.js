@@ -62,9 +62,9 @@ function upload_file(e) {
   const file = document.getElementById('label').files[0];
   const file_2 = document.getElementById('label_2').files[0];
 
-  if (!file_2) {
+  if (!file_2 && file) {
     upload_framwork(file, e)
-  } else if (!file) {
+  } else if (!file && file_2) {
     upload_framwork(file_2, e)
   } else if (file && file_2) {
     upload2F_framwork(file, file_2, e)
@@ -78,7 +78,7 @@ function upload_file(e) {
 async function upload_framwork(file, e) {
   let formData = new FormData();
     formData.append('file', file);
-    formData.append('custom_1',e)
+    formData.append('s3',e)
 
     const response = await fetch(`/api/box/upload`, {
       method: 'POST',
@@ -97,7 +97,7 @@ async function upload_framwork(file, e) {
 async function upload2F_framwork(file, file_2, e) {
   let formData = new FormData();
     formData.append('file', file);
-    formData.append('custom_1',e)
+    formData.append('s3',e)
 
     const response = await fetch(`/api/box/upload`, {
       method: 'POST',
@@ -113,7 +113,7 @@ async function upload2F_framwork(file, file_2, e) {
 async function upload2F_framwork_file2(file, e) {
   let formData = new FormData();
     formData.append('file', file);
-    formData.append('custom_1',e)
+    formData.append('s3',e)
 
     const response = await fetch(`/api/box/upload_2`, {
       method: 'POST',
@@ -158,9 +158,8 @@ function GetSelected() {
 };
 
 async function editStatus(event, n) {
-  var custom_1 = new Date().valueOf() + 1;
-  var file_2 = n;
-  console.log(file_2);
+  var s3 = new Date().valueOf() + 1;
+  var notes = n;
   for (let i = 0; i < event.length; i++) {
     const box_number = event[i].box_number
     var requested_date = new Date().toLocaleDateString("en-US");
@@ -181,16 +180,15 @@ async function editStatus(event, n) {
           box_number,
           status,
           requested_date,
-          custom_1,
-          file_2
+          s3,
+          notes
       }),
       headers: {
           'Content-Type': 'application/json'
       }
     });
   };
-
-  upload_file(custom_1)
+  upload_file(s3)
 
 }
 

@@ -101,7 +101,15 @@ Box.init(
             allowNull: true
         },
         file_2: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        notes: {
             type: DataTypes.TEXT('long'),
+            allowNull: true
+        },
+        s3: {
+            type: DataTypes.STRING,
             allowNull: true
         },
         custom_1: {

@@ -132,7 +132,7 @@ async function editStatus(event, n) {
           box_number,
           status,
           requested_date,
-          custom_1,
+          s3,
           file_2
       }),
       headers: {
@@ -141,7 +141,7 @@ async function editStatus(event, n) {
     });
   };
 
-  upload_file(custom_1)
+  upload_file(s3)
 
 }
 

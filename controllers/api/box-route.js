@@ -135,8 +135,8 @@ router.put('/status_client', withAuth, (req, res) => {
   Box.update({
       status: req.body.status,
       requested_date: req.body.requested_date,
-      custom_1: req.body.custom_1,
-      file_2: req.body.file_2
+      s3: req.body.s3,
+      notes: req.body.notes
     },
       {
       where: {
@@ -159,15 +159,15 @@ router.put('/status_client', withAuth, (req, res) => {
 // upload file to AWS and update file when requested is submitted by client
 router.post('/upload', upload.single('file'), async (req, res) => {
   const file = req.file;
-  const info = req.body.custom_1
+  const info = req.body.s3
   const result = await uploadFile(file);
   await unlinkFile(file.path);
   const key = result.Key;
   Box.update({
-      file: key
+    file: key
   }, {
    where: {
-    custom_1: info
+    s3: info
    }
   })
   .then(dbBoxData => {
@@ -183,18 +183,18 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 });
 });
 
-//upload the second file to AWS and update custom_2 when requested is submitted by client
+//upload the second file to AWS and update file_2 when requested is submitted by client
 router.post('/upload_2', upload.single('file'), async (req, res) => {
   const file = req.file;
-  const info = req.body.custom_1
+  const info = req.body.s3
   const result = await uploadFile(file);
   await unlinkFile(file.path);
   const key = result.Key;
   Box.update({
-      custom_2: key
+    file_2: key
   }, {
    where: {
-    custom_1: info
+    s3: info
    }
   })
   .then(dbBoxData => {

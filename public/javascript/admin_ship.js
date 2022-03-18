@@ -1,5 +1,5 @@
-function pre_ship_scan(custom_1) {
-    console.log(custom_1);
-    localStorage.setItem('pre-ship_item', custom_1);
+function pre_ship_scan(s3) {
+    console.log(s3);
+    localStorage.setItem('pre-ship_item', s3);
     window.location.href = '/admin_pre_ship';
 }

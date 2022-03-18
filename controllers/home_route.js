@@ -34,6 +34,7 @@ router.get('/', withAuth, async (req, res) => {
           'sku',
           'file',
           'file_2',
+          'notes'
         ],
         include: [
           {
@@ -97,6 +98,7 @@ router.get('/request', withAuth, async (req, res) => {
         'sku',
         'file',
         'file_2',
+        'notes'
       ],
       include: [
         {
@@ -360,6 +362,8 @@ router.get('/admin_receiving_main', withAuth, async (req, res) => {
         'sku',
         'file',
         'file_2',
+        'notes',
+        's3'
       ],
       include: [
         {
@@ -404,8 +408,6 @@ router.get('/admin_move_main', withAuth, async (req, res) => {
       },
       attributes: [
         'id',
-        'custom_1',
-        'custom_2',
         'box_number',
         'description',
         'cost',
@@ -423,7 +425,9 @@ router.get('/admin_move_main', withAuth, async (req, res) => {
         'location',
         'sku',
         'file',
-        'file_2'
+        'file_2',
+        'notes',
+        's3'
       ],
       include: [
         {
@@ -452,8 +456,8 @@ router.get('/admin_move_main', withAuth, async (req, res) => {
     });
     const boxes = boxData.map(box => box.get({ plain: true }));
     const result = boxes.reduce(function (r, a) {
-      r[a.custom_1] = r[a.custom_1] || [];
-      r[a.custom_1].push(a);
+      r[a.s3] = r[a.s3] || [];
+      r[a.s3].push(a);
       return r;
     }, Object.create(null));
     const data = Object.values(result);
@@ -488,7 +492,6 @@ router.get('/client_label', withAuth, async (req, res) => {
       attributes: [
         'batch_id',
         'id',
-        'custom_1',
         'box_number',
         'description',
         'cost',
@@ -506,7 +509,9 @@ router.get('/client_label', withAuth, async (req, res) => {
         'location',
         'sku',
         'file',
-        'file_2'
+        'file_2',
+        'notes',
+        's3'
       ],
       include: [
         {

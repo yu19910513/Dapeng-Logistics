@@ -6,12 +6,12 @@ function boxQuery() {
     }).then(function (response) {
         return response.json();
     }).then(function (data) {
-        const custom_1 = localStorage.getItem('pre-ship_item');
-        const boxArr = data[custom_1];
-        if (!boxArr[0].file_2) {
+        const s3 = localStorage.getItem('pre-ship_item');
+        const boxArr = data[s3];
+        if (!boxArr[0].notes) {
             notes.innerHTML = "N/A";
         } else {
-            notes.innerHTML = boxArr[0].file_2;
+            notes.innerHTML = boxArr[0].notes;
         };
         for (let i = 0; i < boxArr.length; i++) {
         boxNArr.push(boxArr[i].box_number);

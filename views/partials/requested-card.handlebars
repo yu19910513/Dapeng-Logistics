@@ -1,15 +1,15 @@
 
 <div class="px-1 py-1 col-4 " id="requested_card">
-<div class="card bg-light shadow-sm" id="{{0.custom_1}}">
+<div class="card bg-light shadow-sm" id="{{0.s3}}">
     <h5 class="card-title mt-3">Request from {{0.user.name}}</h5>
     <h6>Acct: {{0.account.name}}</h6>
     <p>Requested Date: {{0.requested_date}}</p>
  <div class="card-body">
-     <a href="#" class="btn btn-outline-primary btn-sm" onclick="pre_ship_scan({{0.custom_1}})">Proceed</a>
+     <a href="#" class="btn btn-outline-primary btn-sm" onclick="pre_ship_scan({{0.s3}})">Proceed</a>
      {{#if 0.file}}
         <a href="/pdf/{{0.file}}" class="btn btn-success btn-sm">PDF File</a>
-        {{#if 0.custom_2}}
-        <a href="/pdf/{{0.custom_2}}" class="btn btn-success btn-sm">File #2</a>
+        {{#if 0.file_2}}
+        <a href="/pdf/{{0.file_2}}" class="btn btn-success btn-sm">File #2</a>
         {{/if}}
     {{else}}
         <a href="" class="btn btn-danger btn-sm">No File</a>
@@ -34,7 +34,7 @@
                 {{/each}}
             <tbody>
          </table>
-         <a href="#" class="btn btn-primary btn-sm" onclick="pre_ship_scan({{0.custom_1}})">Proceed</a>
+         <a href="#" class="btn btn-primary btn-sm" onclick="pre_ship_scan({{0.s3}})">Proceed</a>
         </div>
     </li>
 </ul>

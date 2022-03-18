@@ -30,6 +30,7 @@ router.get('/', withAuth, async (req, res) => {
         'sku',
         'file',
         'file_2',
+        'notes'
       ],
       include: [
         {

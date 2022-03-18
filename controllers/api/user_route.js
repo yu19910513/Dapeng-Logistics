@@ -123,7 +123,8 @@ router.get('/box', withAuth, async (req, res) => {
         status:2
       },
       attributes: [
-        'custom_1',
+        's3',
+        'notes',
         'id',
         'box_number',
         'description',
@@ -171,8 +172,8 @@ router.get('/box', withAuth, async (req, res) => {
     });
     const boxes = boxData.map(box => box.get({ plain: true }));
     const data = boxes.reduce(function (r, a) {
-      r[a.custom_1] = r[a.custom_1] || [];
-      r[a.custom_1].push(a);
+      r[a.s3] = r[a.s3] || [];
+      r[a.s3].push(a);
       return r;
     }, Object.create(null));
     res.json(data);
