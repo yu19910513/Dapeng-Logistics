@@ -143,7 +143,8 @@ router.get('/box', withAuth, async (req, res) => {
         'location',
         'sku',
         'file',
-        'file_2'
+        'file_2',
+        'fba'
       ],
       include: [
         {

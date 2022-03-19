@@ -136,7 +136,8 @@ router.put('/status_client', withAuth, (req, res) => {
       status: req.body.status,
       requested_date: req.body.requested_date,
       s3: req.body.s3,
-      notes: req.body.notes
+      notes: req.body.notes,
+      fba: req.body.fba
     },
       {
       where: {

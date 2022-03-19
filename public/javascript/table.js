@@ -130,6 +130,8 @@ async function upload2F_framwork_file2(file, e) {
 }
 
 function GetSelected() {
+  var fba = document.getElementById('amazon_ref').value.trim()
+  fba = fba.toUpperCase();
   var notes = document.getElementById('notes').value;
   var confirmationArr = [];
   var table = document.getElementById("myTable");
@@ -145,6 +147,7 @@ function GetSelected() {
                 confirmation.total_box = row.cells[5].innerHTML;
                 confirmation.qty_per_box = row.cells[6].innerHTML;
                 confirmation.status = row.cells[10].innerHTML;
+                confirmation.fba = fba;
                 confirmationArr.push(confirmation)
             }
       };
@@ -161,6 +164,7 @@ async function editStatus(event, n) {
   var s3 = new Date().valueOf() + 1;
   var notes = n;
   for (let i = 0; i < event.length; i++) {
+    const fba = event[i].fba;
     const box_number = event[i].box_number
     var requested_date = new Date().toLocaleDateString("en-US");
     var status = event[i].status;
@@ -181,7 +185,8 @@ async function editStatus(event, n) {
           status,
           requested_date,
           s3,
-          notes
+          notes,
+          fba
       }),
       headers: {
           'Content-Type': 'application/json'
@@ -190,8 +195,7 @@ async function editStatus(event, n) {
   };
   upload_file(s3)
 
-}
-
+};
 
 function sortTable(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
@@ -228,7 +232,7 @@ function sortTable(n) {
       }
     }
   }
-}
+};
 
 // function filter(n) {
 //   var input, filter, table, tr, td, i, txtValue;
@@ -330,6 +334,14 @@ function second_file() {
   document.getElementById('label_2').style.display = '';
 };
 
+function check_amazon() {
+  var amazon = document.getElementById('amazon_ref').value.trim();
+  amazon = amazon.toUpperCase();
+  if (amazon.substring(0,3) != 'FBA' || amazon.length != 12) {
+    alert('invalid amazon ref number! start with FBA following by XXXXXXXXX');
+  }
+
+}
 
 // function getImgFromUrl(logo_url, callback) {
 //   var img = new Image();
