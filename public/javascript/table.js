@@ -44,8 +44,16 @@ function clear_file() {
   document.getElementById('label').value = null;
   document.getElementById('label_2').value = null;
   document.getElementById('label_2').style.display = 'none';
+  document.getElementById('amazon_ref').style.display= 'none';
 }
 
+function clear_noFile_radio() {
+  const no_file = document.getElementById("label_not_required");
+  if (no_file.checked) {
+    no_file.checked = false;
+  }
+
+}
 function validation_request() {
   const file = document.getElementById('label').files[0];
   const file_2 = document.getElementById('label_2').files[0];
@@ -395,6 +403,8 @@ function reset_filter() {
 
 function second_file() {
   document.getElementById('label_2').style.display = '';
+  document.getElementById('amazon_ref').style.display= '';
+  clear_noFile_radio()
 };
 
 function check_amazon() {

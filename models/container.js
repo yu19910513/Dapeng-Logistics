@@ -14,7 +14,7 @@ Container.init(
             primaryKey: true,
             autoIncrement: true,
         },
-        box_number: {
+        container_number: {
             type: DataTypes.STRING,
             allowNull: false
         },
