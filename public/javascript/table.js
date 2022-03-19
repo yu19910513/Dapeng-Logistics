@@ -192,6 +192,74 @@ async function upload2F_framwork_file2(file, e) {
     }
 };
 
+function GetSelected() {
+  var fba = document.getElementById('amazon_ref').value.trim()
+  fba = fba.toUpperCase();
+  var notes = document.getElementById('notes').value;
+  var confirmationArr = [];
+  var table = document.getElementById("myTable");
+  var checkBoxes = table.getElementsByTagName("input");
+    for (var i = 0; i < checkBoxes.length; i++) {
+            var confirmation = new Object
+            if (checkBoxes[i].checked) {
+                var row = checkBoxes[i].parentNode.parentNode;
+                confirmation.account = row.cells[1].innerHTML;
+                confirmation.box_number = row.cells[2].innerHTML;
+                confirmation.description = row.cells[3].innerHTML;
+                confirmation.order = row.cells[4].innerHTML;
+                confirmation.total_box = row.cells[5].innerHTML;
+                confirmation.qty_per_box = row.cells[6].innerHTML;
+                confirmation.status = row.cells[10].innerHTML;
+                confirmation.fba = fba;
+                confirmationArr.push(confirmation)
+            }
+      };
+      if (confirmationArr.length) {
+        editStatus(confirmationArr, notes)
+      } else {
+        loader.style.display = 'none';
+        alert('You need to select at least one box!')
+      }
+
+};
+
+async function editStatus(event, n) {
+  var s3 = new Date().valueOf() + 1;
+  var notes = n;
+  for (let i = 0; i < event.length; i++) {
+    const fba = event[i].fba;
+    const box_number = event[i].box_number
+    var requested_date = new Date().toLocaleDateString("en-US");
+    var status = event[i].status;
+    console.log(status);
+    if(status == 'Pending'){
+        status = 1;
+      } else if (status == 'Received') {
+        status = 2;
+      } else if (status == 'Requested') {
+        status = 3;
+      } else {
+        status = 4
+      }
+    const response = await fetch(`/api/box/status_client`, {
+      method: 'PUT',
+      body: JSON.stringify({
+          box_number,
+          status,
+          requested_date,
+          s3,
+          notes,
+          fba
+      }),
+      headers: {
+          'Content-Type': 'application/json'
+      }
+    });
+  };
+  upload_file(s3)
+
+};
+
 function sortTable(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById("myTable");
@@ -227,7 +295,7 @@ function sortTable(n) {
       }
     }
   }
-}
+};
 
 // function filter(n) {
 //   var input, filter, table, tr, td, i, txtValue;
@@ -329,6 +397,14 @@ function second_file() {
   document.getElementById('label_2').style.display = '';
 };
 
+function check_amazon() {
+  var amazon = document.getElementById('amazon_ref').value.trim();
+  amazon = amazon.toUpperCase();
+  if (amazon.substring(0,3) != 'FBA' || amazon.length != 12) {
+    alert('invalid amazon ref number! start with FBA following by XXXXXXXXX');
+  }
+
+}
 
 // function getImgFromUrl(logo_url, callback) {
 //   var img = new Image();

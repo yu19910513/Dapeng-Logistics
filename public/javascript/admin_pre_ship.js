@@ -7,7 +7,9 @@ function boxQuery() {
         return response.json();
     }).then(function (data) {
         const s3 = localStorage.getItem('pre-ship_item');
+        const fba = document.getElementById('fba');
         const boxArr = data[s3];
+        fba.innerHTML = boxArr[0].fba;
         if (!boxArr[0].notes) {
             notes.innerHTML = "N/A";
         } else {

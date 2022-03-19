@@ -33,13 +33,16 @@
             <input class="form-check-input me-2" type="checkbox" value="" id="label_not_required" onclick="clear_file()"/>
             <label class="form-check-label text-danger" for="label_not_required"><small><u>No file to attach</u></small></label>
         </div>
+
+
         <div class="uk-modal-body">
-            <input type="file" class="custom-file-input" id="label" accept=".pdf, .doc, .docx" onclick="second_file()">
+            <input type="file" class="mt-2 custom-file-input" id="label" accept=".pdf, .doc, .docx" onclick="second_file()">
             <input type="file" class="mt-2 custom-file-input" id="label_2" accept=".pdf, .doc, .docx" style="display: none;">
         </div>
         <div class="uk-modal-footer uk-text-right">
+            <input type="text" class="form-control mb-3 border-warning" id="amazon_ref" placeholder="Amazon Reference Number (e.g. FBAxxxxxxxxx)" aria-describedby="basic-addon1">
             <button class="uk-button uk-button-default uk-modal-close" type="button" onclick="clear_file()">Clear</button>
-            <button class="uk-button uk-button-primary uk-modal-close" type="button">Save</button>
+            <button class="uk-button uk-button-primary uk-modal-close" type="button" onclick="check_amazon()">Save</button>
         </div>
     </div>
 </div>
@@ -57,7 +60,7 @@
         </div>
 
         <div class="uk-navbar-item">
-            <a class="btn btn-sm btn-outline-danger" href="#modal-files" uk-toggle>Attach File</a>
+            <a class="btn btn-sm btn-outline-danger" id='file_btn' href="#modal-files" uk-toggle>Attach File</a>
             <a class="btn btn-sm btn-outline-success" href="#modal-notes" uk-toggle>Attach Notes</a>
         </div>
 

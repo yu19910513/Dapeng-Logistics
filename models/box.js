@@ -112,6 +112,10 @@ Box.init(
             type: DataTypes.STRING,
             allowNull: true
         },
+        fba: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
         custom_1: {
             type: DataTypes.STRING,
             allowNull: true

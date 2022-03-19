@@ -427,7 +427,8 @@ router.get('/admin_move_main', withAuth, async (req, res) => {
         'file',
         'file_2',
         'notes',
-        's3'
+        's3',
+        'fba'
       ],
       include: [
         {
