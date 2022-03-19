@@ -43,6 +43,7 @@ function show_all() {
 function clear_file() {
   document.getElementById('label').value = null;
   document.getElementById('label_2').value = null;
+  document.getElementById('amazon_ref').value = null;
   document.getElementById('label_2').style.display = 'none';
   document.getElementById('amazon_ref').style.display= 'none';
 }
