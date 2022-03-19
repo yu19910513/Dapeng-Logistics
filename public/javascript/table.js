@@ -50,6 +50,7 @@ function clear_file() {
 function clear_noFile_radio() {
   const no_file = document.getElementById("label_not_required");
   if (no_file.checked) {
+    document.getElementById('amazon_ref').value = null;
     no_file.checked = false;
   }
 
@@ -408,12 +409,14 @@ function second_file() {
 };
 
 function check_amazon() {
+  const no_file = document.getElementById("label_not_required");
   var amazon = document.getElementById('amazon_ref').value.trim();
   amazon = amazon.toUpperCase();
-  if (amazon.substring(0,3) != 'FBA' || amazon.length != 12) {
+  if (no_file.checked) {
+    return
+  } else if ( amazon.substring(0,3) != 'FBA' || amazon.length != 12) {
     alert('invalid amazon ref number! start with FBA following by XXXXXXXXX');
   }
-
 }
 
 // function getImgFromUrl(logo_url, callback) {
