@@ -179,6 +179,10 @@ function boxInsertExistedAccount() {
     console.log(batch_map.get(asn));
     var dataTable = document.getElementById( "ordertable" );
     for ( var i = 1; i < dataTable.rows.length; i++ ) {
+        const length = parseInt(dataTable.rows[i].cells[7].innerHTML);
+        const width = parseInt(dataTable.rows[i].cells[8].innerHTML);
+        const height = parseInt(dataTable.rows[i].cells[9].innerHTML);
+        const volume = length*width*height
         const orderdata = {
             batch_id: batch_map.get(asn),
             account_id: savedAccount_id,
@@ -188,12 +192,13 @@ function boxInsertExistedAccount() {
             qty_per_box: parseInt(dataTable.rows[i].cells[3].innerHTML),
             order: parseInt(dataTable.rows[i].cells[4].innerHTML),
             weight: parseInt(dataTable.rows[i].cells[6].innerHTML),
-            length: parseInt(dataTable.rows[i].cells[7].innerHTML),
-            width: parseInt(dataTable.rows[i].cells[8].innerHTML),
-            height: parseInt(dataTable.rows[i].cells[9].innerHTML)
+            length: length,
+            width: width,
+            height: height,
+            volume: volume
         };
         // arr.push(orderdata.box_number);
-        loadingBox(orderdata)
+        loadingBox(orderdata);
     };
     alert('Orders Placed!');
     // barcode(arr);
@@ -204,7 +209,11 @@ function boxInsertNewAccount() {
     // var new_account_arr = [];
     var dataTable = document.getElementById( "ordertable" );
     for ( var i = 1; i < dataTable.rows.length; i++ ) {
-       const newBox = {
+        const length = parseInt(dataTable.rows[i].cells[7].innerHTML);
+        const width = parseInt(dataTable.rows[i].cells[8].innerHTML);
+        const height = parseInt(dataTable.rows[i].cells[9].innerHTML);
+        const volume = length*width*height
+        const newBox = {
             batch_id: batch_map.get(asn),
             account_id: account_map.get(account.value),
             box_number: dataTable.rows[i].cells[0].innerHTML,
@@ -213,9 +222,10 @@ function boxInsertNewAccount() {
             qty_per_box: parseInt(dataTable.rows[i].cells[3].innerHTML),
             order: parseInt(dataTable.rows[i].cells[4].innerHTML),
             weight: parseInt(dataTable.rows[i].cells[6].innerHTML),
-            length: parseInt(dataTable.rows[i].cells[7].innerHTML),
-            width: parseInt(dataTable.rows[i].cells[8].innerHTML),
-            height: parseInt(dataTable.rows[i].cells[9].innerHTML)
+            length: length,
+            width: width,
+            height: height,
+            volume: volume
         };
         // new_account_arr.push(newBox.box_number);
         loadingBox(newBox)
