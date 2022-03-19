@@ -26,7 +26,8 @@ router.post('/', withAuth, (req, res) => {
     weight: req.body.weight,
     length: req.body.length,
     width: req.body.width,
-    height: req.body.height
+    height: req.body.height,
+    volume: req.body.volume
   }, {returning: true})
       .then(dbBoxData => res.json(dbBoxData))
       .catch(err => {
