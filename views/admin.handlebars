@@ -13,17 +13,20 @@
                 <label><input class="uk-radio" type="radio" value='5' name="radio2" onclick="status_trigger(5)">Shipped</label>
             </div>
             </div>
+
             <div class="uk-navbar-item">
             <button type="button" id="inventory_btn" class="btn text-primary btn-light btn-lg border-primary shadow-sm" onclick="status_trigger(6)">
                 Inventory: <b><span class="text-primary" id="numberOfInventory"></span></b>
                         <span class="sr-only">items</span>
             </button>
+            <a href="/billing" class="btn btn-outline-info">Billing</a>
             </div>
+
             <div class="uk-navbar-item">
-    <form class="uk-search uk-search-default">
-        <span uk-search-icon></span>
-        <input class="uk-search-input form-control search-input" type="search" placeholder="Search" data-table="myTable">
-    </form>
+                <form class="uk-search uk-search-default">
+                    <span uk-search-icon></span>
+                     <input class="uk-search-input form-control search-input" type="search" placeholder="Search" data-table="myTable">
+                 </form>
             </div>
         </div>
     {{!-- </nav> --}}

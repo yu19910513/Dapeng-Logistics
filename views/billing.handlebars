@@ -1,0 +1,42 @@
+{{#if admin}}
+<p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
+
+ <div class="contaienr">
+    <div class="row">
+        <div class="uk-margin">
+            <div class="uk-align-center col-4">
+                <select class="uk-select inactive" id="client_list" onchange="client()">
+                    <option value='0'>select client</option>
+                </select>
+            </div>
+            <div class="uk-align-center col-4">
+                <select class="uk-select" style="display: none;" id="account_list" onchange="account()">
+                    <option value='0'>select account</option>
+                </select>
+            </div>
+
+            <div class="uk-align-center col-4">
+                <select class="uk-select" style="display: none;" id="month_list" onchange="next()">
+                    <option value='0'>select billing month</option>
+                    <option value='1'>January</option>
+                    <option value='2'>February</option>
+                    <option value='3'>March</option>
+                    <option value='4'>April</option>
+                    <option value='5'>May</option>
+                    <option value='6'>June</option>
+                    <option value='7'>July</option>
+                    <option value='8'>August</option>
+                    <option value='9'>September</option>
+                    <option value='10'>October</option>
+                    <option value='11'>November</option>
+                    <option value='12'>December</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="javascript/billing_main.js"></script>
+{{else}}
+<script src="javascript/client_redirect.js"></script>
+{{/if}}

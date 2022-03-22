@@ -8,6 +8,9 @@ const {withAuth, adminAuth} = require('../utils/auth');
 router.get('/', withAuth, async (req, res) => {
   try {
     const boxData = await Box.findAll({
+      where:{
+        status: [0, 1, 2, 3]
+      },
       attributes: [
         'tracking',
         'batch_id',

@@ -23,6 +23,52 @@ router.get('/account', withAuth, async (req, res) => {
   }
 });
 
+// get all user info
+router.get('/', withAuth, async (req, res) => {
+  try {
+  const userDB = await User.findAll({
+    where: {
+      admin: false
+    },
+    attributes: [
+      'id',
+      'name'
+    ]
+  });
+  const users = userDB.map(user => user.get({plain: true}));
+  res.json(users);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+//get account info per selected user id
+router.get('/account_per_user', withAuth, async (req, res) => {
+  try {
+  const accountDB = await Account.findAll({
+    attributes: [
+      'id',
+      'name',
+      'prefix'
+    ],
+    include:
+      {
+        model: User,
+        attributes: [
+         'name',
+         'id'
+        ]
+      },
+  });
+  const accounts = accountDB.map(account => account.get({plain: true}));
+  res.json(accounts);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
 //get bactch info and send back to in-browawer js
 router.get('/batch', withAuth, async (req, res) => {
   try {
