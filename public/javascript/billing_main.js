@@ -1,5 +1,6 @@
 const client_list = document.getElementById('client_list');
 const account_list = document.getElementById('account_list');
+const month_list = document.getElementById('month_list');
 function client_data() {
     fetch(`/api/user/`, {
         method: 'GET'
@@ -19,10 +20,22 @@ client_data();
 
 function client() {
  if (client_list.value != 0) {
-    document.getElementById('account_list').style.display = '';
+    document.getElementById('account_list').disabled = false;
     document.getElementById('client_list').disabled = true;
     account_data(client_list.value)
  }
+};
+
+function account() {
+if (account_list.value != 0) {
+   document.getElementById('month_list').disabled = false;
+}
+};
+
+function month() {
+if (month_list.value != 0) {
+    document.getElementById('proceed_btn').disabled = false;
+}
 }
 
 function account_data(user_id) {
@@ -42,14 +55,10 @@ function account_data(user_id) {
     });
 }
 
-function thirty_day(ending_date) {
-    const today = new Date().toLocaleDateString("en-US");
-
-
-}
 
 var cell_table = document.getElementById('cell_table');
 function next() {
+    document.getElementById('myTable').style.display = '';
     const user_id = document.getElementById('client_list').value;
     const account_id = document.getElementById('account_list').value;
     if (account_id == 0) {
@@ -95,4 +104,11 @@ function next() {
         }
 
     });
+}
+
+
+function thirty_day(ending_date) {
+    const today = new Date().toLocaleDateString("en-US");
+
+
 }
