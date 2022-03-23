@@ -24,13 +24,6 @@ function client() {
     account_data(client_list.value)
  }
 }
-function account() {
-    if (account_list.value !=0 ) {
-        document.getElementById('month_list').style.display = '';
-    } else {
-        document.getElementById('month_list').style.display = 'none';
-    }
-}
 
 function account_data(user_id) {
     fetch(`/api/user/account_per_user`, {
@@ -38,7 +31,6 @@ function account_data(user_id) {
     }).then(function (response) {
         return response.json();
     }).then(function (data) {
-        console.log(data);
         for (let i = 0; i < data.length; i++) {
             if (data[i].user.id == user_id) {
             const account = document.createElement('option');
@@ -47,5 +39,60 @@ function account_data(user_id) {
             account_list.appendChild(account)
             }
         };
+    });
+}
+
+function thirty_day(ending_date) {
+    const today = new Date().toLocaleDateString("en-US");
+
+
+}
+
+var cell_table = document.getElementById('cell_table');
+function next() {
+    const user_id = document.getElementById('client_list').value;
+    const account_id = document.getElementById('account_list').value;
+    if (account_id == 0) {
+        alert('please select client, then select account!')
+    } else
+    fetch('/api/user/billing_per_account', {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        const pageData = data[account_id];
+        for (let i = 0; i < pageData.length; i++) {
+            const container = document.createElement('tr');
+            cell_table.appendChild(container);
+            const user = document.createElement('td');
+            const account = document.createElement('td');
+            const box_number = document.createElement('td');
+            const description = document.createElement('td');
+            const received_date = document.createElement('td');
+            const ending_date = document.createElement('td');
+            const volume = document.createElement('td');
+            const billable = document.createElement('td');
+            const cost = document.createElement('td');
+            container.appendChild(user);
+            container.appendChild(account);
+            container.appendChild(box_number);
+            container.appendChild(description);
+            container.appendChild(received_date);
+            container.appendChild(ending_date);
+            container.appendChild(volume);
+            container.appendChild(billable);
+            container.appendChild(cost);
+            user.innerHTML = pageData[i].user.name;
+            account.innerHTML = pageData[i].account.name;
+            box_number.innerHTML = pageData[i].box_number;
+            description.innerHTML = pageData[i].description;
+            received_date.innerHTML = pageData[i].received_date;
+            if (pageData[i].shipped_date) {
+                ending_date.innerHTML = pageData[i].shipped_date;
+            } else {ending_date.innerHTML = new Date().toLocaleDateString("en-US");};
+            volume.innerHTML = pageData[i].volume
+
+        }
+
     });
 }

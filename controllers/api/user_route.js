@@ -231,5 +231,54 @@ router.get('/box', withAuth, async (req, res) => {
 
 });
 
+//billing box data
+router.get('/billing_per_account', withAuth, async (req, res) => {
+  try {
+    const boxData = await Box.findAll({
+      where: {
+        status:[1,2,3]
+      },
+      attributes: [
+        'id',
+        'box_number',
+        'description',
+        'cost',
+        'requested_date',
+        'received_date',
+        'shipped_date',
+        'weight',
+        'volume',
+        'status',
+        'fba'
+      ],
+      include: [
+        {
+          model: Account,
+          attributes: [
+            'id',
+            'name'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'id',
+            'name'
+          ]
+        }
+      ]
+    });
+    const boxes = boxData.map(box => box.get({ plain: true }));
+    const data = boxes.reduce(function (r, a) {
+      r[a.account.id] = r[a.account.id] || [];
+      r[a.account.id].push(a);
+      return r;
+    }, Object.create(null));
+    res.json(data);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 
+});
 module.exports = router;

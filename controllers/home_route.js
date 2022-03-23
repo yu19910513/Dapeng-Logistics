@@ -484,54 +484,7 @@ router.get('/admin_pre_ship', withAuth, (req, res) => {
 //billing page
 router.get('/billing', withAuth, async (req, res) => {
   try {
-    const boxData = await Box.findAll({
-      where: {
-        status: [1, 2]
-      },
-      attributes: [
-        'id',
-        'box_number',
-        'description',
-        'cost',
-        'received_date',
-        'requested_date',
-        'order',
-        'qty_per_box',
-        'length',
-        'width',
-        'height',
-        'weight',
-        'volume',
-        'status',
-        'location',
-        'sku'
-      ],
-      include: [
-        {
-          model: Batch,
-          attributes: [
-            'asn',
-            'pending_date',
-            'total_box'
-          ]
-        },
-        {
-          model: Account,
-          attributes: [
-            'name'
-          ]
-        },
-        {
-          model: User,
-          attributes: [
-            'name'
-          ]
-        }
-      ]
-    });
-    const boxes = boxData.map(box => box.get({ plain: true }));
     res.render('billing', {
-      boxes,
       loggedIn: true,
       admin: req.session.admin,
       name: req.session.name
