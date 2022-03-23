@@ -45,6 +45,9 @@ function prefix_check() {
         masterCheck()
     }
 };
+function infoAlert() {
+    alert("Some of the information are missing or incorrectly input! Please complete the form prior to proceeding.")
+}
 
 function masterCheck() {
     var desscription = document.querySelector('#new_des').value.trim();
@@ -57,8 +60,10 @@ function masterCheck() {
     var total_box = document.querySelector('#new_tot').value.trim()
     if (desscription && length && width && height && weight && qty_per_box && sku && total_box && prefix.value.length > 1) {
         document.getElementById('order_pre-check').style.display = '';
+        document.getElementById('fake').style.display = 'none';
     } else {
         document.getElementById('order_pre-check').style.display = 'none';
+        document.getElementById('fake').style.display = '';
     }
 }
 
