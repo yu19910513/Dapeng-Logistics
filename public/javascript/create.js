@@ -36,29 +36,56 @@ class Box{
 }
 const fixedInfo = document.getElementById('fixedInfo');
 
+function prefix_check() {
+    if (prefix.value.length > 3) {
+        alert('Prefix is limited for 2-3 letters');
+        prefix.value = null;
+        masterCheck()
+    } else {
+        masterCheck()
+    }
+};
 
+function masterCheck() {
+    var desscription = document.querySelector('#new_des').value.trim();
+    var length = document.querySelector('#new_len').value.trim();
+    var width = document.querySelector('#new_wid').value.trim();
+    var height = document.querySelector('#new_hei').value.trim();
+    var weight = document.querySelector('#new_wei').value.trim();
+    var qty_per_box = document.querySelector('#new_qty').value.trim();
+    var sku = document.querySelector('#new_sku').value.trim();
+    var total_box = document.querySelector('#new_tot').value.trim()
+    if (desscription && length && width && height && weight && qty_per_box && sku && total_box && prefix.value.length > 1) {
+        document.getElementById('order_pre-check').style.display = '';
+    } else {
+        document.getElementById('order_pre-check').style.display = 'none';
+    }
+}
 
 function precheck() {
-   if (prefix.value.length > 4 || prefix.value.length < 2) {
-       alert('Prefix is limited for 2-3 letters');
-       return;
-   } else if (prefix.value.length == 2) {
-        prefix.value = prefix.value + "0"
-   };
-    fixedInfo.innerHTML = 'Account:' + account.value + "</br>" + 'ASN:' + asn + "</br>" + 'Pending Date: ' + pending_date;
-    const desscription = document.querySelector('#new_des').value;
-    const length = document.querySelector('#new_len').value;
-    const width = document.querySelector('#new_wid').value;
-    const height = document.querySelector('#new_hei').value;
-    const weight = document.querySelector('#new_wei').value;
-    const qty_per_box = document.querySelector('#new_qty').value;
-    const sku = document.querySelector('#new_sku').value;
+    const desscription = document.querySelector('#new_des').value.trim();
+    const length = document.querySelector('#new_len').value.trim();
+    const width = document.querySelector('#new_wid').value.trim();
+    const height = document.querySelector('#new_hei').value.trim();
+    const weight = document.querySelector('#new_wei').value.trim();
+    const qty_per_box = document.querySelector('#new_qty').value.trim();
+    const sku = document.querySelector('#new_sku').value.trim();
     const total_box = document.querySelector('#new_tot').value.trim();
+    if (prefix.value.length == 2) {
+        prefix.value = prefix.value + "0"
+    };
+    document.getElementById("export-btn").disabled = false;
+    fixedInfo.innerHTML = 'Account:' + account.value + "</br>" + 'ASN:' + asn + "</br>" + 'Pending Date: ' + pending_date;
     const pre_digcode_2 = Math.floor(1000000000 + Math.random() * 9000000000);
     const pre_digcode = parseInt(String(new Date().valueOf() + pre_digcode_2).substring(4, 11));
     localStorage.setItem('total_box',total_box);
     for (let i = 1; i <= total_box; i++) {
-        const digcode = pre_digcode + i;
+        var digcode = pre_digcode;
+        if (pre_digcode.toString().length != 7) {
+            digcode = pre_digcode + `${i}`;
+        } else {
+            digcode = pre_digcode + i;
+        };
         const pre_number = 'SW' + prefix.value.toUpperCase() + digcode
         const box_number = pre_number.replace(/\s/g, '');
         const box = new Box(account.value, prefix.value, asn, desscription, length, weight, height, width, total_box, i, qty_per_box, sku)
@@ -120,6 +147,7 @@ function precheck() {
     };
 
 }
+
 
 document.getElementById('order_pre-check').addEventListener('click', precheck);
 
