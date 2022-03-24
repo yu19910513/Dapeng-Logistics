@@ -2,43 +2,69 @@
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
 
  <div class="container">
-    <div class="row justify-content-center">
-            <div class="col-3">
-                <select class="uk-select" id="client_list" onchange="client()">
-                    <option value='0'>select client</option>
-                </select>
-            </div>
-            <div class="col-3">
-                <select class="uk-select" id="account_list" onchange="account()" disabled>
-                    <option value='0'>select account</option>
-                </select>
-            </div>
+    <div class="row justify-content-between">
+        <div class="col-6">
+            <h1>Billing Date: <span id="today"></span> </h1>
+        </div>
 
-            <div class="col-3">
-                <select class="uk-select" id="month_list" onchange="month()" disabled>
-                    <option value='0'>select billing month</option>
-                    <option value='1'>January</option>
-                    <option value='2'>February</option>
-                    <option value='3'>March</option>
-                    <option value='4'>April</option>
-                    <option value='5'>May</option>
-                    <option value='6'>June</option>
-                    <option value='7'>July</option>
-                    <option value='8'>August</option>
-                    <option value='9'>September</option>
-                    <option value='10'>October</option>
-                    <option value='11'>November</option>
-                    <option value='12'>December</option>
-                </select>
+        <div class="col-4">
+            <div class="row justify-content-end">
+                <div class="col">
+                    <select class="uk-select" id="client_list" onchange="client()">
+                        <option value='0'>select client</option>
+                     </select>
+                </div>
+
+                 <div class="col">
+                    <button class="btn btn-outline-success" type="button" uk-toggle="target: #modal-cost">charge</button>
+                </div>
             </div>
-            <div class="col-3">
-            <button class="btn btn-outline-primary" type="button" id="proceed_btn" onclick="next()" disabled>Proceed</button>
-            </div>
+        </div>
     </div>
 </div>
 
+
+<!-- billing units -->
+<div id="modal-cost" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <h2 class="uk-modal-title text-center mb-4">Billing Units</h2>
+        <div class="container">
+            <div class="row">
+                <div class="input-group mb-3 col">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Receiving Charge" id="receiving_cost" value="3">
+                </div>
+
+                <div class="input-group mb-3 col">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Storage Charge" id="storage_cost" value="0.33">
+                </div>
+
+                <div class="input-group mb-3 col">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Shipping Charge" id="shipping_cost" value="7">
+                </div>
+
+            </div>
+        </div>
+
+
+        <p class="uk-text-center">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+            <button class="uk-button uk-button-primary uk-modal-close" type="button">Save</button>
+        </p>
+    </div>
 </div>
 
+
+
+<div class="container">
         <table class="uk-table uk-table-small uk-table-divider myTable" id="myTable" style="display: none;">
             <thead>
                 <tr>

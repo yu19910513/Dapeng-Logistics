@@ -270,8 +270,8 @@ router.get('/billing_per_account', withAuth, async (req, res) => {
     });
     const boxes = boxData.map(box => box.get({ plain: true }));
     const data = boxes.reduce(function (r, a) {
-      r[a.account.id] = r[a.account.id] || [];
-      r[a.account.id].push(a);
+      r[a.user.id] = r[a.user.id] || [];
+      r[a.user.id].push(a);
       return r;
     }, Object.create(null));
     res.json(data);

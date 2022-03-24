@@ -1,6 +1,10 @@
 const client_list = document.getElementById('client_list');
-const account_list = document.getElementById('account_list');
-const month_list = document.getElementById('month_list');
+const today = new Date().toLocaleDateString("en-US");
+const shipping_cost = document.getElementById('shipping_cost');
+const receiving_cost = document.getElementById('receiving_cost');
+const storage_cost = document.getElementById('storage_cost');
+
+document.getElementById('today').innerHTML = today;
 function client_data() {
     fetch(`/api/user/`, {
         method: 'GET'
@@ -20,56 +24,21 @@ client_data();
 
 function client() {
  if (client_list.value != 0) {
-    document.getElementById('account_list').disabled = false;
     document.getElementById('client_list').disabled = true;
-    account_data(client_list.value)
+    next();
  }
 };
-
-function account() {
-if (account_list.value != 0) {
-   document.getElementById('month_list').disabled = false;
-}
-};
-
-function month() {
-if (month_list.value != 0) {
-    document.getElementById('proceed_btn').disabled = false;
-}
-}
-
-function account_data(user_id) {
-    fetch(`/api/user/account_per_user`, {
-        method: 'GET'
-    }).then(function (response) {
-        return response.json();
-    }).then(function (data) {
-        for (let i = 0; i < data.length; i++) {
-            if (data[i].user.id == user_id) {
-            const account = document.createElement('option');
-            account.innerHTML = data[i].name;
-            account.setAttribute('value', data[i].id);
-            account_list.appendChild(account)
-            }
-        };
-    });
-}
-
 
 var cell_table = document.getElementById('cell_table');
 function next() {
     document.getElementById('myTable').style.display = '';
     const user_id = document.getElementById('client_list').value;
-    const account_id = document.getElementById('account_list').value;
-    if (account_id == 0) {
-        alert('please select client, then select account!')
-    } else
     fetch('/api/user/billing_per_account', {
         method: 'GET'
     }).then(function (response) {
         return response.json();
     }).then(function (data) {
-        const pageData = data[account_id];
+        const pageData = data[user_id];
         for (let i = 0; i < pageData.length; i++) {
             const container = document.createElement('tr');
             cell_table.appendChild(container);
@@ -96,19 +65,33 @@ function next() {
             box_number.innerHTML = pageData[i].box_number;
             description.innerHTML = pageData[i].description;
             received_date.innerHTML = pageData[i].received_date;
+            billable.innerHTML = dayCalculator(pageData[i].received_date, pageData[i].shipped_date);
             if (pageData[i].shipped_date) {
                 ending_date.innerHTML = pageData[i].shipped_date;
             } else {ending_date.innerHTML = new Date().toLocaleDateString("en-US");};
-            volume.innerHTML = pageData[i].volume
+            volume.innerHTML = pageData[i].volume;
+            cost.innerHTML = storage_cost.value
 
         }
 
     });
+};
+
+//billable day function: r = received_date; s = shipped_date if any
+function dayCalculator(r,s) {
+var received_date = new Date(r);
+if (s) {
+    var ending_date = new Date(s);
+} else {
+    var ending_date = new Date(today);
+};
+var Difference_In_Time = ending_date.getTime() - received_date.getTime();
+var diff = Math.ceil(Difference_In_Time / (1000 * 3600 * 24) + 1);
+if (diff > 30) {
+    return diff-30
+} else {
+    return 0
+}
 }
 
-
-function thirty_day(ending_date) {
-    const today = new Date().toLocaleDateString("en-US");
-
-
-}
+//
