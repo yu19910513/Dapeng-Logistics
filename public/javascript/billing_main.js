@@ -22,6 +22,7 @@ function client_data() {
 };
 client_data();
 
+//when specific user is selected
 function client() {
  if (client_list.value != 0) {
     document.getElementById('client_list').disabled = true;
@@ -40,42 +41,58 @@ function next() {
     }).then(function (data) {
         const pageData = data[user_id];
         for (let i = 0; i < pageData.length; i++) {
-            const container = document.createElement('tr');
-            cell_table.appendChild(container);
-            const user = document.createElement('td');
-            const account = document.createElement('td');
-            const box_number = document.createElement('td');
-            const description = document.createElement('td');
-            const received_date = document.createElement('td');
-            const ending_date = document.createElement('td');
-            const volume = document.createElement('td');
-            const billable = document.createElement('td');
-            const cost = document.createElement('td');
-            container.appendChild(user);
-            container.appendChild(account);
-            container.appendChild(box_number);
-            container.appendChild(description);
-            container.appendChild(received_date);
-            container.appendChild(ending_date);
-            container.appendChild(volume);
-            container.appendChild(billable);
-            container.appendChild(cost);
-            user.innerHTML = pageData[i].user.name;
-            account.innerHTML = pageData[i].account.name;
-            box_number.innerHTML = pageData[i].box_number;
-            description.innerHTML = pageData[i].description;
-            received_date.innerHTML = pageData[i].received_date;
-            billable.innerHTML = dayCalculator(pageData[i].received_date, pageData[i].shipped_date);
-            if (pageData[i].shipped_date) {
-                ending_date.innerHTML = pageData[i].shipped_date;
-            } else {ending_date.innerHTML = new Date().toLocaleDateString("en-US");};
-            volume.innerHTML = pageData[i].volume;
-            cost.innerHTML = storage_cost.value
-
+            if (!pageData[i].shipped_date || monthValidate(pageData[i].shipped_date)) {
+                building(pageData, i)
+            }
         }
 
     });
 };
+
+//function to build the table if pass validation
+function building(pageData, i) {
+    const container = document.createElement('tr');
+    cell_table.appendChild(container);
+    const user = document.createElement('td');
+    const account = document.createElement('td');
+    const box_number = document.createElement('td');
+    const description = document.createElement('td');
+    const received_date = document.createElement('td');
+    const ending_date = document.createElement('td');
+    const volume = document.createElement('td');
+    const billable = document.createElement('td');
+    const cost = document.createElement('td');
+    container.appendChild(user);
+    container.appendChild(account);
+    container.appendChild(box_number);
+    container.appendChild(description);
+    container.appendChild(received_date);
+    container.appendChild(ending_date);
+    container.appendChild(volume);
+    container.appendChild(billable);
+    container.appendChild(cost);
+    user.innerHTML = pageData[i].user.name;
+    account.innerHTML = pageData[i].account.name;
+    box_number.innerHTML = pageData[i].box_number;
+    description.innerHTML = pageData[i].description;
+    received_date.innerHTML = pageData[i].received_date;
+    billable.innerHTML = dayCalculator(pageData[i].received_date, pageData[i].shipped_date);
+    if (pageData[i].shipped_date) {
+        ending_date.innerHTML = pageData[i].shipped_date;
+    } else {ending_date.innerHTML = new Date().toLocaleDateString("en-US");};
+    volume.innerHTML = pageData[i].volume;
+    cost.innerHTML = storage_cost.value
+
+}
+
+//month validation: only bill the box not shipped or shipped this month
+function monthValidate(s) {
+    var ending_month= new Date(s).getMonth();
+    var thisMonth = new Date(today).getMonth();
+    if (ending_month == thisMonth) {
+        return true
+    } return false
+}
 
 //billable day function: r = received_date; s = shipped_date if any
 function dayCalculator(r,s) {
@@ -92,6 +109,4 @@ if (diff > 30) {
 } else {
     return 0
 }
-}
-
-//
+};
