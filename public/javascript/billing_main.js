@@ -1,8 +1,16 @@
 const client_list = document.getElementById('client_list');
 const today = new Date().toLocaleDateString("en-US");
+// billing units
 const shipping_cost = document.getElementById('shipping_cost');
 const receiving_cost = document.getElementById('receiving_cost');
 const storage_cost = document.getElementById('storage_cost');
+// charge display
+const shipping_total = document.getElementById('shipping_total');
+const storage_total = document.getElementById('storage_total');
+const receiving_total = document.getElementById('receiving_total');
+// storage table
+var cell_table = document.getElementById('cell_table');
+
 
 document.getElementById('today').innerHTML = today;
 function client_data() {
@@ -30,10 +38,11 @@ function client() {
  }
 };
 
-var cell_table = document.getElementById('cell_table');
+
 function next() {
     document.getElementById('myTable').style.display = '';
     const user_id = document.getElementById('client_list').value;
+    var receiving_cal = 0
     fetch('/api/user/billing_per_account', {
         method: 'GET'
     }).then(function (response) {
@@ -42,15 +51,18 @@ function next() {
         const pageData = data[user_id];
         for (let i = 0; i < pageData.length; i++) {
             if (!pageData[i].shipped_date || monthValidate(pageData[i].shipped_date)) {
-                building(pageData, i)
+                storage_billing(pageData, i);
+                receiving_cal++;
             }
-        }
-
+        };
+        const r_charge = receiving_cal*parseInt(receiving_cost.value);
+        console.log(r_charge);
+        receiving_total.innerHTML = r_charge;
     });
 };
 
-//function to build the table if pass validation
-function building(pageData, i) {
+//function to build the stroage table if pass validation
+function storage_billing(pageData, i) {
     const container = document.createElement('tr');
     cell_table.appendChild(container);
     const user = document.createElement('td');

@@ -1,10 +1,21 @@
 {{#if admin}}
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
 
- <div class="container">
+ <div class="container mb-3">
     <div class="row justify-content-between">
         <div class="col-6">
             <h1>Billing Date: <span id="today"></span> </h1>
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-outline-primary btn-sm">total receiving charge: $<span id="receiving_total"></span></button>
+                </div>
+                 <div class="col">
+                    <button class="btn btn-outline-primary btn-sm">total storage charge: $<span id="storage_total"></span></button>
+                </div>
+                 <div class="col">
+                    <button class="btn btn-outline-primary btn-sm">total shipping charge: $<span id="shipping_total"></span></button>
+                </div>
+            </div>
         </div>
 
         <div class="col-4">
