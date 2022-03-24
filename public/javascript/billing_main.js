@@ -80,8 +80,9 @@ function building(pageData, i) {
     if (pageData[i].shipped_date) {
         ending_date.innerHTML = pageData[i].shipped_date;
     } else {ending_date.innerHTML = new Date().toLocaleDateString("en-US");};
-    const volumeNew = pageData[i].volume/764555
-    volume.innerHTML = Math.round(volumeNew);
+    const volumeNew = pageData[i].volume/764555;
+    console.log(volumeNew, Math.round(volumeNew));
+    volume.innerHTML = volumeNew;
     cost.innerHTML = storage_cost.value
 
 }
