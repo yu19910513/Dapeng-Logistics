@@ -7,13 +7,16 @@
             <h1>Billing Date: <span id="today"></span> </h1>
             <div class="row">
                 <div class="col">
-                    <button class="btn btn-outline-primary btn-sm">total receiving charge: $<span id="receiving_total"></span></button>
+                    <button class="btn btn-outline-primary btn-sm shadow-sm" id="r_only" onclick="r_only()" disabled>total receiving charge: $<span id="receiving_total"></span></button>
                 </div>
                  <div class="col">
-                    <button class="btn btn-outline-primary btn-sm">total storage charge: $<span id="storage_total"></span></button>
+                    <button class="btn btn-outline-primary btn-sm shadow-sm" id="st_only" onclick="st_only()" disabled>total storage charge: $<span id="storage_total"></span></button>
                 </div>
                  <div class="col">
-                    <button class="btn btn-outline-primary btn-sm">total shipping charge: $<span id="shipping_total"></span></button>
+                    <button class="btn btn-outline-primary btn-sm shadow-sm" id="s_only" onclick="s_only()" disabled>total shipping charge: $<span id="shipping_total"></span></button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-outline-primary btn-sm shadow-sm" id="all" onclick="show_all()" disabled><b>Grand Total: $<span id="all_total"></span></b></button>
                 </div>
             </div>
         </div>
@@ -76,23 +79,63 @@
 
 
 <div class="container">
-        <table class="uk-table uk-table-small uk-table-divider myTable" id="myTable" style="display: none;">
+    <div class="" id="storageTable" style="display: none;">
+        <h4>Storing Charge: $<span id="storage_total_2"></span></h4>
+        <table class="uk-table uk-table-small uk-table-divider myTable" id="stTable">
             <thead>
                 <tr>
-                    <th onclick="sortTable(0)">User</th>
-                    <th onclick="sortTable(1)">Account</th>
+                    <th onclick="sortStTable(0)">User</th>
+                    <th onclick="sortStTable(1)">Account</th>
                     <th>Box number</th>
-                    <th onclick="sortTable(3)">Item Description</th>
-                    <th onclick="sortTable(9)">Received Date</th>
-                    <th>Ending Date</th>
+                    <th onclick="sortStTable(3)">Item Description</th>
+                    <th onclick="sortStTable(4)">Received Date</th>
+                    <th onclick="sortStTable(5)">Ending Date</th>
                     <th>Volume</th>
                     <th>Billable Days</th>
                     <th>Cost</th>
                 </tr>
             </thead>
-            <tbody id="cell_table">
+            <tbody id="storage_table">
             </tbody>
         </table>
+    </div>
+<br>
+    <div class="" id="receivedTable" style="display: none;">
+        <h4>Receiving Charge: $<span id="receiving_total_2"></span></h4>
+        <table class="uk-table uk-table-small uk-table-divider myTable bg-light" id="rTable">
+            <thead>
+                <tr>
+                    <th onclick="sortRTable(0)">User</th>
+                    <th onclick="sortRTable(1)">Account</th>
+                    <th>Box number</th>
+                    <th onclick="sortRTable(3)">Item Description</th>
+                    <th onclick="sortRTable(4)">Received Date</th>
+                    <th>Cost</th>
+                </tr>
+            </thead>
+            <tbody id="received_table">
+            </tbody>
+        </table>
+    </div>
+<br>
+     <div class="" id="shippedTable" style="display: none;">
+        <h4>Shipping Charge: $<span id="shipping_total_2"></span></h4>
+        <table class="uk-table uk-table-small uk-table-divider myTable bg-warning" id="sTable">
+            <thead>
+                <tr>
+                    <th onclick="sortSTable(0)">User</th>
+                    <th onclick="sortSTable(1)">Account</th>
+                    <th onclick="sortSTable(2)">FBA#</th>
+                    <th>Box number</th>
+                    <th onclick="sortSTable(4)">Item Description</th>
+                    <th onclick="sortSTable(5)">Shipped Date</th>
+                    <th>Cost</th>
+                </tr>
+            </thead>
+            <tbody id="shipped_table">
+            </tbody>
+        </table>
+    </div>
 </div>
 
 

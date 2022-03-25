@@ -232,7 +232,7 @@ router.get('/box', withAuth, async (req, res) => {
 });
 
 //billing box data
-router.get('/billing_per_account', withAuth, async (req, res) => {
+router.get('/billing_per_user', withAuth, async (req, res) => {
   try {
     const boxData = await Box.findAll({
       where: {
@@ -249,7 +249,9 @@ router.get('/billing_per_account', withAuth, async (req, res) => {
         'weight',
         'volume',
         'status',
-        'fba'
+        'fba',
+        'bill_received',
+        'bill_shipped'
       ],
       include: [
         {

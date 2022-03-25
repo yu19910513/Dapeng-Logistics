@@ -48,6 +48,14 @@ Box.init(
             type: DataTypes.STRING,
             allowNull: true
          },
+        bill_received: {
+            type: DataTypes.STRING,
+            allowNull: true
+         },
+        bill_shipped: {
+            type: DataTypes.STRING,
+            allowNull: true
+         },
 //qty data
         order: {
             type: DataTypes.INTEGER,
