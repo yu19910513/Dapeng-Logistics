@@ -88,7 +88,7 @@ function next() {
         //STORAGE FOR LOOP
         for (let i = 0; i < pageData.length; i++) {
             if (!pageData[i].shipped_date || monthValidate(pageData[i].shipped_date)) {
-                storage_billing(pageData, i);
+                storage_billing_1stStep(pageData, i);
             };
         };
         var storage_charge = total_billable_day*total_volume*storage_cost.value;
@@ -114,10 +114,19 @@ function next() {
     });
 };
 
-
+const test = new Date('2/1/2022').getTime()
+console.log(test.toString());
 ////////////////////////////// STORAGE FOR LOOP
 //function to build the stroage table if pass validation
-function storage_billing(pageData, i) {
+function storage_billing_1stStep(pageData, i) {
+    if (!pageData[i].bill_storage) {
+        storage_billing(pageData, i, pageData[i].received_date)
+    } else {
+        const oldDate = new Date(pageData[i].bill_storage).toLocaleDateString("en-US");
+        storage_billing(pageData, i, oldDate);
+    }
+};
+function storage_billing(pageData, i, lastBillDate) {
     const container = document.createElement('tr');
     storage_table.appendChild(container);
     const user = document.createElement('td');
@@ -142,9 +151,13 @@ function storage_billing(pageData, i) {
     account.innerHTML = pageData[i].account.name;
     box_number.innerHTML = pageData[i].box_number;
     description.innerHTML = pageData[i].description;
-    received_date.innerHTML = pageData[i].received_date;
-    billable.innerHTML = dayCalculator(pageData[i].received_date, pageData[i].shipped_date);
-    total_billable_day = total_billable_day + dayCalculator(pageData[i].received_date, pageData[i].shipped_date);
+    if (lastBillDate == pageData[i].received_date) {
+        received_date.innerHTML = lastBillDate;
+    } else {
+        received_date.innerHTML = `${pageData[i].received_date} <br> L: <u>${lastBillDate}</u>`;
+    };
+    billable.innerHTML = dayCalculator(lastBillDate, pageData[i].shipped_date);
+    total_billable_day = total_billable_day + dayCalculator(lastBillDate, pageData[i].shipped_date);
     if (pageData[i].shipped_date) {
         ending_date.innerHTML = pageData[i].shipped_date;
     } else {ending_date.innerHTML = new Date().toLocaleDateString("en-US");};
@@ -152,7 +165,6 @@ function storage_billing(pageData, i) {
     volume.innerHTML = volumeNew.toFixed(10);
     total_volume = total_volume + volumeNew;
     cost.innerHTML = `$${storage_cost.value}/ day`
-
 };
 
 //month validation: only bill the box not shipped or shipped this month

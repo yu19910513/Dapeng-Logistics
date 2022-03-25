@@ -251,7 +251,8 @@ router.get('/billing_per_user', withAuth, async (req, res) => {
         'status',
         'fba',
         'bill_received',
-        'bill_shipped'
+        'bill_shipped',
+        'bill_storage'
       ],
       include: [
         {

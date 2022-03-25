@@ -49,15 +49,15 @@ Box.init(
             allowNull: true
          },
         bill_received: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT(14),
             allowNull: true
          },
          bill_storage: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT(14),
             allowNull: true
          },
         bill_shipped: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT(14),
             allowNull: true
          },
 //qty data
