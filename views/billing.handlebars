@@ -30,7 +30,8 @@
                 </div>
 
                  <div class="col">
-                    <button class="btn btn-outline-success" type="button" uk-toggle="target: #modal-cost">charge</button>
+                    <button class="btn btn-outline-success" type="button" id="charge_btn" uk-toggle="target: #modal-cost">Charge</button>
+                    <button class="btn btn-outline-info" type="button" onclick="reset()" id="reset_btn" style="display: none;">Reset</button>
                 </div>
             </div>
         </div>
@@ -86,12 +87,12 @@
                 <tr>
                     <th onclick="sortStTable(0)">User</th>
                     <th onclick="sortStTable(1)">Account</th>
-                    <th>Box number</th>
+                    <th onclick="sortStTable(2)">Box number</th>
                     <th onclick="sortStTable(3)">Item Description</th>
                     <th onclick="sortStTable(4)">Received Date</th>
                     <th onclick="sortStTable(5)">Ending Date</th>
-                    <th>Volume</th>
-                    <th>Billable Days</th>
+                    <th onclick="sortStTable(6)">Volume</th>
+                    <th onclick="sortStTable(7)">Billable Days</th>
                     <th>Cost</th>
                 </tr>
             </thead>
@@ -107,7 +108,7 @@
                 <tr>
                     <th onclick="sortRTable(0)">User</th>
                     <th onclick="sortRTable(1)">Account</th>
-                    <th>Box number</th>
+                    <th onclick="sortRTable(2)">Box number</th>
                     <th onclick="sortRTable(3)">Item Description</th>
                     <th onclick="sortRTable(4)">Received Date</th>
                     <th>Cost</th>
@@ -126,7 +127,7 @@
                     <th onclick="sortSTable(0)">User</th>
                     <th onclick="sortSTable(1)">Account</th>
                     <th onclick="sortSTable(2)">FBA#</th>
-                    <th>Box number</th>
+                    <th onclick="sortSTable(3)">Box number</th>
                     <th onclick="sortSTable(4)">Item Description</th>
                     <th onclick="sortSTable(5)">Shipped Date</th>
                     <th>Cost</th>
@@ -135,6 +136,7 @@
             <tbody id="shipped_table">
             </tbody>
         </table>
+        <button class="btn btn-danger" id="s_onlyConfrim" style="display: none;">Confirm</button>
     </div>
 </div>
 

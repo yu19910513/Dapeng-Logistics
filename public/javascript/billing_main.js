@@ -37,6 +37,8 @@ client_data();
 
 function unlock_select() {
     document.getElementById('client_list').disabled = false;
+    document.getElementById('charge_btn').style.display = 'none';
+    document.getElementById('reset_btn').style.display = '';
 };
 //when specific user is selected
 function client() {
@@ -278,6 +280,7 @@ function show_all() {
     document.getElementById('storageTable').style.display ='';
     document.getElementById('receivedTable').style.display ='';
     document.getElementById('shippedTable').style.display ='';
+    document.getElementById('s_onlyConfrim').style.display = 'none';
 };
 function st_only() {
     document.getElementById('storageTable').style.display = '';
@@ -293,4 +296,9 @@ function s_only() {
     document.getElementById('storageTable').style.display = 'none';
     document.getElementById('receivedTable').style.display = 'none';
     document.getElementById('shippedTable').style.display = '';
+    document.getElementById('s_onlyConfrim').style.display = '';
 };
+
+function reset() {
+    location.reload()
+}
