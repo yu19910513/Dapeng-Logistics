@@ -24,7 +24,6 @@ function client_data() {
     }).then(function (response) {
         return response.json();
     }).then(function (data) {
-        console.log(data);
         for (let i = 0; i < data.length; i++) {
         const user = document.createElement('option');
         user.innerHTML = data[i].name;
@@ -53,6 +52,11 @@ var total_billable_day = 0;
 var receivedCount = 0;
 var shippedCount = 0;
 
+/////////////Array to store box_numbers to update their assoicated bill_shipped & bill_received
+var shippedBoxArr = [];
+var receivedBoxArr = [];
+
+//////////// trigger fetch function to grab data
 function next() {
     document.getElementById('storageTable').style.display = '';
     document.getElementById('receivedTable').style.display = '';
@@ -74,6 +78,7 @@ function next() {
            if(!pageData[j].bill_received) {
             received_billing(pageData, j);
             receivedCount++;
+            receivedBoxArr.push(pageData[j].box_number)
            }
         };
         var received_charge = receivedCount*receiving_cost.value;
@@ -95,6 +100,7 @@ function next() {
             if(!pageData[k].bill_shipped && pageData[k].status == 3) {
                 shipped_billing(pageData, k);
                 shippedCount++;
+                shippedBoxArr.push(pageData[k].box_number)
             }
         };
         var shipped_charge = shippedCount*shipping_cost.value;
@@ -104,9 +110,10 @@ function next() {
         //total charge
         var total_charge = shipped_charge + received_charge + storage_charge;
         all_total.innerHTML = total_charge.toFixed(2);
-
+        return shippedBoxArr, receivedBoxArr
     });
 };
+
 
 ////////////////////////////// STORAGE FOR LOOP
 //function to build the stroage table if pass validation
@@ -194,7 +201,7 @@ function received_billing(pageData, i) {
     box_number.innerHTML = pageData[i].box_number;
     description.innerHTML = pageData[i].description;
     received_date.innerHTML = pageData[i].received_date;
-    cost.innerHTML = `$${receiving_cost.value}/ day`
+    cost.innerHTML = `$${receiving_cost.value}`
 };
 
 ////////////////////////////// SHIPPED FOR LOOP
@@ -221,7 +228,7 @@ function shipped_billing(pageData, i) {
     box_number.innerHTML = pageData[i].box_number;
     description.innerHTML = pageData[i].description;
     shipped_date.innerHTML = pageData[i].shipped_date;
-    cost.innerHTML = `$${shipping_cost.value}/ day`;
+    cost.innerHTML = `$${shipping_cost.value}`;
 };
 
 
