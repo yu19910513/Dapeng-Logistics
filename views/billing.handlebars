@@ -24,7 +24,7 @@
         <div class="col-4">
             <div class="row justify-content-end">
                 <div class="col">
-                    <select class="uk-select" id="client_list" onchange="client()">
+                    <select class="uk-select" id="client_list" onchange="client()" disabled>
                         <option value='0'>select client</option>
                      </select>
                 </div>
@@ -71,7 +71,7 @@
 
         <p class="uk-text-center">
             <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
-            <button class="uk-button uk-button-primary uk-modal-close" type="button">Save</button>
+            <button class="uk-button uk-button-primary uk-modal-close" type="button" onclick="unlock_select()">Save</button>
         </p>
     </div>
 </div>

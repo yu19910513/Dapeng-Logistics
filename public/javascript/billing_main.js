@@ -35,6 +35,9 @@ function client_data() {
 };
 client_data();
 
+function unlock_select() {
+    document.getElementById('client_list').disabled = false;
+};
 //when specific user is selected
 function client() {
  if (client_list.value != 0) {
