@@ -12,10 +12,12 @@ const all_total = document.getElementById('all_total');
 const shipping_total_2 = document.getElementById('shipping_total_2');
 const storage_total_2 = document.getElementById('storage_total_2');
 const receiving_total_2 = document.getElementById('receiving_total_2');
+
 // table
 var storage_table = document.getElementById('storage_table');
 var received_table = document.getElementById('received_table');
 var shipped_table = document.getElementById('shipped_table');
+
 
 document.getElementById('today').innerHTML = today;
 function client_data() {
@@ -42,8 +44,10 @@ function unlock_select() {
 //when specific user is selected
 function client() {
  if (client_list.value != 0) {
+    const user_id = client_list.value
     document.getElementById('client_list').disabled = true;
-    next();
+    localStorage.setItem('user', user_id);
+    next(user_id);
  }
 };
 
@@ -55,9 +59,10 @@ var shippedCount = 0;
 /////////////Array to store box_numbers to update their assoicated bill_shipped & bill_received
 var shippedBoxArr = [];
 var receivedBoxArr = [];
+var storageBoxArr = [];
 
 //////////// trigger fetch function to grab data
-function next() {
+function next(user_id) {
     document.getElementById('storageTable').style.display = '';
     document.getElementById('receivedTable').style.display = '';
     document.getElementById('shippedTable').style.display = '';
@@ -65,7 +70,6 @@ function next() {
     document.getElementById('s_only').disabled = false;
     document.getElementById('st_only').disabled = false;
     document.getElementById('all').disabled = false;
-    const user_id = document.getElementById('client_list').value;
     fetch('/api/user/billing_per_user', {
         method: 'GET'
     }).then(function (response) {
@@ -89,6 +93,7 @@ function next() {
         for (let i = 0; i < pageData.length; i++) {
             if (!pageData[i].shipped_date || monthValidate(pageData[i].shipped_date)) {
                 storage_billing_1stStep(pageData, i);
+                storageBoxArr.push(pageData[i].box_number);
             };
         };
         var storage_charge = total_billable_day*total_volume*storage_cost.value;
@@ -110,7 +115,7 @@ function next() {
         //total charge
         var total_charge = shipped_charge + received_charge + storage_charge;
         all_total.innerHTML = total_charge.toFixed(2);
-        return shippedBoxArr, receivedBoxArr
+        return shippedBoxArr, receivedBoxArr, storageBoxArr;
     });
 };
 
@@ -166,7 +171,6 @@ function storage_billing(pageData, i, lastBillDate) {
     total_volume = total_volume + volumeNew;
     cost.innerHTML = `$${storage_cost.value}/ day`
 };
-
 //month validation: only bill the box not shipped or shipped this month
 function monthValidate(s) {
     var ending_month= new Date(s).getMonth();
@@ -175,7 +179,6 @@ function monthValidate(s) {
         return true
     } return false
 };
-
 //billable day function: r = received_date; s = shipped_date if any
 function dayCalculator(r,s) {
 var received_date = new Date(r);
@@ -192,6 +195,8 @@ if (diff > 30) {
     return 0
 }
 };
+/////////////////////////////////////////////////
+
 ////////////////////////////// RECEIVED FOR LOOP
 function received_billing(pageData, i) {
     const container = document.createElement('tr');
@@ -300,9 +305,12 @@ function show_all() {
     document.getElementById('receivedTable').style.display ='';
     document.getElementById('shippedTable').style.display ='';
     document.getElementById('s_onlyConfrim').style.display = 'none';
+    document.getElementById('r_onlyConfrim').style.display = 'none';
+    document.getElementById('st_onlyConfrim').style.display = 'none';
 };
 function st_only() {
     document.getElementById('storageTable').style.display = '';
+    document.getElementById('st_onlyConfrim').style.display = '';
     document.getElementById('receivedTable').style.display = 'none';
     document.getElementById('shippedTable').style.display = 'none';
 };
@@ -310,6 +318,7 @@ function r_only() {
     document.getElementById('storageTable').style.display = 'none';
     document.getElementById('receivedTable').style.display = '';
     document.getElementById('shippedTable').style.display = 'none';
+    document.getElementById('r_onlyConfrim').style.display = '';
 };
 function s_only() {
     document.getElementById('storageTable').style.display = 'none';
@@ -318,6 +327,24 @@ function s_only() {
     document.getElementById('s_onlyConfrim').style.display = '';
 };
 
+// rest page
 function reset() {
     location.reload()
+};
+
+// add new ediable row for extra charge
+function addRow(t, n) {
+    const target_table = document.getElementById(`${t}`);
+    var row = target_table.insertRow(0);
+    for (let i = 0; i < n; i++) {
+        var cell1 = row.insertCell(i);
+    }
+
+
 }
+
+
+// <tr>
+// <td contenteditable='true'></td>
+// <td contenteditable='true'></td>
+// </tr>
