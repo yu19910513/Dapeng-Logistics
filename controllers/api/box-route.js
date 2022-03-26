@@ -212,5 +212,70 @@ router.post('/upload_2', upload.single('file'), async (req, res) => {
 });
 });
 
+router.put('/bill_received_update', withAuth, (req, res) => {
+  Box.update({
+      bill_received: req.body.bill
+    },
+      {
+      where: {
+          box_number: req.body.box_number
+      }
+    })
+    .then(dbBoxData => {
+      if (!dbBoxData[0]) {
+        res.status(404).json({ message: 'This Box does not exist!' });
+        return;
+      }
+      res.json(dbBoxData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+router.put('/bill_shipped_update', withAuth, (req, res) => {
+  Box.update({
+      bill_shipped: req.body.bill
+    },
+      {
+      where: {
+          box_number: req.body.box_number
+      }
+    })
+    .then(dbBoxData => {
+      if (!dbBoxData[0]) {
+        res.status(404).json({ message: 'This Box does not exist!' });
+        return;
+      }
+      res.json(dbBoxData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+router.put('/bill_storage_update', withAuth, (req, res) => {
+  Box.update({
+      bill_storage: req.body.bill
+    },
+      {
+      where: {
+          box_number: req.body.box_number
+      }
+    })
+    .then(dbBoxData => {
+      if (!dbBoxData[0]) {
+        res.status(404).json({ message: 'This Box does not exist!' });
+        return;
+      }
+      res.json(dbBoxData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
 
   module.exports = router;

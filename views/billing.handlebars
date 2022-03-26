@@ -7,13 +7,13 @@
             <h1>Billing Date: <span id="today"></span> </h1>
             <div class="row">
                 <div class="col">
-                    <button class="btn btn-outline-primary btn-sm shadow-sm" id="r_only" onclick="r_only()" disabled>total receiving charge: $<span id="receiving_total"></span></button>
+                    <button class="btn btn-outline-primary btn-sm shadow-sm" id="r_only" onclick="r_only()" disabled>Total Receiving Charge: $<span id="receiving_total"></span></button>
                 </div>
                  <div class="col">
-                    <button class="btn btn-outline-primary btn-sm shadow-sm" id="st_only" onclick="st_only()" disabled>total storage charge: $<span id="storage_total"></span></button>
+                    <button class="btn btn-outline-primary btn-sm shadow-sm" id="st_only" onclick="st_only()" disabled>Total Storage Charge: $<span id="storage_total"></span></button>
                 </div>
                  <div class="col">
-                    <button class="btn btn-outline-primary btn-sm shadow-sm" id="s_only" onclick="s_only()" disabled>total shipping charge: $<span id="shipping_total"></span></button>
+                    <button class="btn btn-outline-primary btn-sm shadow-sm" id="s_only" onclick="s_only()" disabled>Total Shipping Charge: $<span id="shipping_total"></span></button>
                 </div>
                 <div class="col">
                     <button class="btn btn-outline-primary btn-sm shadow-sm" id="all" onclick="show_all()" disabled><b>Grand Total: $<span id="all_total"></span></b></button>
@@ -96,10 +96,10 @@
                     <th>Cost</th>
                 </tr>
             </thead>
-            <tbody id="storage_table" contenteditable='true'>
+            <tbody id="storage_table">
             </tbody>
         </table>
-         <button class="btn btn-outline-danger" id="st_onlyConfrim" style="display: none;">Confirm</button>
+         <button class="btn btn-outline-danger" id="st_onlyConfrim" style="display: none;" onclick="bill_confirm(storageBoxArr, 'st')">Confirm</button>
     </div>
 <br>
     <div class="" id="receivedTable" style="display: none;">
@@ -115,10 +115,10 @@
                     <th>Cost</th>
                 </tr>
             </thead>
-            <tbody id="received_table" contenteditable='true'>
+            <tbody id="received_table">
             </tbody>
         </table>
-         <button class="btn btn-outline-danger" id="r_onlyConfrim" style="display: none;">Confirm</button>
+         <button class="btn btn-outline-danger" id="r_onlyConfrim" style="display: none;" onclick="bill_confirm(receivedBoxArr, 'r')">Confirm</button>
     </div>
 <br>
      <div class="" id="shippedTable" style="display: none;">
@@ -128,17 +128,17 @@
                 <tr>
                     <th onclick="sortSTable(0)">User</th>
                     <th onclick="sortSTable(1)">Account</th>
-                    <th onclick="sortSTable(2)">FBA#</th>
-                    <th onclick="sortSTable(3)">Box number</th>
+                    <th onclick="sortSTable(2)">Box number</th>
+                    <th onclick="sortSTable(3)">FBA#</th>
                     <th onclick="sortSTable(4)">Item Description</th>
                     <th onclick="sortSTable(5)">Shipped Date</th>
                     <th>Cost</th>
                 </tr>
             </thead>
-            <tbody id="shipped_table" contenteditable='true'>
+            <tbody id="shipped_table">
             </tbody>
         </table>
-        <button class="btn btn-outline-danger" id="s_onlyConfrim" style="display: none;">Confirm</button>
+        <button class="btn btn-outline-danger" id="s_onlyConfrim" style="display: none;" onclick="bill_confirm(shippedBoxArr, 's')">Confirm</button>
     </div>
 </div>
 

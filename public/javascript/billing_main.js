@@ -46,7 +46,7 @@ function client() {
  if (client_list.value != 0) {
     const user_id = client_list.value
     document.getElementById('client_list').disabled = true;
-    localStorage.setItem('user', user_id);
+    localStorage.setItem('user_id', user_id);
     next(user_id);
  }
 };
@@ -76,7 +76,7 @@ function next(user_id) {
         return response.json();
     }).then(function (data) {
         const pageData = data[user_id];
-
+        localStorage.setItem('user_name', pageData[0].user.name);
         //RECEIVED FOR LOOP
         for (let j = 0; j < pageData.length; j++) {
            if(!pageData[j].bill_received) {
@@ -119,8 +119,6 @@ function next(user_id) {
     });
 };
 
-const test = new Date('2/1/2022').getTime()
-console.log(test.toString());
 ////////////////////////////// STORAGE FOR LOOP
 //function to build the stroage table if pass validation
 function storage_billing_1stStep(pageData, i) {
@@ -181,13 +179,14 @@ function monthValidate(s) {
 };
 //billable day function: r = received_date; s = shipped_date if any
 function dayCalculator(r,s) {
-var received_date = new Date(r);
+var rDate_bDate = new Date(r);
+console.log(rDate_bDate);
 if (s) {
     var ending_date = new Date(s);
 } else {
     var ending_date = new Date(today);
 };
-var Difference_In_Time = ending_date.getTime() - received_date.getTime();
+var Difference_In_Time = ending_date.getTime() - rDate_bDate.getTime();
 var diff = Math.ceil(Difference_In_Time / (1000 * 3600 * 24) + 1);
 if (diff > 30) {
     return diff-30
@@ -227,22 +226,22 @@ function shipped_billing(pageData, i) {
     shipped_table.appendChild(container);
     const user = document.createElement('td');
     const account = document.createElement('td');
-    const fba = document.createElement('td');
     const box_number = document.createElement('td');
+    const fba = document.createElement('td');
     const description = document.createElement('td');
     const shipped_date = document.createElement('td');
     const cost = document.createElement('td');
     container.appendChild(user);
     container.appendChild(account);
-    container.appendChild(fba);
     container.appendChild(box_number);
+    container.appendChild(fba);
     container.appendChild(description);
     container.appendChild(shipped_date);
     container.appendChild(cost);
     user.innerHTML = pageData[i].user.name;
     account.innerHTML = pageData[i].account.name;
-    fba.innerHTML = pageData[i].fba
     box_number.innerHTML = pageData[i].box_number;
+    fba.innerHTML = pageData[i].fba;
     description.innerHTML = pageData[i].description;
     shipped_date.innerHTML = pageData[i].shipped_date;
     cost.innerHTML = `$${shipping_cost.value}`;
@@ -335,16 +334,66 @@ function reset() {
 // add new ediable row for extra charge
 function addRow(t, n) {
     const target_table = document.getElementById(`${t}`);
+    const pre_digcode = parseInt(String(new Date().valueOf() + Math.floor(1000000000 + Math.random() * 9000000000)).substring(4, 11));
+    const charge_number = "AC" + pre_digcode;
     var row = target_table.insertRow(0);
+    row.setAttribute('class','text-danger');
     for (let i = 0; i < n; i++) {
-        var cell1 = row.insertCell(i);
+        var cell = row.insertCell(i);
+        if (i == 2) {
+            cell.innerHTML = charge_number;
+        } else if (i == 0) {
+            cell.innerHTML = localStorage.getItem('user_name')
+        }
+
+        else {
+            cell.setAttribute('contenteditable', true)
+        }
+    };
+
+};
+
+//fetch to put the change: status updated
+function bill_confirm(arr, e) {
+    const today = new Date().getTime();
+    var bill_received, bill_shipped, bill_storage;
+    if (e == 's') {
+        bill_shipped = today;
+        fetch_update(arr, bill_shipped, 'bill_shipped')
+    } else if (e == 'r') {
+        bill_received = today;
+        fetch_update(arr, bill_received, 'bill_received')
+    } else {
+        bill_storage = today;
+        fetch_update(arr, bill_storage, 'bill_storage')
     }
+};
+async function fetch_update(arr, bill, type) {
+    for (let i = 0; i < arr.length; i++) {
+        var box_number = arr[i];
+        const response = await fetch(`/api/box/${type}_update`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                box_number,
+                bill
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+          })
+          if (response.ok) {
+            console.log(bill);
+          } else {
+            alert('Opps! Errors occured!')
+          };
+
+    };
+    alert('database updated successfully!');
+    show_all()
+};
 
 
-}
 
-
-// <tr>
-// <td contenteditable='true'></td>
-// <td contenteditable='true'></td>
-// </tr>
+///tool
+const test = new Date('2/1/2022').getTime()
+console.log(test.toString());
