@@ -41,16 +41,16 @@
                     </li>
 {{else}}
 
-                    <li class="create_order" onclick="accountList()"><a href="#createneworder" uk-toggle><b>Create</b> shipment</a></li>
+                    <li class="create_order" onclick="accountList()"><a href="#createneworder" uk-toggle><b>Create</b> shipment 新订单</a></li>
                                 <div id="createneworder" uk-modal>
                                     <div class="uk-modal-dialog">
 
                                         <button class="uk-modal-close-default" type="button" uk-close></button>
 
-                                        <div class="uk-modal-header uk-background-muted">
-                                            <h4 class="uk-modal-title uk-text-center">Account Option</h4>
+                                        <div class="uk-modal-header uk-background-muted uk-text-center">
+                                            <h4 class="uk-modal-title">Account Options<br><small>帐户名选择</small></h4>
                                         </div>
-                                            <p class="uk-margin-medium-left uk-margin-medium-right uk-margin-medium-top uk-margin-medium-bottom">Before creating a new shipment, please select an existed account to where the new order will be assigned. If you would like to create a new account, select "Create New Account" and continue.</p>
+                                            <p class="uk-margin-medium-left uk-margin-medium-right uk-margin-medium-top uk-margin-medium-bottom">Before creating a new shipment, please select an existed account to where the new order will be assigned. If you would like to create a new account, select "Create New Account" and continue. <br><small>创造新订单前，请选择一个已注册帐户，如欲创立新帐户名，选择“create new account”然后“确认”。</small></p>
                                         <form class="uk-form-horizontal uk-margin-small uk-margin-small-left">
                                             <div class="uk-margin">
                                                 <label class="uk-form-label" for="form-horizontal-select"><span uk-icon="icon: user"></span>USER: {{name}}</label>
@@ -63,15 +63,14 @@
 
                                             <div class="uk-modal-footer uk-text-right">
                                                 <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
-                                                <button class="uk-button uk-button-primary" id="account_selection" type="submit"><a uk-icon="icon:  arrow-right" href="/neworder">Continue</a></button>
+                                                <a class="uk-button uk-button-primary" id="account_selection" uk-icon="icon:  arrow-right" href="/neworder">Continue(确认)</a>
                                             </div>
                                         </form>
 
                                     </div>
                                 </div>
 
-                    <li><a href="/client_label"><b>Pending</b> Orders</a></li>
-                    <li><a href="/request"><b>Request</b>  Ship-out</a></li>
+                    <li><a href="/client_label"><b>Pending</b> Orders 挂单</a></li>
 {{/if}}
                 </ul>
             </div>
@@ -94,8 +93,10 @@
                     <li>
                         <a href="/admin_return" uk-icon="icon: refresh" >Return</a>
                     </li> --}}
+{{else}}
+                    <li><a href="/request"><b>Request</b>  Ship-out 出货</a></li>
 {{/if}}
-                    <li><a class="logout" uk-icon="icon: sign-out">Log Out</a></li>
+                    <li><a class="logout" uk-icon="icon: sign-out">Log Out 登出</a></li>
                 </ul>
             </div></div>
         </div>

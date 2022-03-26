@@ -7,17 +7,17 @@
 
             <div class="uk-navbar-item">
             <div class="uk-grid-small uk-child-width-auto uk-grid">
-                <label><input id="radio" class="uk-radio" type="radio" value='1' name="radio2" onclick="status_trigger(1)">All</label>
-                <label><input id="radio" class="uk-radio" type="radio" value='2' name="radio2" onclick="status_trigger(2)">Pending</label>
-                <label><input id="radio" class="uk-radio" type="radio" value='3' name="radio2" onclick="status_trigger(3)">Received</label>
-                <label><input id="radio" class="uk-radio" type="radio" value='4' name="radio2" onclick="status_trigger(4)">Requested</label>
-                <label><input  id="radio"class="uk-radio" type="radio" value='5' name="radio2" onclick="status_trigger(5)">Shipped</label>
+                <label><input id="radio" class="uk-radio" type="radio" value='1' name="radio2" onclick="status_trigger(1)">All 全交易</label>
+                <label><input id="radio" class="uk-radio" type="radio" value='2' name="radio2" onclick="status_trigger(2)">Pending 挂单</label>
+                <label><input id="radio" class="uk-radio" type="radio" value='3' name="radio2" onclick="status_trigger(3)">Received 存货</label>
+                <label><input id="radio" class="uk-radio" type="radio" value='4' name="radio2" onclick="status_trigger(4)">Requested 出货通知</label>
+                <label><input  id="radio"class="uk-radio" type="radio" value='5' name="radio2" onclick="status_trigger(5)">Shipped 已出货</label>
             </div>
             </div>
 
             <div class="uk-navbar-item">
             <button type="button" id='inventory_btn' class="btn btn-lg btn-light border-primary text-primary shadow-sm" onclick="status_trigger(6)">
-                Inventory:
+                Inventory 库存:
             {{!-- <div class="dropdown-content">
                 <div class="text-dark" href="#">大鹏库存</div>
             </div> --}}
@@ -46,17 +46,17 @@
         <table class="uk-table uk-table-small uk-table-divider myTable text-center" id="myTable">
             <thead>
                 <tr>
-                    <th onclick="sortTable(0)">Account</th>
-                    <th onclick="sortTable(1)">Box number</th>
-                    <th onclick="sortTable(2)">Item Description</th>
+                    <th onclick="sortTable(0)">Account 帐户</th>
+                    <th onclick="sortTable(1)">Box number 箱码</th>
+                    <th onclick="sortTable(2)">Item Description 细目</th>
                     <th>Box</th>
                     <th>of Box</th>
-                    <th>Qty per Box</th>
+                    <th>Qty per Box 物件量</th>
                     <th>SKU</th>
-                    <th onclick="sortTable(7)">Batch Labels</th>
+                    <th onclick="sortTable(7)">Batch Labels 标签</th>
                     <th>Tracking</th>
-                    <th onclick="sortTable(9)">Date</th>
-                    <th onclick="sortTable(10)">Status</th>
+                    <th onclick="sortTable(9)">Date 日期</th>
+                    <th onclick="sortTable(10)">Status 状态</th>
                 </tr>
             </thead>
             <tbody>

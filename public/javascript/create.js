@@ -38,7 +38,7 @@ const fixedInfo = document.getElementById('fixedInfo');
 
 function prefix_check() {
     if (prefix.value.length > 3) {
-        alert('Prefix is limited for 2-3 letters');
+        alert('Prefix is limited for 2-3 letters 单位缩写限制二到三个英文字母!');
         prefix.value = null;
         masterCheck()
     } else {
@@ -80,7 +80,7 @@ function precheck() {
         prefix.value = prefix.value + "0"
     };
     document.getElementById("export-btn").disabled = false;
-    fixedInfo.innerHTML = 'Account:' + account.value + "</br>" + 'ASN:' + asn + "</br>" + 'Pending Date: ' + pending_date;
+    fixedInfo.innerHTML = 'Account 帐户名:' + account.value + "</br>" + 'ASN:' + asn + "</br>" + 'Pending Date 挂单日期(美): ' + pending_date;
     const pre_digcode_2 = Math.floor(1000000000 + Math.random() * 9000000000);
     const pre_digcode = parseInt(String(new Date().valueOf() + pre_digcode_2).substring(4, 11));
     localStorage.setItem('total_box',total_box);
@@ -339,46 +339,3 @@ async function loadingBatch1(data) {
     }
 
  }
-
-
-
-
-
-
- ///////////////////barcode+pdf/////////////////
-
-// function barcode(arr) {
-//     const bar = document.getElementsByClassName('barcode');
-//     console.log(arr);
-//     for (let i = 0; i < arr.length; i++) {
-//     var url = `http://bwipjs-api.metafloor.com/?bcid=code128&text=${arr[i]}`;
-//     var txt = arr[i];
-//     var img = document.createElement('img');
-//     img.src = url
-//     var header = document.createElement('li')
-//     img.setAttribute("class", 'uk-card uk-card-default uk-card-body')
-//     header.innerHTML = txt;
-//     bar[0].appendChild(header);
-//     bar[0].appendChild(img);
-//     };
-// }
-
-// function done() {
-//     window.location.replace('/');
-// }
-
-// function generatePdf(imageUrls, txts) {
-//   const doc = new jsPDF();
-//   for (let i = 0; i < imageUrls.length; i++) {
-//       doc.addImage(imageUrls[i], "JPEG", 5, 5, 0, 0);
-//       doc.addPage();
-//   };
-//   return doc;
-// }
-
-
-// async function savePdf(arr) {
-//   const multiPng = await generatePdf(arr);
-//   const dataURLString = multiPng.output("dataurlstring", "shipping_barcode.pdf");
-//   multiPng.output("save", "shipping_barcode.pdf");
-// }

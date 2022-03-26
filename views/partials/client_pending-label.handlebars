@@ -1,11 +1,11 @@
 
 <div class="px-1 py-1 col-4 " id="pending_card">
 <div class="card bg-light border-danger shadow" id="{{0.batch_id}}">
-    <h5 class="card-title mt-3">Acct: {{0.account.name}}</h5>
+    <h5 class="card-title mt-3">{{0.account.name}}</h5>
     <small>{{0.description}}</small>
-    <p>Order placed on {{0.batch.pending_date}}</p>
+    <p>Order placed on {{0.batch.pending_date}}(挂单日期)</p>
  <div class="card-body">
-     <a href="/batch/{{0.batch_id}}" class="btn btn-light border-dark btn-sm">Shipping Label(s)</a>
+     <a href="/batch/{{0.batch_id}}" class="btn btn-light border-dark btn-sm">Shipping Label(s) 挂单标签群</a>
 </div>
 
 <ul uk-accordion="multiple: true">
@@ -15,10 +15,10 @@
          <table class="uk-table uk-table-small uk-table-divider myTable" id="myTable">
             <thead>
                 <tr>
-                    <th>Box Number</th>
+                    <th>Box Number 箱碼</th>
                     <th>Box Order</th>
-                    <th>Qty</th>
-                    <th>SKU</th>
+                    <th>Qty<br>单箱量</th>
+                    <th>SKU<br>存货单位</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,7 +27,7 @@
                 {{/each}}
             <tbody>
          </table>
-         <a href="/batch/{{0.batch_id}}" class="btn btn-primary btn-sm">Shipping Label(s)</a>
+         <a href="/batch/{{0.batch_id}}" class="btn btn-primary btn-sm">Shipping Label(s) 挂单标签群</a>
         </div>
     </li>
 </ul>

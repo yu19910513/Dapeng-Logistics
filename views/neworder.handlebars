@@ -8,12 +8,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="account">Account 帐户</label>
-                    <input type="text" class="form-control" id="new_account" value="" placeholder="create a new account" onkeyup="masterCheck()" disabled>
+                    <label for="account">Account 新帐户</label>
+                    <input type="text" class="form-control" id="new_account" value="" placeholder="新帐户名 (只限英文字母)" onkeyup="masterCheck()" disabled>
                 </div>
                 <div class="form-group col-6">
                     <label for="prefix">Prefix 单位缩写</label>
-                    <input type="text" class="form-control" id="new_prefix" value="" placeholder="up to 3-letter prefix" onkeyup="prefix_check()" disabled>
+                    <input type="text" class="form-control" id="new_prefix" value="" placeholder="限2-3英文字母" onkeyup="prefix_check()" disabled>
                 </div>
                 <div class="form-group">
                     <label for="description">Description 货品描述</label>
@@ -54,8 +54,8 @@
                     <input type="number" class="form-control" id="new_qty" onkeyup="masterCheck()">
                 </div>
 
-                <a id="order_pre-check" class="btn btn-primary mt-2 text-white" href="#precheck-selection" uk-toggle style="display: none;">Pre-check</a>
-                <a id="fake" class="btn btn-secondary mt-2 text-white" onclick="infoAlert()">Pre-check</a>
+                <a id="order_pre-check" class="btn btn-primary mt-2 text-white" href="#precheck-selection" uk-toggle style="display: none;">Pre-check 预先校验</a>
+                <a id="fake" class="btn btn-secondary mt-2 text-white" onclick="infoAlert()">Pre-check 预先校验</a>
                 <div id="precheck-selection" class="uk-modal-container text-center" uk-modal>
                 <div class="uk-modal-dialog">
                      <button class="uk-modal-close-default" type="button" onclick="reset()" uk-close></button>
@@ -67,16 +67,16 @@
                     <div id="table" class="table-editable">
                         <table class="table" id="ordertable">
                             <tr>
-                                <th>Box Number</th>
-                                <th>Item Description</th>
-                                <th>SKU</th>
-                                <th>Quantity per Box</th>
+                                <th>Box Number<br>箱码</th>
+                                <th>Item Description<br>细目</th>
+                                <th>SKU<br>存货单位</th>
+                                <th>Quantity per Box<br>单箱货量</th>
                                 <th>Box</th>
-                                <th>of Boxes</th>
-                                <th>Weight(kg)</th>
-                                <th>Length(cm)</th>
-                                <th>Width(cm)</th>
-                                <th>Height(cm)</th>
+                                <th>of Boxes<br>箱总数</th>
+                                <th>Weight(kg)<br>重</th>
+                                <th>Length(cm)<br>长</th>
+                                <th>Width(cm)<br>宽</th>
+                                <th>Height(cm)<br>高</th>
                             </tr>
 
                         </table>
