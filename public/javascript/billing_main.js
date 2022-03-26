@@ -131,7 +131,6 @@ function storage_billing_1stStep(pageData, i) {
 };
 function storage_billing(pageData, i, lastBillDate) {
     const container = document.createElement('tr');
-    storage_table.appendChild(container);
     const user = document.createElement('td');
     const account = document.createElement('td');
     const box_number = document.createElement('td');
@@ -155,14 +154,22 @@ function storage_billing(pageData, i, lastBillDate) {
     box_number.innerHTML = pageData[i].box_number;
     description.innerHTML = pageData[i].description;
     if (lastBillDate == pageData[i].received_date) {
-        received_date.innerHTML = lastBillDate;
+        received_date.innerHTML = pageData[i].received_date;
+        const dayCalInit = dayCalculatorInit(pageData[i].received_date, pageData[i].shipped_date);
+        billable.innerHTML =  dayCalInit
+        total_billable_day = total_billable_day +  dayCalInit;
+        storage_table.appendChild(container);
     } else {
         received_date.innerHTML = `${pageData[i].received_date} <br> L: <u>${lastBillDate}</u>`;
+        const dayCalConti = dayCalculatorConti(pageData[i].received_date, lastBillDate, pageData[i].shipped_date);
+        billable.innerHTML = dayCalConti;
+        if ( dayCalConti > -1) {
+            total_billable_day = total_billable_day + dayCalConti;
+            storage_table.appendChild(container);
+        }
     };
-    billable.innerHTML = dayCalculator(lastBillDate, pageData[i].shipped_date);
-    total_billable_day = total_billable_day + dayCalculator(lastBillDate, pageData[i].shipped_date);
     if (pageData[i].shipped_date) {
-        ending_date.innerHTML = pageData[i].shipped_date;
+        ending_date.innerHTML = `${pageData[i].shipped_date}**`;
     } else {ending_date.innerHTML = new Date().toLocaleDateString("en-US");};
     const volumeNew = pageData[i].volume/764555;
     volume.innerHTML = volumeNew.toFixed(10);
@@ -178,21 +185,37 @@ function monthValidate(s) {
     } return false
 };
 //billable day function: r = received_date; s = shipped_date if any
-function dayCalculator(r,s) {
-var rDate_bDate = new Date(r);
-console.log(rDate_bDate);
-if (s) {
-    var ending_date = new Date(s);
-} else {
-    var ending_date = new Date(today);
-};
-var Difference_In_Time = ending_date.getTime() - rDate_bDate.getTime();
-var diff = Math.ceil(Difference_In_Time / (1000 * 3600 * 24) + 1);
-if (diff > 30) {
+function dayCalculatorInit(r,s) {
+    var diff = main_calculator(r,s)
+    if (diff > 30) {
     return diff-30
-} else {
+    } else {
     return 0
-}
+    }
+};
+function main_calculator(start, end) {
+    var start_date = new Date(start);
+    if (end) {
+        var ending_date = new Date(end);
+    } else {
+        var ending_date = new Date(today);
+    };
+    var Difference_In_Time = ending_date.getTime() - start_date.getTime();
+    return Math.ceil(Difference_In_Time / (1000 * 3600 * 24)) + 1;
+};
+
+//three cases: 1st case: 1st bill client got all 30 days free, so 2nd and later billing bill all days no discount;
+//2nd case: 1st bill client got some of 30 day free(partial), and need some day free from 2nd bill;
+//3rd case: 2nd case but now it's the 3rd and later billing;
+
+function dayCalculatorConti(r,b,s) {
+    var discount;
+    if (30 - main_calculator(r,b) < 0) {
+        discount = 0;
+    } else {
+        discount = 30 - main_calculator(r,b);
+    };
+    return main_calculator(b,s)-1-discount;
 };
 /////////////////////////////////////////////////
 
