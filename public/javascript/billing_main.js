@@ -296,6 +296,10 @@ function sortSTable(n) {
     const table = document.getElementById("sTable");
     sortTable(table, n)
 };
+function sortXTable(n) {
+    const table = document.getElementById("xTable");
+    sortTable(table, n)
+};
 function sortTable(table,n) {
     var rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
     switching = true;
