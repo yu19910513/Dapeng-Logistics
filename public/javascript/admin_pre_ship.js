@@ -68,4 +68,4 @@ async function pre_check() {
         alert('Wrong Box!')
     }
 
-}
+};

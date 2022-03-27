@@ -8,15 +8,18 @@ const storage_cost = document.getElementById('storage_cost');
 const shipping_total = document.getElementById('shipping_total');
 const storage_total = document.getElementById('storage_total');
 const receiving_total = document.getElementById('receiving_total');
+const xcharge_total = document.getElementById('xcharge_total');
 const all_total = document.getElementById('all_total');
 const shipping_total_2 = document.getElementById('shipping_total_2');
 const storage_total_2 = document.getElementById('storage_total_2');
 const receiving_total_2 = document.getElementById('receiving_total_2');
+const xcharge_total_2 = document.getElementById('xcharge_total_2');
 
 // table
 var storage_table = document.getElementById('storage_table');
 var received_table = document.getElementById('received_table');
 var shipped_table = document.getElementById('shipped_table');
+var xcharge_table = document.getElementById('xcharge_table');
 
 
 document.getElementById('today').innerHTML = today;
@@ -53,6 +56,7 @@ function client() {
 
 var total_volume = 0;
 var total_billable_day = 0;
+var total_st_charge = 0;
 var receivedCount = 0;
 var shippedCount = 0;
 
@@ -66,6 +70,8 @@ function next(user_id) {
     document.getElementById('storageTable').style.display = '';
     document.getElementById('receivedTable').style.display = '';
     document.getElementById('shippedTable').style.display = '';
+    document.getElementById('xchargeTable').style.display = '';
+    document.getElementById('x_only').disabled = false;
     document.getElementById('r_only').disabled = false;
     document.getElementById('s_only').disabled = false;
     document.getElementById('st_only').disabled = false;
@@ -96,9 +102,9 @@ function next(user_id) {
                 storageBoxArr.push(pageData[i].box_number);
             };
         };
-        var storage_charge = total_billable_day*total_volume*storage_cost.value;
-        storage_total.innerHTML = storage_charge.toFixed(5);
-        storage_total_2.innerHTML = storage_charge.toFixed(5);
+        // var storage_charge = total_billable_day*total_volume*storage_cost.value;
+        storage_total.innerHTML = total_st_charge.toFixed(5);
+        storage_total_2.innerHTML = total_st_charge.toFixed(5)
 
         //SHIPPED FOR LOOP
         for (let k = 0; k < pageData.length; k++) {
@@ -113,7 +119,7 @@ function next(user_id) {
         shipping_total_2.innerHTML = shipped_charge;
 
         //total charge
-        var total_charge = shipped_charge + received_charge + storage_charge;
+        var total_charge = shipped_charge + received_charge + total_st_charge;
         all_total.innerHTML = total_charge.toFixed(2);
         return shippedBoxArr, receivedBoxArr, storageBoxArr;
     });
@@ -153,28 +159,34 @@ function storage_billing(pageData, i, lastBillDate) {
     account.innerHTML = pageData[i].account.name;
     box_number.innerHTML = pageData[i].box_number;
     description.innerHTML = pageData[i].description;
+    const volumeNew = pageData[i].volume/764555;
+    volume.innerHTML = volumeNew.toFixed(10);
     if (lastBillDate == pageData[i].received_date) {
         received_date.innerHTML = pageData[i].received_date;
         const dayCalInit = dayCalculatorInit(pageData[i].received_date, pageData[i].shipped_date);
         billable.innerHTML =  dayCalInit
-        total_billable_day = total_billable_day +  dayCalInit;
+        // total_billable_day = total_billable_day + dayCalInit;
+        // total_volume = total_volume + volumeNew;
         storage_table.appendChild(container);
+        const pre_cost = storage_cost.value*volumeNew*dayCalInit;
+        total_st_charge = total_st_charge+pre_cost
+        cost.innerHTML = `$${pre_cost.toFixed(5)}`
     } else {
-        received_date.innerHTML = `${pageData[i].received_date} <br> L: <u>${lastBillDate}</u>`;
         const dayCalConti = dayCalculatorConti(pageData[i].received_date, lastBillDate, pageData[i].shipped_date);
-        billable.innerHTML = dayCalConti;
-        if ( dayCalConti > -1) {
-            total_billable_day = total_billable_day + dayCalConti;
+        if (dayCalConti > -1) {
+            received_date.innerHTML = `${pageData[i].received_date} <br> L: <u>${lastBillDate}</u>`;
+            billable.innerHTML = dayCalConti;
+            const pre_cost = storage_cost.value*volumeNew*dayCalConti;
+            cost.innerHTML = `$${pre_cost.toFixed(5)}`
+            // total_billable_day = total_billable_day + dayCalConti;
+            // total_volume = total_volume + volumeNew;
+            total_st_charge = total_st_charge+pre_cost
             storage_table.appendChild(container);
         }
     };
     if (pageData[i].shipped_date) {
         ending_date.innerHTML = `${pageData[i].shipped_date}**`;
     } else {ending_date.innerHTML = new Date().toLocaleDateString("en-US");};
-    const volumeNew = pageData[i].volume/764555;
-    volume.innerHTML = volumeNew.toFixed(10);
-    total_volume = total_volume + volumeNew;
-    cost.innerHTML = `$${storage_cost.value}/ day`
 };
 //month validation: only bill the box not shipped or shipped this month
 function monthValidate(s) {
@@ -326,18 +338,23 @@ function show_all() {
     document.getElementById('storageTable').style.display ='';
     document.getElementById('receivedTable').style.display ='';
     document.getElementById('shippedTable').style.display ='';
+    document.getElementById('xchargeTable').style.display = '';
+    document.getElementById('x_onlyConfrim').style.display = 'none';
     document.getElementById('s_onlyConfrim').style.display = 'none';
     document.getElementById('r_onlyConfrim').style.display = 'none';
     document.getElementById('st_onlyConfrim').style.display = 'none';
+    document.getElementById('x_onlySave').style.display = 'none';
 };
 function st_only() {
     document.getElementById('storageTable').style.display = '';
     document.getElementById('st_onlyConfrim').style.display = '';
     document.getElementById('receivedTable').style.display = 'none';
     document.getElementById('shippedTable').style.display = 'none';
+    document.getElementById('xchargeTable').style.display = 'none';
 };
 function r_only() {
     document.getElementById('storageTable').style.display = 'none';
+    document.getElementById('xchargeTable').style.display = 'none';
     document.getElementById('receivedTable').style.display = '';
     document.getElementById('shippedTable').style.display = 'none';
     document.getElementById('r_onlyConfrim').style.display = '';
@@ -345,12 +362,23 @@ function r_only() {
 function s_only() {
     document.getElementById('storageTable').style.display = 'none';
     document.getElementById('receivedTable').style.display = 'none';
+    document.getElementById('xchargeTable').style.display = 'none';
     document.getElementById('shippedTable').style.display = '';
     document.getElementById('s_onlyConfrim').style.display = '';
 };
+function x_only() {
+    document.getElementById('storageTable').style.display = 'none';
+    document.getElementById('receivedTable').style.display = 'none';
+    document.getElementById('shippedTable').style.display = 'none';
+    document.getElementById('x_onlySave').style.display = '';
+    document.getElementById('xchargeTable').style.display = '';
+    document.getElementById('x_onlyConfrim').style.display = '';
+
+}
 
 // rest page
 function reset() {
+    localStorage.removeItem('user_id');
     location.reload()
 };
 
@@ -412,10 +440,14 @@ async function fetch_update(arr, bill, type) {
 
     };
     alert('database updated successfully!');
-    show_all()
+    location.reload();
 };
 
-
+if (localStorage.getItem('user_id')) {
+    window.onload = next(localStorage.getItem('user_id'));
+    document.getElementById('charge_btn').style.display = 'none';
+    document.getElementById('reset_btn').style.display = '';
+}
 
 ///tool
 const test = new Date('2/1/2022').getTime()

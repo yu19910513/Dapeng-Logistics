@@ -56,4 +56,4 @@ async function auto_relocate(box, shelf) {
       list.appendChild(child);
      }
 
-}
+};

@@ -70,4 +70,4 @@ async function auto_receive(event) {
       localStorage.clear();
      }
     }
-}
+};

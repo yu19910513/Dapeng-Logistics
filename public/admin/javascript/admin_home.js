@@ -19,3 +19,7 @@ function number_item () {
   setInterval (number_item(), 1000);
 
   document.getElementById('inventory_btn').click();
+
+if (localStorage.getItem('user_id')) {
+  localStorage.removeItem('user_id');
+};

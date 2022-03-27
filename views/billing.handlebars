@@ -7,13 +7,16 @@
             <h1>Billing Date: <span id="today"></span> </h1>
             <div class="row">
                 <div class="col">
-                    <button class="btn btn-outline-primary btn-sm shadow-sm" id="r_only" onclick="r_only()" disabled>Total Receiving Charge: $<span id="receiving_total"></span></button>
+                    <button class="btn btn-outline-primary btn-sm shadow-sm" id="r_only" onclick="r_only()" disabled>Receiving Charge: $<span id="receiving_total"></span></button>
                 </div>
                  <div class="col">
-                    <button class="btn btn-outline-primary btn-sm shadow-sm" id="st_only" onclick="st_only()" disabled>Total Storage Charge: $<span id="storage_total"></span></button>
+                    <button class="btn btn-outline-primary btn-sm shadow-sm" id="st_only" onclick="st_only()" disabled>Storage Charge: $<span id="storage_total"></span></button>
                 </div>
                  <div class="col">
-                    <button class="btn btn-outline-primary btn-sm shadow-sm" id="s_only" onclick="s_only()" disabled>Total Shipping Charge: $<span id="shipping_total"></span></button>
+                    <button class="btn btn-outline-primary btn-sm shadow-sm" id="s_only" onclick="s_only()" disabled>Shipping Charge: $<span id="shipping_total"></span></button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-outline-primary btn-sm shadow-sm" id="x_only" onclick="x_only()" disabled>Additonal Charge: $<span id="xcharge_total"></span></button>
                 </div>
                 <div class="col">
                     <button class="btn btn-outline-primary btn-sm shadow-sm" id="all" onclick="show_all()" disabled><b>Grand Total: $<span id="all_total"></span></b></button>
@@ -81,7 +84,7 @@
 
 <div class="container">
     <div class="" id="storageTable" style="display: none;">
-        <h4>Storing Charge: $<span id="storage_total_2"></span> <a id="st_plus" onclick="addRow('storage_table', 9)" uk-icon="icon: plus"></a></h4>
+        <h4>Storing Charge: $<span id="storage_total_2">0</span></h4>
         <table class="uk-table uk-table-small uk-table-divider myTable bg-light shadow" id="stTable">
             <thead>
                 <tr>
@@ -103,7 +106,7 @@
     </div>
 <br>
     <div class="" id="receivedTable" style="display: none;">
-        <h4>Receiving Charge: $<span id="receiving_total_2"></span> <a id="r_plus" onclick="addRow('received_table', 7)" uk-icon="icon: plus"></a></h4>
+        <h4>Receiving Charge: $<span id="receiving_total_2">0</span></h4>
         <table class="uk-table uk-table-small uk-table-divider myTable bg-light shadow" id="rTable">
             <thead>
                 <tr>
@@ -122,7 +125,7 @@
     </div>
 <br>
      <div class="" id="shippedTable" style="display: none;">
-        <h4>Shipping Charge: $<span id="shipping_total_2"></span> <a id="s_plus" onclick="addRow('shipped_table', 7)" uk-icon="icon: plus"></a></h4>
+        <h4>Shipping Charge: $<span id="shipping_total_2">0</span></h4>
         <table class="uk-table uk-table-small uk-table-divider myTable bg-light shadow" id="sTable">
             <thead>
                 <tr>
@@ -139,6 +142,26 @@
             </tbody>
         </table>
         <button class="btn btn-outline-danger" id="s_onlyConfrim" style="display: none;" onclick="bill_confirm(shippedBoxArr, 's')">Confirm</button>
+    </div>
+<br>
+    <div class="" id="xchargeTable" style="display: none">
+        <h4>Additonal charge: $<span id="xcharge_total_2">0</span> <a id="x_plus" onclick="addRow('xcharge_table', 7)" uk-icon="icon: plus"></a></h4>
+        <table class="uk-table uk-table-small uk-table-divider myTable bg-light shadow" id="rTable">
+            <thead>
+                <tr>
+                    <th onclick="sortRTable(0)">User</th>
+                    <th onclick="sortRTable(1)">Account</th>
+                    <th onclick="sortRTable(2)">Box number</th>
+                    <th onclick="sortRTable(3)">Item Description</th>
+                    <th onclick="sortRTable(4)">Charge Date</th>
+                    <th>Cost</th>
+                </tr>
+            </thead>
+            <tbody id="xcharge_table">
+            </tbody>
+        </table>
+        <button class="btn btn-outline-success" id="x_onlySave" style="display: none;" onclick="xcharge_create()">Save</button>
+         <button class="btn btn-outline-danger" id="x_onlyConfrim" style="display: none;" onclick="xcharge_confirm()">Update</button>
     </div>
 </div>
 
