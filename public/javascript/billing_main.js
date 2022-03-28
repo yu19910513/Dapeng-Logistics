@@ -398,17 +398,40 @@ function addRow(t, n) {
     row.setAttribute('class','text-danger');
     for (let i = 0; i < n; i++) {
         var cell = row.insertCell(i);
-        if (i == 2) {
+        if (i == 3) {
             cell.innerHTML = charge_number;
-        } else if (i == 0) {
+        } else if (i == 1) {
             cell.innerHTML = localStorage.getItem('user_name')
+        } else if (i == 0) {
+            cell.innerHTML = today;
+        } else if (i == 2) {
+            cell.innerHTML = `<select class="uk-select" id="account_list">
+            <option value='0'>select account</option>
+         </select>`
         }
-
         else {
             cell.setAttribute('contenteditable', true)
         }
     };
+    getAccounts(localStorage.getItem('user_id'));
+};
 
+//get account selection for additional charge
+function getAccounts(user_id) {
+    const account_list = document.getElementById('account_list');
+    fetch(`/api/user/account_per_user`, {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        const accountData = data[user_id];
+        for (let i = 0; i < accountData.length; i++) {
+        const account = document.createElement('option');
+        account.innerHTML = accountData[i].name;
+        account.setAttribute('value', accountData[i].id);
+        account_list.appendChild(account);
+        };
+    });
 };
 
 //fetch to put the change: status updated
@@ -464,7 +487,6 @@ console.log(test.toString());
 // var dataTable = document.getElementById( "xTable");
 // for (let i = 1; i < dataTable.rows.length; i++ ) {
 //     const orderdata = {
-//         batch_id: batch_map.get(asn),
 //         account_id: savedAccount_id,
 //         box_number: dataTable.rows[i].cells[0].innerHTML,
 //         description: dataTable.rows[i].cells[1].innerHTML,
@@ -480,3 +502,118 @@ console.log(test.toString());
 //     // arr.push(orderdata.box_number);
 //     loadingBox(orderdata);
 // }}
+
+
+// function boxInsertNewAccount() {
+//     // var new_account_arr = [];
+//     var dataTable = document.getElementById( "ordertable" );
+//     for ( var i = 1; i < dataTable.rows.length; i++ ) {
+//         const length = parseInt(dataTable.rows[i].cells[7].innerHTML);
+//         const width = parseInt(dataTable.rows[i].cells[8].innerHTML);
+//         const height = parseInt(dataTable.rows[i].cells[9].innerHTML);
+//         const volume = length*width*height
+//         const newBox = {
+//             batch_id: batch_map.get(asn),
+//             account_id: account_map.get(account.value),
+//             box_number: dataTable.rows[i].cells[0].innerHTML,
+//             description: dataTable.rows[i].cells[1].innerHTML,
+//             sku: dataTable.rows[i].cells[2].innerHTML,
+//             qty_per_box: parseInt(dataTable.rows[i].cells[3].innerHTML),
+//             order: parseInt(dataTable.rows[i].cells[4].innerHTML),
+//             weight: parseInt(dataTable.rows[i].cells[6].innerHTML),
+//             length: length,
+//             width: width,
+//             height: height,
+//             volume: volume
+//         };
+//         // new_account_arr.push(newBox.box_number);
+//         loadingBox(newBox)
+//     }
+//     alert('Orders Placed!');
+//     // barcode(new_account_arr);
+//     window.location.replace(`/batch/${batch_map.get(asn)}`)
+// };
+
+// async function loadingBox(data) {
+
+//     const response = await fetch('/api/box', {
+//         method: 'post',
+//         body: JSON.stringify(data),
+//         headers: { 'Content-Type': 'application/json' }
+//       });
+//       if (response.ok) {
+//         console.log('order placed successfully!')
+//       } else {
+//         alert('try again')
+//       }
+
+// };
+
+// function findBatchId() {
+//     fetch(`/api/user/batch`, {
+//         method: 'GET'
+//     }).then(function (response) {
+//         return response.json();
+//     }).then(function (data) {
+//         for (let i = 0; i < data.length; i++) {
+//             batch_map.set(data[i].asn, data[i].id);
+//         };
+//         console.log(batch_map.get(asn));
+//         boxInsertNewAccount()
+//     });
+// };
+
+// function findAccountId() {
+//     fetch(`/api/user/account`, {
+//         method: 'GET'
+//     }).then(function (response) {
+//         return response.json();
+//     }).then(function (data) {
+//         for (let j = 0; j < data.length; j++) {
+//             account_map.set(data[j].name, data[j].id);
+//         }
+//         const account_id = account_map.get(account.value);
+//         const total_box = parseInt(localStorage.getItem('total_box'));
+//         loadingBatch({asn, pending_date, total_box, account_id})
+//     });
+// };
+
+// async function loadingBatch(data) {
+//     const response = await fetch('/api/batch/new', {
+//         method: 'post',
+//         body: JSON.stringify(data),
+//         headers: { 'Content-Type': 'application/json' }
+//       });
+
+//       if (response.ok) {
+//        console.log("batch inserted");
+//        findBatchId()
+//       } else {
+//         alert('try again')
+//       }
+
+// };
+
+// function findBatchId() {
+//     fetch(`/api/user/batch`, {
+//         method: 'GET'
+//     }).then(function (response) {
+//         return response.json();
+//     }).then(function (data) {
+//         for (let i = 0; i < data.length; i++) {
+//             batch_map.set(data[i].asn, data[i].id);
+//         };
+//         console.log(batch_map.get(asn));
+//         boxInsertNewAccount()
+//     });
+// };
+
+
+// function exportData() {
+//     const total_box = parseInt(localStorage.getItem('total_box'));
+//     if (savedAccount != "Create New Account") {
+//         loadingBatch1({asn, pending_date, total_box, savedAccount_id});
+//         }else {
+//         loadingAccount({name: account.value, prefix: prefix.value.toUpperCase()});
+//     }
+// }

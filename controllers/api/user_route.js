@@ -62,7 +62,12 @@ router.get('/account_per_user', withAuth, async (req, res) => {
       },
   });
   const accounts = accountDB.map(account => account.get({plain: true}));
-  res.json(accounts);
+  const data = accounts.reduce(function (r, a) {
+    r[a.user.id] = r[a.user.id] || [];
+    r[a.user.id].push(a);
+    return r;
+  }, Object.create(null));
+  res.json(data);
   } catch (err) {
     console.log(err);
     res.status(500).json(err);

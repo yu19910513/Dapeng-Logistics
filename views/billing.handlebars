@@ -145,16 +145,18 @@
     </div>
 <br>
     <div class="" id="xchargeTable" style="display: none">
-        <h4>Additonal charge: $<span id="xcharge_total_2">0</span> <a id="x_plus" onclick="addRow('xcharge_table', 7)" uk-icon="icon: plus"></a></h4>
+        <h4>Additonal charge: $<span id="xcharge_total_2">0</span> <a id="x_plus" onclick="addRow('xcharge_table', 8)" uk-icon="icon: plus"></a></h4>
         <table class="uk-table uk-table-small uk-table-divider bg-light shadow border border-danger" id="xTable">
             <thead>
                 <tr>
-                    <th onclick="sortXTable(0)">User</th>
-                    <th onclick="sortXTable(1)">Account</th>
-                    <th onclick="sortXTable(2)">Box number</th>
-                    <th onclick="sortXTable(3)">Description</th>
-                    <th>Date</th>
-                    <th>Cost</th>
+                    <th onclick="sortXTable(0)">Date</th>
+                    <th onclick="sortXTable(1)">User</th>
+                    <th onclick="sortXTable(2)">Account</th>
+                    <th onclick="sortXTable(3)">Billing ID</th>
+                    <th onclick="sortXTable(4)">Description</th>
+                    <th>Qty</th>
+                    <th>Unit Charge</th>
+                    <th>Total Cost</th>
                 </tr>
             </thead>
             <tbody id="xcharge_table">
