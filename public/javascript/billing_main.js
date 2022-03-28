@@ -98,8 +98,9 @@ function next(user_id) {
         //STORAGE FOR LOOP
         for (let i = 0; i < pageData.length; i++) {
             if (!pageData[i].shipped_date || monthValidate(pageData[i].shipped_date)) {
+                if(!(pageData[i].status == 3 && pageData[i].bill_storage)) {
                 storage_billing_1stStep(pageData, i);
-                storageBoxArr.push(pageData[i].box_number);
+                }
             };
         };
         // var storage_charge = total_billable_day*total_volume*storage_cost.value;
@@ -162,6 +163,7 @@ function storage_billing(pageData, i, lastBillDate) {
     const volumeNew = pageData[i].volume/764555;
     volume.innerHTML = volumeNew.toFixed(10);
     if (lastBillDate == pageData[i].received_date) {
+        storageBoxArr.push(pageData[i].box_number);
         received_date.innerHTML = pageData[i].received_date;
         const dayCalInit = dayCalculatorInit(pageData[i].received_date, pageData[i].shipped_date);
         billable.innerHTML =  dayCalInit
@@ -173,7 +175,8 @@ function storage_billing(pageData, i, lastBillDate) {
         cost.innerHTML = `$${pre_cost.toFixed(5)}`
     } else {
         const dayCalConti = dayCalculatorConti(pageData[i].received_date, lastBillDate, pageData[i].shipped_date);
-        if (dayCalConti > -1) {
+
+            storageBoxArr.push(pageData[i].box_number);
             received_date.innerHTML = `${pageData[i].received_date} <br> L: <u>${lastBillDate}</u>`;
             billable.innerHTML = dayCalConti;
             const pre_cost = storage_cost.value*volumeNew*dayCalConti;
@@ -182,7 +185,7 @@ function storage_billing(pageData, i, lastBillDate) {
             // total_volume = total_volume + volumeNew;
             total_st_charge = total_st_charge+pre_cost
             storage_table.appendChild(container);
-        }
+
     };
     if (pageData[i].shipped_date) {
         ending_date.innerHTML = `${pageData[i].shipped_date}**`;
@@ -215,11 +218,6 @@ function main_calculator(start, end) {
     var Difference_In_Time = ending_date.getTime() - start_date.getTime();
     return Math.ceil(Difference_In_Time / (1000 * 3600 * 24)) + 1;
 };
-
-//three cases: 1st case: 1st bill client got all 30 days free, so 2nd and later billing bill all days no discount;
-//2nd case: 1st bill client got some of 30 day free(partial), and need some day free from 2nd bill;
-//3rd case: 2nd case but now it's the 3rd and later billing;
-
 function dayCalculatorConti(r,b,s) {
     var discount;
     if (30 - main_calculator(r,b) < 0) {
@@ -227,7 +225,12 @@ function dayCalculatorConti(r,b,s) {
     } else {
         discount = 30 - main_calculator(r,b);
     };
-    return main_calculator(b,s)-1-discount;
+    const result = main_calculator(b,s)-1-discount;
+    if (result < -1) {
+        return 0;
+    } else {
+        return result;
+    }
 };
 /////////////////////////////////////////////////
 
@@ -454,5 +457,26 @@ if (localStorage.getItem('user_id')) {
 }
 
 ///tool
-const test = new Date('2/1/2022').getTime()
+const test = new Date('3/20/2022').getTime()
 console.log(test.toString());
+
+// function xcharge_create() {
+// var dataTable = document.getElementById( "xTable");
+// for (let i = 1; i < dataTable.rows.length; i++ ) {
+//     const orderdata = {
+//         batch_id: batch_map.get(asn),
+//         account_id: savedAccount_id,
+//         box_number: dataTable.rows[i].cells[0].innerHTML,
+//         description: dataTable.rows[i].cells[1].innerHTML,
+//         sku: dataTable.rows[i].cells[2].innerHTML,
+//         qty_per_box: 1,
+//         order: 1,
+//         weight: 1,
+//         length: 1,
+//         width: 1,
+//         height: 1,
+//         volume: 1
+//     };
+//     // arr.push(orderdata.box_number);
+//     loadingBox(orderdata);
+// }}
