@@ -239,7 +239,7 @@ function dayCalculatorConti(r,b,s) {
         discount = 30 - main_calculator(r,b);
     };
     const result = main_calculator(b,s)-1-discount;
-    if (result < -1) {
+    if (result < 0) {
         return 0;
     } else {
         return result;
@@ -535,29 +535,41 @@ function xc_cost_calculator () {
         total_cost.innerHTML = qty*unit_charge
     }
 };
-
-
+var true_false_arr = [];
 //to construct data object before fetching
 function xcharge_create() {
-var dataTable = document.getElementById( "xTable");
+    var dataTable = document.getElementById( "xTable");
     for (let i = 1; i < dataTable.rows.length; i++ ) {
      const account_td = dataTable.rows[i].cells[2];
      const account_select = account_td.querySelector('select');
      if (account_select) {
-        const xc_account_id = account_select.value;
-        const user_id = parseInt(localStorage.getItem('user_id'));
-        const single_XC_data = {
-           user_id: user_id,
-           account_id: xc_account_id,
-           box_number: dataTable.rows[i].cells[3].innerHTML,
-           fba: dataTable.rows[i].cells[4].innerHTML,
-           description: dataTable.rows[i].cells[5].innerHTML,
-           qty_per_box: dataTable.rows[i].cells[6].innerHTML,
-           order: dataTable.rows[i].cells[7].innerHTML,
-           cost: dataTable.rows[i].cells[8].innerHTML
-        };
-        loading_xc_data(single_XC_data);
-     };
+        true_false_arr.push(1);
+            if (dataTable.rows[i].cells[8].innerHTML != 'NaN' && dataTable.rows[i].cells[8].innerHTML && dataTable.rows[i].cells[5].innerHTML && dataTable.rows[i].cells[5].innerHTML != '<br>' && account_select.value != 0) {
+                const xc_account_id = account_select.value;
+                const user_id = parseInt(localStorage.getItem('user_id'));
+                const single_XC_data = {
+                    user_id: user_id,
+                    account_id: xc_account_id,
+                    box_number: dataTable.rows[i].cells[3].innerHTML,
+                    fba: dataTable.rows[i].cells[4].innerHTML,
+                    description: dataTable.rows[i].cells[5].innerHTML,
+                    qty_per_box: dataTable.rows[i].cells[6].innerHTML,
+                    order: dataTable.rows[i].cells[7].innerHTML,
+                    cost: dataTable.rows[i].cells[8].innerHTML
+                };
+                loading_xc_data(single_XC_data)
+            } else {
+                alert(`Incomplete data input on row #${i}. Unable to save this row.`);
+                true_false_arr.push(0);
+            };
+        }
+    };
+
+    if(!true_false_arr.includes(0) && true_false_arr.includes(1)){
+        alert(`Additional charges are inserted successfully!`);
+        location.reload();
+    } else {
+        location.reload();
     }
 };
 //fetch function for xc data
@@ -568,8 +580,7 @@ const loading_xc_data = async(data) => {
         headers: { 'Content-Type': 'application/json' }
     });
     if (response.ok) {
-        location.reload();
-        alert(`additional charges for are inserted successfully!`)
+        console.log(`charge id: ${data.box_number} is inserted successfully!`);
     } else {
         alert('try again')
     }
