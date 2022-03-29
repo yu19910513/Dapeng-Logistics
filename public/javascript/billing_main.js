@@ -530,8 +530,8 @@ function xc_cost_calculator () {
     var dataTable = document.getElementById( "xTable");
     for (let i = 1; i < dataTable.rows.length; i++ ) {
         const total_cost = dataTable.rows[i].cells[8];
-        const qty = parseInt(dataTable.rows[i].cells[6].innerHTML);
-        const unit_charge = parseInt(dataTable.rows[i].cells[7].innerHTML);
+        const qty = dataTable.rows[i].cells[6].innerHTML;
+        const unit_charge = dataTable.rows[i].cells[7].innerHTML;
         total_cost.innerHTML = qty*unit_charge
     }
 };
