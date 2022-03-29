@@ -16,10 +16,10 @@ const receiving_total_2 = document.getElementById('receiving_total_2');
 const xcharge_total_2 = document.getElementById('xcharge_total_2');
 
 // table
-var storage_table = document.getElementById('storage_table');
-var received_table = document.getElementById('received_table');
-var shipped_table = document.getElementById('shipped_table');
-var xcharge_table = document.getElementById('xcharge_table');
+const storage_table = document.getElementById('storage_table');
+const received_table = document.getElementById('received_table');
+const shipped_table = document.getElementById('shipped_table');
+const xcharge_table = document.getElementById('xcharge_table');
 
 
 document.getElementById('today').innerHTML = today;
@@ -54,9 +54,9 @@ function client() {
  }
 };
 
-var total_volume = 0;
-var total_billable_day = 0;
+var total_charge = 0
 var total_st_charge = 0;
+var total_xc_charge = 0;
 var receivedCount = 0;
 var shippedCount = 0;
 
@@ -64,7 +64,26 @@ var shippedCount = 0;
 var shippedBoxArr = [];
 var receivedBoxArr = [];
 var storageBoxArr = [];
+var xchargeBoxArr = [];
 
+/// trigger fetch for additional charge data
+function xc_next(user_id) {
+    fetch('/api/user/xc_per_user', {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (xcData) {
+        const selectedData = xcData[user_id];
+        if (selectedData) {
+            for (let b = 0; b < selectedData.length; b++) {
+                xc_billing(selectedData, b);
+            };
+            xcharge_total_2.innerHTML = total_xc_charge;
+            xcharge_total.innerHTML = total_xc_charge;
+            all_total.innerHTML = parseInt(all_total.innerHTML) + total_xc_charge;
+        };
+    })
+}
 //////////// trigger fetch function to grab data
 function next(user_id) {
     document.getElementById('storageTable').style.display = '';
@@ -120,12 +139,12 @@ function next(user_id) {
         shipping_total_2.innerHTML = shipped_charge;
 
         //total charge
-        var total_charge = shipped_charge + received_charge + total_st_charge;
+        total_charge = shipped_charge + received_charge + total_st_charge;
         all_total.innerHTML = total_charge.toFixed(2);
+        xc_next(user_id);
         return shippedBoxArr, receivedBoxArr, storageBoxArr;
     });
 };
-
 ////////////////////////////// STORAGE FOR LOOP
 //function to build the stroage table if pass validation
 function storage_billing_1stStep(pageData, i) {
@@ -167,25 +186,19 @@ function storage_billing(pageData, i, lastBillDate) {
         received_date.innerHTML = pageData[i].received_date;
         const dayCalInit = dayCalculatorInit(pageData[i].received_date, pageData[i].shipped_date);
         billable.innerHTML =  dayCalInit
-        // total_billable_day = total_billable_day + dayCalInit;
-        // total_volume = total_volume + volumeNew;
         storage_table.appendChild(container);
         const pre_cost = storage_cost.value*volumeNew*dayCalInit;
         total_st_charge = total_st_charge+pre_cost
         cost.innerHTML = `$${pre_cost.toFixed(5)}`
     } else {
         const dayCalConti = dayCalculatorConti(pageData[i].received_date, lastBillDate, pageData[i].shipped_date);
-
-            storageBoxArr.push(pageData[i].box_number);
-            received_date.innerHTML = `${pageData[i].received_date} <br> L: <u>${lastBillDate}</u>`;
-            billable.innerHTML = dayCalConti;
-            const pre_cost = storage_cost.value*volumeNew*dayCalConti;
-            cost.innerHTML = `$${pre_cost.toFixed(5)}`
-            // total_billable_day = total_billable_day + dayCalConti;
-            // total_volume = total_volume + volumeNew;
-            total_st_charge = total_st_charge+pre_cost
-            storage_table.appendChild(container);
-
+        storageBoxArr.push(pageData[i].box_number);
+        received_date.innerHTML = `${pageData[i].received_date} <br> L: <u>${lastBillDate}</u>`;
+        billable.innerHTML = dayCalConti;
+        const pre_cost = storage_cost.value*volumeNew*dayCalConti;
+        cost.innerHTML = `$${pre_cost.toFixed(5)}`;
+        total_st_charge = total_st_charge+pre_cost;
+        storage_table.appendChild(container);
     };
     if (pageData[i].shipped_date) {
         ending_date.innerHTML = `${pageData[i].shipped_date}**`;
@@ -285,6 +298,41 @@ function shipped_billing(pageData, i) {
     cost.innerHTML = `$${shipping_cost.value}`;
 };
 
+////////////////////////////// XC FOR LOOP
+function xc_billing(data, i) {
+    xchargeBoxArr.push(data[i].box_number)
+    const container = document.createElement('tr');
+    xcharge_table.appendChild(container);
+    const date = document.createElement('td');
+    const user = document.createElement('td');
+    const account = document.createElement('td');
+    const box_number = document.createElement('td');
+    const fba = document.createElement('td');
+    const description = document.createElement('td');
+    const qty_per_box = document.createElement('td');
+    const order = document.createElement('td');
+    const cost = document.createElement('td');
+    container.appendChild(date);
+    container.appendChild(user);
+    container.appendChild(account);
+    container.appendChild(box_number);
+    container.appendChild(fba);
+    container.appendChild(description);
+    container.appendChild(qty_per_box);
+    container.appendChild(order);
+    container.appendChild(cost);
+    date.innerHTML = data[i].requested_date;
+    user.innerHTML = data[i].user.name;
+    account.innerHTML = data[i].account.name;
+    box_number.innerHTML = data[i].box_number;
+    box_number.style.display = 'none';
+    fba.innerHTML = data[i].fba;
+    description.innerHTML = data[i].description;
+    order.innerHTML = data[i].order;
+    qty_per_box.innerHTML = data[i].qty_per_box;
+    cost.innerHTML = `$${data[i].cost}`;
+    total_xc_charge = total_xc_charge + data[i].cost;
+}
 
 //sorting
 function sortStTable(n) {
@@ -400,6 +448,7 @@ function addRow(t, n) {
         var cell = row.insertCell(i);
         if (i == 3) {
             cell.innerHTML = charge_number;
+            cell.style.display = 'none'
         } else if (i == 1) {
             cell.innerHTML = localStorage.getItem('user_name')
         } else if (i == 0) {
@@ -408,9 +457,14 @@ function addRow(t, n) {
             cell.innerHTML = `<select class="uk-select" id="account_list">
             <option value='0'>select account</option>
          </select>`
-        }
-        else {
+        } else if (i == 5) {
             cell.setAttribute('contenteditable', true)
+        } else if (i == 4) {
+            cell.setAttribute('contenteditable', true);
+            cell.innerHTML = 'FBA'
+        } else if (i == 6 || i == 7) {
+            cell.setAttribute('onkeyup', 'xc_cost_calculator()');
+            cell.setAttribute('contenteditable', true);
         }
     };
     getAccounts(localStorage.getItem('user_id'));
@@ -437,16 +491,14 @@ function getAccounts(user_id) {
 //fetch to put the change: status updated
 function bill_confirm(arr, e) {
     const today = new Date().getTime();
-    var bill_received, bill_shipped, bill_storage;
     if (e == 's') {
-        bill_shipped = today;
-        fetch_update(arr, bill_shipped, 'bill_shipped')
+        fetch_update(arr, today, 'bill_shipped')
     } else if (e == 'r') {
-        bill_received = today;
-        fetch_update(arr, bill_received, 'bill_received')
-    } else {
-        bill_storage = today;
-        fetch_update(arr, bill_storage, 'bill_storage')
+        fetch_update(arr, today, 'bill_received')
+    } else if (e == 'st'){
+        fetch_update(arr, today, 'bill_storage')
+    } else if (e == 'x') {
+        fetch_update(arr, today, 'xcharge')
     }
 };
 async function fetch_update(arr, bill, type) {
@@ -473,147 +525,65 @@ async function fetch_update(arr, bill, type) {
     location.reload();
 };
 
+//TOOL: calculate qty * unit charge
+function xc_cost_calculator () {
+    var dataTable = document.getElementById( "xTable");
+    for (let i = 1; i < dataTable.rows.length; i++ ) {
+        const total_cost = dataTable.rows[i].cells[8];
+        const qty = parseInt(dataTable.rows[i].cells[6].innerHTML);
+        const unit_charge = parseInt(dataTable.rows[i].cells[7].innerHTML);
+        total_cost.innerHTML = qty*unit_charge
+    }
+};
+
+
+//to construct data object before fetching
+function xcharge_create() {
+var dataTable = document.getElementById( "xTable");
+    for (let i = 1; i < dataTable.rows.length; i++ ) {
+     const account_td = dataTable.rows[i].cells[2];
+     const account_select = account_td.querySelector('select');
+     if (account_select) {
+        const xc_account_id = account_select.value;
+        const user_id = parseInt(localStorage.getItem('user_id'));
+        const single_XC_data = {
+           user_id: user_id,
+           account_id: xc_account_id,
+           box_number: dataTable.rows[i].cells[3].innerHTML,
+           fba: dataTable.rows[i].cells[4].innerHTML,
+           description: dataTable.rows[i].cells[5].innerHTML,
+           qty_per_box: dataTable.rows[i].cells[6].innerHTML,
+           order: dataTable.rows[i].cells[7].innerHTML,
+           cost: dataTable.rows[i].cells[8].innerHTML
+        };
+        loading_xc_data(single_XC_data);
+     };
+    }
+};
+//fetch function for xc data
+const loading_xc_data = async(data) => {
+    const response = await fetch('/api/box/additional_charge', {
+        method: 'post',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+    });
+    if (response.ok) {
+        location.reload();
+        alert(`additional charges for are inserted successfully!`)
+    } else {
+        alert('try again')
+    }
+};
+
+
+// reload and auto fetch the previous data
 if (localStorage.getItem('user_id')) {
     window.onload = next(localStorage.getItem('user_id'));
     document.getElementById('charge_btn').style.display = 'none';
     document.getElementById('reset_btn').style.display = '';
 }
 
+
 ///tool
 const test = new Date('3/20/2022').getTime()
 console.log(test.toString());
-
-// function xcharge_create() {
-// var dataTable = document.getElementById( "xTable");
-// for (let i = 1; i < dataTable.rows.length; i++ ) {
-//     const orderdata = {
-//         account_id: savedAccount_id,
-//         box_number: dataTable.rows[i].cells[0].innerHTML,
-//         description: dataTable.rows[i].cells[1].innerHTML,
-//         sku: dataTable.rows[i].cells[2].innerHTML,
-//         qty_per_box: 1,
-//         order: 1,
-//         weight: 1,
-//         length: 1,
-//         width: 1,
-//         height: 1,
-//         volume: 1
-//     };
-//     // arr.push(orderdata.box_number);
-//     loadingBox(orderdata);
-// }}
-
-
-// function boxInsertNewAccount() {
-//     // var new_account_arr = [];
-//     var dataTable = document.getElementById( "ordertable" );
-//     for ( var i = 1; i < dataTable.rows.length; i++ ) {
-//         const length = parseInt(dataTable.rows[i].cells[7].innerHTML);
-//         const width = parseInt(dataTable.rows[i].cells[8].innerHTML);
-//         const height = parseInt(dataTable.rows[i].cells[9].innerHTML);
-//         const volume = length*width*height
-//         const newBox = {
-//             batch_id: batch_map.get(asn),
-//             account_id: account_map.get(account.value),
-//             box_number: dataTable.rows[i].cells[0].innerHTML,
-//             description: dataTable.rows[i].cells[1].innerHTML,
-//             sku: dataTable.rows[i].cells[2].innerHTML,
-//             qty_per_box: parseInt(dataTable.rows[i].cells[3].innerHTML),
-//             order: parseInt(dataTable.rows[i].cells[4].innerHTML),
-//             weight: parseInt(dataTable.rows[i].cells[6].innerHTML),
-//             length: length,
-//             width: width,
-//             height: height,
-//             volume: volume
-//         };
-//         // new_account_arr.push(newBox.box_number);
-//         loadingBox(newBox)
-//     }
-//     alert('Orders Placed!');
-//     // barcode(new_account_arr);
-//     window.location.replace(`/batch/${batch_map.get(asn)}`)
-// };
-
-// async function loadingBox(data) {
-
-//     const response = await fetch('/api/box', {
-//         method: 'post',
-//         body: JSON.stringify(data),
-//         headers: { 'Content-Type': 'application/json' }
-//       });
-//       if (response.ok) {
-//         console.log('order placed successfully!')
-//       } else {
-//         alert('try again')
-//       }
-
-// };
-
-// function findBatchId() {
-//     fetch(`/api/user/batch`, {
-//         method: 'GET'
-//     }).then(function (response) {
-//         return response.json();
-//     }).then(function (data) {
-//         for (let i = 0; i < data.length; i++) {
-//             batch_map.set(data[i].asn, data[i].id);
-//         };
-//         console.log(batch_map.get(asn));
-//         boxInsertNewAccount()
-//     });
-// };
-
-// function findAccountId() {
-//     fetch(`/api/user/account`, {
-//         method: 'GET'
-//     }).then(function (response) {
-//         return response.json();
-//     }).then(function (data) {
-//         for (let j = 0; j < data.length; j++) {
-//             account_map.set(data[j].name, data[j].id);
-//         }
-//         const account_id = account_map.get(account.value);
-//         const total_box = parseInt(localStorage.getItem('total_box'));
-//         loadingBatch({asn, pending_date, total_box, account_id})
-//     });
-// };
-
-// async function loadingBatch(data) {
-//     const response = await fetch('/api/batch/new', {
-//         method: 'post',
-//         body: JSON.stringify(data),
-//         headers: { 'Content-Type': 'application/json' }
-//       });
-
-//       if (response.ok) {
-//        console.log("batch inserted");
-//        findBatchId()
-//       } else {
-//         alert('try again')
-//       }
-
-// };
-
-// function findBatchId() {
-//     fetch(`/api/user/batch`, {
-//         method: 'GET'
-//     }).then(function (response) {
-//         return response.json();
-//     }).then(function (data) {
-//         for (let i = 0; i < data.length; i++) {
-//             batch_map.set(data[i].asn, data[i].id);
-//         };
-//         console.log(batch_map.get(asn));
-//         boxInsertNewAccount()
-//     });
-// };
-
-
-// function exportData() {
-//     const total_box = parseInt(localStorage.getItem('total_box'));
-//     if (savedAccount != "Create New Account") {
-//         loadingBatch1({asn, pending_date, total_box, savedAccount_id});
-//         }else {
-//         loadingAccount({name: account.value, prefix: prefix.value.toUpperCase()});
-//     }
-// }

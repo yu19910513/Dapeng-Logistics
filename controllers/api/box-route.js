@@ -278,4 +278,52 @@ router.put('/bill_storage_update', withAuth, (req, res) => {
     });
 });
 
+router.put('/xcharge_update', withAuth, (req, res) => {
+  Box.update({
+      status: 5,
+      bill_shipped: req.body.bill
+    },
+      {
+      where: {
+          box_number: req.body.box_number
+      }
+    })
+    .then(dbBoxData => {
+      if (!dbBoxData[0]) {
+        res.status(404).json({ message: 'This Box does not exist!' });
+        return;
+      }
+      res.json(dbBoxData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+router.post('/additional_charge', withAuth, (req, res) => {
+  Box.create({
+    requested_date: new Date().toLocaleDateString("en-US"),
+    box_number: req.body.box_number,
+    account_id: req.body.account_id,
+    user_id: req.body.user_id,
+    description: req.body.description,
+    fba: req.body.fba,
+    qty_per_box: req.body.qty_per_box,
+    order: req.body.order,
+    weight: 0,
+    length: 0,
+    width: 0,
+    height: 0,
+    cost: req.body.cost,
+    status: 4
+  }, {returning: true})
+      .then(dbBoxData => res.json(dbBoxData))
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+});
+
+
   module.exports = router;

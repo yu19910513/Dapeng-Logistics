@@ -289,4 +289,58 @@ router.get('/billing_per_user', withAuth, async (req, res) => {
   }
 
 });
+
+//additional charge data
+router.get('/xc_per_user', withAuth, async (req, res) => {
+  try {
+    const xcData = await Box.findAll({
+      where: {
+        status:[4]
+      },
+      attributes: [
+        'id',
+        'box_number',
+        'description',
+        'cost',
+        'order',
+        'qty_per_box',
+        'requested_date',
+        'shipped_date',
+        'fba',
+        'bill_received',
+        'bill_shipped',
+        'bill_storage'
+      ],
+      include: [
+        {
+          model: Account,
+          attributes: [
+            'id',
+            'name'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'id',
+            'name'
+          ]
+        }
+      ]
+    });
+    const extra_charges = xcData.map(charge => charge.get({ plain: true }));
+    const data = extra_charges.reduce(function (r, a) {
+      r[a.user.id] = r[a.user.id] || [];
+      r[a.user.id].push(a);
+      return r;
+    }, Object.create(null));
+    res.json(data);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+
+});
+
+
 module.exports = router;
