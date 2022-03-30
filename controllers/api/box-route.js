@@ -36,6 +36,33 @@ router.post('/', withAuth, (req, res) => {
       });
 });
 
+//insert old data - seeds
+router.post('/seeds', withAuth, (req, res) => {
+  Box.create({
+    box_number: req.body.box_number,
+    received_date: req.body.received_date,
+    account_id: req.body.account_id,
+    batch_id: req.body.batch_id,
+    user_id: req.body.user_id,
+    description: req.body.description,
+    sku: req.body.sku,
+    qty_per_box: req.body.qty_per_box,
+    order: req.body.order,
+    weight: req.body.weight,
+    length: req.body.length,
+    width: req.body.width,
+    height: req.body.height,
+    volume: req.body.volume,
+    location: req.body.location,
+    status: req.body.status
+  }, {returning: true})
+      .then(dbBoxData => res.json(dbBoxData))
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+});
+
 //update status from pending to receiving
 router.put('/status_admin_receiving', withAuth, (req, res) => {
   Box.update({

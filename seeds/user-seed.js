@@ -17,6 +17,13 @@ const userData = [
         username: "rexyu",
         password: '$2b$10$hT/f3byFYnDu5c3ZdfHJiO4TdnTXyVyvnk.XjYAHeisMUFeFRQGdu',
         admin: false
+    },
+    {
+        name: "Yiwu",
+        email: "rexyu@uw.edu",
+        username: "yiwu",
+        password: '$2b$10$hT/f3byFYnDu5c3ZdfHJiO4TdnTXyVyvnk.XjYAHeisMUFeFRQGdu',
+        admin: false
     }
 ]
 

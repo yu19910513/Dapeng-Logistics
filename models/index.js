@@ -84,5 +84,4 @@ Item.belongsTo(Container, {
 
 
 
-// module.exports = {User, Account, Batch, Box, Container, Item};
-module.exports = {User, Account, Batch, Box};
+module.exports = {User, Account, Batch, Box, Container, Item};

@@ -18,19 +18,7 @@ Container.init(
             type: DataTypes.STRING,
             allowNull: false
         },
-        description: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        cost: {
-            type: DataTypes.INTEGER,
-            allowNull: true
-        },
         tracking: {
-            type: DataTypes.STRING,
-            allowNull: true
-        },
-        old_tracking: {
             type: DataTypes.STRING,
             allowNull: true
         },
@@ -49,19 +37,10 @@ Container.init(
             allowNull: true
          },
 //qty data
-        order: {
+        qty: {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 1
-        },
-        qty_per_box: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 1
-        },
-        sku: {
-            type: DataTypes.STRING,
-            allowNull: true
         },
 // dimension data
         length: {
@@ -84,6 +63,10 @@ Container.init(
             type: DataTypes.INTEGER,
             allowNull: true
         },
+        cost: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
 
 // distrubution data
         status: {
@@ -101,6 +84,10 @@ Container.init(
             allowNull: true
         },
         file_2: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        fba: {
             type: DataTypes.STRING,
             allowNull: true
         },

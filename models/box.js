@@ -62,9 +62,9 @@ Box.init(
          },
 //qty data
         order: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
-            defaultValue: 1
+            defaultValue: "N/A"
         },
         qty_per_box: {
             type: DataTypes.INTEGER,
@@ -77,23 +77,23 @@ Box.init(
         },
 // dimension data
         length: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL,
             allowNull: false
         },
         width: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL,
             allowNull: false
         },
         height: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL,
             allowNull: false
         },
         weight: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL,
             allowNull: false
         },
         volume: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL,
             allowNull: true
         },
 
