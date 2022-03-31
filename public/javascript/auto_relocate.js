@@ -15,7 +15,7 @@ function location_update() {
     if (isCharacterALetter(scanned_obj[0]) && !isNaN(scanned_obj[1]) && isCharacterASpeical(scanned_obj)) {
         localStorage.setItem('location', scanned_obj);
         document.getElementById('scanned_obj').value = null;
-    } else if (scanned_obj.length == 12 && scanned_obj[0] == 'S' && scanned_obj[1] == 'W') {
+    } else if ((scanned_obj.length == 12 && scanned_obj[0] == 'S' && scanned_obj[1] == 'W') || (scanned_obj[scanned_obj.length-1] == '*' && scanned_obj.length > 5)) {
         var locatioin_barcode = localStorage.getItem('location')
         if (!locatioin_barcode) {
             document.getElementById('scanned_obj').value = null;

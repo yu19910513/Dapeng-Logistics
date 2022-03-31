@@ -89,7 +89,7 @@ function loading(start, end) {
         end = rows.length
     };
     for (var i = start; i < end; i++ ) {
-        const box_number = filter_s(rows[i].cells[1]);
+        const box_number = `${filter_s(rows[i].cells[1])}*`;
         const account_name = filter_s(rows[i].cells[4]);
         const received_date = filter_s(rows[i].cells[2]);
         const description = filter_s(rows[i].cells[5]);
