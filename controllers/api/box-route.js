@@ -54,7 +54,9 @@ router.post('/seeds', withAuth, (req, res) => {
     height: req.body.height,
     volume: req.body.volume,
     location: req.body.location,
-    status: req.body.status
+    status: req.body.status,
+    bill_received: req.body.bill_received,
+    bill_storage: req.body.bill_storage
   }, {returning: true})
       .then(dbBoxData => res.json(dbBoxData))
       .catch(err => {

@@ -98,6 +98,8 @@ function loading(start, end) {
         const width = parseInt(filter_s(rows[i].cells[10]))*2.54;
         const height = parseInt(filter_s(rows[i].cells[11]))*2.54;
         const volume = parseInt(length*width*height);
+        const storage_date_b = new Date(document.getElementById('st_b').value.trim()).getTime();
+        const received_date_b = new Date(document.getElementById('r_b').value.trim()).getTime();
         const orderdata = {
             user_id: 3,
             account_id: account_map.get(account_name),
@@ -114,7 +116,9 @@ function loading(start, end) {
             height: height,
             volume: volume,
             location: location,
-            status: 1
+            status: 1,
+            bill_storage: storage_date_b,
+            bill_received: received_date_b
         };
 
         if (orderdata.account_id) {
