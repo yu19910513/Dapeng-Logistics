@@ -236,6 +236,70 @@ router.get('/box', withAuth, async (req, res) => {
 
 });
 
+router.get('/allBox', withAuth, async (req, res) => {
+  try {
+    const boxData = await Box.findAll({
+      where: {
+        user_id: req.session.user_id
+      },
+      attributes: [
+        's3',
+        'notes',
+        'id',
+        'box_number',
+        'description',
+        'cost',
+        'requested_date',
+        'received_date',
+        'shipped_date',
+        'order',
+        'qty_per_box',
+        'length',
+        'width',
+        'height',
+        'weight',
+        'volume',
+        'status',
+        'location',
+        'sku',
+        'file',
+        'file_2',
+        'fba'
+      ],
+      include: [
+        {
+          model: Batch,
+          attributes: [
+            'asn',
+            'pending_date',
+            'total_box'
+          ]
+        },
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'id',
+            'name',
+            'email'
+          ]
+        }
+      ]
+    });
+    const boxes = boxData.map(box => box.get({ plain: true }));
+    res.json(boxes);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+
+});
+
 //billing box data
 router.get('/billing_per_user', withAuth, async (req, res) => {
   try {
@@ -341,6 +405,7 @@ router.get('/xc_per_user', withAuth, async (req, res) => {
   }
 
 });
+
 
 
 module.exports = router;

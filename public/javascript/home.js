@@ -51,3 +51,28 @@ function number_item () {
 setInterval (number_item(), 1000);
 
 document.getElementById('inventory_btn').click();
+
+
+// var boxArr = [];
+// function getAllBoxes() {
+//     fetch(`/api/user/allBox`, {
+//         method: 'GET'
+//     }).then(function (response) {
+//         return response.json();
+//     }).then(function (data) {
+//         console.log(data);
+//         // for (let i = 0; i < data.length; i++) {
+//         //     const element = data[i];
+//         //     if (element.status[2] || element.status[1]) {
+//         //         console.log(element);
+//         //         boxArr.push(element);
+//         //     }
+
+//         // }
+//         // console(boxArr);
+//     })
+// }
+
+// function console(boxArr) {
+//     console.log(boxArr.length);
+// }

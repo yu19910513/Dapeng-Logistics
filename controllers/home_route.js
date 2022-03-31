@@ -6,7 +6,7 @@ const {withAuth, adminAuth} = require('../utils/auth');
 const { uploadFile, getFile} = require('../utils/s3');
 
 //client home page
-router.get('/', withAuth, async (req, res) => {
+router.get('/:start&:end', withAuth, async (req, res) => {
     try {
       const boxData = await Box.findAll({
         where: {
@@ -24,24 +24,15 @@ router.get('/', withAuth, async (req, res) => {
           'requested_date',
           'shipped_date',
           'order',
-          'qty_per_box',
-          'length',
-          'width',
-          'height',
-          'weight',
-          'volume',
           'status',
-          'location',
           'sku',
           'file',
-          'file_2',
-          'notes'
+          'qty_per_box'
         ],
         include: [
           {
             model: Batch,
             attributes: [
-              'asn',
               'pending_date',
               'total_box'
             ]
@@ -54,20 +45,78 @@ router.get('/', withAuth, async (req, res) => {
           }
         ]
       });
-      const boxes = boxData.map(box => box.get({ plain: true }));
+      const boxe = boxData.map(box => box.get({ plain: true }));
+      boxes = [];
+      for (let i = req.params.start; i < req.params.end; i++) {
+        boxes.push(boxe[i])
+      };
       res.render('home', {
         boxes,
         loggedIn: true,
         admin: req.session.admin,
-        name: req.session.name,
-        shipped_date: req.body.shipped_date,
-        received_date: req.body.received_date,
-        requested_date: req.body.requested_date
+        name: req.session.name
       });
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
     }
+
+});
+
+router.get('/', withAuth, async (req, res) => {
+  try {
+    const boxData = await Box.findAll({
+      where: {
+        user_id: req.session.user_id,
+        status: [0, 1, 2, 3]
+      },
+      attributes: [
+        'tracking',
+        'batch_id',
+        'id',
+        'box_number',
+        'description',
+        'cost',
+        'received_date',
+        'requested_date',
+        'shipped_date',
+        'order',
+        'status',
+        'sku',
+        'file',
+        'qty_per_box'
+      ],
+      include: [
+        {
+          model: Batch,
+          attributes: [
+            'pending_date',
+            'total_box'
+          ]
+        },
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        }
+      ]
+    });
+    const boxes = boxData.map(box => box.get({ plain: true }));
+    // boxes = [];
+    // for (let i = 0; i < 50; i++) {
+    //   boxes.push(boxe[i])
+    // };
+    res.render('home', {
+      boxes,
+      loggedIn: true,
+      admin: req.session.admin,
+      name: req.session.name
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 
 });
 
