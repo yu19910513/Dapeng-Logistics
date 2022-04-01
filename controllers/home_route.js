@@ -66,9 +66,6 @@ router.get('/:start&:end', withAuth, async (req, res) => {
 router.get('/', withAuth, async (req, res) => {
   try {
     const accountData = await Account.findAll({
-      order: [
-        ["name", "ASC"],
-      ],
       where: {
         user_id: req.session.user_id,
       },
@@ -83,7 +80,10 @@ router.get('/', withAuth, async (req, res) => {
             'box_number'
           ]
         }
-      ]
+      ],
+      order: [
+        ["name", "ASC"],
+      ],
     });
     const pre_accounts = accountData.map(account => account.get({ plain: true }));
     console.log(accounts);
