@@ -27,6 +27,7 @@ function compile() {
     for (let j = 0; j < account_nameArr.length; j++) {
         loadingAccount(
             {
+                user_id: 3,
                 name: account_nameArr[j],
                 prefix: prefix_map.get(account_nameArr[j])
             }
