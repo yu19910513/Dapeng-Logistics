@@ -1,0 +1,126 @@
+<div class="uk-overflow-auto">
+<p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
+<div class="uk-margin uk-overflow-auto">
+<div class="uk-margin">
+    {{!-- <nav class="uk-navbar-container" > --}}
+        <div class="uk-navbar-right uk-child-width-expand@s">
+
+            <div class="uk-navbar-item">
+            <div class="uk-grid-small uk-child-width-auto uk-grid">
+                <label><input id="radio" class="uk-radio" type="radio" value='1' name="radio2" onclick="status_trigger(1)">All 全交易</label>
+                <label><input id="radio" class="uk-radio" type="radio" value='2' name="radio2" onclick="status_trigger(2)">Pending 挂单</label>
+                <label><input id="radio" class="uk-radio" type="radio" value='3' name="radio2" onclick="status_trigger(3)">Received 存货</label>
+                <label><input id="radio" class="uk-radio" type="radio" value='4' name="radio2" onclick="status_trigger(4)">Requested 出货通知</label>
+                <label><input  id="radio"class="uk-radio" type="radio" value='5' name="radio2" onclick="status_trigger(5)">Shipped 已出货</label>
+            </div>
+            </div>
+
+            <div class="uk-navbar-item">
+            <button type="button" id='inventory_btn' class="btn btn-lg btn-light border-primary text-primary shadow-sm" onclick="status_trigger(6)">
+                Inventory 库存:
+            {{!-- <div class="dropdown-content">
+                <div class="text-dark" href="#">大鹏库存</div>
+            </div> --}}
+                <b><span class="text-primary" id="numberOfInventory"></span></b>
+                        <span class="sr-only">Items</span>
+            </button>
+            </div>
+
+            {{!-- <div class="uk-navbar-item">
+                <a href="" class="btn btn-success">Labeling</a>
+            </div> --}}
+
+            <div class="uk-navbar-item">
+                <form class="uk-search uk-search-default">
+                    <span uk-search-icon></span>
+                    <input class="uk-search-input form-control search-input" type="search" placeholder="Search" data-table="myTable">
+                 </form>
+            </div>
+
+
+        </div>
+    {{!-- </nav> --}}
+    </div>
+</div>
+
+        <table class="uk-table uk-table-small uk-table-divider myTable text-center" id="myTable">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Account 帐户</th>
+                    <th onclick="sortTable(1)">Box number 箱码</th>
+                    <th onclick="sortTable(2)">Item Description 细目</th>
+                    <th>Box</th>
+                    <th>of Box</th>
+                    <th>Qty per Box 物件量</th>
+                    <th>SKU</th>
+                    <th onclick="sortTable(7)">Batch Labels 标签</th>
+                    <th>Tracking</th>
+                    <th onclick="sortTable(9)">Date 日期</th>
+                    <th onclick="sortTable(10)">Status 状态</th>
+                </tr>
+            </thead>
+            <tbody>
+
+{{#each boxes as |box|}}
+
+{{> box-data box }}
+
+{{else}}
+
+{{#if admin}}
+<h3 class="text-center uk-text-bold">Loading admin files...</h3>
+{{else}}
+<h3 class="text-center">NO ORDER WAS FOUND!</h3>
+{{/if}}
+
+{{/each}}
+
+            </tbody>
+        </table>
+
+    </div>
+<script>
+        (function(document) {
+            'use strict';
+
+            var TableFilter = (function(myArray) {
+                var search_input;
+
+                function _onInputSearch(e) {
+                    search_input = e.target;
+                    var tables = document.getElementsByClassName(search_input.getAttribute('data-table'));
+                    myArray.forEach.call(tables, function(table) {
+                        myArray.forEach.call(table.tBodies, function(tbody) {
+                            myArray.forEach.call(tbody.rows, function(row) {
+                                var text_content = row.textContent.toLowerCase();
+                                var search_val = search_input.value.toLowerCase();
+                                row.style.display = text_content.indexOf(search_val) > -1 ? '' : 'none';
+                            });
+                        });
+                    });
+                }
+
+                return {
+                    init: function() {
+                        var inputs = document.getElementsByClassName('search-input');
+                        myArray.forEach.call(inputs, function(input) {
+                            input.oninput = _onInputSearch;
+                        });
+                    }
+                };
+            })(Array.prototype);
+
+            document.addEventListener('readystatechange', function() {
+                if (document.readyState === 'complete') {
+                    TableFilter.init();
+                }
+            });
+
+        })(document);
+    </script>
+
+<script src="javascript/table.js"></script>
+<script src="javascript/home.js"></script>
+{{#if admin}}
+<script src="javascript/admin_redirect.js"></script>
+{{/if}}

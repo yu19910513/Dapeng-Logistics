@@ -6,6 +6,9 @@ const {withAuth, adminAuth} = require('../../utils/auth');
 router.get('/account', withAuth, async (req, res) => {
   try {
   const accountDB = await Account.findAll({
+    order: [
+      ["name", "ASC"]
+    ],
     where: {
       user_id: req.session.user_id
     },
@@ -240,7 +243,8 @@ router.get('/allBox', withAuth, async (req, res) => {
   try {
     const boxData = await Box.findAll({
       where: {
-        user_id: req.session.user_id
+        user_id: req.session.user_id,
+        status: [0,1,2,3]
       },
       attributes: [
         's3',

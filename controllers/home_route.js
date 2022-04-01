@@ -65,6 +65,50 @@ router.get('/:start&:end', withAuth, async (req, res) => {
 
 router.get('/', withAuth, async (req, res) => {
   try {
+    const accountData = await Account.findAll({
+      order: [
+        ["name", "ASC"],
+      ],
+      where: {
+        user_id: req.session.user_id,
+      },
+      attributes: [
+        'id',
+        'name'
+      ],
+      include: [
+        {
+          model: Box,
+          attributes: [
+            'box_number'
+          ]
+        }
+      ]
+    });
+    const pre_accounts = accountData.map(account => account.get({ plain: true }));
+    console.log(accounts);
+    var accounts = [];
+    for (let i = 0; i < pre_accounts.length; i++) {
+      const element = pre_accounts[i].boxes[0];
+      if (element) {
+        accounts.push(pre_accounts[i]);
+      };
+    }
+    res.render('home', {
+      accounts,
+      loggedIn: true,
+      admin: req.session.admin,
+      name: req.session.name
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+
+});
+
+router.get('/master', withAuth, async (req, res) => {
+  try {
     const boxData = await Box.findAll({
       where: {
         user_id: req.session.user_id,
@@ -107,7 +151,7 @@ router.get('/', withAuth, async (req, res) => {
     // for (let i = 0; i < 50; i++) {
     //   boxes.push(boxe[i])
     // };
-    res.render('home', {
+    res.render('master_home', {
       boxes,
       loggedIn: true,
       admin: req.session.admin,
@@ -694,7 +738,70 @@ router.get('/box/:id', withAuth, async (req, res) => {
     console.log(err);
     res.status(500).json(err);
   }
-  })
+});
+
+router.get('/account/:id', withAuth, async (req, res) => {
+    try {
+      const boxData = await Box.findAll({
+        where: {
+          account_id: req.params.id,
+          user_id: req.session.user_id
+        },
+          attributes: [
+        'batch_id',
+        'id',
+        'box_number',
+        'description',
+        'cost',
+        'received_date',
+        'requested_date',
+        'shipped_date',
+        'order',
+        'qty_per_box',
+        'length',
+        'width',
+        'height',
+        'weight',
+        'volume',
+        'status',
+        'location',
+        'sku',
+        'file',
+        'file_2',
+          ],
+            include: [
+          {
+          model: Batch,
+          attributes:
+          [
+            'asn',
+            'pending_date',
+            'total_box',
+            'id'
+            ]},
+          {
+            model: Account,
+            attributes: [
+              'name'
+            ]
+          }
+            ]
+      })
+      const boxes = boxData.map(box => box.get({ plain: true }));
+      res.render('master_home', {
+        boxes,
+        loggedIn: true,
+        admin: req.session.admin,
+        name: req.session.name,
+        account: boxes[0].account.name,
+        date: boxes[0].batch.pending_date
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+});
+
 
 router.get('/rawData', withAuth, (req, res) => {
     res.render('rawData');

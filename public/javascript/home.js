@@ -1,35 +1,3 @@
-var map = new Map();
-function accountList() {
-    fetch(`/api/user/account`, {
-        method: 'GET'
-    }).then(function (response) {
-        return response.json();
-    }).then(function (data) {
-        for (let i = 0; i < data.length; i++) {
-            const option = document.createElement('option');
-            option.innerHTML = data[i].name + " (prefix: "+ data[i].prefix.toUpperCase() + ")";
-            document.querySelector('#accountList').appendChild(option);
-            map.set(data[i].name, data[i].id);
-        }
-    });
-};
-
-function saveAccount() {
-    var selectedOption = document.querySelector('#accountList').value;
-
-    if(selectedOption != 'Create New Account'){
-        var accountSaved = selectedOption.split(' (prefix:');
-        var prefixSaved = accountSaved[1].split(')');
-        localStorage.setItem('account', accountSaved[0]);
-        localStorage.setItem('prefix', prefixSaved[0]);
-        localStorage.setItem('account_id', map.get(accountSaved[0]));
-    } else {
-        localStorage.setItem('account', selectedOption);
-    }
-}
-
-document.querySelector("#account_selection").addEventListener("click", saveAccount);
-
 function number_item () {
     var numberOfItem = document.getElementById('numberOfInventory');
     var arr =[]
@@ -51,28 +19,3 @@ function number_item () {
 setInterval (number_item(), 1000);
 
 document.getElementById('inventory_btn').click();
-
-
-// var boxArr = [];
-// function getAllBoxes() {
-//     fetch(`/api/user/allBox`, {
-//         method: 'GET'
-//     }).then(function (response) {
-//         return response.json();
-//     }).then(function (data) {
-//         console.log(data);
-//         // for (let i = 0; i < data.length; i++) {
-//         //     const element = data[i];
-//         //     if (element.status[2] || element.status[1]) {
-//         //         console.log(element);
-//         //         boxArr.push(element);
-//         //     }
-
-//         // }
-//         // console(boxArr);
-//     })
-// }
-
-// function console(boxArr) {
-//     console.log(boxArr.length);
-// }
