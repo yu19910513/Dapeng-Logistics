@@ -12,6 +12,8 @@ var qty_per_boxMap = new Map();
 var skuMap = new Map();
 var dateMap = new Map();
 var statusMap = new Map();
+var boxNumberArr = [];
+
 function allBox() {
     fetch(`/api/user/allBox`, {
         method: 'GET'
@@ -21,13 +23,14 @@ function allBox() {
         for (let i = 0; i < data.length; i++) {
           const status = data[i].status;
           const box_number = data[i].box_number;
-            box_numberMap.set(box_number, data[i].id)
-            accountMap.set(box_number, data[i].account.name);
-            orderMap.set(box_number, data[i].order);
-            descriptionMap.set(box_number, data[i].description);
-            total_boxMap.set(box_number, data[i].batch.total_box);
-            qty_per_boxMap.set(box_number, data[i].qty_per_box);
-            skuMap.set(box_number, data[i].sku);
+          boxNumberArr.push(box_number);
+          box_numberMap.set(box_number, data[i].id)
+          accountMap.set(box_number, data[i].account.name);
+          orderMap.set(box_number, data[i].order);
+          descriptionMap.set(box_number, data[i].description);
+          total_boxMap.set(box_number, data[i].batch.total_box);
+          qty_per_boxMap.set(box_number, data[i].qty_per_box);
+          skuMap.set(box_number, data[i].sku);
             if (status == 0 ) {
               dateMap.set(box_number, data[i].batch.pending_Map)
               statusMap.set(box_number, 'pending')
@@ -54,7 +57,7 @@ allBox()
 
 const accounts_content = document.getElementById("myDropdown");
 const accountInput = document.getElementById("accountInput");
-const boxInput = document.getElementById("boxInput");
+const _ioxInput = document.getElementById("boxInput");
 const boxTable = document.getElementById("boxTable");
 function box_show() {
   accounts_content.style.display = 'none';
@@ -89,13 +92,41 @@ function filterFunction() {
   }
 }
 
+function box_searchBtn(b) {
+  // const box_input = document.getElementById('myBoxInput').value.trim();
+    for (i = 0; i < boxNumberArr.length; i++) {
+    if (b.length >= 3) {
+      txtValue = boxNumberArr[i];
+      if (txtValue.toUpperCase().indexOf(b.toUpperCase()) > -1) {
+        filterFunction_box(boxNumberArr[i]);
+        document.getElementById('searchNote').innerHTML = null;
+      }
+    }
+  };
+};
+
 function box_searching() {
- const box_input = document.getElementById('myBoxInput').value.trim();
+  unattach();
+ var box_input = document.getElementById('myBoxInput').value.trim();
+ if (box_input[0] == '/') {
+  document.getElementById('searchNote').innerHTML = "** The partial function is initiated, please input at least 3 key characters associated with box number **"
+  box_input = box_input.substring(1,box_input.length)
+  box_searchBtn(box_input)
+ } else {
+  document.getElementById('searchNote').innerHTML = null;
   if (box_numberMap.get(box_input.toUpperCase())) {
     filterFunction_box(box_input.toUpperCase());
     document.getElementById('myBoxInput').value = null;
   }
+ }
+};
+
+function unattach() {
+const tBody = document.getElementById('boxBody');
+const old_search = tBody.querySelectorAll('tr');
+old_search.forEach(i => i.remove())
 }
+
 function filterFunction_box(b) {
     const boxBody = document.getElementById('boxBody')
     const container = document.createElement('tr');
@@ -126,5 +157,5 @@ function filterFunction_box(b) {
     sku.innerHTML = skuMap.get(b);
     date.innerHTML = dateMap.get(b);
     status.innerHTML = statusMap.get(b);
-    boxBody.appendChild(container)
+    boxBody.appendChild(container);
 };
