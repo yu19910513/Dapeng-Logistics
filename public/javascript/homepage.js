@@ -3,15 +3,7 @@ const pending_count = document.getElementById('pending_c');
 var receivedCount = 0;
 var requestedCount = 0;
 var pendingCount = 0;
-var accountMap = new Map();
-var box_numberMap = new Map();
-var orderMap = new Map();
-var descriptionMap = new Map();
-var total_boxMap = new Map();
-var qty_per_boxMap = new Map();
-var skuMap = new Map();
-var dateMap = new Map();
-var statusMap = new Map();
+var objectMap = new Map();
 var boxNumberArr = [];
 
 function allBox() {
@@ -23,28 +15,15 @@ function allBox() {
         for (let i = 0; i < data.length; i++) {
           const status = data[i].status;
           const box_number = data[i].box_number;
+          objectMap.set(box_number, data[i]);
           boxNumberArr.push(box_number);
-          box_numberMap.set(box_number, data[i].id)
-          accountMap.set(box_number, data[i].account.name);
-          orderMap.set(box_number, data[i].order);
-          descriptionMap.set(box_number, data[i].description);
-          total_boxMap.set(box_number, data[i].batch.total_box);
-          qty_per_boxMap.set(box_number, data[i].qty_per_box);
-          skuMap.set(box_number, data[i].sku);
             if (status == 0 ) {
-              dateMap.set(box_number, data[i].batch.pending_Map)
-              statusMap.set(box_number, 'pending')
               pendingCount++
             } else if (status == 1) {
-              dateMap.set(box_number, data[i].received_date);
-              statusMap.set(box_number, 'received')
               receivedCount++
             } else if (status == 2) {
-              dateMap.set(box_number, data[i].requested_date);
-              statusMap.set(box_number, 'requested');
               requestedCount++
             } else if (status == 3){
-              dateMap.set(box_number, data[i].shipped_date);
               statusMap.set(box_number, 'shipped')
             }
         };
@@ -57,7 +36,7 @@ allBox()
 
 const accounts_content = document.getElementById("myDropdown");
 const accountInput = document.getElementById("accountInput");
-const _ioxInput = document.getElementById("boxInput");
+const boxInput = document.getElementById("boxInput");
 const boxTable = document.getElementById("boxTable");
 function box_show() {
   accounts_content.style.display = 'none';
@@ -93,7 +72,6 @@ function filterFunction() {
 }
 
 function box_searchBtn(b) {
-  // const box_input = document.getElementById('myBoxInput').value.trim();
     for (i = 0; i < boxNumberArr.length; i++) {
     if (b.length >= 3) {
       txtValue = boxNumberArr[i];
@@ -106,7 +84,7 @@ function box_searchBtn(b) {
 };
 
 function box_searching() {
-  unattach();
+unattach();
  var box_input = document.getElementById('myBoxInput').value.trim();
  if (box_input[0] == '/') {
   document.getElementById('searchNote').innerHTML = "** The partial function is initiated, please input at least 3 key characters associated with box number **"
@@ -114,7 +92,7 @@ function box_searching() {
   box_searchBtn(box_input)
  } else {
   document.getElementById('searchNote').innerHTML = null;
-  if (box_numberMap.get(box_input.toUpperCase())) {
+  if (boxNumberArr.includes(box_input.toUpperCase())) {
     filterFunction_box(box_input.toUpperCase());
     document.getElementById('myBoxInput').value = null;
   }
@@ -148,14 +126,43 @@ function filterFunction_box(b) {
     container.appendChild(sku);
     container.appendChild(date);
     container.appendChild(status);
-    account.innerHTML = accountMap.get(b);
+    account.innerHTML = objectMap.get(b).account.name;
     box_number.innerHTML = b;
-    description.innerHTML = descriptionMap.get(b);
-    order.innerHTML = orderMap.get(b);
-    total_box.innerHTML = total_boxMap.get(b);
-    qty_per_box.innerHTML = qty_per_boxMap.get(b);
-    sku.innerHTML = skuMap.get(b);
-    date.innerHTML = dateMap.get(b);
-    status.innerHTML = statusMap.get(b);
+    description.innerHTML = objectMap.get(b).description;
+    order.innerHTML = objectMap.get(b).order;
+    total_box.innerHTML = objectMap.get(b).batch.total_box;
+    qty_per_box.innerHTML = objectMap.get(b).qty_per_box;
+    sku.innerHTML = objectMap.get(b).sku;
+    date.innerHTML = convertor(objectMap.get(b));
+    status.innerHTML = convertor_status(objectMap.get(b).status);
     boxBody.appendChild(container);
 };
+
+
+function convertor(object) {
+  const received_date = object.received_date;
+  const shipped_date = object.shipped_date;
+  const pending_date = object.batch.pending_date;
+  const requested_date =object.requested_date;
+  if (shipped_date) {
+    return shipped_date
+  } else if (requested_date) {
+    return requested_date
+  } else if (received_date) {
+    return received_date
+  } else {
+    return pending_date
+  }
+};
+
+function convertor_status(s) {
+  if (s == 0) {
+    return 'pending'
+  } else if ( s == 1) {
+    return 'received'
+  } else if (s == 2) {
+    return 'requested'
+  } else if (s ==3) {
+    return 'shipped'
+  }
+}
