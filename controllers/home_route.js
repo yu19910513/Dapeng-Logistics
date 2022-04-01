@@ -76,6 +76,7 @@ router.get('/', withAuth, async (req, res) => {
       include: [
         {
           model: Box,
+          where: {status: [0,1,2,3]},
           attributes: [
             'box_number'
           ]
@@ -748,6 +749,7 @@ router.get('/account/:id', withAuth, async (req, res) => {
           user_id: req.session.user_id
         },
           attributes: [
+        'account_id',
         'batch_id',
         'id',
         'box_number',
@@ -791,6 +793,7 @@ router.get('/account/:id', withAuth, async (req, res) => {
       res.render('master_home', {
         boxes,
         loggedIn: true,
+        accountId: req.params.id,
         admin: req.session.admin,
         name: req.session.name,
         account: boxes[0].account.name,
@@ -802,6 +805,60 @@ router.get('/account/:id', withAuth, async (req, res) => {
     }
 });
 
+router.get('/request/:id', withAuth, async (req, res) => {
+  try {
+    const boxData = await Box.findAll({
+      where: {
+        user_id: req.session.user_id,
+        account_id: req.params.id,
+        status: 1,
+      },
+      attributes: [
+        'id',
+        'box_number',
+        'description',
+        'cost',
+        'requested_date',
+        'received_date',
+        'shipped_date',
+        'order',
+        'qty_per_box',
+        'length',
+        'width',
+        'height',
+        'weight',
+        'volume',
+        'status',
+        'location',
+        'sku',
+        'file',
+        'file_2',
+        'notes'
+      ],
+      include: [
+        {
+          model: Batch,
+          attributes: [
+            'asn',
+            'pending_date',
+            'total_box'
+          ]
+        },
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        }
+      ]
+    });
+    const boxes = boxData.map(box => box.get({ plain: true }));
+    res.render('request', { boxes, loggedIn: true, admin: req.session.admin, name: req.session.name });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
 
 router.get('/rawData', withAuth, (req, res) => {
     res.render('rawData');

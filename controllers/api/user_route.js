@@ -247,6 +247,7 @@ router.get('/allBox', withAuth, async (req, res) => {
         status: [0,1,2,3]
       },
       attributes: [
+        'account_id',
         's3',
         'notes',
         'id',

@@ -7,8 +7,8 @@
 <div class="container">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item active" >Pending Count: <span id="pending_c"></span> </li>
-      <li class="breadcrumb-item active" >Inventory Count: <span id="inventory_c"></span></li>
+      <li class="breadcrumb-item active" >Pending Count 挂单总数: <span id="pending_c"></span> </li>
+      <li class="breadcrumb-item active" >Inventory Count 库存量: <span id="inventory_c"></span></li>
     </ol>
   </nav>
 
@@ -22,20 +22,20 @@
 <div class="form-check">
   <input class="form-check-input" type="radio" name="box_checkbox" id="box_search" onclick="box_show()">
   <label class="form-check-label" for="boxSearch">
-    Box Search
+    Box Search (via box number)
   </label>
 </div>
 
 
   <form class="uk-search uk-search-large" id="accountInput">
     <span uk-search-icon></span>
-    <input class="uk-search-input" type="search" placeholder="Account Search" id="myInput" onkeyup="filterFunction()">
+    <input class="uk-search-input" type="search" placeholder="帐号查找" id="myInput" onkeyup="filterFunction()">
   </form>
 
 
   <form class="uk-search uk-search-large" id="boxInput" style="display: none;">
     <span uk-search-icon></span>
-    <input class="uk-search-input" type="search" placeholder="Box # Search" id="myBoxInput" onkeyup="box_searching()">
+    <input class="uk-search-input" type="search" placeholder="货品讯息查找" id="myBoxInput" onkeyup="box_searching()">
   </form>
 </div>
 

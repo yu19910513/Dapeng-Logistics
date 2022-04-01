@@ -87,7 +87,7 @@ function box_searching() {
 unattach();
  var box_input = document.getElementById('myBoxInput').value.trim();
  if (box_input[0] == '/') {
-  document.getElementById('searchNote').innerHTML = "** The partial function is initiated, please input at least 3 key characters associated with box number **"
+  document.getElementById('searchNote').innerHTML = "The partial function is initiated, please input at least 3 key characters associated with box number <br>快捷功能活化，请用三位以上关键字母数字查找(箱码)"
   box_input = box_input.substring(1,box_input.length)
   box_searchBtn(box_input)
  } else {
@@ -126,7 +126,7 @@ function filterFunction_box(b) {
     container.appendChild(sku);
     container.appendChild(date);
     container.appendChild(status);
-    account.innerHTML = objectMap.get(b).account.name;
+    account.innerHTML = `<a href="/account/${objectMap.get(b).account_id}" >${objectMap.get(b).account.name}</a>`;
     box_number.innerHTML = b;
     description.innerHTML = objectMap.get(b).description;
     order.innerHTML = objectMap.get(b).order;
@@ -166,3 +166,5 @@ function convertor_status(s) {
     return 'shipped'
   }
 }
+
+// console.log(window.location.href);
