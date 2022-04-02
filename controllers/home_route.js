@@ -76,7 +76,7 @@ router.get('/', withAuth, async (req, res) => {
       include: [
         {
           model: Box,
-          where: {status: [0,1,2,3]},
+          where: {status: [1,2]},
           attributes: [
             'box_number'
           ]

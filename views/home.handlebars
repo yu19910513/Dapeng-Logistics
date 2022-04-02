@@ -4,7 +4,7 @@
 {{else}}
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
 <div class="uk-flex uk-flex-center@m uk-flex-right@l uk-margin-small-right mb-2">
-<a href="/master" uk-icon="icon: ban"></a>
+<a href="/master" class="btn-sm btn btn-outline-warning" uk-tooltip="此页面乘载大量资料，可能会降低使用速度与品质!">总库存浏览页</a>
 </div>
 
 
@@ -20,26 +20,26 @@
   <div class="form-check">
   <input class="form-check-input" type="radio" name="account_checkbox" id="account_search" onclick="account_show()" checked>
   <label class="form-check-label" for="accountSearch">
-   Account Search
+   Account Search 帐号查找
   </label>
 </div>
 <div class="form-check">
   <input class="form-check-input" type="radio" name="box_checkbox" id="box_search" onclick="box_show()">
   <label class="form-check-label" for="boxSearch">
-    Box Search (via box number)
+    Box # Search 讯息快搜
   </label>
 </div>
 
 
   <form class="uk-search uk-search-large" id="accountInput">
     <span uk-search-icon></span>
-    <input class="uk-search-input" type="search" placeholder="帐号查找" id="myInput" onkeyup="filterFunction()">
+    <input class="uk-search-input" type="search" placeholder="请输入帐号" id="myInput" onkeyup="filterFunction()">
   </form>
 
 
   <form class="uk-search uk-search-large" id="boxInput" style="display: none;">
     <span uk-search-icon></span>
-    <input class="uk-search-input" type="search" placeholder="货品讯息查找" id="myBoxInput" onkeyup="box_searching()">
+    <input class="uk-search-input" type="search" placeholder="请输入货物代码" id="myBoxInput" onkeyup="box_searching()" uk-tooltip="按下“/”启动快搜功能，搜寻引擎会根据接下来的三个以上的关键数字/字母(货物代码)来搜寻相关货物 (例：/SWLY******)">
   </form>
 </div>
 
@@ -47,7 +47,7 @@
   {{#each accounts as |account|}}
   {{> account-data account }}
   {{else}}
-    <h3 class="text-center">NO ORDER WAS FOUND!</h3>
+    <h3 class="text-center">NO ACCOUNT WAS FOUND!</h3>
   {{/each}}
 </div>
 <div class="container" id="boxTable" style="display: none;">
