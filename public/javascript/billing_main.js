@@ -597,7 +597,7 @@ if (localStorage.getItem('user_id')) {
 //access code to initiate billing process
 function done() {
     var password = document.getElementById("pass").value;
-    if (password == 'Ma09dapeng01') {
+    if (password == '0523') {
         document.getElementById('charge_btn').style.display ='';
         document.getElementById("popup").style.display = "none";
     }
