@@ -3,6 +3,7 @@ const pending_count = document.getElementById('pending_c');
 var receivedCount = 0;
 var requestedCount = 0;
 var pendingCount = 0;
+var shippedCount = 0;
 var objectMap = new Map();
 var boxNumberArr = [];
 
@@ -24,7 +25,7 @@ function allBox() {
             } else if (status == 2) {
               requestedCount++
             } else if (status == 3){
-              statusMap.set(box_number, 'shipped')
+              shippedCount++
             }
         };
         var inventoryCount = receivedCount + requestedCount;

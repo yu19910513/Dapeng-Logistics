@@ -77,6 +77,78 @@ router.get('/', withAuth, async (req, res) => {
 
 });
 
+router.get('/master_page', withAuth, async (req, res) => {
+  try {
+    const boxData = await Box.findAll({
+      where:{
+        status: [0, 1, 2, 3]
+      },
+      attributes: [
+        'tracking',
+        'batch_id',
+        'id',
+        'box_number',
+        'description',
+        'cost',
+        'requested_date',
+        'received_date',
+        'shipped_date',
+        'order',
+        'qty_per_box',
+        'length',
+        'width',
+        'height',
+        'weight',
+        'volume',
+        'status',
+        'location',
+        'sku',
+        'file',
+        'file_2',
+        'notes'
+      ],
+      include: [
+        {
+          model: Batch,
+          attributes: [
+            'asn',
+            'pending_date',
+            'total_box'
+          ]
+        },
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'id',
+            'name',
+            'email'
+          ]
+        }
+      ]
+    });
+    const boxes = boxData.map(box => box.get({ plain: true }));
+    res.render('master_admin', {
+      boxes,
+      loggedIn: true,
+      admin: req.session.admin,
+      name: req.session.name,
+      shipped_date: req.body.shipped_date,
+      received_date: req.body.received_date,
+      requested_date: req.body.requested_date
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+
+});
+
 //admin bulk barcode for china shipment
 router.get('/batch/:id', withAuth, async (req, res) => {
   try {

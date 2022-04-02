@@ -1,3 +1,7 @@
+{{#if admin}}
+  <h3 class="text-center uk-text-bold">Loading admin files...</h3>
+  <script src="javascript/admin_redirect.js"></script>
+{{else}}
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
 <div class="uk-flex uk-flex-center@m uk-flex-right@l uk-margin-small-right mb-2">
 <a href="/master" uk-icon="icon: ban"></a>
@@ -40,17 +44,11 @@
 </div>
 
 <div class="container" id="myDropdown">
-    {{!-- <div class="uk-child-width-1-2 uk-child-width-1-4@s uk-grid-match" uk-grid> --}}
-        {{#each accounts as |account|}}
-            {{> account-data account }}
-            {{else}}
-            {{#if admin}}
-                <h3 class="text-center uk-text-bold">Loading admin files...</h3>
-                {{else}}
-                <h3 class="text-center">NO ORDER WAS FOUND!</h3>
-            {{/if}}
-        {{/each}}
-    {{!-- </div> --}}
+  {{#each accounts as |account|}}
+  {{> account-data account }}
+  {{else}}
+    <h3 class="text-center">NO ORDER WAS FOUND!</h3>
+  {{/each}}
 </div>
 <div class="container" id="boxTable" style="display: none;">
   <small id="searchNote" class="text-primary"></small>
@@ -74,9 +72,5 @@
       </table>
 
 </div>
-
-{{#if admin}}
-<script src="javascript/admin_redirect.js"></script>
-{{else}}
 <script src="javascript/homepage.js"></script>
 {{/if}}
