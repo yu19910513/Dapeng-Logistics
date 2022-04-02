@@ -33,7 +33,10 @@
                 </div>
 
                  <div class="col">
-                    <button class="btn btn-outline-success" type="button" id="charge_btn" uk-toggle="target: #modal-cost">Charge</button>
+                    <div id="popup">
+                        <input id="pass" type="password" placeholder="access code" onkeyup="done()"/>
+                    </div>
+                    <button class="btn btn-outline-success" type="button" id="charge_btn" uk-toggle="target: #modal-cost" style="display: none;">Charge</button>
                     <button class="btn btn-outline-info" type="button" onclick="reset()" id="reset_btn" style="display: none;">Reset</button>
                 </div>
             </div>

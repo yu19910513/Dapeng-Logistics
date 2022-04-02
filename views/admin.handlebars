@@ -1,15 +1,27 @@
 {{#if admin}}
+<link rel="stylesheet" href="../css/admin_homepage.css">
     <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
-
     <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" >Pending Count: <span id="pending_c"></span> </li>
+                <li class="breadcrumb-item active" >Inventory Count: <span id="inventory_c"></span></li>
+             </ol>
+        </nav>
         <div>
-            <a class="btn btn-outline-warning btn-sm shadow-sm"href="/admin/master_page">Master Page</a>
-            <a href="/billing" class="btn btn-sm btn-outline-info shadow-sm"><b>₿</b>illing</a>
+            <a class="btn btn-outline-warning btn-sm shadow-sm" href="/admin/master_page">Master Page</a>
+            <a class="btn btn-sm btn-outline-info shadow-sm" href="/billing"><b>₿</b>illing</a>
+            <a class="btn btn-sm btn-outline-danger shadow-sm">Edit/Delete Items</a>
         </div>
+
+    {{!-- <form class="uk-search uk-search-large">
+        <span uk-search-icon></span>
+        <input class="uk-search-input" type="search" placeholder="Search">
+    </form> --}}
+
     </div>
 
-
-
+<script src="../javascript/admin_homepage.js"></script>
 {{else}}
 <script src="javascript/client_redirect.js"></script>
 <img class="uk-align-center" src="https://i0.wp.com/wirthconsulting.org/wp-content/uploads/2018/02/forbidden1.jpg?w=346&ssl=1" alt="">

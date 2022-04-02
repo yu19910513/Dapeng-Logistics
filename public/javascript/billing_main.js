@@ -594,6 +594,15 @@ if (localStorage.getItem('user_id')) {
     document.getElementById('reset_btn').style.display = '';
 }
 
+//access code to initiate billing process
+function done() {
+    var password = document.getElementById("pass").value;
+    if (password == 'Ma09dapeng01') {
+        document.getElementById('charge_btn').style.display ='';
+        document.getElementById("popup").style.display = "none";
+    }
+};
+
 
 ///tool
 const test = new Date('3/20/2022').getTime()
