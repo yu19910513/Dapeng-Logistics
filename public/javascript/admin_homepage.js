@@ -81,7 +81,6 @@ function location_search(l) {
     let txtValue = locationArr[i];
     if (txtValue.toUpperCase().indexOf(l.toUpperCase()) > -1) {
       locationMap.get(locationArr[i]).forEach((obj)=> {filterFunction_box(obj.box_number)})
-      document.getElementById('searchNote').innerHTML = null;
     }
   }
 };
@@ -96,9 +95,7 @@ unattach();
   document.getElementById('searchNote').innerHTML = "The partial function is initiated, please input at least 3 key characters associated with box number"
   box_input = box_input.substring(1,box_input.length)
   box_searchBtn(box_input)
- } else if (box_input[0] == '.') {
-  document.getElementById('searchNote').innerHTML = "The location function is initiated!"
-  box_input = box_input.substring(1,box_input.length)
+ } else if (isCharacterALetter(box_input[0]) && !isNaN(box_input[1])) {
   location_search(box_input)
  } else {
   document.getElementById('searchNote').innerHTML = null;
@@ -179,3 +176,13 @@ function convertor_status(s) {
     return 'shipped'
   }
 }
+
+
+//helper functions
+const isCharacterALetter = (char) => {
+  return (/[a-zA-Z]/).test(char)
+};
+
+const isCharacterASpeical = (char) => {
+  return (/[-]/).test(char)
+};

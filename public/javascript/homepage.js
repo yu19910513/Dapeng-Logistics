@@ -55,7 +55,6 @@ function account_show() {
   document.getElementById('box_search').checked = false
 }
 
-
 function filterFunction() {
   var input, filter, div, a, i;
   div = document.getElementById("myDropdown");
@@ -74,29 +73,19 @@ function filterFunction() {
 
 function box_searchBtn(b) {
     for (i = 0; i < boxNumberArr.length; i++) {
-    if (b.length >= 3) {
       txtValue = boxNumberArr[i];
       if (txtValue.toUpperCase().indexOf(b.toUpperCase()) > -1) {
         filterFunction_box(boxNumberArr[i]);
         document.getElementById('searchNote').innerHTML = null;
       }
-    }
   };
 };
 
 function box_searching() {
 unattach();
  var box_input = document.getElementById('myBoxInput').value.trim();
- if (box_input[0] == '/') {
-  document.getElementById('searchNote').innerHTML = "The partial function is initiated, please input at least 3 key characters associated with box number <br>快捷功能活化，请用三位以上关键字母数字查找(箱码)"
-  box_input = box_input.substring(1,box_input.length)
+ if (box_input.length > 2) {
   box_searchBtn(box_input)
- } else {
-  document.getElementById('searchNote').innerHTML = null;
-  if (boxNumberArr.includes(box_input.toUpperCase())) {
-    filterFunction_box(box_input.toUpperCase());
-    document.getElementById('myBoxInput').value = null;
-  }
  }
 };
 
