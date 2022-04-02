@@ -66,13 +66,11 @@ const boxTable = document.getElementById("boxTable");
 
 function box_searchBtn(b) {
     for (i = 0; i < boxNumberArr.length; i++) {
-    if (b.length >= 3) {
       let txtValue = boxNumberArr[i];
       if (txtValue.toUpperCase().indexOf(b.toUpperCase()) > -1) {
         filterFunction_box(boxNumberArr[i]);
         document.getElementById('searchNote').innerHTML = null;
       }
-    }
   };
 };
 
@@ -91,9 +89,8 @@ unattach();
  if (box_input) {
     boxTable.style.display = '';
  };
- if (box_input[0] == '/') {
-  document.getElementById('searchNote').innerHTML = "The partial function is initiated, please input at least 3 key characters associated with box number"
-  box_input = box_input.substring(1,box_input.length)
+ if (box_input.length > 2 && !isCharacterASpeical(box_input)) {
+  document.getElementById('searchNote').innerHTML = "No information was found according to your input! Please try again"
   box_searchBtn(box_input)
  } else if (isCharacterALetter(box_input[0]) && !isNaN(box_input[1])) {
   location_search(box_input)
