@@ -19,6 +19,63 @@
         <input class="uk-search-input" type="search" placeholder="Search">
     </form> --}}
 
+    {{!-- <div class="form-check">
+  <input class="form-check-input" type="radio" name="account_checkbox" id="account_search" onclick="account_show()" checked>
+  <label class="form-check-label" for="accountSearch">
+   Account Search
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" type="radio" name="box_checkbox" id="box_search" onclick="box_show()">
+  <label class="form-check-label" for="boxSearch">
+    Box Search (via box number)
+  </label>
+</div> --}}
+
+
+  {{!-- <form class="uk-search uk-search-large" id="accountInput">
+    <span uk-search-icon></span>
+    <input class="uk-search-input" type="search" placeholder="帐号查找" id="myInput" onkeyup="filterFunction()">
+  </form> --}}
+
+
+  <form class="uk-search uk-search-large" id="boxInput">
+    <span uk-search-icon></span>
+    <input class="uk-search-input" type="search" placeholder="Box Search" id="myBoxInput" onkeyup="box_searching()">
+  </form>
+</div>
+
+{{!-- <div class="container" id="myDropdown">
+  {{#each accounts as |account|}}
+  {{> account-data account }}
+  {{else}}
+    <h3 class="text-center">NO USER WAS FOUND!</h3>
+  {{/each}}
+</div> --}}
+<div class="container" id="boxTable" style="display: none;">
+  <small id="searchNote" class="text-primary"></small>
+<table class="uk-table uk-table-small uk-table-divider text-center bg-light shadow">
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th>Account</th>
+                    <th>Box number</th>
+                    <th >Item Description</th>
+                    <th>Box</th>
+                    <th>of Box</th>
+                    <th>Qty per Box</th>
+                    <th>Location</th>
+                    <th >Date</th>
+                    <th >Status</th>
+                </tr>
+            </thead>
+            <tbody id="boxBody">
+
+            </tbody>
+      </table>
+
+</div>
+
     </div>
 
 <script src="../javascript/admin_homepage.js"></script>

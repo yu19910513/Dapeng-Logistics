@@ -169,7 +169,7 @@ router.post('/logout', (req, res) => {
   }
 });
 
-// get box info and send back to in-browawer js
+// get box info and send back to in-browawer js status[2]
 router.get('/box', withAuth, async (req, res) => {
   try {
     const boxData = await Box.findAll({
