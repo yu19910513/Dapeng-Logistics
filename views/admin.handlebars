@@ -11,21 +11,37 @@
   <div class="uk-child-width-expand@s" uk-grid>
     <div class="uk-grid-item-match">
           <div class="uk-card uk-card-default uk-card-body uk-width-1-3@m rounded">
-            <h3 class="lead"><b>Master Functions</b></h3>
-            <a class="btn btn-outline-warning btn-sm shadow-sm" href="/admin/master_page">Home Page</a>
-            <a class="btn btn-sm btn-outline-info shadow-sm" href="/billing"><b>₿</b>illing</a>
-            <a class="btn btn-sm btn-outline-danger shadow-sm" id="edit_btn" onclick="passcode()">Edit/Delete</a>
-            <select name="edit_selection" id="edit_select" class="uk-select uk-form-danger rounded uk-form-small uk-form-width-small" style="display: none;" onchange="preChangeConfirm()">
-              <option value="">select update</option>
-              <option value="0">Pending</option>
-              <option value="1">Received</option>
-              <option value="2">Requested</option>
-              <option value="3">Shipped</option>
-              <option value="4">Pre-billed (additional charge)</option>
-              <option value="5">Billed (additional chagre)</option>
+            <h3 class="lead" onclick="reset()" uk-tooltip="title: click to reset; pos: top-left"><b>Master Functions</b></h3>
+            <a class="btn btn-outline-warning btn-sm shadow-sm mt-1" href="/admin/master_page">Home Page</a>
+            <a class="btn btn-sm btn-outline-info shadow-sm mt-1" href="/billing"><b>₿</b>illing</a>
+            <a class="btn btn-sm btn-outline-danger shadow-sm mt-1" id="edit_btn" onclick="passcode('s')" uk-tooltip="title: Edit status or delete boxes; pos: bottom">Edit/ Del</a>
+            <a class="btn btn-sm btn-outline-primary shadow-sm mt-1" id="update_btn" onclick="passcode('d')" uk-tooltip="title: Redate status; pos: bottom">Redate</a>
+            <select name="edit_selection" id="edit_select" class="uk-select uk-form-danger rounded uk-form-small uk-form-width-small" style="display: none;" onchange="preChangeConfirm()" uk-tooltip="update new STATUS to boxes">
+              <option value="">Select...</option>
+              <option value="0">Status: Pending</option>
+              <option value="1">Status: Received</option>
+              <option value="2">Status: Requested</option>
+              <option value="3">Status: Shipped</option>
+              <option value="4">Status: Pre-billed (additional charge)</option>
+              <option value="5">Status: Billed (additional chagre)</option>
               <option value="98">Archive</option>
               <option value="99">Delete</option>
             </select>
+
+             <select name="edit_selection" id="update_select" class="uk-select uk-form-primary rounded uk-form-small uk-form-width-small" style="display: none;" onchange="preUpdateConfirm()" uk-tooltip="update new status DATE to boxes">
+              <option value="">Select...</option>
+              <option value="pending_date">Pending Date</option>
+              <option value="received_date">Received Date</option>
+              <option value="request_date">Requested Date</option>
+              <option value="shipped_date">Shipped Date</option>
+              <option value="bill_received">Billing Date (receiving)</option>
+              <option value="bill_storage">Billing Date (storage)</option>
+              <option value="bill_shipped">Billing Date (shipping)</option>
+            </select>
+            <div id="update_date_btn" style="display: none;">
+              <input type="date" id="update_date_select" class="uk-input uk-form-primary rounded uk-form-small uk-form-width-small" placeholder='mm/dd/yyyy'>
+              <button class='btn btn-sm btn-primary' onclick="finalConfirmation()" uk-icon="check"></button>
+            </div>
           </div>
 
           {{!-- <div class="uk-card bg-light shadow-sm ml-1 uk-card-body uk-width-2-3@m rounded border-dark">

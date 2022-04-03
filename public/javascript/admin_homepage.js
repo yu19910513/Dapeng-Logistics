@@ -73,8 +73,9 @@ function box_searchBtn(b) {
 function location_search(l) {
   for (i = 0; i < locationArr.length; i++) {
     let txtValue = locationArr[i];
-    if (txtValue.toUpperCase().indexOf(l.toUpperCase()) > -1) {
-      locationMap.get(locationArr[i]).forEach((obj)=> {buildingRow(obj.box_number)})
+    if (txtValue && txtValue.toUpperCase().indexOf(l.toUpperCase()) > -1) {
+      locationMap.get(locationArr[i]).forEach((obj)=> {buildingRow(obj.box_number)});
+      document.getElementById('searchNote').innerHTML = null;
     }
   }
 };
@@ -85,13 +86,20 @@ unattach();
  if (box_input) {
     boxTable.style.display = '';
  };
- if (box_input.length > 2 && !isCharacterASpeical(box_input)) {
+ if (box_input.length > 2 && !isCharacterASpeical(box_input) && box_input[0] != '/') {
   document.getElementById('searchNote').innerHTML = "No information was found according to your input! Please try again"
   box_searchBtn(box_input)
  } else if (isCharacterALetter(box_input[0]) && !isNaN(box_input[1])) {
+  document.getElementById('searchNote').innerHTML = "This location is not associated with any box"
   location_search(box_input)
- } else {
-  document.getElementById('searchNote').innerHTML = null;
+ }  else if (box_input == '/all') {
+  for (let i = 0; i < boxNumberArr.length; i++) {
+    const each_of_all = boxNumberArr[i];
+    if (each_of_all) {
+      buildingRow(each_of_all)
+    }
+  }
+} else {
   if (boxNumberArr.includes(box_input.toUpperCase())) {
     buildingRow(box_input.toUpperCase());
     document.getElementById('myBoxInput').value = null;
@@ -100,11 +108,12 @@ unattach();
 };
 
 function unattach() {
-preUpdateArr = [];
-boxTable.style.display = 'none'
-const tBody = document.getElementById('boxBody');
-const old_search = tBody.querySelectorAll('tr');
-old_search.forEach(i => i.remove())
+  document.getElementById('searchNote').innerHTML = null;
+  preUpdateArr = [];
+  boxTable.style.display = 'none'
+  const tBody = document.getElementById('boxBody');
+  const old_search = tBody.querySelectorAll('tr');
+  old_search.forEach(i => i.remove())
 }
 
 function buildingRow(b) {
@@ -186,13 +195,23 @@ function newDateValidate(date) {
 }
 
 const edit_btn = document.getElementById('edit_btn');
+const update_btn = document.getElementById('update_btn');
+const update_select = document.getElementById('update_select');
 const edit_select = document.getElementById('edit_select');
-function passcode() {
+const update_date_select = document.getElementById('update_date_select');
+const update_date_btn = document.getElementById('update_date_btn');
+function passcode(w) {
   let code = prompt("Please enter the passcode");
-  if (code == '0523') {
-    localStorage.setItem('pass', 'pass')
+  if (code == '0523' && w == 's') {
+    localStorage.setItem('pass', 'status update')
     edit_btn.style.display = 'none';
+    update_btn.style.display = 'none';
     edit_select.style.display = '';
+  } else if (code == '0523' && w == 'd') {
+    localStorage.setItem('pass', 'date update')
+    update_btn.style.display = 'none';
+    edit_btn.style.display = 'none';
+    update_select.style.display = '';
   } else {
     alert('Incorrect passcode')
   }
@@ -203,11 +222,11 @@ function preChangeConfirm() {
   if (code_2 == '0523') {
     const status = parseInt(edit_select.value);
     for (let i = 0; i < preUpdateArr.length; i++) {
-      const box_number = preUpdateArr[i].id;
+      const box_id = preUpdateArr[i].id;
       if (status == 99) {
-        mannual_delete(box_number)
+        mannual_delete(box_id)
       } else {
-        mannual_update(status, box_number)
+        mannual_update(status, box_id)
       }
     };
     alert(`${preUpdateArr.length} items were updated!`)
@@ -215,8 +234,8 @@ function preChangeConfirm() {
   }
 };
 
-async function mannual_update(status, box_id) {
-  const response = await fetch(`/api/box/master_update_status`, {
+function mannual_update(status, box_id) {
+  fetch(`/api/box/master_update_status`, {
     method: 'PUT',
     body: JSON.stringify({
         box_id,
@@ -228,8 +247,8 @@ async function mannual_update(status, box_id) {
   });
 };
 
-async function mannual_delete(box_id) {
-  const response = await fetch(`/api/box/${box_id}`, {
+function mannual_delete(box_id) {
+ fetch(`/api/box/${box_id}`, {
     method: 'DELETE',
     headers: {
         'Content-Type': 'application/json'
@@ -246,7 +265,73 @@ const isCharacterASpeical = (char) => {
   return (/[-]/).test(char)
 };
 
-if (localStorage.getItem('pass')) {
+if (localStorage.getItem('pass') == 'status update') {
   edit_btn.style.display = 'none';
   edit_select.style.display = '';
+  update_btn.style.display = 'none';
+} else if (localStorage.getItem('pass') == 'date update') {
+  edit_btn.style.display = 'none';
+  update_btn.style.display = 'none';
+  update_select.style.display =''
+}
+
+function preUpdateConfirm() {
+  if (update_select.value) {
+    update_date_btn.style.display ='';
+  } else {
+    update_date_btn.style.display ='none';
+    update_date_select.value = null;
+  }
 };
+
+function finalConfirmation() {
+  if (!preUpdateArr.length) {
+    update_date_select.value = null;
+    alert('You need to select at least one box to procced the update function');
+  } else {
+    if (confirm('sure wanna update date?')) {
+      let password = prompt('Please enter the passcode again to confirm the change!');
+      if (password == '0523') {
+        const chosenStatus = update_select.value;
+        var newDate = update_date_select.value;
+        for (let i = 0; i < preUpdateArr.length; i++) {
+          var box_id = preUpdateArr[i].id;
+          if (chosenStatus == 'pending_date') {
+            box_id = preUpdateArr[i].batch_id
+          };
+          if (!newDate) {
+            newDate = null;
+          };
+          mannual_date_update(box_id, newDate, chosenStatus)
+        };
+        alert(`${chosenStatus} of ${preUpdateArr.length} items were updated to ${newDate}!`)
+        location.reload();
+      } else {
+        alert('incorrect password!');
+        finalConfirmation()
+      }
+    }
+  }
+}
+
+function mannual_date_update(id, date, s) {
+  fetch(`/api/box/dateUpdate_${s}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+        id,
+        date
+    }),
+    headers: {
+        'Content-Type': 'application/json'
+    }
+  });
+};
+
+function reset() {
+  update_date_btn.style.display = 'none';
+  update_select.style.display = 'none';
+  edit_select.style.display = 'none'
+  edit_btn.style.display = '';
+  update_btn.style.display = ''
+  localStorage.clear();
+}

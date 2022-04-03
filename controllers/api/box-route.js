@@ -395,4 +395,164 @@ router.delete('/:id', withAuth, (req, res) => {
       });
 });
 
+
+//// mannual update date of each status////////////////
+router.put('/dateUpdate_received_date', withAuth, (req, res) => {
+  Box.update({
+      received_date: req.body.date
+    },
+    {
+    where:{
+      id: req.body.id
+    }
+    })
+    .then(dbBoxData => {
+      if (!dbBoxData[0]) {
+        res.status(404).json({ message: 'This Box does not exist!' });
+        return;
+      }
+      res.json(dbBoxData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+router.put('/dateUpdate_pending_date', withAuth, (req, res) => {
+  Batch.update({
+      pending_date: req.body.date
+    },
+    {
+    where:{
+      id: req.body.id
+    }
+    })
+    .then(dbBoxData => {
+      if (!dbBoxData[0]) {
+        res.status(404).json({ message: 'This Box does not exist!' });
+        return;
+      }
+      res.json(dbBoxData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+router.put('/dateUpdate_requested_date', withAuth, (req, res) => {
+  Box.update({
+      requested_date: req.body.date
+    },
+    {
+    where:{
+      id: req.body.id
+    }
+    })
+    .then(dbBoxData => {
+      if (!dbBoxData[0]) {
+        res.status(404).json({ message: 'This Box does not exist!' });
+        return;
+      }
+      res.json(dbBoxData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+router.put('/dateUpdate_shipped_date', withAuth, (req, res) => {
+  Box.update({
+      shipped_date: req.body.date
+    },
+    {
+    where:{
+      id: req.body.id
+    }
+    })
+    .then(dbBoxData => {
+      if (!dbBoxData[0]) {
+        res.status(404).json({ message: 'This Box does not exist!' });
+        return;
+      }
+      res.json(dbBoxData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+router.put('/dateUpdate_bill_received', withAuth, (req, res) => {
+  const time = new Date(req.body.date).getTime()
+  Box.update({
+      bill_received: time
+    },
+    {
+    where:{
+      id: req.body.id
+    }
+    })
+    .then(dbBoxData => {
+      if (!dbBoxData[0]) {
+        res.status(404).json({ message: 'This Box does not exist!' });
+        return;
+      }
+      res.json(dbBoxData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+router.put('/dateUpdate_bill_storage', withAuth, (req, res) => {
+  const time = new Date(req.body.date).getTime()
+  Box.update({
+      bill_storage: time
+    },
+    {
+    where:{
+      id: req.body.id
+    }
+    })
+    .then(dbBoxData => {
+      if (!dbBoxData[0]) {
+        res.status(404).json({ message: 'This Box does not exist!' });
+        return;
+      }
+      res.json(dbBoxData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+router.put('/dateUpdate_bill_shipped', withAuth, (req, res) => {
+  const time = new Date(req.body.date).getTime()
+  Box.update({
+      bill_shipped: time
+    },
+    {
+    where:{
+      id: req.body.id
+    }
+    })
+    .then(dbBoxData => {
+      if (!dbBoxData[0]) {
+        res.status(404).json({ message: 'This Box does not exist!' });
+        return;
+      }
+      res.json(dbBoxData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+
   module.exports = router;

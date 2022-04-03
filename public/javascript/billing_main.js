@@ -592,6 +592,7 @@ if (localStorage.getItem('user_id')) {
     window.onload = next(localStorage.getItem('user_id'));
     document.getElementById('charge_btn').style.display = 'none';
     document.getElementById('reset_btn').style.display = '';
+    document.getElementById("pass").style.display = 'none';
 }
 
 //access code to initiate billing process

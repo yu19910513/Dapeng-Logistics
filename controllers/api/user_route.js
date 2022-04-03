@@ -313,6 +313,7 @@ router.get('/allBox_admin', withAuth, async (req, res) => {
         status: [0,1,2,3,4,5,98]
       },
       attributes: [
+        'batch_id',
         'account_id',
         's3',
         'notes',
