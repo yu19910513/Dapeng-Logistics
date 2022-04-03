@@ -335,7 +335,10 @@ router.get('/allBox_admin', withAuth, async (req, res) => {
         'sku',
         'file',
         'file_2',
-        'fba'
+        'fba',
+        'bill_received',
+        'bill_storage',
+        'bill_shipped'
       ],
       include: [
         {

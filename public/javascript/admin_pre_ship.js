@@ -9,6 +9,9 @@ function boxQuery() {
         const s3 = localStorage.getItem('pre-ship_item');
         const fba = document.getElementById('fba');
         const boxArr = data[s3];
+        if(!boxArr) {
+            alert('Admin mannually changed the status! client has not requested those boxes yet')
+        };
         fba.innerHTML = boxArr[0].fba;
         if (!boxArr[0].notes) {
             notes.innerHTML = "N/A";

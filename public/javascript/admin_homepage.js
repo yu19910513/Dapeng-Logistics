@@ -64,7 +64,7 @@ function box_searchBtn(b) {
     for (i = 0; i < boxNumberArr.length; i++) {
       let txtValue = boxNumberArr[i];
       if (txtValue.toUpperCase().indexOf(b.toUpperCase()) > -1) {
-        filterFunction_box(boxNumberArr[i]);
+        buildingRow(boxNumberArr[i]);
         document.getElementById('searchNote').innerHTML = null;
       }
   };
@@ -74,7 +74,7 @@ function location_search(l) {
   for (i = 0; i < locationArr.length; i++) {
     let txtValue = locationArr[i];
     if (txtValue.toUpperCase().indexOf(l.toUpperCase()) > -1) {
-      locationMap.get(locationArr[i]).forEach((obj)=> {filterFunction_box(obj.box_number)})
+      locationMap.get(locationArr[i]).forEach((obj)=> {buildingRow(obj.box_number)})
     }
   }
 };
@@ -93,7 +93,7 @@ unattach();
  } else {
   document.getElementById('searchNote').innerHTML = null;
   if (boxNumberArr.includes(box_input.toUpperCase())) {
-    filterFunction_box(box_input.toUpperCase());
+    buildingRow(box_input.toUpperCase());
     document.getElementById('myBoxInput').value = null;
   }
  }
@@ -107,7 +107,7 @@ const old_search = tBody.querySelectorAll('tr');
 old_search.forEach(i => i.remove())
 }
 
-function filterFunction_box(b) {
+function buildingRow(b) {
     preUpdateArr.push(objectMap.get(b));
     const boxBody = document.getElementById('boxBody')
     const container = document.createElement('tr');
@@ -140,6 +140,7 @@ function filterFunction_box(b) {
     qty_per_box.innerHTML = objectMap.get(b).qty_per_box;
     location.innerHTML = objectMap.get(b).location;
     date.innerHTML = convertor(objectMap.get(b));
+    date.setAttribute('uk-tooltip', `pending date ${newDateValidate(objectMap.get(b).batch.pending_date)} ; received date ${newDateValidate(objectMap.get(b).received_date)} ; requested date ${newDateValidate(objectMap.get(b).requested_date)} ; shipped date ${newDateValidate(objectMap.get(b).shipped_date)} ; bill for receiving ${newDateValidate(new Date(objectMap.get(b).bill_received).toLocaleDateString("en-US"))} ; bill for storage ${newDateValidate(new Date(objectMap.get(b).bill_storage).toLocaleDateString("en-US"))} ; bill for shipping ${newDateValidate(new Date(objectMap.get(b).bill_shipped).toLocaleDateString("en-US"))}`)
     status.innerHTML = convertor_status(objectMap.get(b).status);
     boxBody.appendChild(container);
 };
@@ -176,6 +177,12 @@ function convertor_status(s) {
   } else if (s == 98) {
     return 'archived'
   }
+};
+
+function newDateValidate(date) {
+  if (date == "12/31/1969" || !date) {
+    return 'N/A'
+  } return date
 }
 
 const edit_btn = document.getElementById('edit_btn');
@@ -242,4 +249,4 @@ const isCharacterASpeical = (char) => {
 if (localStorage.getItem('pass')) {
   edit_btn.style.display = 'none';
   edit_select.style.display = '';
-}
+};
