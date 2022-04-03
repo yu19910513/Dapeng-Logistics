@@ -310,7 +310,7 @@ router.get('/allBox_admin', withAuth, async (req, res) => {
   try {
     const boxData = await Box.findAll({
       where: {
-        status: [0,1,2,3]
+        status: [0,1,2,3,4,5,98]
       },
       attributes: [
         'account_id',

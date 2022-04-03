@@ -9,10 +9,25 @@
              </ol>
         </nav>
         <div>
-            <a class="btn btn-outline-warning btn-sm shadow-sm" href="/admin/master_page">Master Page</a>
+          <div class="uk-card uk-card-default uk-card-body uk-width-1-3@m rounded">
+          <h3 class="lead"><b>Master Functions</b></h3>
+            <a class="btn btn-outline-warning btn-sm shadow-sm" href="/admin/master_page">Home Page</a>
             <a class="btn btn-sm btn-outline-info shadow-sm" href="/billing"><b>₿</b>illing</a>
-            <a class="btn btn-sm btn-outline-danger shadow-sm">Edit/Delete Items</a>
+            <a class="btn btn-sm btn-outline-danger shadow-sm" id="edit_btn" onclick="passcode()">Edit/Delete</a>
+            <select name="edit_selection" id="edit_select" class="uk-select uk-form-danger rounded uk-form-small uk-form-width-small" style="display: none;" onchange="preChangeConfirm()">
+              <option value="">select update</option>
+              <option value="0">Pending</option>
+              <option value="1">Received</option>
+              <option value="2">Requested</option>
+              <option value="3">Shipped</option>
+              <option value="4">Pre-billed (additional charge)</option>
+              <option value="5">Billed (additional chagre)</option>
+              <option value="98">Archive</option>
+              <option value="99">Delete</option>
+            </select>
+
         </div>
+      </div>
 
     {{!-- <form class="uk-search uk-search-large">
         <span uk-search-icon></span>

@@ -354,5 +354,45 @@ router.post('/additional_charge', withAuth, (req, res) => {
       });
 });
 
+router.put('/master_update_status', withAuth, (req, res) => {
+  Box.update({
+      status: req.body.status
+    },
+    {
+    where:{
+          id: req.body.box_id
+    }
+    })
+    .then(dbBoxData => {
+      if (!dbBoxData[0]) {
+        res.status(404).json({ message: 'This Box does not exist!' });
+        return;
+      }
+      res.json(dbBoxData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+router.delete('/:id', withAuth, (req, res) => {
+  Box.destroy({
+      where: {
+        id: req.params.id
+      }
+    })
+      .then(dbBoxData => {
+        if (!dbBoxData) {
+          res.status(404).json({ message: 'No box found with this id' });
+          return;
+        }
+        res.json(dbBoxData);
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+});
 
   module.exports = router;

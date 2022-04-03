@@ -8,6 +8,7 @@ var objectMap = new Map();
 var locationMap = new Map()
 var boxNumberArr = [];
 var locationArr = [];
+var preUpdateArr = [];
 
 function allBox() {
     fetch(`/api/user/allBox_admin`, {
@@ -58,12 +59,7 @@ function allBox() {
 allBox();
 
 
-
-
-const boxInput = document.getElementById("boxInput");
 const boxTable = document.getElementById("boxTable");
-
-
 function box_searchBtn(b) {
     for (i = 0; i < boxNumberArr.length; i++) {
       let txtValue = boxNumberArr[i];
@@ -104,6 +100,7 @@ unattach();
 };
 
 function unattach() {
+preUpdateArr = [];
 boxTable.style.display = 'none'
 const tBody = document.getElementById('boxBody');
 const old_search = tBody.querySelectorAll('tr');
@@ -111,6 +108,7 @@ old_search.forEach(i => i.remove())
 }
 
 function filterFunction_box(b) {
+    preUpdateArr.push(objectMap.get(b));
     const boxBody = document.getElementById('boxBody')
     const container = document.createElement('tr');
     const user = document.createElement('td');
@@ -171,9 +169,66 @@ function convertor_status(s) {
     return 'requested'
   } else if (s ==3) {
     return 'shipped'
+  } else if (s == 4) {
+    return 'xc pre-billed'
+  } else if (s == 5) {
+    return 'xc billed'
+  } else if (s == 98) {
+    return 'archived'
   }
 }
 
+const edit_btn = document.getElementById('edit_btn');
+const edit_select = document.getElementById('edit_select');
+function passcode() {
+  let code = prompt("Please enter the passcode");
+  if (code == '0523') {
+    localStorage.setItem('pass', 'pass')
+    edit_btn.style.display = 'none';
+    edit_select.style.display = '';
+  } else {
+    alert('Incorrect passcode')
+  }
+};
+
+function preChangeConfirm() {
+  let code_2 = prompt('Please enter the passcode again to confirm the change!');
+  if (code_2 == '0523') {
+    const status = parseInt(edit_select.value);
+    for (let i = 0; i < preUpdateArr.length; i++) {
+      const box_number = preUpdateArr[i].id;
+      if (status == 99) {
+        mannual_delete(box_number)
+      } else {
+        mannual_update(status, box_number)
+      }
+    };
+    alert(`${preUpdateArr.length} items were updated!`)
+    location.reload();
+  }
+};
+
+async function mannual_update(status, box_id) {
+  const response = await fetch(`/api/box/master_update_status`, {
+    method: 'PUT',
+    body: JSON.stringify({
+        box_id,
+        status
+    }),
+    headers: {
+        'Content-Type': 'application/json'
+    }
+  });
+};
+
+async function mannual_delete(box_id) {
+  const response = await fetch(`/api/box/${box_id}`, {
+    method: 'DELETE',
+    headers: {
+        'Content-Type': 'application/json'
+    }
+  });
+};
 
 //helper functions
 const isCharacterALetter = (char) => {
@@ -183,3 +238,8 @@ const isCharacterALetter = (char) => {
 const isCharacterASpeical = (char) => {
   return (/[-]/).test(char)
 };
+
+if (localStorage.getItem('pass')) {
+  edit_btn.style.display = 'none';
+  edit_select.style.display = '';
+}
