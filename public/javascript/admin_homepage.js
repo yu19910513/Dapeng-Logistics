@@ -233,7 +233,7 @@ function preChangeConfirm() {
     location.reload();
   }
 };
-
+////fetch function for status update, delete, and date update//////
 function mannual_update(status, box_id) {
   fetch(`/api/box/master_update_status`, {
     method: 'PUT',
@@ -256,6 +256,19 @@ function mannual_delete(box_id) {
   });
 };
 
+function mannual_date_update(id, date, s) {
+  fetch(`/api/box/dateUpdate_${s}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+        id,
+        date
+    }),
+    headers: {
+        'Content-Type': 'application/json'
+    }
+  });
+};
+
 //helper functions
 const isCharacterALetter = (char) => {
   return (/[a-zA-Z]/).test(char)
@@ -265,6 +278,7 @@ const isCharacterASpeical = (char) => {
   return (/[-]/).test(char)
 };
 
+//reload without reset
 if (localStorage.getItem('pass') == 'status update') {
   edit_btn.style.display = 'none';
   edit_select.style.display = '';
@@ -294,16 +308,30 @@ function finalConfirmation() {
       if (password == '0523') {
         const chosenStatus = update_select.value;
         var newDate = update_date_select.value;
-        for (let i = 0; i < preUpdateArr.length; i++) {
-          var box_id = preUpdateArr[i].id;
-          if (chosenStatus == 'pending_date') {
-            box_id = preUpdateArr[i].batch_id
+        if (!newDate) {
+          newDate = null;
+        } ;
+        if (preUpdateArr.length < 100) {
+          for (let i = 0; i < preUpdateArr.length; i++) {
+            var box_id = preUpdateArr[i].id;
+            if (chosenStatus == 'pending_date') {
+              box_id = preUpdateArr[i].batch_id
+            }
+            mannual_date_update(box_id, newDate, chosenStatus)
           };
-          if (!newDate) {
-            newDate = null;
-          };
-          mannual_date_update(box_id, newDate, chosenStatus)
-        };
+        } else {
+          const round = Math.ceil(preUpdateArr.length/100);
+          var collectionArr = preUpdateArr.reduce((resultArray, item, index) => {
+            const chunkIndex = Math.floor(index/round)
+            if(!resultArray[chunkIndex]) {
+              resultArray[chunkIndex] = []
+            };
+            resultArray[chunkIndex].push(item)
+            return resultArray
+          }, []);
+          console.log(round, collectionArr);
+          collectionArr.forEach(arr => loadBalancer(arr, chosenStatus, newDate));
+        }
         alert(`${chosenStatus} of ${preUpdateArr.length} items were updated to ${newDate}!`)
         location.reload();
       } else {
@@ -314,19 +342,7 @@ function finalConfirmation() {
   }
 }
 
-function mannual_date_update(id, date, s) {
-  fetch(`/api/box/dateUpdate_${s}`, {
-    method: 'PUT',
-    body: JSON.stringify({
-        id,
-        date
-    }),
-    headers: {
-        'Content-Type': 'application/json'
-    }
-  });
-};
-
+// rest after clicking master functions
 function reset() {
   update_date_btn.style.display = 'none';
   update_select.style.display = 'none';
@@ -334,4 +350,14 @@ function reset() {
   edit_btn.style.display = '';
   update_btn.style.display = ''
   localStorage.clear();
+};
+
+function loadBalancer(arr, status, date) {
+  for (let i = 0; i < arr.length; i++) {
+    var box_id = arr[i].id;
+    if (status == 'pending_date') {
+      box_id = arr[i].batch_id
+    };
+    mannual_date_update(box_id, date, status)
+  };
 }

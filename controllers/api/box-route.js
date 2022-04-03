@@ -486,7 +486,7 @@ router.put('/dateUpdate_shipped_date', withAuth, (req, res) => {
 });
 
 router.put('/dateUpdate_bill_received', withAuth, (req, res) => {
-  const time = new Date(req.body.date).getTime()
+  const time = new Date(req.body.date).getTime() + 86400000;
   Box.update({
       bill_received: time
     },
@@ -509,7 +509,7 @@ router.put('/dateUpdate_bill_received', withAuth, (req, res) => {
 });
 
 router.put('/dateUpdate_bill_storage', withAuth, (req, res) => {
-  const time = new Date(req.body.date).getTime()
+  const time = new Date(req.body.date).getTime() + 86400000;
   Box.update({
       bill_storage: time
     },
@@ -532,7 +532,7 @@ router.put('/dateUpdate_bill_storage', withAuth, (req, res) => {
 });
 
 router.put('/dateUpdate_bill_shipped', withAuth, (req, res) => {
-  const time = new Date(req.body.date).getTime()
+  const time = new Date(req.body.date).getTime() + 86400000;
   Box.update({
       bill_shipped: time
     },
