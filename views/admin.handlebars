@@ -16,7 +16,7 @@
             <a class="btn btn-sm btn-outline-info shadow-sm mt-1" href="/billing"><b>₿</b>illing</a>
             <a class="btn btn-sm btn-outline-danger shadow-sm mt-1" id="edit_btn" onclick="passcode('s')" uk-tooltip="title: Edit status or delete boxes; pos: bottom">Edit/ Del</a>
             <a class="btn btn-sm btn-outline-primary shadow-sm mt-1" id="update_btn" onclick="passcode('d')" uk-tooltip="title: Redate status; pos: bottom">Redate</a>
-            <select name="edit_selection" id="edit_select" class="uk-select uk-form-danger rounded uk-form-small uk-form-width-small" style="display: none;" onchange="preChangeConfirm()" uk-tooltip="update new STATUS to boxes">
+            <select name="edit_selection" id="edit_select" class="uk-select uk-form-danger rounded uk-form-small uk-form-width-small mt-1" style="display: none;" onchange="preChangeConfirm()" uk-tooltip="update new STATUS to boxes">
               <option value="">Select...</option>
               <option value="0">Status: Pending</option>
               <option value="1">Status: Received</option>
@@ -28,7 +28,7 @@
               <option value="99">Delete</option>
             </select>
 
-             <select name="edit_selection" id="update_select" class="uk-select uk-form-primary rounded uk-form-small uk-form-width-small" style="display: none;" onchange="preUpdateConfirm()" uk-tooltip="update new status DATE to boxes">
+             <select name="edit_selection" id="update_select" class="uk-select uk-form-primary rounded uk-form-small uk-form-width-small mt-1" style="display: none;" onchange="preUpdateConfirm()" uk-tooltip="update new status DATE to boxes">
               <option value="">Select...</option>
               <option value="pending_date">Pending Date</option>
               <option value="received_date">Received Date</option>
@@ -39,8 +39,8 @@
               <option value="bill_shipped">Billing Date (shipping)</option>
             </select>
             <div id="update_date_btn" style="display: none;">
-              <input type="date" id="update_date_select" class="uk-input uk-form-primary rounded uk-form-small uk-form-width-small" placeholder='mm/dd/yyyy'>
-              <button class='btn btn-sm btn-primary' onclick="finalConfirmation()" uk-icon="check"></button>
+              <input type="date" id="update_date_select" class="uk-input uk-form-primary rounded uk-form-small uk-form-width-small mt-1" placeholder='mm/dd/yyyy'>
+              <button class='btn btn-sm btn-primary mt-1' onclick="finalConfirmation()" uk-icon="check"></button>
             </div>
           </div>
 
