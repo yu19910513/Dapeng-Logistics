@@ -1,5 +1,5 @@
 {{#if admin}}
-<link rel="stylesheet" href="../css/admin_homepage.css">
+<link rel="stylesheet" href="../css/loader.css">
     <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
     <div class="container">
         <nav aria-label="breadcrumb">
@@ -32,7 +32,7 @@
               <option value="">Select...</option>
               <option value="pending_date">Pending Date</option>
               <option value="received_date">Received Date</option>
-              <option value="request_date">Requested Date</option>
+              <option value="requested_date">Requested Date</option>
               <option value="shipped_date">Shipped Date</option>
               <option value="bill_received">Billing Date (receiving)</option>
               <option value="bill_storage">Billing Date (storage)</option>
@@ -57,6 +57,10 @@
   </form>
 </div>
 
+<div id="loader" style="display: none;">
+    <h1 class="text-center">Updating <span id="numberOfItems"></span>...</h1>
+<div class="loader container"></div>
+</div>
 <div class="container" id="boxTable" style="display: none;">
   <small id="searchNote" class="text-primary"></small>
 <table class="uk-table uk-table-small uk-table-divider text-center bg-light shadow">

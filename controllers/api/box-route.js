@@ -376,10 +376,10 @@ router.put('/master_update_status', withAuth, (req, res) => {
     });
 });
 
-router.delete('/:id', withAuth, (req, res) => {
+router.delete('/destroy', withAuth, (req, res) => {
   Box.destroy({
       where: {
-        id: req.params.id
+        id: req.body.box_id
       }
     })
       .then(dbBoxData => {
@@ -486,7 +486,12 @@ router.put('/dateUpdate_shipped_date', withAuth, (req, res) => {
 });
 
 router.put('/dateUpdate_bill_received', withAuth, (req, res) => {
-  const time = new Date(req.body.date).getTime() + 86400000;
+  var time = new Date(req.body.date).getTime();
+  if(time) {
+    time = time + 86400000
+  } else {
+    time = null
+  }
   Box.update({
       bill_received: time
     },
@@ -509,7 +514,12 @@ router.put('/dateUpdate_bill_received', withAuth, (req, res) => {
 });
 
 router.put('/dateUpdate_bill_storage', withAuth, (req, res) => {
-  const time = new Date(req.body.date).getTime() + 86400000;
+  var time = new Date(req.body.date).getTime();
+  if(time) {
+    time = time + 86400000
+  } else {
+    time = null
+  }
   Box.update({
       bill_storage: time
     },
@@ -532,7 +542,12 @@ router.put('/dateUpdate_bill_storage', withAuth, (req, res) => {
 });
 
 router.put('/dateUpdate_bill_shipped', withAuth, (req, res) => {
-  const time = new Date(req.body.date).getTime() + 86400000;
+  var time = new Date(req.body.date).getTime();
+  if(time) {
+    time = time + 86400000
+  } else {
+    time = null
+  }
   Box.update({
       bill_shipped: time
     },

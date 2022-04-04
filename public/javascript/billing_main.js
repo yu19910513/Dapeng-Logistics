@@ -502,6 +502,9 @@ function bill_confirm(arr, e) {
     }
 };
 async function fetch_update(arr, bill, type) {
+    document.getElementById('loader').style.display = '';
+    document.getElementById('numberOfItems').innerHTML = `${arr.length} items; may take up to ${arr.length/50} seconds`;
+    document.getElementById('all_tables').style.display='none';
     for (let i = 0; i < arr.length; i++) {
         var box_number = arr[i];
         const response = await fetch(`/api/box/${type}_update`, {
@@ -574,6 +577,7 @@ function xcharge_create() {
 };
 //fetch function for xc data
 const loading_xc_data = async(data) => {
+    document.getElementById('loader').style.display = '';
     const response = await fetch('/api/box/additional_charge', {
         method: 'post',
         body: JSON.stringify(data),

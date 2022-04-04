@@ -221,15 +221,17 @@ function preChangeConfirm() {
   let code_2 = prompt('Please enter the passcode again to confirm the change!');
   if (code_2 == '0523') {
     const status = parseInt(edit_select.value);
+    let idArr = [];
     for (let i = 0; i < preUpdateArr.length; i++) {
       const box_id = preUpdateArr[i].id;
-      if (status == 99) {
-        mannual_delete(box_id)
-      } else {
-        mannual_update(status, box_id)
-      }
+      idArr.push(box_id)
     };
-    alert(`${preUpdateArr.length} items were updated!`)
+    if (status == 99) {
+      mannual_delete(idArr)
+    } else {
+      mannual_update(status, idArr)
+    };
+    alert(`${preUpdateArr.length} items were updated to status ${status}!`)
     location.reload();
   }
 };
@@ -248,8 +250,11 @@ function mannual_update(status, box_id) {
 };
 
 function mannual_delete(box_id) {
- fetch(`/api/box/${box_id}`, {
+ fetch(`/api/box/destroy`, {
     method: 'DELETE',
+    body: JSON.stringify({
+      box_id
+  }),
     headers: {
         'Content-Type': 'application/json'
     }
@@ -303,35 +308,23 @@ function finalConfirmation() {
     update_date_select.value = null;
     alert('You need to select at least one box to procced the update function');
   } else {
-    if (confirm('sure wanna update date?')) {
+    if (confirm(`UPDATE ${update_select.value} of ${preUpdateArr.length} ITEMS to ${update_date_select.value}?`)) {
       let password = prompt('Please enter the passcode again to confirm the change!');
       if (password == '0523') {
         const chosenStatus = update_select.value;
         var newDate = update_date_select.value;
+        let idArr = [];
         if (!newDate) {
           newDate = null;
-        } ;
-        if (preUpdateArr.length < 100) {
-          for (let i = 0; i < preUpdateArr.length; i++) {
-            var box_id = preUpdateArr[i].id;
-            if (chosenStatus == 'pending_date') {
-              box_id = preUpdateArr[i].batch_id
-            }
-            mannual_date_update(box_id, newDate, chosenStatus)
+        };
+        for (let i = 0; i < preUpdateArr.length; i++) {
+          var box_id = preUpdateArr[i].id;
+          if (chosenStatus == 'pending_date') {
+            box_id = preUpdateArr[i].batch_id
           };
-        } else {
-          const round = Math.ceil(preUpdateArr.length/100);
-          var collectionArr = preUpdateArr.reduce((resultArray, item, index) => {
-            const chunkIndex = Math.floor(index/round)
-            if(!resultArray[chunkIndex]) {
-              resultArray[chunkIndex] = []
-            };
-            resultArray[chunkIndex].push(item)
-            return resultArray
-          }, []);
-          console.log(round, collectionArr);
-          collectionArr.forEach(arr => loadBalancer(arr, chosenStatus, newDate));
-        }
+          idArr.push(box_id)
+        };
+        mannual_date_update(idArr, newDate, chosenStatus);
         alert(`${chosenStatus} of ${preUpdateArr.length} items were updated to ${newDate}!`)
         location.reload();
       } else {
@@ -352,12 +345,7 @@ function reset() {
   localStorage.clear();
 };
 
-function loadBalancer(arr, status, date) {
-  for (let i = 0; i < arr.length; i++) {
-    var box_id = arr[i].id;
-    if (status == 'pending_date') {
-      box_id = arr[i].batch_id
-    };
-    mannual_date_update(box_id, date, status)
-  };
-}
+
+
+// document.getElementById('numberOfItems').innerHTML = `${preUpdateArr.length} items; may take up to ${preUpdateArr.length/100} seconds`;
+// document.getElementById('loader').style.display = '';

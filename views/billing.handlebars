@@ -1,4 +1,5 @@
 {{#if admin}}
+<link rel="stylesheet" href="css/loader.css">
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
 
  <div class="container mb-3">
@@ -85,7 +86,7 @@
 
 
 
-<div class="container">
+<div class="container" id="all_tables">
     <div class="" id="storageTable" style="display: none;">
         <h4>Storing Charge: $<span id="storage_total_2">0</span></h4>
         <table class="uk-table uk-table-small uk-table-divider myTable bg-light shadow" id="stTable">
@@ -171,6 +172,10 @@
     </div>
 </div>
 
+<div id="loader" style="display: none;">
+    <h1 class="text-center">Updating <span id="numberOfItems"></span>...</h1>
+<div class="loader container"></div>
+</div>
 
 
 
