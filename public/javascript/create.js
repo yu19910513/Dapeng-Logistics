@@ -75,7 +75,7 @@ function precheck() {
     const weight = document.querySelector('#new_wei').value.trim();
     const qty_per_box = document.querySelector('#new_qty').value.trim();
     const sku = document.querySelector('#new_sku').value.trim();
-    const total_box = document.querySelector('#new_tot').value.trim();
+    const total_box = parseInt(document.querySelector('#new_tot').value.trim());
     if (prefix.value.length == 2) {
         prefix.value = prefix.value + "0"
     };
