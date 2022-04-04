@@ -247,7 +247,7 @@ router.put('/bill_received_update', withAuth, (req, res) => {
     },
       {
       where: {
-          box_number: req.body.box_number
+          box_number: req.body.arr
       }
     })
     .then(dbBoxData => {
@@ -269,7 +269,7 @@ router.put('/bill_shipped_update', withAuth, (req, res) => {
     },
       {
       where: {
-          box_number: req.body.box_number
+          box_number: req.body.arr
       }
     })
     .then(dbBoxData => {
@@ -291,7 +291,7 @@ router.put('/bill_storage_update', withAuth, (req, res) => {
     },
       {
       where: {
-          box_number: req.body.box_number
+          box_number: req.body.arr
       }
     })
     .then(dbBoxData => {
@@ -314,7 +314,7 @@ router.put('/xcharge_update', withAuth, (req, res) => {
     },
       {
       where: {
-          box_number: req.body.box_number
+          box_number: req.body.arr
       }
     })
     .then(dbBoxData => {

@@ -503,27 +503,18 @@ function bill_confirm(arr, e) {
 };
 async function fetch_update(arr, bill, type) {
     document.getElementById('loader').style.display = '';
-    document.getElementById('numberOfItems').innerHTML = `${arr.length} items; may take up to ${arr.length/50} seconds`;
+    document.getElementById('numberOfItems').innerHTML = `${arr.length} items`;
     document.getElementById('all_tables').style.display='none';
-    for (let i = 0; i < arr.length; i++) {
-        var box_number = arr[i];
-        const response = await fetch(`/api/box/${type}_update`, {
-            method: 'PUT',
-            body: JSON.stringify({
-                box_number,
-                bill
-            }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-          })
-          if (response.ok) {
-            console.log(bill);
-          } else {
-            alert('Opps! Errors occured!')
-          };
-
-    };
+    const response = await fetch(`/api/box/${type}_update`, {
+        method: 'PUT',
+        body: JSON.stringify({
+            arr,
+            bill
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
     alert('database updated successfully!');
     location.reload();
 };
