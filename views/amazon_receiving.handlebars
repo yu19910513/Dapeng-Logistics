@@ -1,0 +1,69 @@
+{{#if admin}}
+<p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
+<div class="container">
+    <div class="row justify-content-md-center">
+        <form class="col-6 shadow p-4 rounded bg-light">
+                  <div class="row">
+                        <div class="form-group col">
+                            <label for="Date">Date</label>
+                            <input type="text" class="form-control" id="today" value="" disabled>
+                        </div>
+                        <div class="form-group col">
+                            <label for="Client">Client</label>
+                            <select name="user" id="user" class="uk-select uk-form-default rounded mt-1" onchange="account_data()">
+                                <option value="">select client</option>
+                                <option value="0">--- create new client ---</option>
+                            </select>
+                            <input type="text" class="form-control rounded mt-1" id="newUserName" placeholder="username" style="display: none">
+                            <input type="text" class="form-control rounded mt-1" id="newPassword" placeholder="password" style="display: none">
+                        </div>
+                        <div class="form-group col" id="accountDiv">
+                            <label for="Account">Account</label>
+                            <select name="account" id="account" class="uk-select uk-form-default rounded mt-1" onchange="accountSelection()" disabled>
+                                <option value="">select account</option>
+                                <option value="0">--- create new account ---</option>
+                            </select>
+                            <input type="text" class="form-control rounded mt-1" id="newAccountInput" placeholder="new account name" style="display: none;">
+                        </div>
+                  </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <input type="text" class="form-control" id="new_des">
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                    <label for="length">Length</label>
+                      <input type="number" class="form-control" id="new_len" placeholder="cm">
+                    </div>
+                    <div class="col">
+                        <label for="width">Width</label>
+                      <input type="number" class="form-control" id="new_wid" placeholder="cm">
+                    </div>
+                    <div class="col">
+                        <label for="height">Height</label>
+                        <input type="number" class="form-control" id="new_hei" placeholder="cm">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="container">Box Number</label>
+                    <input type="text" class="form-control" id="new_container">
+                </div>
+
+                <div class="form-group">
+                    <label for="sku">SKU</label>
+                    <input type="text" class="form-control" id="sku" placeholder="sku">
+                </div>
+
+                <a id="order_pre-check" class="btn btn-primary mt-3 text-white" style="display: none;">Confirm</a>
+                <a id="fake" class="btn btn-secondary mt-3 text-white" onclick="infoAlert()">Confirm</a>
+        </form>
+    </div>
+</div>
+
+<script src="javascript/amazon_receiving.js"></script>
+{{else}}
+<script src="javascript/client_redirect.js"></script>
+{{/if}}

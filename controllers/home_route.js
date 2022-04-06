@@ -5,64 +5,6 @@ const {User, Account, Batch, Box} = require('../models');
 const {withAuth, adminAuth} = require('../utils/auth');
 const { uploadFile, getFile} = require('../utils/s3');
 
-//client home page
-router.get('/:start&:end', withAuth, async (req, res) => {
-    try {
-      const boxData = await Box.findAll({
-        where: {
-          user_id: req.session.user_id,
-          status: [0, 1, 2, 3]
-        },
-        attributes: [
-          'tracking',
-          'batch_id',
-          'id',
-          'box_number',
-          'description',
-          'cost',
-          'received_date',
-          'requested_date',
-          'shipped_date',
-          'order',
-          'status',
-          'sku',
-          'file',
-          'qty_per_box'
-        ],
-        include: [
-          {
-            model: Batch,
-            attributes: [
-              'pending_date',
-              'total_box'
-            ]
-          },
-          {
-            model: Account,
-            attributes: [
-              'name'
-            ]
-          }
-        ]
-      });
-      const boxe = boxData.map(box => box.get({ plain: true }));
-      boxes = [];
-      for (let i = req.params.start; i < req.params.end; i++) {
-        boxes.push(boxe[i])
-      };
-      res.render('home', {
-        boxes,
-        loggedIn: true,
-        admin: req.session.admin,
-        name: req.session.name
-      });
-    } catch (err) {
-      console.log(err);
-      res.status(500).json(err);
-    }
-
-});
-
 router.get('/', withAuth, async (req, res) => {
   try {
     const accountData = await Account.findAll({
@@ -76,7 +18,7 @@ router.get('/', withAuth, async (req, res) => {
       include: [
         {
           model: Box,
-          where: {status: [1,2]},
+          where: {status: [0,1,2]},
           attributes: [
             'box_number'
           ]
@@ -860,7 +802,73 @@ router.get('/request/:id', withAuth, async (req, res) => {
   }
 });
 
-router.get('/rawData', withAuth, (req, res) => {
-    res.render('rawData');
+router.get('/amazon_receiving', withAuth, async(req, res) => {
+  try {
+    res.render('amazon_receiving', {loggedIn: true, admin: req.session.admin, name: req.session.name});
+  } catch (error) {
+    res.status(500).json(error)
+  }
 });
+
+// router.get('/rawData', withAuth, (req, res) => {
+//     res.render('rawData');
+// });
+
+//client home page
+// router.get('/:start&:end', withAuth, async (req, res) => {
+//   try {
+//     const boxData = await Box.findAll({
+//       where: {
+//         user_id: req.session.user_id,
+//         status: [0, 1, 2, 3]
+//       },
+//       attributes: [
+//         'tracking',
+//         'batch_id',
+//         'id',
+//         'box_number',
+//         'description',
+//         'cost',
+//         'received_date',
+//         'requested_date',
+//         'shipped_date',
+//         'order',
+//         'status',
+//         'sku',
+//         'file',
+//         'qty_per_box'
+//       ],
+//       include: [
+//         {
+//           model: Batch,
+//           attributes: [
+//             'pending_date',
+//             'total_box'
+//           ]
+//         },
+//         {
+//           model: Account,
+//           attributes: [
+//             'name'
+//           ]
+//         }
+//       ]
+//     });
+//     const boxe = boxData.map(box => box.get({ plain: true }));
+//     boxes = [];
+//     for (let i = req.params.start; i < req.params.end; i++) {
+//       boxes.push(boxe[i])
+//     };
+//     res.render('home', {
+//       boxes,
+//       loggedIn: true,
+//       admin: req.session.admin,
+//       name: req.session.name
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json(err);
+//   }
+
+// });
   module.exports = router

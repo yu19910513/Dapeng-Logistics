@@ -50,6 +50,9 @@ router.get('/', withAuth, async (req, res) => {
 router.get('/account_per_user', withAuth, async (req, res) => {
   try {
   const accountDB = await Account.findAll({
+    order: [
+      ["name", "ASC"]
+    ],
     attributes: [
       'id',
       'name',
