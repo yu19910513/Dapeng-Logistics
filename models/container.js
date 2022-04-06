@@ -44,27 +44,27 @@ Container.init(
         },
 // dimension data
         length: {
-            type: DataTypes.INTEGER,
-            allowNull: false
+            type: DataTypes.DECIMAL(10,2),
+            allowNull: true
         },
         width: {
-            type: DataTypes.INTEGER,
-            allowNull: false
+            type: DataTypes.DECIMAL(10,2),
+            allowNull: true
         },
         height: {
-            type: DataTypes.INTEGER,
-            allowNull: false
+            type: DataTypes.DECIMAL(10,2),
+            allowNull: true
         },
         weight: {
-            type: DataTypes.INTEGER,
-            allowNull: false
+            type: DataTypes.DECIMAL(10,2),
+            allowNull: true
         },
         volume: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL(10,2),
             allowNull: true
         },
         cost: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL(10,3),
             allowNull: true
         },
 

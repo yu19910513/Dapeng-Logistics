@@ -9,7 +9,8 @@ const password = document.getElementById('newPassword');
 
 const height = document.getElementById('new_hei');
 const length = document.getElementById('new_len');
-const width = document.getElementById('new_wid')
+const width = document.getElementById('new_wid');
+
 date.value = today;
 var masterMap = new Map();
 
