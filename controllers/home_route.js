@@ -810,9 +810,9 @@ router.get('/amazon_receiving', withAuth, async(req, res) => {
   }
 });
 
-router.get('/rawData', withAuth, (req, res) => {
-    res.render('rawData');
-});
+// router.get('/rawData', withAuth, (req, res) => {
+//     res.render('rawData');
+// });
 
 //client home page
 // router.get('/:start&:end', withAuth, async (req, res) => {

@@ -54,11 +54,23 @@
 
                 <div class="form-group">
                     <label for="sku">SKU</label>
-                    <input type="text" class="form-control" id="sku" placeholder="sku">
+                    <input type="text" class="form-control" id="sku" placeholder="sku" onkeyup="itemInput()">
                 </div>
 
-                <a id="order_pre-check" class="btn btn-primary mt-3 text-white" style="display: none;">Confirm</a>
-                <a id="fake" class="btn btn-secondary mt-3 text-white" onclick="infoAlert()">Confirm</a>
+                <div class="form-group mt-3">
+                    <table class="uk-table uk-table-small uk-table-divider bg-light shadow-sm">
+                        <thead>
+                            <tr>
+                                <th>SKU</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sku_list">
+                        </tbody>
+                    </table>
+                <a id="order_pre-check" class="btn btn-primary mt-3 text-white col-12" style="display: none;">Confirm</a>
+                <a id="fake" class="btn btn-secondary mt-3 text-white col-12" onclick="infoAlert()">Confirm</a>
+                </div>
         </form>
     </div>
 </div>
