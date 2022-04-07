@@ -75,14 +75,28 @@ async function merge() {
         }
       })
       if (response.ok) {
-        accountDelete(account_id)
+        containerUpdate({
+            account_id,
+            account_id_2
+        });
+        itemUpdate({
+            account_id,
+            account_id_2
+        });
         batchUpdate({
             user_id,
             account_id,
             account_id_2
         })
       } else {
-        accountDelete(account_id)
+        containerUpdate({
+            account_id,
+            account_id_2
+        });
+        itemUpdate({
+            account_id,
+            account_id_2
+        });
         batchUpdate({
             user_id,
             account_id,
@@ -103,13 +117,35 @@ async function batchUpdate(data) {
         }
       })
       if (response.ok) {
+        accountDelete(data.account_id)
         alert('batch and boxes are merged!')
         location.reload()
       } else {
+        accountDelete(data.account_id)
         alert('boxes are merged!')
         location.reload()
       }
 };
+
+function containerUpdate(data) {
+    fetch(`/api/container/account_merge`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
+function itemUpdate(data) {
+    fetch(`/api/item/account_merge`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
 
 function accountDelete(id) {
     fetch(`/api/account/destroy/${id}`, {
