@@ -26,29 +26,6 @@ router.get('/account', withAuth, async (req, res) => {
   }
 });
 
-router.get('/:key', withAuth, async (req, res) => {
-  try {
-  const accountDB = await Account.findAll({
-    order: [
-      ["name", "ASC"]
-    ],
-    where: {
-      user_id: req.params.key
-    },
-    attributes: [
-      'id',
-      'name',
-      'prefix'
-    ]
-  });
-  const accounts = accountDB.map(account => account.get({plain: true}));
-  res.json(accounts);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json(err);
-  }
-});
-
 // get all user info
 router.get('/', withAuth, async (req, res) => {
   try {
@@ -523,6 +500,28 @@ router.get('/xc_per_user', withAuth, async (req, res) => {
 
 });
 
+router.get('/accountsbyuser_id/:key', withAuth, async (req, res) => {
+  try {
+  const accountDB = await Account.findAll({
+    order: [
+      ["name", "ASC"]
+    ],
+    where: {
+      user_id: req.params.key
+    },
+    attributes: [
+      'id',
+      'name',
+      'prefix'
+    ]
+  });
+  const accounts = accountDB.map(account => account.get({plain: true}));
+  res.json(accounts);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
 
 
 module.exports = router;

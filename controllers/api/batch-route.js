@@ -58,4 +58,22 @@ router.post('/amazon_box', withAuth, (req, res) => {
       });
 });
 
+router.get('/amazon_container/:key', withAuth, async (req, res) => {
+  try {
+    const singleContainer = await Container.findOne({
+      where: {
+        container_number: req.params.key
+      },
+      attributes: [
+        'id'
+      ]
+    });
+    const data = singleContainer.get({plain: true});
+    res.json(data);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+});
+
 module.exports = router;

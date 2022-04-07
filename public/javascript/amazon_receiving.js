@@ -40,8 +40,8 @@ function account_data() {
         method: 'GET'
     }).then(function (response) {
         return response.json();
-    }).then(function (account_data) {
-        let data = account_data[client_list.value];
+    }).then(function (data_u) {
+        const data = data_u[client_list.value]
         if (!data) {
             newAccountInput.style.display = '';
             accountSelect.style.display = 'none'
@@ -63,7 +63,7 @@ function accountSelection() {
     if (accountSelect.value == 0) {
         newAccountInput.style.display = '';
         accountSelect.style.display = 'none'
-    }
+    };
 };
 
 var amazon_box = new Object();
@@ -87,9 +87,18 @@ function amazonCreate() {
         newAccount.prefix = newAccountName.substring(0,3);
         newAccount.name = newAccountName;
         userCreate(newClient, newAccount)
+    } else if (newAccountName) {
+        amazon_box.user_id = client_list.value;
+        newAccount.user_id = client_list.value;
+        newAccount.prefix = newAccountName.substring(0,3);
+        newAccount.name = newAccountName;
+        accountCreate(newAccount)
+    } else {
+        amazon_box.user_id = client_list.value;
+        amazon_box.account_id = accountSelect.value;
+        boxCreate(amazon_box)
     }
 };
-
 async function userCreate(data, data_2) {
     const response = await fetch('/api/user/newUser', {
         method: 'post',
@@ -135,7 +144,7 @@ async function accountCreate(data) {
    }
 };
 function findAccountId(id) {
-    fetch(`/api/user/${id}`, {
+    fetch(`/api/user/accountsbyuser_id/${id}`, {
         method: 'GET'
     }).then(function (response) {
         return response.json();
@@ -157,12 +166,21 @@ async function boxCreate(data) {
 
       if (response.ok) {
        console.log("amazon box inserted");
-       /////////////////////// need to find box_id to insert sku
-       location.reload()
+       findContainerId(data.container_number);
       } else {
         alert('try again')
    }
-}
+};
+function findContainerId(c_number) {
+    fetch(`/api/batch/amazon_container/${c_number}`, {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+       amazon_box.id = data.id
+       console.log(amazon_box);
+    })
+};
 
 
 //tools

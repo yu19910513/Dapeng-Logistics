@@ -100,6 +100,7 @@ function next(user_id) {
     }).then(function (response) {
         return response.json();
     }).then(function (data) {
+        console.log(data);
         const pageData = data[user_id];
         localStorage.setItem('user_name', pageData[0].user.name);
         //RECEIVED FOR LOOP
