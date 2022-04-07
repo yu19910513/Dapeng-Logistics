@@ -8,7 +8,7 @@ const password = document.getElementById('newPassword');//****//
 const height = document.getElementById('new_hei');//****//
 const length = document.getElementById('new_len');//****//
 const width = document.getElementById('new_wid');//****//
-const desscription = document.getElementById('new_des');//****//
+const description = document.getElementById('new_des');//****//
 const container_number = document.getElementById('new_container');//****//
 const sku = document.getElementById('sku');
 const sku_list = document.getElementById('sku_list');
@@ -16,6 +16,8 @@ const sku_table = document.getElementById('sku_table');//****//
 ///////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 date.value = today;
 var masterMap = new Map();
+var userMap = new Map();
+var accouuntMap = new Map();
 //////////////////////////user_data\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 function client_data() {
     fetch(`/api/user/`, {
@@ -64,6 +66,104 @@ function accountSelection() {
     }
 };
 
+var amazon_box = new Object();
+var newClient = new Object();
+var newAccount = new Object();
+function amazonCreate() {
+    const length = document.getElementById('new_len');
+    amazon_box.description = description.value.trim();
+    amazon_box.length = length.value.trim();
+    amazon_box.width = width.value.trim();
+    amazon_box.height = height.value.trim();
+    amazon_box.container_number = container_number.value.trim();
+    const newAccountName = newAccountInput.value.trim();
+    const username_d = username.value.trim();
+    const password_d = password.value.trim();
+
+    if (username_d && password_d) {
+        newClient.name = username_d;
+        newClient.username = username_d;
+        newClient.password = password_d;
+        newAccount.prefix = newAccountName.substring(0,3);
+        newAccount.name = newAccountName;
+        userCreate(newClient, newAccount)
+    }
+};
+
+async function userCreate(data, data_2) {
+    const response = await fetch('/api/user/newUser', {
+        method: 'post',
+        body: JSON.stringify(data),
+        headers: {'Content-Type': 'application/json'}
+      });
+
+      if (response.ok) {
+       console.log("user created");
+       user_data(data.name, data_2);
+      } else {
+        alert('try again')
+   }
+};
+function user_data(name, data_2) {
+    fetch(`/api/user/`, {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        for (let i = 0; i < data.length; i++) {
+        userMap.set(data[i].name, data[i].id)
+        };
+        amazon_box.user_id = userMap.get(name);
+        accountCreate({
+         name: data_2.name,
+         prefix: data_2.prefix,
+         user_id: amazon_box.user_id
+        })
+    });
+};
+async function accountCreate(data) {
+    const response = await fetch('/api/account/amazon_newAccount', {
+        method: 'post',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+      });
+      if (response.ok) {
+       console.log("account inserted");
+       findAccountId(data.user_id)
+      } else {
+        alert('try again')
+   }
+};
+function findAccountId(id) {
+    fetch(`/api/user/${id}`, {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        for (let i = 0; i < data.length; i++) {
+            accouuntMap.set(data[i].name, data[i].id)
+        };
+        amazon_box.account_id = accouuntMap.get(newAccount.name);
+        console.log(amazon_box);
+        boxCreate(amazon_box)
+    })
+};
+async function boxCreate(data) {
+    const response = await fetch('/api/batch/amazon_box', {
+        method: 'post',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (response.ok) {
+       console.log("amazon box inserted");
+       /////////////////////// need to find box_id to insert sku
+       location.reload()
+      } else {
+        alert('try again')
+   }
+}
+
 
 //tools
 function unattach() {
@@ -74,6 +174,9 @@ function unattach() {
         password.style.display = 'none';
         username.style.display = 'none'
     };
+    newAccountInput.value = null;
+    username.value = null;
+    password.value = null;
     const old_account = accountSelect.querySelectorAll('option');
     old_account.forEach(i => i.remove());
     const selectOption = document.createElement('option');
@@ -87,14 +190,14 @@ function unattach() {
     document.getElementById('fake').style.display = '';
 };
 function masterCheck() {
-    const desscription_d = desscription.value.trim();
+    const description_d = description.value.trim();
     const length_d = length.value.trim();
     const width_d = width.value.trim();
     const height_d = height.value.trim();
     const container_d = container_number.value.trim();
     const client_list_d = client_list.value;
     const account_d = accountSelect.value;
-    if (desscription_d && length_d && width_d && height_d && container_d && client_list_d && account_d && validation(client_list_d, account_d) ) {
+    if (description_d && length_d && width_d && height_d && container_d && client_list_d && account_d && validation(client_list_d, account_d) ) {
         document.getElementById('order_pre-check').style.display = '';
         document.getElementById('fake').style.display = 'none';
     } else {

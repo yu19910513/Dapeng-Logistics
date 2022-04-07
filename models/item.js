@@ -20,7 +20,7 @@ Item.init(
         },
         description: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
 //qty data
         qty_per_sku: {

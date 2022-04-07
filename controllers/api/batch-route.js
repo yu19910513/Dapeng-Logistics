@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const {User, Account, Batch, Box} = require('../../models');
+const {User, Account, Batch, Box, Container} = require('../../models');
 const {withAuth, adminAuth} = require('../../utils/auth');
 
 //create new batch under the existed account
@@ -39,5 +39,23 @@ router.post('/new', withAuth, (req, res) => {
     });
 });
 
+router.post('/amazon_box', withAuth, (req, res) => {
+  Container.create({
+    container_number: req.body.container_number,
+    account_id: req.body.account_id,
+    user_id: req.body.user_id,
+    description: req.body.description,
+    length: req.body.length,
+    width: req.body.width,
+    height: req.body.height,
+    volume: req.body.volume,
+    received_date: new Date().toLocaleDateString("en-US")
+  }, {returning: true})
+      .then(dbBoxData => res.json(dbBoxData))
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+});
 
 module.exports = router;

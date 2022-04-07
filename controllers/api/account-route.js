@@ -15,4 +15,16 @@ router.post('/', withAuth, (req, res) => {
     });
 });
 
+router.post('/amazon_newAccount', withAuth, (req, res) => {
+  Account.create({
+      user_id: req.body.user_id,
+      name: req.body.name,
+      prefix: req.body.prefix
+  }).then(dbAccounttData => res.json(dbAccounttData))
+  .catch(err => {
+    console.log(err);
+    res.status(500).json(err);
+  });
+});
+
 module.exports = router;

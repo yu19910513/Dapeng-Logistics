@@ -26,6 +26,29 @@ router.get('/account', withAuth, async (req, res) => {
   }
 });
 
+router.get('/:key', withAuth, async (req, res) => {
+  try {
+  const accountDB = await Account.findAll({
+    order: [
+      ["name", "ASC"]
+    ],
+    where: {
+      user_id: req.params.key
+    },
+    attributes: [
+      'id',
+      'name',
+      'prefix'
+    ]
+  });
+  const accounts = accountDB.map(account => account.get({plain: true}));
+  res.json(accounts);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
 // get all user info
 router.get('/', withAuth, async (req, res) => {
   try {
@@ -128,6 +151,22 @@ router.post('/', (req, res) => {
     res.status(500).json(err);
   }
 
+});
+
+router.post('/newUser', (req, res) => {
+  try {
+    User.create({
+      name: req.body.name,
+      email: req.body.email,
+      password: req.body.password,
+      admin: req.body.admin,
+      username: req.body.username
+    })
+    .then(userDB => res.json(userDB));
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
 // LOGIN FUNCTION <==> LOGIN.JS
