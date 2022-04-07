@@ -14,8 +14,8 @@
                                 <option value="">select client</option>
                                 <option value="0">--- create new client ---</option>
                             </select>
-                            <input type="text" class="form-control rounded mt-1" id="newUserName" placeholder="username" style="display: none">
-                            <input type="text" class="form-control rounded mt-1" id="newPassword" placeholder="password" style="display: none">
+                            <input type="text" class="form-control rounded mt-1" id="newUserName" placeholder="username" style="display: none" onkeyup="masterCheck()">
+                            <input type="text" class="form-control rounded mt-1" id="newPassword" placeholder="password" style="display: none" onkeyup="masterCheck()">
                         </div>
                         <div class="form-group col" id="accountDiv">
                             <label for="Account">Account</label>
@@ -23,33 +23,33 @@
                                 <option value="">select account</option>
                                 <option value="0">--- create new account ---</option>
                             </select>
-                            <input type="text" class="form-control rounded mt-1" id="newAccountInput" placeholder="new account name" style="display: none;">
+                            <input type="text" class="form-control rounded mt-1" id="newAccountInput" placeholder="new account name" style="display: none;" onkeyup="masterCheck()">
                         </div>
                   </div>
 
                 <div class="form-group">
                     <label for="description">Description</label>
-                    <input type="text" class="form-control" id="new_des">
+                    <input type="text" class="form-control" id="new_des" onkeyup="masterCheck()">
                 </div>
 
                 <div class="row">
                     <div class="col">
                     <label for="length">Length</label>
-                      <input type="number" class="form-control" id="new_len" placeholder="cm">
+                      <input type="number" class="form-control" id="new_len" placeholder="cm" onkeyup="masterCheck()">
                     </div>
                     <div class="col">
                         <label for="width">Width</label>
-                      <input type="number" class="form-control" id="new_wid" placeholder="cm">
+                      <input type="number" class="form-control" id="new_wid" placeholder="cm" onkeyup="masterCheck()">
                     </div>
                     <div class="col">
                         <label for="height">Height</label>
-                        <input type="number" class="form-control" id="new_hei" placeholder="cm">
+                        <input type="number" class="form-control" id="new_hei" placeholder="cm" onkeyup="masterCheck()">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="container">Box Number</label>
-                    <input type="text" class="form-control" id="new_container">
+                    <input type="text" class="form-control" id="new_container" onkeyup="masterCheck()">
                 </div>
 
                 <div class="form-group">
@@ -58,7 +58,7 @@
                 </div>
 
                 <div class="form-group mt-3">
-                    <table class="uk-table uk-table-small uk-table-divider bg-light shadow-sm">
+                    <table class="uk-table uk-table-small uk-table-divider bg-light shadow-sm" id="sku_table">
                         <thead>
                             <tr>
                                 <th>SKU</th>
@@ -68,8 +68,8 @@
                         <tbody id="sku_list">
                         </tbody>
                     </table>
-                <a id="order_pre-check" class="btn btn-primary mt-3 text-white col-12" style="display: none;">Confirm</a>
-                <a id="fake" class="btn btn-secondary mt-3 text-white col-12" onclick="infoAlert()">Confirm</a>
+                <a id="order_pre-check" class="btn btn-primary mt-3 text-white col-12" style="display: none;">Ready to Create</a>
+                <a id="fake" class="btn btn-secondary mt-3 text-white col-12">Not Ready to Create</a>
                 </div>
         </form>
     </div>
