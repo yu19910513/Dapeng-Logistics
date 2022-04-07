@@ -89,6 +89,31 @@ router.put('/status_admin_receiving', withAuth, (req, res) => {
     });
 });
 
+//account merge and update box.accout_id
+router.put('/account_merge', withAuth, (req, res) => {
+  Box.update({
+      account_id: req.body.account_id_2
+    },
+    {
+      where: {
+          user_id: req.body.user_id,
+          account_id: req.body.account_id
+      }
+    })
+    .then(dbBoxData => {
+      if (!dbBoxData[0]) {
+        res.status(404).json({ message: 'This Box does not exist!' });
+        return;
+      }
+      res.json(dbBoxData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+
 //update tracking number to box
 router.put('/status_admin_receiving_t', withAuth, (req, res) => {
   Box.update({

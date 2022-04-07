@@ -76,4 +76,27 @@ router.get('/amazon_container/:key', withAuth, async (req, res) => {
     }
 });
 
+router.put('/account_merge', withAuth, (req, res) => {
+  Batch.update({
+      account_id: req.body.account_id_2
+    },
+    {
+      where: {
+          user_id: req.body.user_id,
+          account_id: req.body.account_id
+      }
+    })
+    .then(dbBatchData => {
+      if (!dbBatchData[0]) {
+        res.status(404).json({ message: 'This Batch does not exist!' });
+        return;
+      }
+      res.json(dbBatchData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
 module.exports = router;

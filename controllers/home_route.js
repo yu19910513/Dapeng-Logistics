@@ -185,6 +185,14 @@ router.get('/signup/', (req, res) => {
     res.render('signup');
 });
 
+router.get('/merger', withAuth, (req, res) => {
+  try {
+    res.render('merger', {loggedIn: true, admin: req.session.admin, name: req.session.name});
+  } catch (error) {
+    res.status(500).json(error)
+  }
+})
+
 //admin request-handling page (manual)
 router.get('/admin_move', withAuth, async (req, res) => {
     try {
@@ -602,7 +610,6 @@ router.get('/client_label', withAuth, async (req, res) => {
   }
 
 });
-
 
 //redner box-allocation page
 router.get('/box_location', withAuth, async (req, res) => {
