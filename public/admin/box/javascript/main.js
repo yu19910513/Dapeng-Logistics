@@ -30,4 +30,4 @@ function saveAccount() {
 
 if (document.querySelector("#account_selection")) {
     document.querySelector("#account_selection").addEventListener("click", saveAccount);
-  };
+};
