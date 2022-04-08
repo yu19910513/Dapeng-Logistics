@@ -1,6 +1,13 @@
 <div class="card mb-4 text-center" id="box_bar" style="width: 4in; height: 4in">
     <div class="card-body">
-            <b>{{description}}</b>
+        <h3 class="card-text" style="
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-wrap: break-word;
+            display: block;
+            line-height: 1em;
+            max-height: 2em;
+        ">{{description}}</h3>
     </div>
     <h6>{{account.name}}</h6>
     <h2 class="card-text">{{sku}}</h2>
@@ -14,4 +21,11 @@
     <h1 class="card-text" style="font-size:280%"><b>{{box_number}}</b></h1>
 </div>
 
+<script>
+    const order = document.querySelector('big');
+    if (order.innerHTML.includes('of')) {
+        const text = order.innerHTML.split('/');
+        order.innerHTML = text[0]
+    }
+</script>
 {{!-- https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example --}}
