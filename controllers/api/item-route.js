@@ -30,7 +30,8 @@ router.post('/new', withAuth, (req, res) => {
     user_id: req.body.user_id,
     account_id: req.body.account_id,
     container_id: req.body.container_id,
-    qty_per_sku: req.body.qty_per_sku
+    qty_per_sku: req.body.qty_per_sku,
+    description: req.body.description
   })
     .then(dbItemData => {
         res.json(dbItemData)
@@ -52,7 +53,8 @@ router.get('/infoPerNumber/:key', withAuth, async (req, res) => {
         'user_id',
         'account_id',
         'item_number',
-        'container_id'
+        'container_id',
+        'description'
       ],
         include: [
           {

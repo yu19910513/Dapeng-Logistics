@@ -194,6 +194,7 @@ function itemCreate() {
         item.user_id = amazon_box.user_id;
         item.account_id = amazon_box.account_id;
         item.container_id = amazon_box.id;
+        item.description = amazon_box.description;
         loadingItems(item);
     };
     alert(`1 container(#${amazon_box.container_number}) with ${amazon_box.cost} items is inserted to client_id: ${amazon_box.user_id}!`)
@@ -329,7 +330,6 @@ function scanSKU() {
     }).then(function (response) {
         return response.json();
     }).then(function (data) {
-        console.log(data);
         if (data.item_number){
             document.getElementById("scanDiv").style.display = 'none';
             unattachUser();
@@ -341,7 +341,10 @@ function scanSKU() {
             const account = document.createElement('option');
             account.innerHTML = data.account.name;
             account.setAttribute('value', data.account_id);
-            accountSelect.appendChild(account)
+            accountSelect.appendChild(account);
+            if (data.description) {
+                description.value = data.description
+            }
         } else {
             unattachUser();
             const selectOption = document.createElement('option');
