@@ -36,6 +36,7 @@ function client_data() {
 //////////////////////////account_data\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 function account_data() {
     unattach();
+    document.getElementById("scanDiv").style.display = 'none';
     fetch(`/api/user/account_per_user`, {
         method: 'GET'
     }).then(function (response) {
@@ -215,6 +216,8 @@ function unattach() {
         password.style.display = 'none';
         username.style.display = 'none'
     };
+    const sku_number = document.getElementById('scan');
+    sku_number.value = null;
     newAccountInput.value = null;
     username.value = null;
     password.value = null;
@@ -313,13 +316,15 @@ function itemInput() {
 
 function scanSKU() {
     const sku_number = document.getElementById('scan');
+    console.log(sku_number.value);
     fetch(`/api/item/infoPerNumber/${sku_number.value}`, {
         method: 'GET'
     }).then(function (response) {
         return response.json();
     }).then(function (data) {
-        if (data) {
-            console.log(data);
+        console.log(data);
+        if (data.item_number){
+            document.getElementById("scanDiv").style.display = 'none';
             unattachUser();
             const user = document.createElement('option');
             user.innerHTML = data.user.name;
@@ -330,6 +335,16 @@ function scanSKU() {
             account.innerHTML = data.account.name;
             account.setAttribute('value', data.account_id);
             accountSelect.appendChild(account)
+        } else {
+            unattachUser();
+            const selectOption = document.createElement('option');
+            selectOption.innerHTML = 'select client';
+            const zero = document.createElement('option');
+            zero.innerHTML = '--- create new client ---';
+            zero.setAttribute('value', 0);
+            client_list.appendChild(selectOption);
+            client_list.appendChild(zero);
+            client_data();
         }
     })
 }
@@ -338,4 +353,4 @@ function unattachUser() {
     const old_user = client_list.querySelectorAll('option');
     old_user.forEach(i => i.remove());
     accountSelect.disabled = false;
-}
+};
