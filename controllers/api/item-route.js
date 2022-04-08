@@ -42,4 +42,46 @@ router.post('/new', withAuth, (req, res) => {
     });
 });
 
+router.get('/infoPerNumber/:key', withAuth, async (req, res) => {
+  try {
+    const itemData = await Item.findOne({
+      where: {
+        item_number: req.params.key,
+      },
+      attributes: [
+        'user_id',
+        'account_id',
+        'item_number',
+        'container_id'
+      ],
+        include: [
+          {
+            model: Account,
+            attributes: [
+            'name',
+            'id'
+          ]},
+          {
+            model: Container,
+            attributes: [
+            'container_number',
+            'id'
+          ]},
+          {
+            model: User,
+            attributes: [
+            'name',
+            'id'
+          ]}
+        ]
+      })
+
+    const data = itemData.get({plain: true});
+    res.json(data);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+});
+
 module.exports = router;

@@ -310,3 +310,32 @@ function itemInput() {
    }
 
 };
+
+function scanSKU() {
+    const sku_number = document.getElementById('scan');
+    fetch(`/api/item/infoPerNumber/${sku_number.value}`, {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        if (data) {
+            console.log(data);
+            unattachUser();
+            const user = document.createElement('option');
+            user.innerHTML = data.user.name;
+            user.setAttribute('value', data.user_id);
+            client_list.appendChild(user);
+            client_list.disabled = true;
+            const account = document.createElement('option');
+            account.innerHTML = data.account.name;
+            account.setAttribute('value', data.account_id);
+            accountSelect.appendChild(account)
+        }
+    })
+}
+
+function unattachUser() {
+    const old_user = client_list.querySelectorAll('option');
+    old_user.forEach(i => i.remove());
+    accountSelect.disabled = false;
+}
