@@ -26,7 +26,6 @@ function location_update() {
     }
 }
 
-
 async function auto_relocate(box, shelf) {
     const box_number = box;
     const location_b = shelf;
@@ -57,3 +56,9 @@ async function auto_relocate(box, shelf) {
      }
 
 };
+
+var timer = null;
+function delay(){
+    clearTimeout(timer);
+    timer = setTimeout(location_update, 300)
+}
