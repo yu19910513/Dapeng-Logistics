@@ -49,6 +49,7 @@ router.post('/amazon_box', withAuth, (req, res) => {
     width: req.body.width,
     height: req.body.height,
     volume: req.body.volume,
+    cost: req.body.cost,
     received_date: new Date().toLocaleDateString("en-US")
   }, {returning: true})
       .then(dbBoxData => res.json(dbBoxData))

@@ -13,6 +13,7 @@ const container_number = document.getElementById('new_container');//****//
 const sku = document.getElementById('sku');
 const sku_list = document.getElementById('sku_list');
 const sku_table = document.getElementById('sku_table');//****//
+var itemCount = 0;
 ///////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 date.value = today;
 var masterMap = new Map();
@@ -77,6 +78,7 @@ function amazonCreate() {
     amazon_box.width = width.value.trim();
     amazon_box.height = height.value.trim();
     amazon_box.container_number = container_number.value.trim();
+    amazon_box.cost = itemCount;
     const newAccountName = newAccountInput.value.trim();
     const username_d = username.value.trim();
     const password_d = password.value.trim();
@@ -194,7 +196,7 @@ function itemCreate() {
         item.container_id = amazon_box.id;
         loadingItems(item);
     };
-    alert('success!')
+    alert(`1 container(#${amazon_box.container_number}) with ${amazon_box.cost} items is inserted to client_id: ${amazon_box.user_id}!`)
     location.reload()
 };
 
@@ -274,13 +276,15 @@ var skuArr = [];
 var skuMap = new Map()
 function itemInput() {
     const skuValue = sku.value.trim().toUpperCase();
-   if ((skuValue.substring(0,1) == 'X' && skuValue.length == 10) || skuValue.length > 6) {
+   if ((skuValue.substring(0,1) == 'X' && skuValue.length == 10) || (skuValue.length > 6 && skuValue.substring(0,1) != '-')) {
     if (skuArr.includes(skuValue)) {
+        itemCount++;
         const skuAmount = document.getElementById(`${skuValue}c`);
         const totalAmount = parseInt(skuAmount.innerHTML) + 1;
         skuAmount.innerHTML = totalAmount;
         skuMap.set(skuValue, totalAmount);
     } else {
+        itemCount++;
         skuArr.push(skuValue);
         skuMap.set(skuValue, 1);
         const trTag = document.createElement('tr');
@@ -295,20 +299,23 @@ function itemInput() {
         skuLabel.innerHTML = skuValue;
     };
     sku.value = null;
-   } else if (skuValue.substring(0,1) == '-' && skuValue.length == 11) {
+   } else if (skuValue.substring(0,1) == '-' && skuValue.length > 6) {
         const newSku = skuValue.substring(1, skuValue.length);
         const skuAmount = document.getElementById(`${newSku}c`);
-        const totalAmount = parseInt(skuAmount.innerHTML) - 1;
-        const trTag = document.getElementById(`${newSku}t`)
-        if (totalAmount < 1) {
-            trTag.remove();
-            skuMap.delete(newSku);
-            skuArr = skuArr.filter(i => i != newSku);
-            sku.value = null;
-        } else {
-            skuAmount.innerHTML = totalAmount;
-            skuMap.set(newSku, totalAmount);
-            sku.value = null;
+        if (skuAmount) {
+            itemCount--;
+            const totalAmount = parseInt(skuAmount.innerHTML) - 1;
+            const trTag = document.getElementById(`${newSku}t`)
+            if (totalAmount < 1) {
+                trTag.remove();
+                skuMap.delete(newSku);
+                skuArr = skuArr.filter(i => i != newSku);
+                sku.value = null;
+            } else {
+                skuAmount.innerHTML = totalAmount;
+                skuMap.set(newSku, totalAmount);
+                sku.value = null;
+            }
         }
    }
 

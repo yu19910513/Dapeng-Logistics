@@ -49,7 +49,7 @@ Container.init(
             allowNull: true
          },
 //qty data
-        qty: {
+        type: {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 1
@@ -76,7 +76,7 @@ Container.init(
             allowNull: true
         },
         cost: {
-            type: DataTypes.DECIMAL(10,3),
+            type: DataTypes.INTEGER,
             allowNull: true
         },
 
