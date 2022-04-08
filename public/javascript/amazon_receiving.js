@@ -172,14 +172,37 @@ async function boxCreate(data) {
    }
 };
 function findContainerId(c_number) {
-    fetch(`/api/batch/amazon_container/${c_number}`, {
+    fetch(`/api/container/amazon_container/${c_number}`, {
         method: 'GET'
     }).then(function (response) {
         return response.json();
     }).then(function (data) {
        amazon_box.id = data.id
-       console.log(amazon_box);
+       itemCreate()
     })
+};
+
+function itemCreate() {
+    var rows = sku_table.rows;
+    for (let i = 1; i < rows.length; i++) {
+        var item = new Object()
+        item.item_number = rows[i].cells[0].innerHTML;
+        item.qty_per_sku = parseInt(rows[i].cells[1].innerHTML);
+        item.user_id = amazon_box.user_id;
+        item.account_id = amazon_box.account_id;
+        item.container_id = amazon_box.id;
+        loadingItems(item);
+    };
+    alert('success!')
+    location.reload()
+};
+
+function loadingItems(data) {
+    fetch('/api/item/new', {
+        method: 'post',
+        body: JSON.stringify(data),
+        headers: {'Content-Type': 'application/json'}
+    });
 };
 
 
@@ -215,7 +238,7 @@ function masterCheck() {
     const container_d = container_number.value.trim();
     const client_list_d = client_list.value;
     const account_d = accountSelect.value;
-    if (description_d && length_d && width_d && height_d && container_d && client_list_d && account_d && validation(client_list_d, account_d) ) {
+    if (description_d && length_d && width_d && height_d && container_d.substring(0,2).toUpperCase() == 'AM' && container_d.length == 8 && client_list_d && account_d && validation(client_list_d, account_d) ) {
         document.getElementById('order_pre-check').style.display = '';
         document.getElementById('fake').style.display = 'none';
     } else {
@@ -248,7 +271,7 @@ var skuArr = [];
 var skuMap = new Map()
 function itemInput() {
     const skuValue = sku.value.trim().toUpperCase();
-   if (skuValue.substring(0,1) == 'X' && skuValue.length == 10) {
+   if ((skuValue.substring(0,1) == 'X' && skuValue.length == 10) || skuValue.length > 6) {
     if (skuArr.includes(skuValue)) {
         const skuAmount = document.getElementById(`${skuValue}c`);
         const totalAmount = parseInt(skuAmount.innerHTML) + 1;
@@ -287,6 +310,3 @@ function itemInput() {
    }
 
 };
-
-
-// skuValue.substring(0,2) == 'AM' && !isNaN(skuValue.substring(2,skuValue.length)) && skuValue.length == 8

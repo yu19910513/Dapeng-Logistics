@@ -22,6 +22,24 @@ router.put('/account_merge', withAuth, (req, res) => {
         console.log(err);
         res.status(500).json(err);
       });
-  });
+});
+
+router.post('/new', withAuth, (req, res) => {
+  Item.create({
+    item_number: req.body.item_number,
+    user_id: req.body.user_id,
+    account_id: req.body.account_id,
+    container_id: req.body.container_id,
+    qty_per_sku: req.body.qty_per_sku
+  })
+    .then(dbItemData => {
+        res.json(dbItemData)
+      })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+
+    });
+});
 
 module.exports = router;
