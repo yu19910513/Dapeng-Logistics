@@ -293,7 +293,7 @@ function itemInput() {
         const skuInit = document.createElement('td');
         trTag.appendChild(skuLabel);
         trTag.appendChild(skuInit);
-        sku_list.appendChild(trTag);
+        sku_list.prepend(trTag);
         trTag.setAttribute('id', `${skuValue}t`)
         skuInit.setAttribute('id', `${skuValue}c`);
         skuInit.innerHTML = 1;
@@ -364,3 +364,9 @@ function unattachUser() {
     old_user.forEach(i => i.remove());
     accountSelect.disabled = false;
 };
+
+var timer = null;
+function delay(fn){
+    clearTimeout(timer);
+    timer = setTimeout(fn, 100)
+}

@@ -6,7 +6,7 @@
                   <div class="row">
                         <div class="form-group col" id="scanDiv">
                             <label for="scan" class="text-danger">Search</label>
-                            <input type="text" class="form-control" id="scan" placeholder="scan sku" onkeyup="scanSKU()">
+                            <input type="text" class="form-control" id="scan" placeholder="scan sku" onkeyup="delay(scanSKU)">
                         </div>
                         <div class="form-group col">
                             <label for="Date">Date</label>
@@ -58,7 +58,7 @@
 
                 <div class="form-group">
                     <label for="sku">SKU</label>
-                    <input type="text" class="form-control" id="sku" placeholder="sku" onkeyup="itemInput()">
+                    <input type="text" class="form-control" id="sku" placeholder="sku" onkeyup="delay(itemInput)">
                 </div>
 
                 <div class="form-group mt-3">
