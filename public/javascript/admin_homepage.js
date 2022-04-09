@@ -412,7 +412,6 @@ function allItem() {
       const containerNumber = newData[i][0].container.container_number;
       containerMap.set(containerNumber, newData[i])
     }
-
   })
 };
 allItem();
@@ -427,6 +426,10 @@ allItem();
 //   })
 // };
 // allContainer();
+
+
+
+
 const containerTable = document.getElementById("containerTable");
 function container_searching() {
   unattach();

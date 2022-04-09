@@ -74,9 +74,9 @@ var newAccount = new Object();
 function amazonCreate() {
     const length = document.getElementById('new_len');
     amazon_box.description = description.value.trim();
-    amazon_box.length = length.value.trim();
-    amazon_box.width = width.value.trim();
-    amazon_box.height = height.value.trim();
+    amazon_box.length = length.value.trim()*2.54;
+    amazon_box.width = width.value.trim()*2.54;
+    amazon_box.height = height.value.trim()*2.54;
     amazon_box.container_number = container_number.value.trim();
     amazon_box.cost = itemCount;
     const newAccountName = newAccountInput.value.trim();

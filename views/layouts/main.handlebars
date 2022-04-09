@@ -29,15 +29,15 @@
                     </li> --}}
 
                     <li>
-                        <a href="/admin_move_main"><b>Shipping</b> Queue</a>
+                        <a href="/admin_move_main" uk-tooltip="出货通知"><b>Shipping</b> Queue</a>
                     </li>
 
                     <li>
-                        <a href="/admin_receiving_main"><b>Receiving</b> Quene</a>
+                        <a href="/admin_receiving_main" uk-tooltip="海外货品接收"><b>Receiving</b> Quene</a>
                     </li>
 
                     <li>
-                        <a href="/box_location" onclick="resetLocalStorage()"><b>Allocation</b> Queue</a>
+                        <a href="/box_location" onclick="resetLocalStorage()" uk-tooltip="载入货架"><b>Allocation</b> Queue</a>
                     </li>
 {{else}}
 
@@ -76,7 +76,7 @@
             </div>
             </div>
 
-            <a class="uk-navbar-item uk-logo" href="/" ><img src="https://dapengwh.com/wp-content/uploads/2021/03/panpan-0-1.png" style="width: 185px;" alt="logo">
+            <a class="uk-navbar-item uk-logo" href="/" uk-tooltip="回到主页"><img src="https://dapengwh.com/wp-content/uploads/2021/03/panpan-0-1.png" style="width: 185px;" alt="logo">
 
                 {{!-- <div class="dropdown-content">
                     <div class="text-dark" href="#">大鹏库存</div>
@@ -87,7 +87,7 @@
                 <ul class="uk-navbar-nav">
 {{#if admin}}
                     <li>
-                        <a href="/amazon_receiving"><b>Amazon</b></a>
+                        <a href="/amazon_receiving" uk-tooltip="亚马逊货品接收"><b>Amazon</b></a>
                     </li>
 
                     <li><a class="logout" uk-icon="icon: sign-out">Log Out</a></li>

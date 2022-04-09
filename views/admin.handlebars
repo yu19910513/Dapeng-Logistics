@@ -11,12 +11,12 @@
   <div class="uk-child-width-expand@s" uk-grid>
     <div class="uk-grid-item-match">
           <div class="uk-card uk-card-default uk-card-body uk-width-1-3@m rounded">
-            <h3 class="lead" onclick="reset()" uk-tooltip="title: click to reset; pos: top-left"><b>Master Functions</b></h3>
+            <h3 class="lead" onclick="reset()" uk-tooltip="title: click to reset 重置; pos: top-left"><b>Master Functions</b></h3>
             <a class="btn btn-outline-warning btn-sm shadow-sm mt-1" href="/admin/master_page">Home Page</a>
-            <a class="btn btn-sm btn-outline-info shadow-sm mt-1" href="/billing"><b>₿</b>illing</a>
-            <a class="btn btn-sm btn-outline-success shadow-sm mt-1" href="/merger">Merger</a>
-            <a class="btn btn-sm btn-outline-danger shadow-sm mt-1" id="edit_btn" onclick="passcode('s')" uk-tooltip="title: Edit status or delete boxes; pos: bottom">Edit/ Del</a>
-            <a class="btn btn-sm btn-outline-primary shadow-sm mt-1" id="update_btn" onclick="passcode('d')" uk-tooltip="title: Redate status; pos: bottom">Redate</a>
+            <a class="btn btn-sm btn-outline-info shadow-sm mt-1" href="/billing" uk-tooltip="title:帐簿; pos: bottom"><b>₿</b>illing</a>
+            <a class="btn btn-sm btn-outline-success shadow-sm mt-1" href="/merger" uk-tooltip="title:账户合并; pos: bottom">Merger</a>
+            <a class="btn btn-sm btn-outline-danger shadow-sm mt-1" id="edit_btn" onclick="passcode('s')" uk-tooltip="title: 更改货品状态、收纳旧货品、或删除货品; pos: bottom">Edit/ Del</a>
+            <a class="btn btn-sm btn-outline-primary shadow-sm mt-1" id="update_btn" onclick="passcode('d')" uk-tooltip="title: 更改货品状态日期（⚠️ 日期变更会影响存货计费）; pos: bottom">Redate</a>
             <select name="edit_selection" id="edit_select" class="uk-select uk-form-danger rounded uk-form-small uk-form-width-small mt-1" style="display: none;" onchange="preChangeConfirm()" uk-tooltip="update new STATUS to boxes">
               <option value="">Select...</option>
               <option value="0">Status: Pending</option>
