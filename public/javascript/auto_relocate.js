@@ -46,13 +46,13 @@ async function auto_relocate(box, shelf) {
       const list = document.getElementById("inserted_obj");
       var child = document.createElement('h3');
       child.innerHTML = location_b + ": " + box_number + `&#9989`;
-      list.appendChild(child);
+      list.prepend(child);
      } else {
       document.getElementById('scanned_obj').value = null;
       const list = document.getElementById("inserted_obj");
       var child = document.createElement('h4');
       child.innerHTML = box_number + " does not exist!" + `&#10060`;
-      list.appendChild(child);
+      list.prepend(child);
      }
 
 };
@@ -60,5 +60,5 @@ async function auto_relocate(box, shelf) {
 var timer = null;
 function delay(){
     clearTimeout(timer);
-    timer = setTimeout(location_update, 300)
+    timer = setTimeout(location_update, 100)
 }
