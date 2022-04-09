@@ -1,5 +1,8 @@
 const inventory_count = document.getElementById('inventory_c');
 const pending_count = document.getElementById('pending_c');
+const mode = document.getElementById('mode');
+const boxInput = document.getElementById("boxInput");
+const containerInput = document.getElementById('containerInput');
 var receivedCount = 0;
 var requestedCount = 0;
 var pendingCount = 0;
@@ -7,19 +10,10 @@ var shippedCount = 0;
 var objectMap = new Map();
 var locationMap = new Map()
 var boxNumberArr = [];
+var containerNumberArr =[];
 var locationArr = [];
 var preUpdateArr = [];
-
-function allContainer() {
-  fetch(`/api/container/allContainerAdmin`, {
-    method: 'GET'
-  }).then(function (response) {
-    return response.json();
-  }).then(function (data) {
-    console.log(data);
-  })
-};
-allContainer()
+var preUpdateContainerArr = [];
 
 function allBox() {
     fetch(`/api/user/allBox_admin`, {
@@ -103,7 +97,7 @@ unattach();
  } else if (isCharacterALetter(box_input[0]) && !isNaN(box_input[1])) {
   document.getElementById('searchNote').innerHTML = "This location is not associated with any box"
   location_search(box_input)
- }  else if (box_input == '/all') {
+ } else if (box_input == '/all') {
   for (let i = 0; i < boxNumberArr.length; i++) {
     const each_of_all = boxNumberArr[i];
     if (each_of_all) {
@@ -120,11 +114,17 @@ unattach();
 
 function unattach() {
   document.getElementById('searchNote').innerHTML = null;
+  document.getElementById('containerSearchhNote').innerHTML = null;
   preUpdateArr = [];
-  boxTable.style.display = 'none'
+  preUpdateContainerArr = [];
+  boxTable.style.display = 'none';
+  containerTable.style.display = 'none';
   const tBody = document.getElementById('boxBody');
+  const tCBody = document.getElementById('containerBody');
   const old_search = tBody.querySelectorAll('tr');
-  old_search.forEach(i => i.remove())
+  const old_search_c = tCBody.querySelectorAll('tr');
+  old_search.forEach(i => i.remove());
+  old_search_c.forEach(i => i.remove());
 }
 
 function buildingRow(b) {
@@ -357,6 +357,100 @@ function reset() {
 };
 
 
-
+function modeChange() {
+  if (mode.innerHTML == 'C') {
+    mode.innerHTML = 'A';
+    containerInput.style.display = '';
+    boxInput.style.display = 'none';
+    document.getElementById("badge").classList.add('alert-danger');
+    document.getElementById("badge").classList.remove('alert-success');
+    document.getElementById('myBoxInput').value = null;
+    unattach();
+  } else {
+    mode.innerHTML = 'C';
+    containerInput.style.display = 'none';
+    boxInput.style.display = '';
+    document.getElementById("badge").classList.add('alert-success');
+    document.getElementById("badge").classList.remove('alert-danger');
+    myContainerInput.value = null;
+  }
+}
 // document.getElementById('numberOfItems').innerHTML = `${preUpdateArr.length} items; may take up to ${preUpdateArr.length/100} seconds`;
 // document.getElementById('loader').style.display = '';
+
+
+
+///////////////////////////////AMAZON ITEMS ARE HERE///////////////////////////////
+const myContainerInput = document.getElementById('myContainerInput');
+var containerMap = new Map();
+var skuMap = new Map()
+function allItem() {
+  fetch(`/api/item/allItemAdmin`, {
+    method: 'GET'
+  }).then(function (response) {
+    return response.json();
+  }).then(function (data) {
+
+    for (let j = 0; j < data.length; j++) {
+      const element = data[j];
+
+    }
+
+    const item_data = data.reduce((r, a) => {
+      r[a.item_number] = r[a.item_number] || [];
+      r[a.item_number].push(a);
+      return r;
+    }, Object.create(null));
+
+    const container_data = data.reduce((r, a) => {
+      r[a.container.container_number] = r[a.container.container_number] || [];
+      r[a.container.container_number].push(a);
+      return r;
+    }, Object.create(null));
+    const newData = Object.values(container_data);
+    for (let i = 0; i < newData.length; i++) {
+      const containerNumber = newData[i][0].container.container_number;
+      containerMap.set(containerNumber, newData[i])
+    }
+
+  })
+};
+allItem();
+
+// function allContainer() {
+//   fetch(`/api/container/allContainerAdmin`, {
+//     method: 'GET'
+//   }).then(function (response) {
+//     return response.json();
+//   }).then(function (data) {
+//     console.log(data);
+//   })
+// };
+// allContainer();
+const containerTable = document.getElementById("containerTable");
+function container_searching() {
+  unattach();
+   var container_input = document.getElementById('myContainerInput').value.trim();
+   if (container_input) {
+      containerTable.style.display = '';
+   };
+  //  if (container_input.length > 2 && !isCharacterASpeical(container_input) && container_input[0] != '/') {
+  //   document.getElementById('containerSearchNote').innerHTML = "No information was found according to your input! Please try again"
+  //   container_search(container_input)
+  //  } else if (isCharacterALetter(container_input[0]) && !isNaN(container_input[1])) {
+  //   document.getElementById('containerSearchNote').innerHTML = "This location is not associated with any container"
+  //   location_search(container_input)
+  //  } else if (container_input == '/all') {
+  //   for (let i = 0; i < containerNumberArr.length; i++) {
+  //     const each_of_all = containerNumberArr[i];
+  //     if (each_of_all) {
+  //       buildingRow(each_of_all)
+  //     }
+  //   }
+  // } else {
+  //   if (containerNumberArr.includes(container_input.toUpperCase())) {
+  //     buildingRow(container_input.toUpperCase());
+  //     document.getElementById('myContainerInput').value = null;
+  //   }
+  //  }
+  };

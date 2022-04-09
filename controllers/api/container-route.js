@@ -68,7 +68,6 @@ router.get('/allContainerAdmin', withAuth, async (req, res) => {
         'volume',
         'status',
         'location',
-        'sku',
         'file',
         'file_2',
         'fba',
@@ -107,4 +106,5 @@ router.get('/allContainerAdmin', withAuth, async (req, res) => {
   }
 
 });
+
 module.exports = router;

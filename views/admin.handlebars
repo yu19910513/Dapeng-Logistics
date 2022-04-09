@@ -4,8 +4,8 @@
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active" >Pending Count: <span id="pending_c"></span> </li>
-                <li class="breadcrumb-item active" >Inventory Count: <span id="inventory_c"></span></li>
+                <li class="breadcrumb-item active">Pending Count: <span id="pending_c"></span> </li>
+                <li class="breadcrumb-item active">Inventory Count: <span id="inventory_c"></span> </li>
              </ol>
         </nav>
   <div class="uk-child-width-expand@s" uk-grid>
@@ -51,20 +51,28 @@
     </div>
   </div>
 
-
+  <div class="badge alert-success" id="badge" onclick="modeChange()"><span id="mode">C</span> Mode</div>
   <form class="uk-search uk-search-large" id="boxInput">
     <span uk-search-icon></span>
-    <input class="uk-search-input" type="search" placeholder="Box Search" id="myBoxInput" onkeyup="box_searching()">
+    <input class="uk-search-input" type="search" placeholder="China Box Search" id="myBoxInput" onkeyup="box_searching()">
+  </form>
+  <form class="uk-search uk-search-large" id="containerInput" style="display: none;">
+    <span uk-search-icon></span>
+    <input class="uk-search-input" type="search" placeholder="Amazon Box Search" id="myContainerInput" onkeyup="container_searching()">
   </form>
 </div>
+{{!-- loader --}}
+    <div id="loader" style="display: none;">
+      <h1 class="text-center">Updating <span id="numberOfItems"></span>...</h1>
+      <div class="loader container"></div>
+    </div>
 
-<div id="loader" style="display: none;">
-    <h1 class="text-center">Updating <span id="numberOfItems"></span>...</h1>
-<div class="loader container"></div>
-</div>
-<div class="container" id="boxTable" style="display: none;">
-  <small id="searchNote" class="text-primary"></small>
-<table class="uk-table uk-table-small uk-table-divider text-center bg-light shadow">
+{{!-- notes --}}
+    <div class="container" id="boxTable" style="display: none;">
+      <small id="searchNote" class="text-primary"></small>
+
+{{!-- box table --}}
+      <table class="uk-table uk-table-small uk-table-divider text-center bg-light shadow">
             <thead>
                 <tr>
                     <th>Client</th>
@@ -80,13 +88,31 @@
                 </tr>
             </thead>
             <tbody id="boxBody">
-
             </tbody>
       </table>
-
-</div>
-
     </div>
+
+    <div class="container" id="containerTable" style="display: none;">
+      <small id="containerSearchhNote" class="text-primary"></small>
+{{!-- contianer table --}}
+      <table class="uk-table uk-table-small uk-table-divider text-center bg-light shadow">
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th>Account</th>
+                    <th>Box number</th>
+                    <th>Item</th>
+                    <th>Qty per Box</th>
+                    <th>Location</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="containerBody">
+            </tbody>
+      </table>
+    </div>
+</div>
 
 <script src="../javascript/admin_homepage.js"></script>
 {{else}}
