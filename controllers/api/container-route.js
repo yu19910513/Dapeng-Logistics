@@ -41,4 +41,70 @@ router.get('/amazon_container/:key', withAuth, async (req, res) => {
       res.status(500).json(err);
     }
 });
+
+router.get('/allContainerAdmin', withAuth, async (req, res) => {
+  try {
+    const containerData = await Container.findAll({
+      where: {
+        status: [0,1,2,3,4,5,98]
+      },
+      attributes: [
+        'user_id',
+        'account_id',
+        's3',
+        'notes',
+        'id',
+        'container_number',
+        'description',
+        'cost',
+        'requested_date',
+        'received_date',
+        'shipped_date',
+        'type',
+        'length',
+        'width',
+        'height',
+        'weight',
+        'volume',
+        'status',
+        'location',
+        'sku',
+        'file',
+        'file_2',
+        'fba',
+        'bill_received',
+        'bill_storage',
+        'bill_shipped'
+      ],
+      include: [
+        {
+          model: Item,
+          attributes: [
+            'id',
+            'item_number',
+            'qty_per_sku'
+          ]
+        },
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'name'
+          ]
+        }
+      ]
+    });
+    const containers = containerData.map(container => container.get({ plain: true }));
+    res.json(containers);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+
+});
 module.exports = router;

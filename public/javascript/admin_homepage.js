@@ -10,6 +10,17 @@ var boxNumberArr = [];
 var locationArr = [];
 var preUpdateArr = [];
 
+function allContainer() {
+  fetch(`/api/container/allContainerAdmin`, {
+    method: 'GET'
+  }).then(function (response) {
+    return response.json();
+  }).then(function (data) {
+    console.log(data);
+  })
+};
+allContainer()
+
 function allBox() {
     fetch(`/api/user/allBox_admin`, {
         method: 'GET'

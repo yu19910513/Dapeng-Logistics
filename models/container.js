@@ -22,6 +22,10 @@ Container.init(
             type: DataTypes.STRING,
             allowNull: true
         },
+        description: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
 
 //time data
         requested_date: {
