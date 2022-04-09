@@ -16,6 +16,7 @@ var preUpdateArr = [];
 var preUpdateContainerArr = [];
 
 function allBox() {
+    allItem();
     fetch(`/api/user/allBox_admin`, {
         method: 'GET'
     }).then(function (response) {
@@ -114,7 +115,7 @@ unattach();
 
 function unattach() {
   document.getElementById('searchNote').innerHTML = null;
-  document.getElementById('containerSearchhNote').innerHTML = null;
+  document.getElementById('containerSearchNote').innerHTML = null;
   preUpdateArr = [];
   preUpdateContainerArr = [];
   boxTable.style.display = 'none';
@@ -356,7 +357,6 @@ function reset() {
   localStorage.clear();
 };
 
-
 function modeChange() {
   if (mode.innerHTML == 'C') {
     mode.innerHTML = 'A';
@@ -373,6 +373,7 @@ function modeChange() {
     document.getElementById("badge").classList.add('alert-success');
     document.getElementById("badge").classList.remove('alert-danger');
     myContainerInput.value = null;
+    unattach()
   }
 }
 // document.getElementById('numberOfItems').innerHTML = `${preUpdateArr.length} items; may take up to ${preUpdateArr.length/100} seconds`;
@@ -391,45 +392,31 @@ function allItem() {
     return response.json();
   }).then(function (data) {
 
-    for (let j = 0; j < data.length; j++) {
-      const element = data[j];
-
-    }
-
+    ///sort items by item-number
     const item_data = data.reduce((r, a) => {
       r[a.item_number] = r[a.item_number] || [];
       r[a.item_number].push(a);
       return r;
     }, Object.create(null));
 
+    // sort items by container
     const container_data = data.reduce((r, a) => {
       r[a.container.container_number] = r[a.container.container_number] || [];
       r[a.container.container_number].push(a);
       return r;
     }, Object.create(null));
+
     const newData = Object.values(container_data);
     for (let i = 0; i < newData.length; i++) {
       const containerNumber = newData[i][0].container.container_number;
-      containerMap.set(containerNumber, newData[i])
+      containerNumberArr.push(containerNumber);
+      containerMap.set(containerNumber, newData[i]);
+      if (newData[i][0].container.status == '1') {
+        receivedCount++
+      }
     }
   })
 };
-allItem();
-
-// function allContainer() {
-//   fetch(`/api/container/allContainerAdmin`, {
-//     method: 'GET'
-//   }).then(function (response) {
-//     return response.json();
-//   }).then(function (data) {
-//     console.log(data);
-//   })
-// };
-// allContainer();
-
-
-
-
 const containerTable = document.getElementById("containerTable");
 function container_searching() {
   unattach();
@@ -437,23 +424,85 @@ function container_searching() {
    if (container_input) {
       containerTable.style.display = '';
    };
-  //  if (container_input.length > 2 && !isCharacterASpeical(container_input) && container_input[0] != '/') {
-  //   document.getElementById('containerSearchNote').innerHTML = "No information was found according to your input! Please try again"
-  //   container_search(container_input)
-  //  } else if (isCharacterALetter(container_input[0]) && !isNaN(container_input[1])) {
-  //   document.getElementById('containerSearchNote').innerHTML = "This location is not associated with any container"
-  //   location_search(container_input)
-  //  } else if (container_input == '/all') {
-  //   for (let i = 0; i < containerNumberArr.length; i++) {
-  //     const each_of_all = containerNumberArr[i];
-  //     if (each_of_all) {
-  //       buildingRow(each_of_all)
-  //     }
-  //   }
-  // } else {
-  //   if (containerNumberArr.includes(container_input.toUpperCase())) {
-  //     buildingRow(container_input.toUpperCase());
-  //     document.getElementById('myContainerInput').value = null;
-  //   }
-  //  }
+   if (container_input.length > 2 && !isCharacterASpeical(container_input) && container_input[0] != '/') {
+    document.getElementById('containerSearchNote').innerHTML = "No information was found according to your input! Please try again"
+    container_search(container_input)
+   } else if (isCharacterALetter(container_input[0]) && !isNaN(container_input[1])) {
+    document.getElementById('containerSearchNote').innerHTML = "This location is not associated with any container"
+    location_search(container_input)
+   } else if (container_input == '/all') {
+    for (let i = 0; i < containerNumberArr.length; i++) {
+      const each_of_all = containerNumberArr[i];
+      if (each_of_all) {
+        buildingRow(each_of_all)
+      }
+    }
+  } else {
+    if (containerNumberArr.includes(container_input.toUpperCase())) {
+      buildingRow(container_input.toUpperCase());
+      document.getElementById('myContainerInput').value = null;
+    }
+   }
   };
+function container_search(b) {
+    for (i = 0; i < containerNumberArr.length; i++) {
+      let txtValue = containerNumberArr[i];
+      if (txtValue.toUpperCase().indexOf(b.toUpperCase()) > -1) {
+        buildingRow_amazon(containerNumberArr[i]);
+        document.getElementById('containerSearchNote').innerHTML = null;
+      }
+  };
+};
+function buildingRow_amazon(b) {
+  preUpdateContainerArr.push(containerMap.get(b));
+  const containerBody = document.getElementById('containerBody')
+  const container = document.createElement('tr');
+  const user = document.createElement('td');
+  const account = document.createElement('td');
+  const container_number = document.createElement('td');
+  const item = document.createElement('td');
+  const qty_per_sku = document.createElement('td');
+  const location = document.createElement('td');
+  const date = document.createElement('td');
+  const status = document.createElement('td');
+  container.appendChild(user);
+  container.appendChild(account);
+  container.appendChild(container_number);
+  container.appendChild(item);
+  container.appendChild(qty_per_sku)
+  container.appendChild(location);
+  container.appendChild(date);
+  container.appendChild(status);
+  user.innerHTML = containerMap.get(b)[0].user.name
+  account.innerHTML = containerMap.get(b)[0].account.name;
+  container_number.innerHTML = b;
+  for (let i = 0; i < containerMap.get(b).length; i++) {
+    const singleItem = containerMap.get(b)[i];
+    const listedItem = document.createElement('div');
+    const itemAmount = document.createElement('div');
+    listedItem.innerHTML = singleItem.item_number;
+    itemAmount.innerHTML = singleItem.qty_per_sku;
+    item.appendChild(listedItem);
+    qty_per_sku.appendChild(itemAmount);
+  };
+  location.innerHTML = containerMap.get(b)[0].container.location;
+  date.innerHTML = convertor_amazon(containerMap.get(b)[0].container);
+  date.setAttribute('uk-tooltip', `received date ${newDateValidate(containerMap.get(b)[0].container.received_date)} ; requested date ${newDateValidate(containerMap.get(b)[0].container.requested_date)} ; shipped date ${newDateValidate(containerMap.get(b)[0].container.shipped_date)} ; bill for receiving ${newDateValidate(new Date(containerMap.get(b)[0].container.bill_received).toLocaleDateString("en-US"))} ; bill for storage ${newDateValidate(new Date(containerMap.get(b)[0].container.bill_storage).toLocaleDateString("en-US"))} ; bill for shipping ${newDateValidate(new Date(containerMap.get(b)[0].container.bill_shipped).toLocaleDateString("en-US"))}`)
+  status.innerHTML = convertor_status(containerMap.get(b)[0].container.status);
+  containerBody.appendChild(container);
+};
+
+function convertor_amazon(object) {
+  const received_date = object.received_date;
+  const shipped_date = object.shipped_date;
+  const requested_date =object.requested_date;
+  if (shipped_date) {
+    return shipped_date
+  } else if (requested_date) {
+    return requested_date
+  } else if (received_date) {
+    return received_date
+  } else {
+    return 'N/A'
+  }
+};
