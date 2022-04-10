@@ -82,9 +82,9 @@ function containerChecker(cNumber) {
             amazon_box.user_id = data.user_id;
             amazon_box.account_id = data.account_id;
             tempCost = data.cost;
-            length.value = data.length;
-            width.value = data.width;
-            height.value = data.height;
+            length.value = (data.length/2.54).toFixed(2);
+            width.value = (data.width/2.54).toFixed(2);
+            height.value = (data.height/2.54).toFixed(2);
         }
     })
 };
