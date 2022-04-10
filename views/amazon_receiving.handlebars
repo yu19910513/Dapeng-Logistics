@@ -1,8 +1,16 @@
 {{#if admin}}
+<link rel="stylesheet" href="css/loader.css">
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
 <div class="container">
+    <div class="row justify-content-md-center mb-3">
+        <div class="badge alert-success col-sm-3 col-md-1 shadow-sm" id="badge" onclick="modeChange()"><span id="mode">Create</span> Mode</div>
+    </div>
     <div class="row justify-content-md-center">
-        <form class="col-6 shadow p-4 rounded bg-light">
+        <div id="loader" style="display: none;">
+            <h1 class="text-center">Updating <span id="numberOfItems"></span>...</h1>
+            <div class="loader container"></div>
+        </div>
+        <form class="col-md-6 col-sm-8 shadow p-4 rounded bg-light" id="creator_form">
                   <div class="row">
                         <div class="form-group col" id="scanDiv">
                             <label for="scan" class="text-danger">Search</label>
@@ -75,6 +83,24 @@
                 <a id="order_pre-check" class="btn btn-primary mt-3 text-white col-12" style="display: none;" onclick="amazonCreate()">Ready to Create</a>
                 <a id="fake" class="btn btn-secondary mt-3 text-white col-12">Not Ready to Create</a>
                 </div>
+        </form>
+
+        <form id="qucik_receiving" style="display: none;" class="col-md-6 col-sm-8 shadow p-4 rounded bg-light">
+            <div class="mb-3 container">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active">Client: <span id="clientName_q"></span> </li>
+                        <li class="breadcrumb-item active">Account: <span id="accountName_q"></span> </li>
+                    </ol>
+                    <h3 class="breadcrumb-item active">Box Number: <span id="containerNumber_q"></span> </h3>
+                </nav>
+                <input type="text" class="form-control" id="scanned_item" placeholder="Scan..." aria-label="Username" aria-describedby="basic-addon1" onkeyup="delay(quickReceiving)" uk-tooltip="Scan existed amazon box first, then scan each item sku">
+            </div>
+            <div  class="uk-text-center">
+                <h1 class="lead">status:</h1>
+                <ol id="inserted_item">
+                </ol>
+            </div>
         </form>
     </div>
 </div>

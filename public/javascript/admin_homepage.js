@@ -1,7 +1,6 @@
 const inventory_count = document.getElementById('inventory_c');
 const pending_count = document.getElementById('pending_c');
 const mode = document.getElementById('mode');
-localStorage.setItem('mode', 'C');
 const boxInput = document.getElementById("boxInput");
 const containerInput = document.getElementById('containerInput');
 var receivedCount = 0;
@@ -341,12 +340,14 @@ function finalConfirmation() {
 };
 // rest after clicking master functions
 function reset() {
-  update_date_btn.style.display = 'none';
-  update_select.style.display = 'none';
-  edit_select.style.display = 'none'
-  edit_btn.style.display = '';
-  update_btn.style.display = ''
-  localStorage.clear();
+  if (mode.innerHTML == 'C') {
+    update_date_btn.style.display = 'none';
+    update_select.style.display = 'none';
+    edit_select.style.display = 'none'
+    edit_btn.style.display = '';
+    update_btn.style.display = ''
+    localStorage.clear();
+  }
 };
 //--------------------------------------------------------------------//
 function modeChange() {
@@ -355,6 +356,11 @@ function modeChange() {
     mode.innerHTML = 'A';
     containerInput.style.display = '';
     boxInput.style.display = 'none';
+    edit_btn.style.display = 'none';
+    update_btn.style.display = 'none';
+    edit_select.style.display = 'none';
+    update_select.style.display = 'none';
+    update_date_btn.style.display = 'none';
     document.getElementById("badge").classList.add('alert-danger');
     document.getElementById("badge").classList.remove('alert-success');
     document.getElementById('myBoxInput').value = null;
@@ -364,6 +370,8 @@ function modeChange() {
     mode.innerHTML = 'C';
     containerInput.style.display = 'none';
     boxInput.style.display = '';
+    edit_btn.style.display = '';
+    update_btn.style.display = '';
     document.getElementById("badge").classList.add('alert-success');
     document.getElementById("badge").classList.remove('alert-danger');
     myContainerInput.value = null;
@@ -537,3 +545,8 @@ function convertor_amazon(object) {
     return 'N/A'
   }
 };
+if (!localStorage.getItem('mode')) {
+  localStorage.setItem('mode', 'C');
+} else if (localStorage.getItem('mode') == 'A') {
+  modeChange();
+}

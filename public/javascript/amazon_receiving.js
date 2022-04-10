@@ -2,6 +2,7 @@ const today = new Date().toLocaleDateString("en-US");//****//
 const newAccountInput = document.getElementById('newAccountInput');//****//
 const accountSelect = document.getElementById('account');//****//
 const date = document.getElementById('today');
+const loader = document.getElementById('loader'); // loader
 const client_list = document.getElementById("user");//****//
 const username = document.getElementById('newUserName');//****//
 const password = document.getElementById('newPassword');//****//
@@ -95,7 +96,8 @@ var newAccount = new Object();
 function amazonCreate() {
     if (itemCount < 1 && !confirm('No item was scanned! Continue to create an empty amazon box?')) {
         return
-    }
+    };
+    loader.style.display = '';
     const length = document.getElementById('new_len');
     amazon_box.description = description.value.trim();
     amazon_box.length = length.value.trim()*2.54;
@@ -225,6 +227,7 @@ function itemCreate() {
         item.description = amazon_box.description;
         loadingItems(item);
     };
+    loader.style.display = 'none';
     alert(`1 container(#${amazon_box.container_number}) with ${itemCount} items is inserted to client_id: ${amazon_box.user_id}!`)
     location.reload()
 };
@@ -404,3 +407,71 @@ function delay(fn){
     clearTimeout(timer);
     timer = setTimeout(fn, 100)
 }
+
+const creater_form = document.getElementById('creator_form');
+const quick_form = document.getElementById('qucik_receiving');
+const scanned_item = document.getElementById('scanned_item');
+const clientName_q = document.getElementById('clientName_q');
+const accountName_q = document.getElementById('accountName_q');
+const containerNumber_q = document.getElementById('containerNumber_q');
+const inserted_item = document.getElementById('inserted_item');
+function modeChange() {
+    if (mode.innerHTML == 'Create') {
+      localStorage.setItem('amazon_mode', 'Q');
+      mode.innerHTML = 'Quick';
+      creater_form.style.display = 'none';
+      quick_form.style.display ='';
+      document.getElementById("badge").classList.add('alert-danger');
+      document.getElementById("badge").classList.remove('alert-success');
+    } else {
+      localStorage.setItem('amazon_mode', 'C')
+      mode.innerHTML = 'Create';
+      creater_form.style.display = '';
+      quick_form.style.display ='none';
+      document.getElementById("badge").classList.add('alert-success');
+      document.getElementById("badge").classList.remove('alert-danger');
+    }
+};
+
+var quickContainerObj = new Object();
+function quickReceiving() {
+    const scannedBox = scanned_item.value.trim();
+    if (scannedBox.substring(0,2) == 'AM' && scannedBox.length == 8) {
+        fetch(`/api/container/amazon_container/${scannedBox}`, {
+            method: 'GET'
+        }).then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            quickContainerObj.user_id = data.user_id;
+            quickContainerObj.account_id = data.account_id;
+            quickContainerObj.container_id = data.id;
+            quickContainerObj.cost = data.cost;
+            quickContainerObj.container_number = scannedBox;
+            clientName_q.innerHTML = data.user.name;
+            accountName_q.innerHTML = data.account.name;
+            containerNumber_q.innerHTML = scannedBox;
+            scanned_item.value = null;
+        })
+    } else if (scannedBox.length > 4 && !scannedBox.includes('-')){
+        if (quickContainerObj.user_id) {
+            quickContainerObj.cost++;
+            quickContainerObj.item_number = scannedBox;
+            updateCost(quickContainerObj.cost, quickContainerObj.container_id);
+            loadingItems(quickContainerObj);
+            scanned_item.value = null;
+            const newsku = document.createElement('div');
+            inserted_item.prepend(newsku);
+            newsku.innerHTML = `Insert <b>${scannedBox}</b> into <b>${quickContainerObj.container_number}</b>`
+        } else {
+            alert('You need to scan the existed amazon box first!');
+            scanned_item.value = null;
+        }
+
+    }
+}
+
+var timer = null;
+function delay(fn){
+    clearTimeout(timer);
+    timer = setTimeout(fn, 100)
+};
