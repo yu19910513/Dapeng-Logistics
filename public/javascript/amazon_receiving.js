@@ -402,12 +402,6 @@ function unattachUser() {
     accountSelect.disabled = false;
 };
 
-var timer = null;
-function delay(fn){
-    clearTimeout(timer);
-    timer = setTimeout(fn, 100)
-}
-
 const creater_form = document.getElementById('creator_form');
 const quick_form = document.getElementById('qucik_receiving');
 const scanned_item = document.getElementById('scanned_item');
@@ -432,7 +426,6 @@ function modeChange() {
       document.getElementById("badge").classList.remove('alert-danger');
     }
 };
-
 var quickContainerObj = new Object();
 function quickReceiving() {
     const scannedBox = scanned_item.value.trim();
@@ -468,10 +461,29 @@ function quickReceiving() {
         }
 
     }
-}
-
+};
 var timer = null;
 function delay(fn){
     clearTimeout(timer);
     timer = setTimeout(fn, 100)
+};
+
+//reconciliation items with same item_number(sku) with the same container_id
+function reconciliation() {
+
+}
+
+function allContainerId(id) {
+    fetch(`/api/user/accountsbyuser_id/${id}`, {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        for (let i = 0; i < data.length; i++) {
+            accouuntMap.set(data[i].name, data[i].id)
+        };
+        amazon_box.account_id = accouuntMap.get(newAccount.name);
+        console.log(amazon_box);
+        boxCreate(amazon_box)
+    })
 };

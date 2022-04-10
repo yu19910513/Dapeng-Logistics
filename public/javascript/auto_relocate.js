@@ -60,5 +60,5 @@ async function auto_relocate(box, shelf) {
 var timer = null;
 function delay(){
     clearTimeout(timer);
-    timer = setTimeout(location_update, 100)
+    timer = setTimeout(location_update, 50)
 }
