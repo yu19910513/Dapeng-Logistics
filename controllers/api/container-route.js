@@ -22,7 +22,7 @@ router.put('/account_merge', withAuth, (req, res) => {
         console.log(err);
         res.status(500).json(err);
       });
-  });
+});
 
 router.get('/amazon_container/:key', withAuth, async (req, res) => {
   try {
@@ -31,11 +31,33 @@ router.get('/amazon_container/:key', withAuth, async (req, res) => {
         container_number: req.params.key
       },
       attributes: [
-        'id'
+        'id',
+        'user_id',
+        'account_id',
+        'cost',
+        'height',
+        'width',
+        'length'
+      ],
+      include: [
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'name'
+          ]
+        }
       ]
     });
-    const data = singleContainer.get({plain: true});
-    res.json(data);
+    if(singleContainer) {
+      const data = singleContainer.get({plain: true});
+      res.json(data);
+    };
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
@@ -107,4 +129,25 @@ router.get('/allContainerAdmin', withAuth, async (req, res) => {
 
 });
 
+router.put('/updateCost/:cost&:id', withAuth, (req, res) => {
+  Container.update({
+      cost: req.params.cost
+    },
+    {
+      where: {
+        id: req.params.id
+      }
+    })
+    .then(dbContainerData => {
+      if (!dbContainerData[0]) {
+        res.status(404).json({ message: 'This Container does not exist!' });
+        return;
+      }
+      res.json(dbContainerData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
 module.exports = router;

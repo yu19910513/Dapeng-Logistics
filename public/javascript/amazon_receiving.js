@@ -68,10 +68,34 @@ function accountSelection() {
     };
 };
 
+var checker = false
+var tempCost = 0;
+function containerChecker(cNumber) {
+    fetch(`/api/container/amazon_container/${cNumber}`, {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        if (data.id && client_list.value == data.user_id && accountSelect.value == data.account_id) {
+            checker = true;
+            amazon_box.id = data.id;
+            amazon_box.user_id = data.user_id;
+            amazon_box.account_id = data.account_id;
+            tempCost = data.cost;
+            length.value = data.length;
+            width.value = data.width;
+            height.value = data.height;
+        }
+    })
+};
+
 var amazon_box = new Object();
 var newClient = new Object();
 var newAccount = new Object();
 function amazonCreate() {
+    if (itemCount < 1 && !confirm('No item was scanned! Continue to create an empty amazon box?')) {
+        return
+    }
     const length = document.getElementById('new_len');
     amazon_box.description = description.value.trim();
     amazon_box.length = length.value.trim()*2.54;
@@ -82,7 +106,6 @@ function amazonCreate() {
     const newAccountName = newAccountInput.value.trim();
     const username_d = username.value.trim();
     const password_d = password.value.trim();
-
     if (username_d && password_d) {
         newClient.name = username_d;
         newClient.username = username_d;
@@ -96,6 +119,10 @@ function amazonCreate() {
         newAccount.prefix = newAccountName.substring(0,3);
         newAccount.name = newAccountName;
         accountCreate(newAccount)
+    } else if (checker) {
+        amazon_box.cost += tempCost;
+        updateCost(amazon_box.cost, amazon_box.id);
+        itemCreate();
     } else {
         amazon_box.user_id = client_list.value;
         amazon_box.account_id = accountSelect.value;
@@ -161,6 +188,7 @@ function findAccountId(id) {
     })
 };
 async function boxCreate(data) {
+    console.log('boxCreate');
     const response = await fetch('/api/batch/amazon_box', {
         method: 'post',
         body: JSON.stringify(data),
@@ -184,8 +212,8 @@ function findContainerId(c_number) {
        itemCreate()
     })
 };
-
 function itemCreate() {
+    console.log('itemCreate');
     var rows = sku_table.rows;
     for (let i = 1; i < rows.length; i++) {
         var item = new Object()
@@ -197,10 +225,9 @@ function itemCreate() {
         item.description = amazon_box.description;
         loadingItems(item);
     };
-    alert(`1 container(#${amazon_box.container_number}) with ${amazon_box.cost} items is inserted to client_id: ${amazon_box.user_id}!`)
+    alert(`1 container(#${amazon_box.container_number}) with ${itemCount} items is inserted to client_id: ${amazon_box.user_id}!`)
     location.reload()
 };
-
 function loadingItems(data) {
     fetch('/api/item/new', {
         method: 'post',
@@ -244,7 +271,8 @@ function masterCheck() {
     const container_d = container_number.value.trim();
     const client_list_d = client_list.value;
     const account_d = accountSelect.value;
-    if (description_d && length_d && width_d && height_d && container_d.substring(0,2).toUpperCase() == 'AM' && container_d.length == 8 && client_list_d && account_d && validation(client_list_d, account_d) ) {
+    if (description_d && length_d && width_d && height_d && container_d.substring(0,2).toUpperCase() == 'AM' && container_d.length == 8 && client_list_d && account_d && validation(client_list_d, account_d)) {
+        containerChecker(container_d);
         document.getElementById('order_pre-check').style.display = '';
         document.getElementById('fake').style.display = 'none';
     } else {
@@ -269,6 +297,12 @@ function validation(c, a) {
         return true
     }
 };
+function updateCost(cost, id) {
+    fetch(`/api/container/updateCost/${cost}&${id}`, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'}
+    });
+}
 
 
 

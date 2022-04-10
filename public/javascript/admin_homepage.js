@@ -477,7 +477,6 @@ function item_search(skuSearchInput) {
         let singleContainerN = itemObj.container.container_number
         if (!container_numberArr_sku.includes(singleContainerN)) {
           container_numberArr_sku.push(singleContainerN);
-          console.log(container_numberArr_sku);
           buildingRow_amazon(singleContainerN)
         }
       });
