@@ -361,7 +361,6 @@ function itemInput() {
 
 function scanSKU() {
     const sku_number = document.getElementById('scan');
-    console.log(sku_number.value);
     fetch(`/api/item/infoPerNumber/${sku_number.value}`, {
         method: 'GET'
     }).then(function (response) {
@@ -412,7 +411,7 @@ const inserted_item = document.getElementById('inserted_item');
 function modeChange() {
     if (mode.innerHTML == 'Create') {
       localStorage.setItem('amazon_mode', 'Q');
-      mode.innerHTML = 'Quick';
+      mode.innerHTML = 'Refill';
       creater_form.style.display = 'none';
       quick_form.style.display ='';
       document.getElementById("badge").classList.add('alert-danger');
@@ -428,7 +427,7 @@ function modeChange() {
 };
 var quickContainerObj = new Object();
 function quickReceiving() {
-    const scannedBox = scanned_item.value.trim();
+    const scannedBox = scanned_item.value.trim().toUpperCase();
     if (scannedBox.substring(0,2) == 'AM' && scannedBox.length == 8) {
         fetch(`/api/container/amazon_container/${scannedBox}`, {
             method: 'GET'
@@ -450,7 +449,8 @@ function quickReceiving() {
             quickContainerObj.cost++;
             quickContainerObj.item_number = scannedBox;
             updateCost(quickContainerObj.cost, quickContainerObj.container_id);
-            loadingItems(quickContainerObj);
+            duplicatationValidator(quickContainerObj);
+            // loadingItems(quickContainerObj);
             scanned_item.value = null;
             const newsku = document.createElement('div');
             inserted_item.prepend(newsku);
@@ -468,22 +468,41 @@ function delay(fn){
     timer = setTimeout(fn, 100)
 };
 
-//reconciliation items with same item_number(sku) with the same container_id
-function reconciliation() {
-
-}
-
-function allContainerId(id) {
-    fetch(`/api/user/accountsbyuser_id/${id}`, {
+var itemchecker = false
+function duplicatationValidator(obj) {
+    fetch(`/api/item/findAllPerContainer/${obj.container_id}`, {
         method: 'GET'
     }).then(function (response) {
         return response.json();
-    }).then(function (data) {
-        for (let i = 0; i < data.length; i++) {
-            accouuntMap.set(data[i].name, data[i].id)
+    }).then(function (item) {
+        for (let i = 0; i < item.length; i++) {
+            var uniqueItemN = item[i];
+            if(uniqueItemN.item_number == obj.item_number) {
+                uniqueItemN.qty_per_sku++
+                updateExistedItem(obj, uniqueItemN.qty_per_sku);
+                itemchecker = true
+            };
         };
-        amazon_box.account_id = accouuntMap.get(newAccount.name);
-        console.log(amazon_box);
-        boxCreate(amazon_box)
+        if (itemchecker == false) {
+            loadingItems(obj);
+        } itemchecker = false;
+    });
+};
+async function updateExistedItem(obj, newSkuQ) {
+    const load = await fetch(`/api/item/updateQty_ExistedItem/${obj.container_id}&${obj.item_number}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+            qty_per_sku: newSkuQ
+        }),
+        headers: {'Content-Type': 'application/json'}
     })
 };
+
+//reload
+function reconciliation() {
+    location.reload();
+};
+
+if (localStorage.getItem('amazon_mode') == 'Q') {
+    document.getElementById('badge').click();
+}

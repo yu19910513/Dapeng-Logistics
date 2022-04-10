@@ -89,9 +89,6 @@ router.get('/infoPerNumber/:key', withAuth, async (req, res) => {
 router.get('/allItemAdmin', withAuth, async (req, res) => {
   try {
     const itemData = await Item.findAll({
-      where: {
-
-      },
       attributes: [
         'id',
         'item_number',
@@ -150,6 +147,53 @@ router.get('/allItemAdmin', withAuth, async (req, res) => {
     res.status(500).json(err);
   }
 
-})
+});
+
+router.get('/findAllPerContainer/:container_id', withAuth, async (req, res) => {
+  try {
+    const itemData = await Item.findAll({
+      where: {
+        container_id: req.params.container_id
+      },
+      attributes: [
+        'id',
+        'item_number',
+        'qty_per_sku',
+        'user_id',
+        'account_id',
+        'container_id'
+      ]
+    });
+    const items = itemData.map(i => i.get({ plain: true }));
+    res.json(items);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+
+});
+
+router.put('/updateQty_ExistedItem/:container_id&:item_number', withAuth, (req, res) => {
+  Item.update({
+      qty_per_sku: req.body.qty_per_sku
+    },
+    {
+      where: {
+        container_id: req.params.container_id,
+        item_number: req.params.item_number
+      }
+    })
+    .then(dbItemData => {
+      if (!dbItemData[0]) {
+        res.status(404).json({ message: 'This Item does not exist!' });
+        return;
+      }
+      res.json(dbItemData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
 
 module.exports = router;
