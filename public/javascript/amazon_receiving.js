@@ -78,14 +78,38 @@ function containerChecker(cNumber) {
         return response.json();
     }).then(function (data) {
         if (data.id && client_list.value == data.user_id && accountSelect.value == data.account_id) {
-            checker = true;
-            amazon_box.id = data.id;
-            amazon_box.user_id = data.user_id;
-            amazon_box.account_id = data.account_id;
-            tempCost = data.cost;
-            length.value = (data.length/2.54).toFixed(2);
-            width.value = (data.width/2.54).toFixed(2);
-            height.value = (data.height/2.54).toFixed(2);
+            alert('This box is already assocaited with this account! Please use refill mode to add more items')
+            let code = prompt('Please enter the passcode to override the restriction');
+            if(code == '0523') {
+                checker = true;
+                amazon_box.id = data.id;
+                amazon_box.user_id = data.user_id;
+                amazon_box.account_id = data.account_id;
+                tempCost = data.cost;
+                length.value = (data.length/2.54).toFixed(2);
+                width.value = (data.width/2.54).toFixed(2);
+                height.value = (data.height/2.54).toFixed(2);
+            } else {
+                container_number.value = null;
+            }
+        } else if (data.id && client_list.value == data.user_id) {
+            alert(`This box is already associated with the account: ${data.account.name}! Please use a new amazon box #`);
+            let code = prompt('Please enter the passcode to override the restriction');
+            if(code == '0523') {
+                checker = true;
+                amazon_box.id = data.id;
+                amazon_box.user_id = data.user_id;
+                amazon_box.account_id = data.account_id;
+                tempCost = data.cost;
+                length.value = (data.length/2.54).toFixed(2);
+                width.value = (data.width/2.54).toFixed(2);
+                height.value = (data.height/2.54).toFixed(2);
+            } else {
+                container_number.value = null;
+            }
+        } else if (data.id) {
+            alert(`This box is already associated with a client ${data.user.name}! Please use a new amazon box #`);
+            container_number.value = null;
         }
     })
 };
