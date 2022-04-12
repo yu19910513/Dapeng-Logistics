@@ -28,6 +28,7 @@
   <label class="form-check-label" for="boxSearch">
     Box # Search 讯息快搜
   </label>
+  <div class="badge alert-success" id="badge" onclick="modeChange()"><span id="mode">C</span> Mode</div>
 </div>
 
 
@@ -36,10 +37,10 @@
     <input class="uk-search-input" type="search" placeholder="请输入帐号" id="myInput" onkeyup="filterFunction()">
   </form>
 
-
   <form class="uk-search uk-search-large" id="boxInput" style="display: none;">
     <span uk-search-icon></span>
     <input class="uk-search-input" type="search" placeholder="请输入货物代码" id="myBoxInput" onkeyup="box_searching()" uk-tooltip="快搜引擎会依据货物代码中的任何连续三位以上数字/字母来搜查 (例：若想查询SWLYA******, 可用SWL、LYA、WLYA等等来搜查)">
+    <input class="uk-search-input" type="search" placeholder="Amazon 货件搜查" id="containerInput" onkeyup="container_searching()" style="display: none;">
   </form>
 </div>
 
@@ -51,8 +52,8 @@
   {{/each}}
 </div>
 <div class="container" id="boxTable" style="display: none;">
-  <small id="searchNote" class="text-primary"></small>
-<table class="uk-table uk-table-small uk-table-divider text-center bg-light shadow">
+<small id="searchNote" class="text-primary"></small>
+<table class="uk-table uk-table-small uk-table-divider bg-light shadow">
             <thead>
                 <tr>
                     <th>Account 帐户</th>
@@ -72,5 +73,25 @@
       </table>
 
 </div>
+
+<div class="container" id="containerTable" style="display: none;">
+<small id="containerSearchNote" class="text-primary"></small>
+<table class="uk-table uk-table-small uk-table-divider bg-light shadow">
+  <thead>
+    <tr>
+      <th>Account 帐户</th>
+      <th>Box number 箱码</th>
+      <th>SKU</th>
+      <th>Qty 数量</th>
+      <th>Description 细目</th>
+      <th>Date 日期</th>
+      <th>Status 状态</th>
+    </tr>
+  </thead>
+    <tbody id="containerBody">
+    </tbody>
+</table>
+</div>
+
 <script src="javascript/homepage.js"></script>
 {{/if}}

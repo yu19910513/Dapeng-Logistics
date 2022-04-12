@@ -75,6 +75,9 @@ function containerChecker(cNumber) {
     fetch(`/api/container/amazon_container/${cNumber}`, {
         method: 'GET'
     }).then(function (response) {
+        if (response.status == 500) {
+            document.getElementById('uniqueMark').innerHTML = `&#10004;`;
+        }
         return response.json();
     }).then(function (data) {
         if (data.id && client_list.value == data.user_id && accountSelect.value == data.account_id) {
@@ -156,6 +159,7 @@ function amazonCreate() {
     }
 };
 async function userCreate(data, data_2) {
+    console.log('user created');
     const response = await fetch('/api/user/newUser', {
         method: 'post',
         body: JSON.stringify(data),
@@ -163,7 +167,7 @@ async function userCreate(data, data_2) {
       });
 
       if (response.ok) {
-       console.log("user created");
+       console.log("user inserted");
        user_data(data.name, data_2);
       } else {
         alert('try again')
@@ -175,6 +179,7 @@ function user_data(name, data_2) {
     }).then(function (response) {
         return response.json();
     }).then(function (data) {
+        console.log('user_id fetched');
         for (let i = 0; i < data.length; i++) {
         userMap.set(data[i].name, data[i].id)
         };
@@ -187,6 +192,7 @@ function user_data(name, data_2) {
     });
 };
 async function accountCreate(data) {
+    console.log('account created');
     const response = await fetch('/api/account/amazon_newAccount', {
         method: 'post',
         body: JSON.stringify(data),
@@ -205,6 +211,7 @@ function findAccountId(id) {
     }).then(function (response) {
         return response.json();
     }).then(function (data) {
+        console.log('account_id fetched');
         for (let i = 0; i < data.length; i++) {
             accouuntMap.set(data[i].name, data[i].id)
         };
@@ -229,11 +236,13 @@ async function boxCreate(data) {
    }
 };
 function findContainerId(c_number) {
+    console.log('getting container_id');
     fetch(`/api/container/amazon_container/${c_number}`, {
         method: 'GET'
     }).then(function (response) {
         return response.json();
     }).then(function (data) {
+        console.log('container_id fetched');
        amazon_box.id = data.id
        itemCreate()
     })
@@ -303,6 +312,7 @@ function masterCheck() {
         document.getElementById('order_pre-check').style.display = '';
         document.getElementById('fake').style.display = 'none';
     } else {
+        document.getElementById('uniqueMark').innerHTML = '';
         document.getElementById('order_pre-check').style.display = 'none';
         document.getElementById('fake').style.display = '';
     }
@@ -382,7 +392,6 @@ function itemInput() {
    }
 
 };
-
 function scanSKU() {
     const sku_number = document.getElementById('scan');
     fetch(`/api/item/infoPerNumber/${sku_number.value}`, {
@@ -417,8 +426,7 @@ function scanSKU() {
             client_data();
         }
     })
-}
-
+};
 function unattachUser() {
     const old_user = client_list.querySelectorAll('option');
     old_user.forEach(i => i.remove());

@@ -54,10 +54,8 @@ router.get('/amazon_container/:key', withAuth, async (req, res) => {
         }
       ]
     });
-    if(singleContainer) {
       const data = singleContainer.get({plain: true});
       res.json(data);
-    };
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
