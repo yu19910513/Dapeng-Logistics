@@ -1,7 +1,7 @@
 <div class="uk-overflow-auto">
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
 <div class="uk-margin uk-overflow-auto">
-<div class="uk-margin">
+<div class="container">
     {{!-- <nav class="uk-navbar-container" > --}}
         <div class="uk-navbar-right uk-child-width-expand@s">
 
@@ -24,7 +24,7 @@
                 <b><span class="text-primary" id="numberOfInventory"></span></b>
                         <span class="sr-only">Items</span>
             </button>
-            <a class="btn btn-success btn-sm shadow-sm" href="/amazon/{{accountId}}" uk-icon="icon: bookmark" >回流货物(Amazon)</a>
+            <a class="btn btn-success btn-sm shadow-sm" href="/amazon/{{accountId}}" uk-icon="icon: bookmark" uk-tooltip="e.g. Amazon">回流货物</a>
             <a class="btn btn-warning btn-sm shadow-sm" href="/request/{{accountId}}" uk-tooltip="Ship-out" >单位出货</a>
             </div>
 
