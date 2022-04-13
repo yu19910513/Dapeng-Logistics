@@ -195,7 +195,70 @@ router.get('/allItem', withAuth, async (req, res) => {
         {
           model: Account,
           attributes: [
-            'name'
+            'name',
+            'id'
+          ]
+        }
+      ]
+    });
+    const items = itemData.map(i => i.get({ plain: true }));
+    res.json(items);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+
+});
+
+router.get('/allItem/:account_id', withAuth, async (req, res) => {
+  try {
+    const itemData = await Item.findAll({
+      where: {
+        user_id: req.session.user_id,
+        account_id: req.params.account_id
+      },
+      attributes: [
+        'id',
+        'item_number',
+        'qty_per_sku',
+        'user_id',
+        'account_id',
+        'container_id'
+      ],
+      include: [
+        {
+          model: Container,
+          attributes: [
+            's3',
+            'notes',
+            'id',
+            'container_number',
+            'description',
+            'cost',
+            'requested_date',
+            'received_date',
+            'shipped_date',
+            'type',
+            'length',
+            'width',
+            'height',
+            'weight',
+            'volume',
+            'status',
+            'location',
+            'file',
+            'file_2',
+            'fba',
+            'bill_received',
+            'bill_storage',
+            'bill_shipped'
+          ]
+        },
+        {
+          model: Account,
+          attributes: [
+            'name',
+            'id'
           ]
         }
       ]

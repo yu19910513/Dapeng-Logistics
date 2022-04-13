@@ -24,8 +24,8 @@
                 <b><span class="text-primary" id="numberOfInventory"></span></b>
                         <span class="sr-only">Items</span>
             </button>
-            <a class="btn btn-success btn-sm shadow-sm" href="/amazon/{{accountId}}" uk-icon="icon: bookmark" >回流货物(Amazon)</a>
-            <a class="btn btn-warning btn-sm shadow-sm" href="/request/{{accountId}}" uk-tooltip="Ship-out" >单位出货</a>
+            <a class="btn btn-danger btn-sm shadow-sm" href="/account/{{accountId}}" uk-icon="icon: bookmark">原始货物(China)</a>
+            <a class="btn btn-warning btn-sm" href="/request/{{accountId}}" uk-tooltip="Ship-out">单位出货</a>
             </div>
 
             {{!-- <div class="uk-navbar-item">
@@ -44,42 +44,32 @@
     {{!-- </nav> --}}
     </div>
 </div>
-<div class="container">
-        <table class="uk-table uk-table-small uk-table-divider myTable text-center shadow-sm" id="myTable">
+    <div class="container">
+        <table class="uk-table uk-table-small uk-table-divider myTable shadow-sm" id="myTable">
             <thead>
                 <tr>
                     <th onclick="sortTable(0)">Account 帐户</th>
                     <th onclick="sortTable(1)">Box number 箱码</th>
-                    <th onclick="sortTable(2)">Item Description 细目</th>
-                    <th>Box</th>
-                    <th>of Box</th>
-                    <th>Qty per Box 物件量</th>
-                    <th>SKU</th>
-                    <th onclick="sortTable(7)">Batch Labels 标签</th>
-                    <th>Tracking</th>
-                    <th onclick="sortTable(9)">Date 日期</th>
-                    <th onclick="sortTable(10)">Status 状态</th>
+                    <th onclick="sortTable(2)">SKU</th>
+                    <th onclick="sortTable(3)">Qty 数量</th>
+                    <th onclick="sortTable(4)">Description 细目</th>
+                    <th onclick="sortTable(5)">Date 日期</th>
+                    <th onclick="sortTable(6)">Status 状态</th>
                 </tr>
             </thead>
             <tbody>
-
-{{#each boxes as |box|}}
-
-{{> box-data box }}
-
-{{else}}
-
-{{#if admin}}
-<h3 class="text-center uk-text-bold">Loading admin files...</h3>
-{{else}}
-<h3 class="text-center">NO ORDER WAS FOUND!</h3>
-{{/if}}
-
-{{/each}}
-
+                {{#each containers as |container|}}
+                {{> container-data container }}
+                {{else}}
+                    {{#if admin}}
+                        <h3 class="text-center uk-text-bold">Loading admin files...</h3>
+                    {{else}}
+                        <h3 class="text-center">NO AMAZON BOX WAS FOUND!</h3>
+                    {{/if}}
+                {{/each}}
             </tbody>
         </table>
-</div>
+    </div>
     </div>
 <script>
         (function(document) {

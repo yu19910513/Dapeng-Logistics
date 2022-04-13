@@ -277,9 +277,10 @@ function container_searching() {
    if (container_input) {
       containerTable.style.display = '';
    };
-   if (container_input.length > 2 && !isCharacterASpeical(container_input) && container_input[0] != '/' && container_input[0] != '.') {
-    document.getElementById('containerSearchNote').innerHTML = "No information was found according to your input! Please try again"
-    container_search(container_input)
+   if (container_input.length > 2 && !isCharacterASpeical(container_input) && container_input[0] == '.') {
+    document.getElementById('containerSearchNote').innerHTML = "No information was found according to your input! Please try again";
+    const containerNewInput = container_input.substring(1, container_input.length);
+    container_search(containerNewInput)
    } else if (container_input == '/all') {
     for (let i = 0; i < containerNumberArr.length; i++) {
       const each_of_all = containerNumberArr[i];
@@ -287,10 +288,9 @@ function container_searching() {
         buildingRow_amazon(each_of_all)
       }
     }
-  } else if (container_input[0] == '.' && container_input.length > 2) {
+  } else if (container_input.length > 2 && !isCharacterASpeical(container_input)) {
     document.getElementById('containerSearchNote').innerHTML = "This SKU does not exist in the system!"
-    const skuSearchInput = container_input.substring(1,container_input.length);
-    item_search(skuSearchInput)
+    item_search(container_input)
   }
 };
 function container_search(b) {
@@ -336,7 +336,7 @@ function buildingRow_amazon(b) {
   container.appendChild(description);
   container.appendChild(date);
   container.appendChild(status);
-  account.innerHTML = containerMap.get(b)[0].account.name;
+  account.innerHTML = `<a href="/account/${containerMap.get(b)[0].account_id}">${containerMap.get(b)[0].account.name}</a>`;
   container_number.innerHTML = b;
   for (let i = 0; i < containerMap.get(b).length; i++) {
     const singleItem = containerMap.get(b)[i];

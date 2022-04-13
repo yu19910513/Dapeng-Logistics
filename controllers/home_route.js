@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { route } = require('.');
 const sequelize = require('../config/connection');
-const {User, Account, Batch, Box} = require('../models');
+const {User, Account, Batch, Box, Container, Item} = require('../models');
 const {withAuth, adminAuth} = require('../utils/auth');
 const { uploadFile, getFile} = require('../utils/s3');
 
@@ -695,7 +695,8 @@ router.get('/account/:id', withAuth, async (req, res) => {
       const boxData = await Box.findAll({
         where: {
           account_id: req.params.id,
-          user_id: req.session.user_id
+          user_id: req.session.user_id,
+          status: [0,1,2,3]
         },
           attributes: [
         'account_id',
@@ -752,6 +753,65 @@ router.get('/account/:id', withAuth, async (req, res) => {
       console.log(err);
       res.status(500).json(err);
     }
+});
+
+router.get('/amazon/:id', withAuth, async (req, res) => {
+  try {
+    const containerData = await Container.findAll({
+      where: {
+        account_id: req.params.id,
+        user_id: req.session.user_id,
+        status: [0,1,2,3]
+      },
+        attributes: [
+          'id',
+          'user_id',
+          'account_id',
+          's3',
+          'notes',
+          'id',
+          'container_number',
+          'description',
+          'cost',
+          'requested_date',
+          'received_date',
+          'shipped_date',
+          'type',
+          'length',
+          'width',
+          'height',
+          'weight',
+          'volume',
+          'status',
+          'location',
+          'file',
+          'file_2',
+          'fba',
+          'bill_received',
+          'bill_storage',
+          'bill_shipped'
+        ],
+          include: [
+            {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+            }
+          ]
+      })
+    const containers = containerData.map(container => container.get({ plain: true }));
+    res.render('master_home_amazon', {
+      containers,
+      loggedIn: true,
+      accountId: req.params.id,
+      admin: req.session.admin,
+      name: req.session.name
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
 router.get('/request/:id', withAuth, async (req, res) => {
