@@ -2,11 +2,6 @@
 <div class="uk-overflow-auto">
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
 
-
-
-
-
-
 {{!-- notes --}}
 <div id="modal-notes" uk-modal>
     <div class="uk-modal-dialog">
@@ -52,9 +47,10 @@
 <nav class="uk-navbar-container" uk-navbar>
     <div class="uk-navbar-center">
         <div class="uk-navbar-item">
-            <a class="btn btn-secondary btn-sm shadow-sm" href="/request/{{accountId}}" uk-tooltip="China Boxes">原始货物</a>
-            <a class="btn btn-light btn-sm shadow-sm" href="/request_amazon/{{accountId}}" uk-tooltip="e.g. Amazon">回流货物</a>
+            <a class="btn btn-light btn-sm shadow-sm" href="/request/{{accountId}}" uk-tooltip="China Boxes">原始货物</a>
+            <a class="btn btn-secondary btn-sm shadow-sm" href="/request_amazon/{{accountId}}" uk-tooltip="e.g. Amazon">回流货物</a>
         </div>
+
         <div class="uk-navbar-item">
             <form class="uk-search uk-search-default">
                 <span uk-search-icon></span>
@@ -86,19 +82,16 @@
                     <th></th>
                     <th onclick="sortTable(1)">Account 帐户</th>
                     <th onclick="sortTable(2)">Box number 箱码</th>
-                    <th onclick="sortTable(3)">Item Description 细目</th>
-                    <th>Box</th>
-                    <th>of Box</th>
-                    <th>Qty per Box 物件量</th>
-                    <th>SKU</th>
-                    <th>Volume</th>
-                    <th onclick="sortTable(9)">Received Date 入货日</th>
-                    <th>Status 状态</th>
+                    <th onclick="sortTable(3)">SKU</th>
+                    <th onclick="sortTable(4)">Qty 数量</th>
+                    <th onclick="sortTable(5)">Description 细目</th>
+                    <th onclick="sortTable(6)">Date 日期</th>
+                    <th onclick="sortTable(7)">Status 状态</th>
                 </tr>
             </thead>
             <tbody>
-                {{#each boxes as |box|}}
-                    {{> select-box box }}
+                {{#each containers as |container|}}
+                    {{> select-container container }}
                 {{else}}
                 <h2 class="text-center mt-3">您的货物皆已出货或已通知，暂时无物件可出货</h2>
                 <h3 class="text-center">NO ORDER WAS FOUND!</h3>
@@ -147,3 +140,4 @@
         })(document);
     </script>
 <script src="javascript/table.js"></script>
+<script src="javascript/sku_qty.js"></script>
