@@ -148,4 +148,26 @@ router.put('/updateCost/:cost&:id', withAuth, (req, res) => {
       res.status(500).json(err);
     });
 });
+
+router.put('/admin_relocating', withAuth, (req, res) => {
+  Container.update({
+      location: req.body.location_b
+    },
+      {
+      where: {
+          container_number: req.body.container_number
+      }
+    })
+    .then(dbContainerData => {
+      if (!dbContainerData[0]) {
+        res.status(404).json({ message: 'This container does not exist!' });
+        return;
+      }
+      res.json(dbContainerData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
 module.exports = router;

@@ -1,6 +1,6 @@
 function update() {
     var scan_item = document.getElementById('scanned_item').value;
-    if (scan_item.length == 12 && scan_item[0] == 'S' && scan_item[1] == 'W') {
+    if (scan_item.length > 10 && scan_item[0] == 'S' && scan_item[1] == 'W') {
         auto_receive(scan_item);
         localStorage.setItem('scan_item',scan_item);
     } else if (scan_item.substring(0,2) == '1Z' || scan_item.length == 22 || scan_item.length == 12) {
