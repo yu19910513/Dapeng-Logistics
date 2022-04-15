@@ -45,6 +45,7 @@ function allItem() {
         const container_number = tr[i].getElementsByTagName('td')[1].innerHTML;
         const sku = tr[i].getElementsByTagName('td')[2];
         const qty = tr[i].getElementsByTagName('td')[3];
+        if(containerMap.get(container_number)){
         containerMap.get(container_number).forEach(item => {
           const singleSKU = document.createElement('div');
           const singleQty = document.createElement('div');
@@ -53,6 +54,7 @@ function allItem() {
           sku.appendChild(singleSKU);
           qty.appendChild(singleQty)
         })
+      }
       }
     })
   };

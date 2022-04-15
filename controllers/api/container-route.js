@@ -2,6 +2,14 @@ const router = require('express').Router();
 const {User, Account, Batch, Box, Container, Item} = require('../../models');
 const {withAuth, adminAuth} = require('../../utils/auth');
 
+const multer = require('multer');
+const upload = multer({dest: 'uploads/'});
+const { uploadFile, getFile} = require('../../utils/s3');
+const fs = require('fs');
+const util = require('util');
+const { log } = require('console');
+const unlinkFile = util.promisify(fs.unlink)
+
 router.put('/account_merge', withAuth, (req, res) => {
     Container.update({
         account_id: req.body.account_id_2
@@ -170,4 +178,80 @@ router.put('/admin_relocating', withAuth, (req, res) => {
       res.status(500).json(err);
     });
 });
+
+router.post('/amazon_request', withAuth, (req, res) => {
+  Container.create({
+    container_number: req.body.container_number,
+    account_id: req.body.account_id,
+    user_id: req.session.user_id,
+    cost: req.body.cost,
+    requested_date: new Date().toLocaleDateString("en-US"),
+    status: 2,
+    type: 2,
+    location: req.body.location,
+    s3: req.body.s3,
+    fba: req.body.fba,
+    notes: req.body.notes
+  }, {returning: true})
+      .then(dbBoxData => res.json(dbBoxData))
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+});
+
+router.post('/upload', upload.single('file'), async (req, res) => {
+  const file = req.file;
+  const info = req.body.s3
+  const result = await uploadFile(file);
+  await unlinkFile(file.path);
+  const key = result.Key;
+  Container.update({
+    file: key
+  }, {
+   where: {
+    s3: info
+   }
+  })
+  .then(dbBoxData => {
+  if (!dbBoxData[0]) {
+    res.status(404).json({ message: 'This Box does not exist!' });
+    return;
+  }
+  res.send({pdfPath: `/pdf/${key}`})
+  })
+.catch(err => {
+  console.log(err);
+  res.status(500).json(err);
+});
+});
+
+//upload the second file to AWS and update file_2 when requested is submitted by client
+router.post('/upload_2', upload.single('file'), async (req, res) => {
+  const file = req.file;
+  const info = req.body.s3
+  const result = await uploadFile(file);
+  await unlinkFile(file.path);
+  const key = result.Key;
+  Container.update({
+    file_2: key
+  }, {
+   where: {
+    s3: info
+   }
+  })
+  .then(dbBoxData => {
+  if (!dbBoxData[0]) {
+    res.status(404).json({ message: 'This Box does not exist!' });
+    return;
+  }
+  res.send({pdfPath: `/pdf/${key}`})
+  })
+.catch(err => {
+  console.log(err);
+  res.status(500).json(err);
+});
+});
+
+
 module.exports = router;

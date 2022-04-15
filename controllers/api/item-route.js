@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const {User, Account, Batch, Box, Container, Item} = require('../../models');
 const {withAuth, adminAuth} = require('../../utils/auth');
+const { route } = require('./user_route');
 
 router.put('/account_merge', withAuth, (req, res) => {
     Item.update({
@@ -25,9 +26,15 @@ router.put('/account_merge', withAuth, (req, res) => {
 });
 
 router.post('/new', withAuth, (req, res) => {
+  var user_id;
+  if(!req.body.user_id) {
+    user_id = req.session.user_id
+  } else {
+    user_id = req.body.user_id
+  }
   Item.create({
     item_number: req.body.item_number,
-    user_id: req.body.user_id,
+    user_id: user_id,
     account_id: req.body.account_id,
     container_id: req.body.container_id,
     qty_per_sku: req.body.qty_per_sku,
@@ -318,5 +325,47 @@ router.put('/updateQty_ExistedItem/:container_id&:item_number', withAuth, (req, 
       res.status(500).json(err);
     });
 });
+
+router.put('/updateQty_ExistedItemId/:container_id&:item_id', withAuth, (req, res) => {
+  Item.update({
+      qty_per_sku: req.body.qty_per_sku
+    },
+    {
+      where: {
+        container_id: req.params.container_id,
+        id: req.params.item_id
+      }
+    })
+    .then(dbItemData => {
+      if (!dbItemData[0]) {
+        res.status(404).json({ message: 'This Item does not exist!' });
+        return;
+      }
+      res.json(dbItemData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+router.delete('/destroy/:id', withAuth, (req, res) => {
+Item.destroy({
+  where: {
+    id: req.params.id
+  }
+})
+  .then(dbItemData => {
+    if (!dbItemData) {
+      res.status(404).json({ message: 'No item found with this id' });
+      return;
+    }
+    res.json(dbItemData);
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json(err);
+  });
+})
 
 module.exports = router;
