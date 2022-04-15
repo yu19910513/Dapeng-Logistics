@@ -39,6 +39,7 @@ router.post('/', withAuth, (req, res) => {
 //insert old data - seeds
 router.post('/seeds', withAuth, (req, res) => {
   Box.create({
+    pending_date: new Date('12/25/2021').toLocaleDateString("en-US"),
     box_number: req.body.box_number,
     received_date: req.body.received_date,
     account_id: req.body.account_id,
@@ -53,7 +54,6 @@ router.post('/seeds', withAuth, (req, res) => {
     width: req.body.width,
     height: req.body.height,
     volume: req.body.volume,
-    location: req.body.location,
     status: req.body.status,
     bill_received: req.body.bill_received,
     bill_storage: req.body.bill_storage
