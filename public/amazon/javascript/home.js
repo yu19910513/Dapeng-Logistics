@@ -1,7 +1,11 @@
+var inventoryCount = 0;
+var numberOfItem = document.getElementById('numberOfInventory');
+const locationAddress = location.href.split('/');
+const account_id = locationAddress[locationAddress.length-1];
+const containerTable = document.getElementById('myTable');
+var containerMap = new Map();
 function number_item () {
-    var numberOfItem = document.getElementById('numberOfInventory');
-    var arr =[]
-    var table, tr, td, txtValue;
+    var table, tr, td, txtValue, sku;
     table = document.getElementById("myTable");
     tr = table.getElementsByTagName("tr");
     for (i = 1; i < tr.length; i++) {
@@ -9,20 +13,12 @@ function number_item () {
       if (td) {
         txtValue = td.textContent || td.innerText;
         if (txtValue == 'Received' || txtValue == 'Requested') {
-          arr.push(td)
+          inventoryCount++
         }
       }
     };
-    numberOfItem.innerHTML = arr.length
-
-  }
-setInterval (number_item(), 1000);
-document.getElementById('inventory_btn').click();
-/////////////////////
-const locationAddress = location.href.split('/');
-const account_id = locationAddress[locationAddress.length-1];
-const containerTable = document.getElementById('myTable');
-var containerMap = new Map();
+    allItem();
+  } number_item();
 function allItem() {
     fetch(`/api/item/allItem/${account_id}`, {
       method: 'GET'
@@ -40,6 +36,8 @@ function allItem() {
         containerMap.set(containerNumber, newData[i]);
       };
       var tr;
+      var skuCount = 0;
+      var emptyArr = [];
       tr = containerTable.getElementsByTagName('tr');
       for (let i = 1; i < tr.length; i++) {
         const container_number = tr[i].getElementsByTagName('td')[1].innerHTML;
@@ -47,6 +45,7 @@ function allItem() {
         const qty = tr[i].getElementsByTagName('td')[3];
         if(containerMap.get(container_number)){
         containerMap.get(container_number).forEach(item => {
+          skuCount++;
           const singleSKU = document.createElement('div');
           const singleQty = document.createElement('div');
           singleSKU.innerHTML = item.item_number;
@@ -54,18 +53,15 @@ function allItem() {
           sku.appendChild(singleSKU);
           qty.appendChild(singleQty)
         })
+      } else {
+        emptyArr.push(tr[i]);
+        inventoryCount--
+        tr[i].style.display = 'none';
       }
-      }
+      };
+      emptyArr.forEach(i => i.remove())
+      numberOfItem.innerHTML = inventoryCount
     })
-  };
-allItem();
+};
 
-
-
-
-
-
-
-// const chinaBoxTable = document.getElementById('myTable')
-// const tbody = chinaBoxTable.querySelectorAll('tbody');
-// tbody.forEach(i => i.remove());
+document.getElementById('inventory_btn').click();

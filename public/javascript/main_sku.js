@@ -1,3 +1,133 @@
+var loader = document.getElementById('loader');
+var table = document.getElementById("myTable");
+var rows = table.rows;
+for (i = 1; i < (rows.length + 1); i++){
+  var data_status = rows[i].getElementsByTagName('td');
+    if (data_status[7].innerHTML == 1) {
+      rows[i].getElementsByTagName("td")[7].innerHTML = "Received"
+    } else if (data_status[7].innerHTML == 2) {
+      rows[i].getElementsByTagName("td")[7].innerHTML = "Requested"
+    } else if (data_status[7].innerHTML == 3) {
+      rows[i].getElementsByTagName("td")[7].innerHTML = "Shipped"
+    } else if (data_status[7].innerHTML == 4) {
+      rows[i].getElementsByTagName("td")[7].innerHTML = "Archived"
+    } else {
+      rows[i].getElementsByTagName("td")[7].innerHTML = "Pending"
+    }
+};
+
+function clear_file() {
+  document.getElementById('label').value = null;
+  document.getElementById('label_2').value = null;
+  document.getElementById('amazon_ref').value = null;
+  document.getElementById('label_2').style.display = 'none';
+  document.getElementById('amazon_ref').style.display= 'none';
+};
+function clear_noFile_radio() {
+  const no_file = document.getElementById("label_not_required");
+  if (no_file.checked) {
+    document.getElementById('amazon_ref').value = null;
+    no_file.checked = false;
+  }
+};
+
+function validation_request() {
+  const file = document.getElementById('label').files[0];
+  const file_2 = document.getElementById('label_2').files[0];
+  var check_label = document.getElementById('label_not_required')
+  if (!file && !file_2 && !check_label.checked) {
+    alert('The shipping label is missing! Please attach a pdf file and try again! 无夹带档案！请夹带档案或者勾选无夹带档案栏，然后再试一遍。')
+  } else {
+    loader.style.display = '';
+    GetSelected()
+  }
+};
+
+
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("myTable");
+  switching = true;
+  dir = "asc";
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount ++;
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+};
+
+function second_file() {
+  document.getElementById('label_2').style.display = '';
+  document.getElementById('amazon_ref').style.display= '';
+  clear_noFile_radio()
+};
+
+function check_amazon() {
+  const no_file = document.getElementById("label_not_required");
+  var amazon = document.getElementById('amazon_ref').value.trim();
+  amazon = amazon.toUpperCase();
+  if (no_file.checked) {
+    return
+  } else if ( amazon.substring(0,3) != 'FBA' || amazon.length != 12) {
+    alert('invalid amazon ref number! start with FBA following by XXXXXXXXX');
+  }
+}
+
+var map = new Map();
+function accountList() {
+    fetch(`/api/user/account`, {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        for (let i = 0; i < data.length; i++) {
+            const option = document.createElement('option');
+            option.innerHTML = data[i].name + " (prefix: "+ data[i].prefix.toUpperCase() + ")";
+            document.querySelector('#accountList').appendChild(option);
+            map.set(data[i].name, data[i].id);
+        }
+    });
+};
+
+function saveAccount() {
+    var selectedOption = document.querySelector('#accountList').value;
+
+    if(selectedOption != 'Create New Account'){
+        var accountSaved = selectedOption.split(' (prefix:');
+        var prefixSaved = accountSaved[1].split(')');
+        localStorage.setItem('account', accountSaved[0]);
+        localStorage.setItem('prefix', prefixSaved[0]);
+        localStorage.setItem('account_id', map.get(accountSaved[0]));
+    } else {
+        localStorage.setItem('account', selectedOption);
+    }
+};
+
 const locationAddress = location.href.split('/');
 const account_id = locationAddress[locationAddress.length-1];
 const containerTable = document.getElementById('myTable');
@@ -6,6 +136,7 @@ var itemMap = new Map();
 var itemRef = new Map();
 var containerRef = new Map();
 var locationRef = new Map();
+var trCount = 0;
 var costCount = 0;
 //init
 function getByValue(map, searchValue) {
@@ -38,7 +169,6 @@ function allItem() {
       };
       var tr;
       tr = containerTable.getElementsByTagName('tr');
-      var emptyBoxArr = [];
       for (let i = 1; i < tr.length; i++) {
         const container_number = tr[i].getElementsByTagName('td')[2].innerHTML;
         const sku = tr[i].getElementsByTagName('td')[3];
@@ -56,12 +186,11 @@ function allItem() {
           qty.appendChild(singleQty)
         })
         } else {
-          emptyBoxArr.push(tr[i])
          tr[i].style.display ='none';
+         trCount++
         }
       }
-      emptyBoxArr.forEach(i => i.remove());
-      if (tr.length == 1) {
+      if (trCount == tr.length) {
         containerTable.style.display = 'none';
         document.getElementById('noSign').style.display = '';
       }
@@ -72,7 +201,7 @@ allItem();
 function validationSKU(container_id, item_id, qty_per_sku) {
   const qtyInput = document.getElementById(`${container_id}_${item_id}_${qty_per_sku}`);
   const qtysku = parseInt(qtyInput.innerHTML);
-  if (qtysku <= qty_per_sku && qtysku > 0) {
+  if (qtysku <= qty_per_sku && qtysku > -1) {
     qtyInput.setAttribute('class', 'text-danger itemQ')
   } else {
     qtyInput.innerHTML = null;
