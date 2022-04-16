@@ -518,6 +518,7 @@ function buildingRow_amazon(b) {
   for (let i = 0; i < containerMap.get(b).length; i++) {
     const singleItem = containerMap.get(b)[i];
     const listedItem = document.createElement('div');
+    listedItem.setAttribute('uk-tooltip',`title: ${singleItem.description}`)
     const itemAmount = document.createElement('div');
     listedItem.innerHTML = singleItem.item_number;
     itemAmount.innerHTML = singleItem.qty_per_sku;

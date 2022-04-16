@@ -100,6 +100,7 @@ router.get('/allItemAdmin', withAuth, async (req, res) => {
         'id',
         'item_number',
         'qty_per_sku',
+        'description',
         'user_id',
         'account_id',
         'container_id'
