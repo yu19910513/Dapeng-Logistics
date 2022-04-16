@@ -1,3 +1,4 @@
+console.log(location.href, 'master admin_homepage.js');
 const inventory_count = document.getElementById('inventory_c');
 const pending_count = document.getElementById('pending_c');
 const mode = document.getElementById('mode');

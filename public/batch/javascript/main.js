@@ -1,10 +1,5 @@
-console.log(location.href, 'main js');
 var map = new Map();
 function accountList() {
-    document.querySelector('#accountList').querySelectorAll('option').forEach(i => i.remove())
-    const newAcc = document.createElement('option');
-    newAcc.innerHTML = 'Create New Account';
-    document.querySelector('#accountList').appendChild(newAcc);
     fetch(`/api/user/account`, {
         method: 'GET'
     }).then(function (response) {
@@ -21,6 +16,7 @@ function accountList() {
 
 function saveAccount() {
     var selectedOption = document.querySelector('#accountList').value;
+
     if(selectedOption != 'Create New Account'){
         var accountSaved = selectedOption.split(' (prefix:');
         var prefixSaved = accountSaved[1].split(')');
@@ -32,6 +28,4 @@ function saveAccount() {
     }
 }
 
-if (document.querySelector("#account_selection")) {
-    document.querySelector("#account_selection").addEventListener("click", saveAccount);
-};
+document.querySelector("#account_selection").addEventListener("click", saveAccount);

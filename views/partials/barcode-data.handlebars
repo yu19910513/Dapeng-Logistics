@@ -23,7 +23,7 @@
 
 <script>
     //only apply on old data which does not have associated batch info
-    const order = document.querySelector('big');
+    var order = document.querySelector('big');
     if (order.innerHTML.includes('of')) {
         const text = order.innerHTML.split('/');
         order.innerHTML = text[0]

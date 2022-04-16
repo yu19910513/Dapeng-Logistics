@@ -1,3 +1,4 @@
+console.log(location.href, 'req_amazon sku_qty js');
 const locationAddress = location.href.split('/');
 const account_id = locationAddress[locationAddress.length-1];
 const containerTable = document.getElementById('myTable');

@@ -1,3 +1,4 @@
+console.log(location.href, 'master admin_table js');
 var table = document.getElementById("myTable");
 var rows = table.rows;
 for (i = 1; i < (rows.length + 1); i++){

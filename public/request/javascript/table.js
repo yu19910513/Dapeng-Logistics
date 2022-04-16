@@ -1,3 +1,4 @@
+console.log(location.href, 'request table js');
 var loader = document.getElementById('loader');
 var table = document.getElementById("myTable");
 var rows = table.rows;
@@ -48,7 +49,6 @@ function clear_file() {
   if (no_file.checked) {
     document.getElementById('amazon_ref').style.display = ''
   }
-
 };
 
 function clear_noFile_radio() {

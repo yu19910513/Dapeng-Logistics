@@ -1,3 +1,4 @@
+console.log(location.href, 'master create js');
 const today = new Date();
 const pending_date = today.toLocaleDateString("en-US");
 const asn = "ASN"+String(new Date().valueOf()).substring(3, 13);

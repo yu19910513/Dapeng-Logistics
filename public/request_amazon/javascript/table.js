@@ -1,3 +1,4 @@
+console.log(location.href, 'req_amazon table');
 var loader = document.getElementById('loader');
 var table = document.getElementById("myTable");
 var rows = table.rows;
@@ -22,6 +23,10 @@ function clear_file() {
   document.getElementById('amazon_ref').value = null;
   document.getElementById('label_2').style.display = 'none';
   document.getElementById('amazon_ref').style.display= 'none';
+  const no_file = document.getElementById("label_not_required");
+  if (no_file.checked) {
+    document.getElementById('amazon_ref').style.display = ''
+  }
 };
 function clear_noFile_radio() {
   const no_file = document.getElementById("label_not_required");
@@ -30,7 +35,6 @@ function clear_noFile_radio() {
     no_file.checked = false;
   }
 };
-
 function validation_request() {
   const file = document.getElementById('label').files[0];
   const file_2 = document.getElementById('label_2').files[0];
@@ -42,8 +46,6 @@ function validation_request() {
     GetSelected()
   }
 };
-
-
 function sortTable(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById("myTable");
@@ -80,50 +82,20 @@ function sortTable(n) {
     }
   }
 };
-
 function second_file() {
   document.getElementById('label_2').style.display = '';
   document.getElementById('amazon_ref').style.display= '';
   clear_noFile_radio()
 };
-
 function check_amazon() {
   const no_file = document.getElementById("label_not_required");
   var amazon = document.getElementById('amazon_ref').value.trim();
   amazon = amazon.toUpperCase();
-  if (no_file.checked) {
-    return
-  } else if ( amazon.substring(0,3) != 'FBA' || amazon.length != 12) {
-    alert('invalid amazon ref number! start with FBA following by XXXXXXXXX');
-  }
-}
-
-var map = new Map();
-function accountList() {
-    fetch(`/api/user/account`, {
-        method: 'GET'
-    }).then(function (response) {
-        return response.json();
-    }).then(function (data) {
-        for (let i = 0; i < data.length; i++) {
-            const option = document.createElement('option');
-            option.innerHTML = data[i].name + " (prefix: "+ data[i].prefix.toUpperCase() + ")";
-            document.querySelector('#accountList').appendChild(option);
-            map.set(data[i].name, data[i].id);
-        }
-    });
-};
-
-function saveAccount() {
-    var selectedOption = document.querySelector('#accountList').value;
-
-    if(selectedOption != 'Create New Account'){
-        var accountSaved = selectedOption.split(' (prefix:');
-        var prefixSaved = accountSaved[1].split(')');
-        localStorage.setItem('account', accountSaved[0]);
-        localStorage.setItem('prefix', prefixSaved[0]);
-        localStorage.setItem('account_id', map.get(accountSaved[0]));
-    } else {
-        localStorage.setItem('account', selectedOption);
+  if (!no_file.checked && document.getElementById('amazon_ref').style.display == '' || no_file.checked) {
+    if ( amazon.substring(0,3) != 'FBA' || amazon.length != 12) {
+      alert('invalid amazon ref number! start with FBA following by XXXXXXXXX');
     }
+  } else {
+   return
+  }
 }

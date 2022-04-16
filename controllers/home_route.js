@@ -212,6 +212,65 @@ router.get('/request_amazon', withAuth, async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+router.get('/amazon', withAuth, async (req, res) => {
+  try {
+    const containerData = await Container.findAll({
+      where: {
+        user_id: req.session.user_id,
+        status: [0,1,2,3]
+      },
+        attributes: [
+          'id',
+          'user_id',
+          'account_id',
+          's3',
+          'notes',
+          'id',
+          'container_number',
+          'description',
+          'cost',
+          'requested_date',
+          'received_date',
+          'shipped_date',
+          'type',
+          'length',
+          'width',
+          'height',
+          'weight',
+          'volume',
+          'status',
+          'location',
+          'file',
+          'file_2',
+          'fba',
+          'bill_received',
+          'bill_storage',
+          'bill_shipped'
+        ],
+          include: [
+            {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+            }
+          ]
+      })
+    const containers = containerData.map(container => container.get({ plain: true }));
+    res.render('master_home_amazon', {
+      containers,
+      loggedIn: true,
+      accountId: req.params.id,
+      admin: req.session.admin,
+      name: req.session.name
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
 //log in page
 router.get('/login', (req, res) => {
   if (req.session.loggedIn) {
@@ -983,61 +1042,5 @@ router.get('/amazon_receiving', withAuth, async(req, res) => {
 //     res.render('rawData');
 // });
 
-//client home page
-// router.get('/:start&:end', withAuth, async (req, res) => {
-//   try {
-//     const boxData = await Box.findAll({
-//       where: {
-//         user_id: req.session.user_id,
-//         status: [0, 1, 2, 3]
-//       },
-//       attributes: [
-//         'tracking',
-//         'batch_id',
-//         'id',
-//         'box_number',
-//         'description',
-//         'cost',
-//         'received_date',
-//         'requested_date',
-//         'shipped_date',
-//         'order',
-//         'status',
-//         'sku',
-//         'file',
-//         'qty_per_box'
-//       ],
-//       include: [
-//         {
-//           model: Batch,
-//           attributes: [
-//             'pending_date',
-//             'total_box'
-//           ]
-//         },
-//         {
-//           model: Account,
-//           attributes: [
-//             'name'
-//           ]
-//         }
-//       ]
-//     });
-//     const boxe = boxData.map(box => box.get({ plain: true }));
-//     boxes = [];
-//     for (let i = req.params.start; i < req.params.end; i++) {
-//       boxes.push(boxe[i])
-//     };
-//     res.render('home', {
-//       boxes,
-//       loggedIn: true,
-//       admin: req.session.admin,
-//       name: req.session.name
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     res.status(500).json(err);
-//   }
 
-// });
   module.exports = router

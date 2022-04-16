@@ -1,12 +1,6 @@
 <link rel="stylesheet" href="css/loader.css">
 <div class="uk-overflow-auto">
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
-
-
-
-
-
-
 {{!-- notes --}}
 <div id="modal-notes" uk-modal>
     <div class="uk-modal-dialog">
@@ -23,7 +17,6 @@
         </div>
     </div>
 </div>
-
 {{!-- file --}}
 <div id="modal-files" uk-modal>
     <div class="uk-modal-dialog">
@@ -46,13 +39,14 @@
         </div>
     </div>
 </div>
-
-
-
 <nav class="uk-navbar-container" uk-navbar>
     <div class="uk-navbar-center">
         <div class="uk-navbar-item">
+            {{#if accountId}}
             <a class="btn btn-white border-warning btn-sm shadow-sm" href="/account/{{accountId}}" uk-icon="icon: home" uk-tooltip="Personal Homepage"></a>
+            {{else}}
+            <a class="btn btn-white border-warning btn-sm shadow-sm" href="/master" uk-icon="icon: home" uk-tooltip="Personal Homepage"></a>
+            {{/if}}
             <a class="btn btn-secondary btn-sm shadow-sm" href="/request/{{accountId}}" uk-tooltip="China Boxes">原始货物</a>
             <a class="btn btn-light btn-sm shadow-sm" href="/request_amazon/{{accountId}}" uk-tooltip="e.g. Amazon">回流货物</a>
         </div>
@@ -72,15 +66,12 @@
 
     </div>
 </nav>
-
 <div id="loader" style="display: none;">
     <h1 class="text-center">Uploading...</h1>
     <h3 class="text-center">上传中，请耐心等候</h3>
     <div class="loader container"></div>
 </div>
-
-
-    <div class="col">
+<div class="col">
         <table class="uk-table uk-table-small uk-table-divider myTable" id="myTable">
             <thead>
                 <tr>
@@ -106,7 +97,7 @@
                 {{/each}}
             </tbody>
         </table>
-    </div>
+</div>
 
 <script>
         (function(document) {

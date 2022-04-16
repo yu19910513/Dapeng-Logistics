@@ -1,3 +1,4 @@
+console.log(location.href, 'master homepage js');
 const inventory_count = document.getElementById('inventory_c');
 const pending_count = document.getElementById('pending_c');
 var receivedCount = 0;
