@@ -93,7 +93,7 @@ async function amazon_relocate(box, shelf) {
 };
 
 var timer = null;
-function delay(){
+function delay(fn){
     clearTimeout(timer);
-    timer = setTimeout(location_update, 50)
+    timer = setTimeout(fn, 50)
 }

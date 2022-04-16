@@ -71,3 +71,9 @@ async function auto_receive(event) {
      }
     }
 };
+
+var timer = null;
+function delay(fn){
+    clearTimeout(timer);
+    timer = setTimeout(fn, 50)
+}
