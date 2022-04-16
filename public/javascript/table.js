@@ -41,7 +41,7 @@ function show_all() {
 function clear_file() {
   document.getElementById('label').value = null;
   document.getElementById('label_2').value = null;
-  document.getElementById('amazon_ref').value = null;
+  document.getElementById('amazon_ref').value = 'null';
   document.getElementById('label_2').style.display = 'none';
   document.getElementById('amazon_ref').style.display= 'none';
 };
@@ -52,7 +52,6 @@ function clear_noFile_radio() {
     document.getElementById('amazon_ref').value = null;
     no_file.checked = false;
   }
-
 }
 function validation_request() {
   const file = document.getElementById('label').files[0];

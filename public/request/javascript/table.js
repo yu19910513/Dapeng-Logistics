@@ -44,6 +44,11 @@ function clear_file() {
   document.getElementById('amazon_ref').value = null;
   document.getElementById('label_2').style.display = 'none';
   document.getElementById('amazon_ref').style.display= 'none';
+  const no_file = document.getElementById("label_not_required");
+  if (no_file.checked) {
+    document.getElementById('amazon_ref').style.display = ''
+  }
+
 };
 
 function clear_noFile_radio() {
@@ -357,10 +362,12 @@ function check_amazon() {
   const no_file = document.getElementById("label_not_required");
   var amazon = document.getElementById('amazon_ref').value.trim();
   amazon = amazon.toUpperCase();
-  if (no_file.checked) {
-    return
-  } else if ( amazon.substring(0,3) != 'FBA' || amazon.length != 12) {
-    alert('invalid amazon ref number! start with FBA following by XXXXXXXXX');
+  if (!no_file.checked && document.getElementById('amazon_ref').style.display == '' || no_file.checked) {
+    if ( amazon.substring(0,3) != 'FBA' || amazon.length != 12) {
+      alert('invalid amazon ref number! start with FBA following by XXXXXXXXX');
+    }
+  } else {
+   return
   }
 }
 
