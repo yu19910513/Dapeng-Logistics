@@ -253,5 +253,23 @@ router.post('/upload_2', upload.single('file'), async (req, res) => {
 });
 });
 
+router.delete('/destroyBulk', withAuth, (req, res) => {
+  Container.destroy({
+    where: {
+      id: req.body.id
+    }
+  }).then(dbContainerData => {
+    if (!dbContainerData) {
+      res.status(404).json({ message: 'No Container found with this id' });
+      return;
+    }
+    res.json(dbContainerData);
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json(err);
+  });
+})
+
 
 module.exports = router;

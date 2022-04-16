@@ -538,3 +538,55 @@ function reconciliation() {
 if (localStorage.getItem('amazon_mode') == 'Q') {
     document.getElementById('badge').click();
 }
+
+
+var allContainerArr = [];
+var emptyArr = [];
+function removeEmptyContainer() {
+    fetch(`/api/item/allItemAdmin`, {
+        method: 'GET'
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        for (let i = 0; i < data.length; i++) {
+            const item = data[i];
+            if(!allContainerArr.includes(item.container_id)) {
+                allContainerArr.push(item.container_id)
+            };
+
+        };
+        fetch(`/api/container/allContainerAdmin`, {
+            method: 'GET'
+          }).then(function (response) {
+            return response.json();
+          }).then(function (data) {
+            for (let i = 0; i < data.length; i++) {
+                const container = data[i];
+                if(!allContainerArr.includes(container.id)) {
+                    emptyArr.push(container.id)
+                };
+
+            };
+            if (!emptyArr.length) {
+                alert('No empty container was found in the database')
+            } else {
+                removeEmpty(emptyArr);
+            }
+          })
+      });
+};
+async function removeEmpty(Arr) {
+    const response = await fetch(`/api/container/destroyBulk/`, {
+        method: 'DELETE',
+        body: JSON.stringify({
+            id: Arr
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (response.ok) {
+        alert(`Successfully remove ${Arr.length} empty containers! `)
+    }
+}
