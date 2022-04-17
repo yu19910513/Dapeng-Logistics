@@ -78,7 +78,8 @@ function validationSKU(container_id, item_id, qty_per_sku) {
   if (qtysku <= qty_per_sku && qtysku > 0) {
     qtyInput.setAttribute('class', 'text-danger itemQ')
   } else {
-    qtyInput.innerHTML = null
+    qtyInput.innerHTML = null;
+    qtyInput.setAttribute('class', 'itemQ')
   };
 };
 function containerValidation(id) {
