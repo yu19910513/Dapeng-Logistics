@@ -130,7 +130,7 @@ function amazonCreate() {
     amazon_box.length = length.value.trim()*2.54;
     amazon_box.width = width.value.trim()*2.54;
     amazon_box.height = height.value.trim()*2.54;
-    amazon_box.container_number = container_number.value.trim();
+    amazon_box.container_number = container_number.value.trim().toUpperCase();
     amazon_box.cost = itemCount;
     const newAccountName = newAccountInput.value.trim();
     const username_d = username.value.trim();

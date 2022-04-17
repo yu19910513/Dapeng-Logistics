@@ -1,6 +1,7 @@
 console.log(location.href, 'req_amazon sku_qty js');
 const locationAddress = location.href.split('/');
 const account_id = locationAddress[locationAddress.length-1];
+
 const containerTable = document.getElementById('myTable');
 var containerMap = new Map();
 var itemMap = new Map();
@@ -8,6 +9,7 @@ var itemRef = new Map();
 var containerRef = new Map();
 var locationRef = new Map();
 var costCount = 0;
+var masterAccountIdArr = [];
 //init
 function getByValue(map, searchValue) {
   for (let [key, value] of map.entries()) {
@@ -76,7 +78,7 @@ function validationSKU(container_id, item_id, qty_per_sku) {
   if (qtysku <= qty_per_sku && qtysku > 0) {
     qtyInput.setAttribute('class', 'text-danger itemQ')
   } else {
-    qtyInput.innerHTML = null;
+    qtyInput.innerHTML = null
   };
 };
 function containerValidation(id) {
@@ -118,6 +120,8 @@ function GetSelected() {
 
     const location = locationRef.get(container_id);
     const container_number = containerRef.get(container_id);
+    const selectedAcccountId = containerMap.get(container_number)[0].account_id;
+    masterAccountIdArr.push(selectedAcccountId);
     const item_number = itemRef.get(item_id);
     const qty_per_sku = parseInt(selectedSkus[i].innerHTML);
     costCount = costCount + qty_per_sku;
@@ -132,14 +136,22 @@ function GetSelected() {
     var requested_item = new Object();
     requested_item.item_number = item_number;
     requested_item.qty_per_sku = qty_per_sku;
-    requested_item.account_id = account_id;
+    if (account_id) {
+      requested_item.account_id = account_id
+     } else {
+      requested_item.account_id = masterAccountIdArr[0];
+     };
     requested_item.description = `${container_number}:${location}`
     requestedObjArr.push(requested_item);
     requestedItemIdArr.push(item_id);
   };
    /////// create ONE new container
    var requestedContainer = new Object();
-   requestedContainer.account_id = account_id;
+   if (account_id) {
+    requestedContainer.account_id = account_id
+   } else {
+    requestedContainer.account_id = masterAccountIdArr[0];
+   }
    requestedContainer.cost = costCount;
    requestedContainer.fba = fba;
    requestedContainer.location = 'virtual';
@@ -160,7 +172,7 @@ function GetSelected() {
 
 };
 async function createContainer(requestedObjArr, requestedContainer) {
-  console.log('boxCreate');
+  console.log('Container Created');
   const response = await fetch('/api/container/amazon_request', {
       method: 'post',
       body: JSON.stringify(requestedContainer),
