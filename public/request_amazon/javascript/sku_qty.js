@@ -292,3 +292,15 @@ function removeZeroItem(data) {
     headers: {'Content-Type': 'application/json'}
 });
 }
+
+function selectAll(id) {
+  const eachContainer = document.getElementById((`container_${id}`));
+  const checkbox = eachContainer.getElementsByTagName('input');
+  const singleQty = eachContainer.querySelectorAll('.itemQ');
+  if (checkbox[0].checked) {
+    for (let i = 0; i < singleQty.length; i++) {
+      const div = singleQty[i];
+      div.setAttribute('class','text-danger itemQ');
+    }
+  }
+}
