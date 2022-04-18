@@ -698,6 +698,72 @@ router.get('/admin_pre_ship', withAuth, (req, res) => {
   }
 });
 
+router.get('/admin_pre_ship_amazon/:id', withAuth, async (req, res) => {
+    try {
+      const itemData = await Item.findAll({
+        where: {
+          container_id: req.params.id
+        },
+        attributes: [
+          'id',
+          'item_number',
+          'qty_per_sku',
+          'container_id',
+          'account_id',
+          'user_id',
+          'description'
+        ],
+        include: [
+          {
+            model: Container,
+            where: {
+              status:2
+            },
+            attributes: [
+              'id',
+              'container_number',
+              'description',
+              'cost',
+              'requested_date',
+              'received_date',
+              'location',
+              'file',
+              'file_2',
+              'notes',
+              's3',
+              'fba'
+            ]
+          },
+          {
+            model: Account,
+            attributes: [
+              'name'
+            ]
+          },
+          {
+            model: User,
+            attributes: [
+              'id',
+              'name',
+            ]
+          }
+        ]
+      });
+      const items = itemData.map(item => item.get({ plain: true }));
+      const requestsBatch = items.reduce(function (r, a) {
+        r[a.description] = r[a.description] || [];
+        r[a.description].push(a);
+        return r;
+      }, Object.create(null));
+      const requests = Object.values(requestsBatch);
+      res.render('pre_ship_amazon', {requests, loggedIn: true, admin: req.session.admin, name: req.session.name});
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+
+  });
+
 //billing page
 router.get('/billing', withAuth, async (req, res) => {
   try {

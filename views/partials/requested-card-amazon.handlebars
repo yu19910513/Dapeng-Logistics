@@ -1,10 +1,10 @@
-<div class="px-1 py-1 col-lg-4 col-md-4 col-sm-2 " id="requested_card">
-<div class="card bg-light shadow-sm text-center" id="{{0.container.s3}}">
-    <div class="lead mt-2">{{0.container.container_number}}</div>
+<div class="px-1 py-1 col-lg-4 col-md-4 col-sm-2" id="requested_card">
+<div class="card bg-light shadow-sm text-center border-info" id="{{0.container_id}}">
+    <div class="lead mt-2">#{{0.container.container_number}}</div>
     <h5 class="card-title mt-3">{{0.user.name}} - {{0.account.name}}</h5>
     <p>Requested Date: {{0.container.requested_date}}</p>
  <div class="card-body">
-     <a href="#" class="btn btn-outline-primary btn-sm" onclick="pre_ship_scan({{0.container.s3}})">Proceed</a>
+     <a href="/admin_pre_ship_amazon/{{0.container_id}}" class="btn btn-outline-primary btn-sm">Proceed</a>
      {{#if 0.container.file}}
         <a href="/pdf/{{0.container.file}}" class="btn btn-success btn-sm">PDF File</a>
         {{#if 0.container.file_2}}
@@ -17,7 +17,7 @@
 
 <ul uk-accordion="multiple: true">
     <li class="uk-close">
-        <a class="uk-accordion-title" href="#"></a>
+        <a class="uk-accordion-title" href="/admin_pre_ship_amazon/{{0.container_id}}"></a>
         <div class="uk-accordion-content">
          <table class="uk-table uk-table-small uk-table-divider myTable" id="myTable">
             <thead>
@@ -33,7 +33,7 @@
                 {{/each}}
             <tbody>
          </table>
-         <a href="#" class="btn btn-primary btn-sm" onclick="pre_ship_scan({{0.container.s3}})">Proceed</a>
+         <a href="/admin_pre_ship_amazon/{{0.container_id}}" class="btn btn-primary btn-sm">Proceed</a>
         </div>
     </li>
 </ul>

@@ -562,9 +562,9 @@ function removeEmptyContainer() {
           }).then(function (data) {
             for (let i = 0; i < data.length; i++) {
                 const container = data[i];
-                if(!allContainerArr.includes(container.id)) {
+                if(!allContainerArr.includes(container.id) && container.cost == 0) {
                     emptyArr.push(container.id)
-                };
+                }; //cost == 0 means the empty box has been recently billed and ready to get reset
 
             };
             if (!emptyArr.length) {
