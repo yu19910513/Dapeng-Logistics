@@ -1,0 +1,11 @@
+@media print {
+    #nav_bar {
+        display: none;
+    }
+    #barcode_btn {
+        display: none;
+    }
+    #box_bar {
+        page-break-before: always;
+    }
+}

@@ -135,6 +135,62 @@ router.get('/allContainerAdmin', withAuth, async (req, res) => {
 
 });
 
+router.get('/container/:id', withAuth, async (req, res) => {
+  try {
+    const containerData = await Container.findAll({
+      where: {
+        id: req.params.id
+      },
+      attributes: [
+        'user_id',
+        'account_id',
+        's3',
+        'notes',
+        'id',
+        'container_number',
+        'description',
+        'cost',
+        'requested_date',
+        'received_date',
+        'shipped_date',
+        'type',
+        'length',
+        'width',
+        'height',
+        'weight',
+        'volume',
+        'status',
+        'location',
+        'file',
+        'file_2',
+        'fba',
+        'bill_received',
+        'bill_storage',
+        'bill_shipped'
+      ],
+      include: [
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'name'
+          ]
+        }
+      ]
+    });
+    const containers = containerData.map(container => container.get({ plain: true }));
+    res.json(containers);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+})
+
 router.put('/updateCost/:cost&:id', withAuth, (req, res) => {
   Container.update({
       cost: req.params.cost
