@@ -47,8 +47,7 @@ function prefix_check() {
 };
 function infoAlert() {
     alert("Some of the information are missing or incorrectly input! Please complete the form prior to proceeding.")
-}
-
+};
 function masterCheck() {
     var desscription = document.querySelector('#new_des').value.trim();
     var length = document.querySelector('#new_len').value.trim();
@@ -58,15 +57,14 @@ function masterCheck() {
     var qty_per_box = document.querySelector('#new_qty').value.trim();
     var sku = document.querySelector('#new_sku').value.trim();
     var total_box = document.querySelector('#new_tot').value.trim()
-    if (desscription && length && width && height && weight && qty_per_box && sku && total_box && prefix.value.length > 1) {
+    if (desscription && length && width && height && weight && qty_per_box && sku && total_box && prefix.value.length > 1 && account.value.trim()) {
         document.getElementById('order_pre-check').style.display = '';
         document.getElementById('fake').style.display = 'none';
     } else {
         document.getElementById('order_pre-check').style.display = 'none';
         document.getElementById('fake').style.display = '';
     }
-}
-
+};
 function precheck() {
     const desscription = document.querySelector('#new_des').value.trim();
     const length = document.querySelector('#new_len').value.trim();
@@ -151,9 +149,7 @@ function precheck() {
         table.appendChild(tag);
     };
 
-}
-
-
+};
 document.getElementById('order_pre-check').addEventListener('click', precheck);
 
 function reset() {
@@ -273,7 +269,7 @@ function exportData() {
     if (savedAccount != "Create New Account") {
         loadingBatch1({asn, pending_date, total_box, savedAccount_id});
         }else {
-        loadingAccount({name: account.value, prefix: prefix.value.toUpperCase()});
+        loadingAccount({name: account.value.trim(), prefix: prefix.value.toUpperCase()});
     }
 }
 

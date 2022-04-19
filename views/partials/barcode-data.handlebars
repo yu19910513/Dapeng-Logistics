@@ -21,12 +21,14 @@
     <h1 class="card-text" style="font-size:280%"><b>{{box_number}}</b></h1>
 </div>
 
-<script>
+{{!-- <script>
     //only apply on old data which does not have associated batch info
     var order = document.querySelector('big');
-    if (order.innerHTML.includes('of')) {
+    for (let i = 0; i < order.length; i++) {
+        if (order[i].innerHTML.includes('of')) {
         const text = order.innerHTML.split('/');
         order.innerHTML = text[0]
     }
-</script>
+    }
+</script> --}}
 {{!-- https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example --}}
