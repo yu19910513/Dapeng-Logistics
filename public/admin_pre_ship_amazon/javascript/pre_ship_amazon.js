@@ -24,11 +24,11 @@ var selectedSkuArr = [];
 var skuArr = []
 function pre_check() {
     const value = input.value.trim();
-    if (container_numberArr.includes(value) && document.getElementById(value).getAttribute('class') != 'lead text-center bg-success') {
+    if (container_numberArr.includes(value) && document.getElementById(value).getAttribute('class') != 'lead text-center rounded shadow-sm bg-info') {
         for (let i = 0; i < container_numberArr.length; i++) {
-            document.getElementById(container_numberArr[i]).setAttribute('class', 'lead text-center bg-warning' )
+            document.getElementById(container_numberArr[i]).setAttribute('class', 'lead text-center rounded shadow-sm bg-light')
         };
-        document.getElementById(value).setAttribute('class','lead text-center bg-success');
+        document.getElementById(value).setAttribute('class','lead text-center rounded shadow-sm bg-info');
         localStorage.setItem('selectedBox',value);
         const eachTable = document.getElementById(`t_${value}`);
         const rows = eachTable.rows;
@@ -40,17 +40,17 @@ function pre_check() {
             qty.setAttribute('id',`qty_${sku.innerText}_${value}`)
         };
         input.value = null;
-    } else if (container_numberArr.includes(value) && document.getElementById(value).getAttribute('class') == 'lead text-center bg-success') {
+    } else if (container_numberArr.includes(value) && document.getElementById(value).getAttribute('class') == 'lead text-center rounded shadow-sm bg-info') {
         const eachTable = document.getElementById(`t_${value}`);
         const rows = eachTable.rows;
-        rows[0].setAttribute('class','bg-success');
+        rows[0].setAttribute('class','bg-info');
         for (let i = 1; i < rows.length; i++) {
-            rows[i].setAttribute('class','bg-success')
+            rows[i].setAttribute('class','bg-info')
             const sku = rows[i].getElementsByTagName("td")[0];
             selectedSkuArr.push(sku.innerText);
         };
         input.value = null;
-    } else if (skuArr.includes(value) && !selectedSkuArr.includes(value) && document.getElementById(localStorage.getItem('selectedBox')).getAttribute('class') == 'lead text-center bg-success') {
+    } else if (skuArr.includes(value) && !selectedSkuArr.includes(value) && document.getElementById(localStorage.getItem('selectedBox')).getAttribute('class') == 'lead text-center rounded shadow-sm bg-info') {
         const qtyPerSKu = document.getElementById(`qty_${value}_${localStorage.getItem('selectedBox')}`);
         if (qtyPerSKu) {
             const newQty = parseInt(qtyPerSKu.innerHTML)-1;
@@ -59,7 +59,7 @@ function pre_check() {
                 input.value = null;
             } else if (newQty == 0) {
                 document.getElementById(`qty_${value}_${localStorage.getItem('selectedBox')}`).innerHTML = newQty;
-                document.getElementById(`qty_${value}_${localStorage.getItem('selectedBox')}`).parentElement.setAttribute('class','bg-success');
+                document.getElementById(`qty_${value}_${localStorage.getItem('selectedBox')}`).parentElement.setAttribute('class','bg-info');
                 selectedSkuArr.push(document.getElementById(`${value}_${localStorage.getItem('selectedBox')}`).innerHTML);
                 input.value = null;
             }
