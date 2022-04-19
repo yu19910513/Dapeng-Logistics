@@ -5,9 +5,9 @@
 <div class="mb-2 card border-primary p-2"><span class="lead">Notes:</span> <span id="notes"></spans></div>
 </div>
 
-<form class="container shadow-sm col-md-5 col-sm-8">
-<input type="text" class="form-control mb-3" id="scanned_item" placeholder="Scan SKU" aria-label="Username" aria-describedby="basic-addon1" onkeyup="delay(pre_check)">
-<div class="row justify-content-center">
+<form class="container shadow-sm col-md-5 col-sm-8 p-2">
+<input type="text" class="form-control mb-3" id="scanned_item" placeholder="Scan..." aria-label="Username" aria-describedby="basic-addon1" uk-tooltip="Scan the targeted box first, then scan requested sku(s). If the client requested the whole box, scan the box twice to select all requested items" onkeyup="delay(pre_check)">
+<div class="row justify-content-center p-3">
   {{#each requests as |request|}}
     {{> preShipAmazonConfirmation request }}
   {{else}}
