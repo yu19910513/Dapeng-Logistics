@@ -31,13 +31,13 @@ async function auto_receive(event) {
         const list = document.getElementById("inserted_item");
         var child = document.createElement('h3');
         child.innerHTML = box_number + `&#9989`;
-        list.appendChild(child);
+        list.prepend(child);
        } else {
         document.getElementById('scanned_item').value = null;
         const list = document.getElementById("inserted_item");
         var child = document.createElement('h4');
         child.innerHTML = box_number + `&#10060`;
-        list.appendChild(child);
+        list.prepend(child);
         localStorage.clear();
        }
 
@@ -66,7 +66,7 @@ async function auto_receive(event) {
       const list = document.getElementById("inserted_item");
       var child = document.createElement('h3');
       child.innerHTML = tracking + ' attached with ' + box_number + `&#9989`;
-      list.appendChild(child);
+      list.prepend(child);
       localStorage.clear();
      }
     }
