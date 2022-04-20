@@ -154,7 +154,7 @@ router.get('/batch/:id', withAuth, async (req, res) => {
         batch_id: req.params.id
       },
       order: [
-        ["order", "ASC"]
+        ["box_number", "ASC"]
       ],
         attributes: [
       'id',
