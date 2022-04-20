@@ -21,9 +21,10 @@ function supplemental () {
 };supplemental();
 
 var selectedSkuArr = [];
-var skuArr = []
+var skuArr = [];
 function pre_check() {
     const value = input.value.trim();
+    const all_td = document.querySelectorAll('td');
     if (container_numberArr.includes(value) && document.getElementById(value).getAttribute('class') != 'lead text-center rounded shadow-sm bg-info') {
         for (let i = 0; i < container_numberArr.length; i++) {
             document.getElementById(container_numberArr[i]).setAttribute('class', 'lead text-center rounded shadow-sm bg-light')
@@ -50,6 +51,7 @@ function pre_check() {
             selectedSkuArr.push(sku.innerText);
         };
         input.value = null;
+        td_checker (all_td);
     } else if (skuArr.includes(value) && !selectedSkuArr.includes(value) && document.getElementById(localStorage.getItem('selectedBox')).getAttribute('class') == 'lead text-center rounded shadow-sm bg-info') {
         const qtyPerSKu = document.getElementById(`qty_${value}_${localStorage.getItem('selectedBox')}`);
         if (qtyPerSKu) {
@@ -62,6 +64,7 @@ function pre_check() {
                 document.getElementById(`qty_${value}_${localStorage.getItem('selectedBox')}`).parentElement.setAttribute('class','bg-info');
                 selectedSkuArr.push(document.getElementById(`${value}_${localStorage.getItem('selectedBox')}`).innerHTML);
                 input.value = null;
+                td_checker (all_td);
             }
         } else {
             alert(`${value} is not associated with the box: ${localStorage.getItem('selectedBox')}; please scan the right box first`);
@@ -73,8 +76,45 @@ function pre_check() {
     }
 }
 
+function td_checker (arr) {
+    var finalCount = 0;
+    for (let i = 0; i < arr.length; i++) {
+        const eachTd = arr[i].parentElement;
+        if (eachTd.getAttribute('class') == 'bg-info') {
+            finalCount++
+        }
+    };
+    if (finalCount == arr.length) {
+        if (confirm(`Please confirm the shipping for ${arr.length/2} SKUs`)) {
+            updateReqContainer(container_id);
+        }
+    }
+}
+
 var timer = null;
 function delay(fn){
     clearTimeout(timer);
     timer = setTimeout(fn, 50)
+}
+
+async function updateReqContainer(container_id) {
+    const shipped_date = new Date().toLocaleDateString("en-US");
+    const id = container_id;
+    const status = 3;
+    const response = await fetch(`/api/container/reqContainer`, {
+        method: 'PUT',
+        body: JSON.stringify({
+            id,
+            status,
+            shipped_date
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (response.ok) {
+        alert('this requested container has been confirmed for shipping!');
+        window.location.replace('/admin_move_main_amazon');
+    }
+
 }

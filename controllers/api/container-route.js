@@ -32,6 +32,29 @@ router.put('/account_merge', withAuth, (req, res) => {
       });
 });
 
+router.put('/reqContainer', withAuth, (req, res) => {
+  Container.update({
+      status: req.body.status,
+      shipped_date: req.body.shipped_date
+    },
+    {
+      where: {
+          id: req.body.id
+      }
+    })
+    .then(dbContainerData => {
+      if (!dbContainerData[0]) {
+        res.status(404).json({ message: 'This Container does not exist!' });
+        return;
+      }
+      res.json(dbContainerData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
 router.get('/amazon_container/:key', withAuth, async (req, res) => {
   try {
     const singleContainer = await Container.findOne({
