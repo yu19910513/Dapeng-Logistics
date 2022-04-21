@@ -1,14 +1,15 @@
 function update() {
     var scan_item = document.getElementById('scanned_item').value;
-    if (scan_item.length > 10 && scan_item[0] == 'S' && scan_item[1] == 'W') {
+    if (scan_item.length > 10 && scan_item.substring(0,2) == 'SW') {
         auto_receive(scan_item);
         localStorage.setItem('scan_item',scan_item);
-    } else if (scan_item.substring(0,2) == '1Z' || scan_item.length == 22 || scan_item.length == 12) {
+    } else if ((scan_item.substring(0,2) == '1Z' || scan_item.length == 22 || scan_item.length == 12) && scan_item.substring(0,2) != 'SW') {
         track_receive(scan_item);
+    } else if (scan_item.length > 12 && scan_item.length < 22 || scan_item.length > 22) {
+      error();
+      document.getElementById('scanned_item').value = null
     }
-}
-
-
+};
 async function auto_receive(event) {
       const box_number = event;
       const status = 1;
@@ -33,6 +34,7 @@ async function auto_receive(event) {
         child.innerHTML = box_number + `&#9989`;
         list.prepend(child);
        } else {
+        error();
         document.getElementById('scanned_item').value = null;
         const list = document.getElementById("inserted_item");
         var child = document.createElement('h4');
@@ -41,13 +43,17 @@ async function auto_receive(event) {
         localStorage.clear();
        }
 
-  }
-
-  async function track_receive(event) {
+};
+async function track_receive(event) {
     const box_number = localStorage.getItem('scan_item');
     if (!box_number) {
+      error();
       document.getElementById('scanned_item').value = null;
-      alert('Need to scan box first!')
+      const list = document.getElementById("inserted_item");
+      var child = document.createElement('h3');
+      child.setAttribute('class','text-danger');
+      child.innerHTML = 'Need to scan box first before scanning tracking number'
+      list.prepend(child);
     } else {
     const tracking = event
     const response = await fetch(`/api/box/status_admin_receiving_t`, {
@@ -76,4 +82,8 @@ var timer = null;
 function delay(fn){
     clearTimeout(timer);
     timer = setTimeout(fn, 50)
-}
+};
+function error() {
+  var audio = new Audio('../media/wrong.mp3');
+  audio.play();
+};

@@ -27,11 +27,7 @@ function boxQuery() {
         collection.appendChild(list);
         }
     });
-};
-
-boxQuery();
-
-
+};boxQuery();
 async function pre_check() {
     const box_number = document.getElementById('scanned_item').value;
     const status = 3;
@@ -62,13 +58,24 @@ async function pre_check() {
             window.location.href = '/admin_move_main';
         }
         };
-    } else if (box_number.length >= 12){
+    } else {
+        error();
         document.getElementById('scanned_item').value = null;
         const wrongItem = document.createElement('h5');
         const collection = document.getElementById('inserted_item');
         wrongItem.innerHTML = `&#10060` + ` wrong box (${box_number})`;
         collection.appendChild(wrongItem);
-        alert('Wrong Box!')
     }
 
+};
+
+var timer = null;
+function delay(fn){
+    clearTimeout(timer);
+    timer = setTimeout(fn, 50)
+};
+
+function error() {
+    var audio = new Audio('../media/wrong.mp3');
+    audio.play();
 };

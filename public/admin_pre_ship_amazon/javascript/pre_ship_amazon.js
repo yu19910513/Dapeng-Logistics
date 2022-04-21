@@ -23,6 +23,7 @@ function supplemental () {
 var selectedSkuArr = [];
 var skuArr = [];
 function pre_check() {
+    document.getElementById('alert').innerHTML = null;
     const value = input.value.trim();
     const all_td = document.querySelectorAll('td');
     if (container_numberArr.includes(value) && document.getElementById(value).getAttribute('class') != 'lead text-center rounded shadow-sm bg-info') {
@@ -67,11 +68,13 @@ function pre_check() {
                 td_checker (all_td);
             }
         } else {
-            alert(`${value} is not associated with the box: ${localStorage.getItem('selectedBox')}; please scan the right box first`);
+            error();
+            document.getElementById('alert').innerHTML = `${value} is not associated with the box: ${localStorage.getItem('selectedBox')}; please scan the right box first`;
             input.value = null;
         }
     } else {
-        alert('Incorrect Input');
+        error();
+        document.getElementById('alert').innerHTML = 'incorrect input';
         input.value = null;
     }
 }
@@ -118,3 +121,8 @@ async function updateReqContainer(container_id) {
     }
 
 }
+
+function error() {
+    var audio = new Audio('../media/wrong.mp3');
+    audio.play();
+};
