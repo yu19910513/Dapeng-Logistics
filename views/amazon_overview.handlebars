@@ -1,0 +1,23 @@
+{{#if admin}}
+<script src="javascript/admin_redirect.js"></script>
+{{else}}
+<p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
+
+<div class="container">
+    <table class="uk-table uk-table-small uk-table-divider myTable shadow-sm" id="myTable">
+            <thead>
+                <tr id="skuList">
+                    <th>Container({{containers.length}})/ SKU</th>
+                </tr>
+            </thead>
+            <tbody>
+                    {{#each containers as |container|}}
+                        {{> overview-data container }}
+                    {{else}}
+                        <h3 class="text-center">NO ORDER WAS FOUND!</h3>
+                    {{/each}}
+            </tbody>
+    </table>
+</div>
+<script src="javascript/amazon_overview.js"></script>
+{{/if}}
