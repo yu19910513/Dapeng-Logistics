@@ -9,3 +9,5 @@ please refer to https://youtu.be/NZElg91l_ms
 In config/connection, const sequelize = process.env.DATABASE_URL,
 In heroku config var:
 {DATABASE_URL: “mysql://Username:Password@AWS_RDS_Endpoint/DB_Name?sslmode=verify-full&sslrootcert=config/rds-combined-ca-bundle.pem”}
+
+# 21YunBox
