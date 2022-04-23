@@ -274,18 +274,16 @@ function exportData() {
 }
 
 async function loadingBox(data) {
-
-        const response = await fetch('/api/box', {
-            method: 'post',
-            body: JSON.stringify(data),
-            headers: { 'Content-Type': 'application/json' }
-          });
-          if (response.ok) {
-            console.log('order placed successfully!')
-          } else {
-            alert('try again')
-          }
-
+    const response = await fetch('/api/box', {
+        method: 'post',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+      });
+      if (response.ok) {
+        console.log('order placed successfully!')
+      } else {
+        alert('try again')
+    }
 }
 
 async function loadingBatch1(data) {

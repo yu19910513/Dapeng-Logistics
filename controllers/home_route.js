@@ -1293,6 +1293,75 @@ router.get('/amazon_overview', withAuth, async (req, res) => {
     console.log(err);
     res.status(500).json(err);
   }
+});
+
+router.get('/amazon_overview/:id', withAuth, async (req, res) => {
+  try {
+    const containerData = await Container.findAll({
+      where: {
+        user_id: req.session.user_id,
+        account_id: req.params.id,
+        status: [1,2]
+      },
+      order: [
+        ['container_number', 'ASC']
+      ],
+        attributes: [
+          'id',
+          'user_id',
+          'account_id',
+          's3',
+          'notes',
+          'id',
+          'container_number',
+          'description',
+          'cost',
+          'requested_date',
+          'received_date',
+          'shipped_date',
+          'type',
+          'length',
+          'width',
+          'height',
+          'weight',
+          'volume',
+          'status',
+          'location',
+          'file',
+          'file_2',
+          'fba',
+          'bill_received',
+          'bill_storage',
+          'bill_shipped'
+        ],
+          include: [
+            {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+            }
+          ]
+      })
+    const containers = containerData.map(container => container.get({ plain: true }));
+    var account_name;
+    if (containers.length) {
+      account_name = containers[0].account.name
+    } else {
+      account_name = 'N/A'
+    }
+    res.render('amazon_overview', {
+      containers,
+      accountName: account_name,
+      loggedIn: true,
+      accountId: req.params.id,
+      admin: req.session.admin,
+      name: req.session.name
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 })
 
 // router.get('/rawData', withAuth, (req, res) => {
