@@ -6,19 +6,67 @@
 <div id="alert" class="text-danger text-center"></div>
 </div>
 
-<form class="container shadow col-md-5 col-sm-8 p-2 py-3 mt-2">
-<input type="text" class="form-control mb-3" id="scanned_item" placeholder="Scan..." aria-label="Username" aria-describedby="basic-addon1" onkeyup="delay(pre_check)">
-<div class="row justify-content-center p-3">
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col-lg-5 col-md-6">
+      <form class="shadow p-2 py-3 mt-2 rounded">
+      <input type="text" class="form-control mb-3" id="scanned_item" placeholder="Scan..." aria-label="Username" aria-describedby="basic-addon1" onkeyup="delay(pre_check)">
+    <div class="row justify-content-center p-3">
   {{#each requests as |request|}}
     {{> preShipAmazonConfirmation request }}
   {{else}}
-  <h1 class="lead">Great! You have completed all of the ship-out requests!</h1>
-  <div class="col-4 uk-align-center mt-2">
-    <a href="/" class="uk-button uk-button-default" uk-icon="home"></a>
-  </div>
+    <h1 class="lead">Great! You have completed all of the ship-out requests!</h1>
+    <div class="col-4 uk-align-center mt-2">
+      <a href="/" class="uk-button uk-button-default" uk-icon="home"></a>
+    </div>
   {{/each}}
+  </div>
+      </form>
+    </div>
+  {{!-- divdie line --}}
+    <div class="col-lg-4 col-md-5">
+      <form class="shadow p-2 py-3 mt-2 rounded border border-info" id="creator_form">
+        <div class="mb-2 text-center lead">
+        <div>#<span id="pre-shipN"></span></div>
+        </div>
+                <div class="row">
+                    <div class="col">
+                    <label for="length">Length</label>
+                      <input type="number" class="form-control" id="new_len" placeholder="inch" onkeyup="masterCheck()">
+                    </div>
+                    <div class="col">
+                        <label for="width">Width</label>
+                      <input type="number" class="form-control" id="new_wid" placeholder="inch" onkeyup="masterCheck()">
+                    </div>
+                    <div class="col">
+                        <label for="height">Height</label>
+                        <input type="number" class="form-control" id="new_hei" placeholder="inch" onkeyup="masterCheck()">
+                    </div>
+                    <div class="col">
+                        <label for="weight">Weight</label>
+                        <input type="number" class="form-control" id="new_wei" placeholder="lb" onkeyup="masterCheck()">
+                    </div>
+                </div>
+
+                <div class="form-group mt-3">
+                    <table class="uk-table uk-table-small uk-table-divider bg-light shadow-sm" id="sku_table">
+                        <thead>
+                            <tr>
+                                <th>SKU</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sku_list">
+                        </tbody>
+                    </table>
+                <a id="order_pre-check" class="btn btn-primary mt-3 text-white col-12" style="display: none;" onclick="amazonCreate()">Ready to Seal</a>
+                <a id="fake" class="btn btn-secondary mt-3 text-white col-12">Not Ready to Seal</a>
+                </div>
+      </form>
+    </div>
+  </div>
 </div>
-</form>
+
 
 <script src="javascript/pre_ship_amazon.js"></script>
 {{else}}

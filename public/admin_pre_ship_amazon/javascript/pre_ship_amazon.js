@@ -1,4 +1,5 @@
 const container_id = location.href.split('/').slice(-1)[0];
+const pre_shipN = document.getElementById('pre-shipN');
 const notes = document.getElementById('notes');
 const input = document.getElementById("scanned_item");
 var container_numberArr = [];
@@ -122,7 +123,12 @@ async function updateReqContainer(container_id) {
 
 }
 
+
+//helper functions
 function error() {
     var audio = new Audio('../media/wrong.mp3');
     audio.play();
 };
+
+var instance = new Date().valueOf().toString().substring(5,13)+container_id;
+pre_shipN.innerHTML = `SP${instance}`
