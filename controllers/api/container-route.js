@@ -348,7 +348,28 @@ router.delete('/destroyBulk', withAuth, (req, res) => {
     console.log(err);
     res.status(500).json(err);
   });
-})
+});
+
+router.post('/amazon_box', withAuth, (req, res) => {
+  Container.create({
+    container_number: req.body.container_number,
+    account_id: req.body.account_id,
+    user_id: req.body.user_id,
+    description: req.body.description,
+    length: req.body.length,
+    width: req.body.width,
+    height: req.body.height,
+    volume: req.body.volume,
+    weight: req.body.weight,
+    type: req.body.type,
+    received_date: new Date().toLocaleDateString("en-US")
+  }, {returning: true})
+      .then(dbBoxData => res.json(dbBoxData))
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+});
 
 
 module.exports = router;

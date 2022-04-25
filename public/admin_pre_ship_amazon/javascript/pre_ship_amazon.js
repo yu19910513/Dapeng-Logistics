@@ -8,6 +8,7 @@ const height = document.getElementById('new_hei');
 const weight = document.getElementById('new_wei');
 const width = document.getElementById('new_wid');
 const newContainerTable = document.getElementById('sku_table');
+var user_id, account_id;
 
 var container_numberArr = [];
 function supplemental () {
@@ -16,6 +17,8 @@ function supplemental () {
     }).then(function (response) {
         return response.json();
     }).then(function (data) {
+        user_id = data[0].user_id;
+        account_id = data[0].account_id;
         notes.innerHTML = data[0].notes;
         const descriptionArr = document.querySelectorAll('h5');
         const tableArr = document.querySelectorAll('table')
@@ -88,8 +91,7 @@ function pre_check() {
         document.getElementById('alert').innerHTML = 'incorrect input';
         input.value = null;
     }
-}
-
+};
 function td_checker (arr) {
     var finalCount = 0;
     for (let i = 0; i < arr.length; i++) {
@@ -103,14 +105,13 @@ function td_checker (arr) {
             updateReqContainer(container_id);
         }
     }
-}
+};
 
 var timer = null;
 function delay(fn){
     clearTimeout(timer);
     timer = setTimeout(fn, 50)
-}
-
+};
 async function updateReqContainer(container_id) {
     const shipped_date = new Date().toLocaleDateString("en-US");
     const id = container_id;
@@ -131,9 +132,51 @@ async function updateReqContainer(container_id) {
         window.location.replace('/admin_move_main_amazon');
     }
 
-}
+};
 
+var amazon_box = new Object();
+function shippmentCreate() {
+    amazon_box.length = length.value.trim()*2.54;
+    amazon_box.width = width.value.trim()*2.54;
+    amazon_box.height = height.value.trim()*2.54;
+    amazon_box.weight = weight.value.trim()*0.45;
+    amazon_box.volume = length.value*width.value*height.value;
+    amazon_box.container_number = pre_shipN.innerHTML;
+    amazon_box.type = 3;
+    amazon_box.user_id = user_id;
+    amazon_box.account_id = account_id;
+    boxCreate(amazon_box)
+};
+async function boxCreate(data) {
+    console.log('boxCreate');
+    const response = await fetch('/api/container/amazon_box', {
+        method: 'post',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+      });
 
+      if (response.ok) {
+       console.log("amazon box inserted");
+       findContainerId(data.container_number);
+      } else {
+        alert('try again')
+   }
+};
+function findContainerId(c_number) {
+    console.log('getting container_id');
+    fetch(`/api/container/amazon_container/${c_number}`, {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        console.log('container_id fetched');
+        var instance = new Date().valueOf().toString().substring(5,13)+container_id;
+        pre_shipN.innerHTML = `SP${instance}`
+        amazon_box.id = data.id
+        console.log(data.id);
+        // itemCreate()***********************************
+    })
+};
 //helper functions
 function error() {
     var audio = new Audio('../media/wrong.mp3');
