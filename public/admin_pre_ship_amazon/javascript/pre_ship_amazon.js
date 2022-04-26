@@ -211,7 +211,8 @@ function itemCreate() {
         item.description = amazon_box.description;
         loadingItems(item);
     };
-    loader.style.display = 'none';
+    removeItem();
+    console.log('done');
     alert(`1 container(#${amazon_box.container_number}) with ${rows.length-1} items is inserted to client_id: ${amazon_box.user_id}!`)
     location.reload()
 };
@@ -273,6 +274,25 @@ function eachBoxContent (arr, input) {
         }
     }
 
-}
+};
 var instance = new Date().valueOf().toString().substring(5,13)+container_id;
-pre_shipN.innerHTML = `SP${instance}`
+pre_shipN.innerHTML = `SP${instance}`;
+
+function removeItem() {
+    console.log('preparing removal');
+    var idarr = [];
+    for (let i = 0; i < selectedSkuArr.length; i++) {
+        idarr.push(item_numberMap.get(selectedSkuArr[i]))
+    };
+    removeZeroItem(idarr);
+};
+function removeZeroItem(id) {
+    console.log('bulk removal');
+    fetch(`/api/item/bulkDestroy/`, {
+      method: 'DELETE',
+      body: JSON.stringify({
+        id: id
+        }),
+      headers: {'Content-Type': 'application/json'}
+    });
+};
