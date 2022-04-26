@@ -207,9 +207,11 @@ function storage_billing(pageData, i, lastBillDate) {
 };
 //month validation: only bill the box not shipped or shipped this month
 function monthValidate(s) {
-    var ending_month= new Date(s).getMonth();
-    var thisMonth = new Date(today).getMonth();
-    if (ending_month == thisMonth) {
+    const ending_year = new Date(s).getFullYear();
+    const this_year = new Date(today).getFullYear();
+    const ending_month= new Date(s).getMonth();
+    const thisMonth = new Date(today).getMonth();
+    if (ending_month == thisMonth && ending_year == this_year) {
         return true
     } return false
 };
@@ -602,5 +604,5 @@ function done() {
 
 
 ///tool
-const test = new Date('3/20/2022').getTime()
+const test = new Date('4/20/2022').getTime()
 console.log(test.toString());
