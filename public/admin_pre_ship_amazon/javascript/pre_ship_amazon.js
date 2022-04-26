@@ -9,6 +9,8 @@ const weight = document.getElementById('new_wei');
 const width = document.getElementById('new_wid');
 const newContainerTable = document.getElementById('sku_table');
 var item_numberMap = new Map();
+var id_qtyMap = new Map();
+var iidArr = [];
 var user_id, account_id;
 var selectedSkuArr = [];
 var skuArr = [];
@@ -20,37 +22,44 @@ function supplemental () {
     }).then(function (response) {
         return response.json();
     }).then(function (data) {
-        user_id = data[0].user_id;
-        account_id = data[0].account_id;
-        notes.innerHTML = data[0].notes;
-        const descriptionArr = document.querySelectorAll('h5');
-        const tableArr = document.querySelectorAll('table')
-        for (let i = 0; i < descriptionArr.length; i++) {
-            const container_number = descriptionArr[i].innerText.split(':')[0];
-            descriptionArr[i].setAttribute('id',container_number);
-            tableArr[i].setAttribute('id', `t_${container_number}`);
-            container_numberArr.push(container_number);
-        };
-        itemIdCollection();
+        if (data.length) {
+            user_id = data[0].user_id;
+            account_id = data[0].account_id;
+            notes.innerHTML = data[0].notes;
+            const descriptionArr = document.querySelectorAll('h5');
+            const tableArr = document.querySelectorAll('table')
+            for (let i = 0; i < descriptionArr.length; i++) {
+                const container_number = descriptionArr[i].innerText.split(':')[0];
+                descriptionArr[i].setAttribute('id',container_number);
+                tableArr[i].setAttribute('id', `t_${container_number}`);
+                container_numberArr.push(container_number);
+            };
+            itemIdCollection();
+        } else {
+            window.location.replace('/admin_move_main_amazon');
+        }
     })
 };supplemental();
 
 function itemIdCollection() {
-    fetch(`/api/item/allItemAdmin/`, {
+    fetch(`/api/item/findAllPerContainer/${container_id}`, {
         method: 'GET'
     }).then(function (response) {
         return response.json();
     }).then(function (data) {
-        for (let i = 0; i < data.length; i++) {
-            if (data[i].container.type == 2 && data[i].user_id ==  user_id && data[i].account_id == account_id) {
+        if (data.length) {
+            for (let i = 0; i < data.length; i++) {
                 const item_number = data[i].item_number;
                 const description = data[i].description;
                 const item_id = data[i].id;
                 const box_number = description.split(':')[0];
-                const itemCode = `${item_number}-${box_number}`;//***************************//
+                const itemCode = `${item_number}-${box_number}`;
                 item_numberMap.set(itemCode, item_id)
                 skuArr.push(itemCode)
             }
+        } else {
+            console.log('no item in this container! box self-destroyed');
+            updateReqContainer(container_id);
         }
     })
 };
@@ -85,22 +94,24 @@ function pre_check() {
             eachBoxContent(rows[i])
         };
         input.value = null;
-        td_checker (all_td);
     } else if (skuArr.includes(`${value}-${localStorage.getItem('selectedBox')}`) && !selectedSkuArr.includes(`${value}-${localStorage.getItem('selectedBox')}`) && document.getElementById(localStorage.getItem('selectedBox')).getAttribute('class') == 'lead text-center rounded shadow-sm bg-info') {
         const qtyPerSKu = document.getElementById(`qty_${value}_${localStorage.getItem('selectedBox')}`);
         if (qtyPerSKu) {
             const newQty = parseInt(qtyPerSKu.innerHTML)-1;
+            const iid = item_numberMap.get(`${value}-${localStorage.getItem('selectedBox')}`);
             if (newQty > 0) {
                 document.getElementById(`qty_${value}_${localStorage.getItem('selectedBox')}`).innerHTML = newQty;
-                eachBoxContent(null, value)
+                id_qtyMap.set(iid,newQty);
+                iidArr.push(iid);
+                eachBoxContent(null, value);
                 input.value = null;
             } else if (newQty == 0) {
-                eachBoxContent(null, value)
+                eachBoxContent(null, value);
+                iidArr.filter(id => id != iid)
                 document.getElementById(`qty_${value}_${localStorage.getItem('selectedBox')}`).innerHTML = newQty;
                 document.getElementById(`qty_${value}_${localStorage.getItem('selectedBox')}`).parentElement.setAttribute('class','bg-info');
                 selectedSkuArr.push(`${document.getElementById(`${value}_${localStorage.getItem('selectedBox')}`).innerHTML}-${localStorage.getItem('selectedBox')}`);
                 input.value = null;
-                td_checker (all_td);
             }
         } else {
             error();
@@ -113,20 +124,6 @@ function pre_check() {
         input.value = null;
     }
 };
-function td_checker (arr) {
-    var finalCount = 0;
-    for (let i = 0; i < arr.length; i++) {
-        const eachTd = arr[i].parentElement;
-        if (eachTd.getAttribute('class') == 'bg-info') {
-            finalCount++
-        }
-    };
-    if (finalCount == arr.length) {
-        if (confirm(`Please confirm the shipping for ${arr.length/2} SKUs`)) {
-            updateReqContainer(container_id);
-        }
-    }
-};
 
 var timer = null;
 function delay(fn){
@@ -134,15 +131,11 @@ function delay(fn){
     timer = setTimeout(fn, 50)
 };
 async function updateReqContainer(container_id) {
-    const shipped_date = new Date().toLocaleDateString("en-US");
     const id = container_id;
-    const status = 3;
-    const response = await fetch(`/api/container/reqContainer`, {
-        method: 'PUT',
+    const response = await fetch(`/api/container/destroyBulk`, {
+        method: 'DELETE',
         body: JSON.stringify({
-            id,
-            status,
-            shipped_date
+            id: id
         }),
         headers: {
             'Content-Type': 'application/json'
@@ -285,6 +278,12 @@ function removeItem() {
         idarr.push(item_numberMap.get(selectedSkuArr[i]))
     };
     removeZeroItem(idarr);
+    for (let k = 0; k < iidArr.length; k++) {
+        var eachUpdatedItem = new Object();
+        eachUpdatedItem.id = iidArr[k];
+        eachUpdatedItem.qty_per_sku = id_qtyMap.get(iidArr[k]);
+        updateQty(eachUpdatedItem)
+    }
 };
 function removeZeroItem(id) {
     console.log('bulk removal');
@@ -296,3 +295,12 @@ function removeZeroItem(id) {
       headers: {'Content-Type': 'application/json'}
     });
 };
+function updateQty(data) {
+    fetch(`/api/item/updateQtyPerItemId/${data.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          qty_per_sku: data.qty_per_sku
+          }),
+        headers: {'Content-Type': 'application/json'}
+    });
+}

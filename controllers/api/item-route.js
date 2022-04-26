@@ -290,6 +290,7 @@ router.get('/findAllPerContainer/:container_id', withAuth, async (req, res) => {
         'id',
         'item_number',
         'qty_per_sku',
+        'description',
         'user_id',
         'account_id',
         'container_id'
@@ -334,6 +335,28 @@ router.put('/updateQty_ExistedItemId/:container_id&:item_id', withAuth, (req, re
     {
       where: {
         container_id: req.params.container_id,
+        id: req.params.item_id
+      }
+    })
+    .then(dbItemData => {
+      if (!dbItemData[0]) {
+        res.status(404).json({ message: 'This Item does not exist!' });
+        return;
+      }
+      res.json(dbItemData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+router.put('/updateQtyPerItemId/:item_id', withAuth, (req, res) => {
+  Item.update({
+      qty_per_sku: req.body.qty_per_sku
+    },
+    {
+      where: {
         id: req.params.item_id
       }
     })
