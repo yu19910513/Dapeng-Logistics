@@ -8,7 +8,10 @@ const height = document.getElementById('new_hei');
 const weight = document.getElementById('new_wei');
 const width = document.getElementById('new_wid');
 const newContainerTable = document.getElementById('sku_table');
+var item_numberMap = new Map();
 var user_id, account_id;
+var selectedSkuArr = [];
+var skuArr = [];
 
 var container_numberArr = [];
 function supplemental () {
@@ -28,11 +31,30 @@ function supplemental () {
             tableArr[i].setAttribute('id', `t_${container_number}`);
             container_numberArr.push(container_number);
         };
+        itemIdCollection();
     })
 };supplemental();
 
-var selectedSkuArr = [];
-var skuArr = [];
+function itemIdCollection() {
+    fetch(`/api/item/allItemAdmin/`, {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        for (let i = 0; i < data.length; i++) {
+            if (data[i].container.type == 2 && data[i].user_id ==  user_id && data[i].account_id == account_id) {
+                const item_number = data[i].item_number;
+                const description = data[i].description;
+                const item_id = data[i].id;
+                const box_number = description.split(':')[0];
+                const itemCode = `${item_number}-${box_number}`;//***************************//
+                item_numberMap.set(itemCode, item_id)
+                skuArr.push(itemCode)
+            }
+        }
+    })
+};
+
 function pre_check() {
     document.getElementById('alert').innerHTML = null;
     const value = input.value.trim();
@@ -47,7 +69,6 @@ function pre_check() {
         const rows = eachTable.rows;
         for (let i = 1; i < rows.length; i++) {
             const sku = rows[i].getElementsByTagName("td")[0];
-            skuArr.push(sku.innerHTML);
             sku.setAttribute('id',`${sku.innerText}_${value}`)
             const qty = rows[i].getElementsByTagName("td")[1];
             qty.setAttribute('id',`qty_${sku.innerText}_${value}`)
@@ -60,12 +81,12 @@ function pre_check() {
         for (let i = 1; i < rows.length; i++) {
             rows[i].setAttribute('class','bg-info')
             const sku = rows[i].getElementsByTagName("td")[0];
-            selectedSkuArr.push(sku.innerText);
+            selectedSkuArr.push(`${sku.innerText}-${localStorage.getItem('selectedBox')}`);
             eachBoxContent(rows[i])
         };
         input.value = null;
         td_checker (all_td);
-    } else if (skuArr.includes(value) && !selectedSkuArr.includes(value) && document.getElementById(localStorage.getItem('selectedBox')).getAttribute('class') == 'lead text-center rounded shadow-sm bg-info') {
+    } else if (skuArr.includes(`${value}-${localStorage.getItem('selectedBox')}`) && !selectedSkuArr.includes(`${value}-${localStorage.getItem('selectedBox')}`) && document.getElementById(localStorage.getItem('selectedBox')).getAttribute('class') == 'lead text-center rounded shadow-sm bg-info') {
         const qtyPerSKu = document.getElementById(`qty_${value}_${localStorage.getItem('selectedBox')}`);
         if (qtyPerSKu) {
             const newQty = parseInt(qtyPerSKu.innerHTML)-1;
@@ -77,7 +98,7 @@ function pre_check() {
                 eachBoxContent(null, value)
                 document.getElementById(`qty_${value}_${localStorage.getItem('selectedBox')}`).innerHTML = newQty;
                 document.getElementById(`qty_${value}_${localStorage.getItem('selectedBox')}`).parentElement.setAttribute('class','bg-info');
-                selectedSkuArr.push(document.getElementById(`${value}_${localStorage.getItem('selectedBox')}`).innerHTML);
+                selectedSkuArr.push(`${document.getElementById(`${value}_${localStorage.getItem('selectedBox')}`).innerHTML}-${localStorage.getItem('selectedBox')}`);
                 input.value = null;
                 td_checker (all_td);
             }
@@ -174,9 +195,37 @@ function findContainerId(c_number) {
         pre_shipN.innerHTML = `SP${instance}`
         amazon_box.id = data.id
         console.log(data.id);
-        // itemCreate()***********************************
+        itemCreate()
     })
 };
+function itemCreate() {
+    console.log('itemCreate');
+    var rows = newContainerTable.rows;
+    for (let i = 1; i < rows.length; i++) {
+        var item = new Object()
+        item.item_number = rows[i].cells[0].innerHTML;
+        item.qty_per_sku = parseInt(rows[i].cells[1].innerHTML);
+        item.user_id = amazon_box.user_id;
+        item.account_id = amazon_box.account_id;
+        item.container_id = amazon_box.id;
+        item.description = amazon_box.description;
+        loadingItems(item);
+    };
+    loader.style.display = 'none';
+    alert(`1 container(#${amazon_box.container_number}) with ${rows.length-1} items is inserted to client_id: ${amazon_box.user_id}!`)
+    location.reload()
+};
+function loadingItems(data) {
+    fetch('/api/item/new', {
+        method: 'post',
+        body: JSON.stringify(data),
+        headers: {'Content-Type': 'application/json'}
+    });
+};
+
+
+
+
 //helper functions
 function error() {
     var audio = new Audio('../media/wrong.mp3');
