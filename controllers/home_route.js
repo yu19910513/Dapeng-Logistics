@@ -228,7 +228,7 @@ router.get('/request_amazon_confirmation', withAuth, async (req, res) => {
         'account_id',
         's3',
         'notes',
-        'id',
+        'tracking',
         'container_number',
         'description',
         'cost',
@@ -259,7 +259,7 @@ router.get('/request_amazon_confirmation', withAuth, async (req, res) => {
         }
     });
     const containers = containerData.map(container => container.get({ plain: true }));
-    res.render('request_amazon_confirmation', {containers, loggedIn: true, admin: req.session.admin, name: req.session.name, accountId: req.params.id});
+    res.render('request_amazon_confirmation', {containers, loggedIn: true, admin: req.session.admin, name: req.session.name});
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
@@ -1296,7 +1296,6 @@ router.get('/request_amazon_confirmation/:id', withAuth, async (req, res) => {
         'tracking',
         's3',
         'notes',
-        'id',
         'container_number',
         'description',
         'cost',

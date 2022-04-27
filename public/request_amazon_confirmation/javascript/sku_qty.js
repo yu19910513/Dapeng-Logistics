@@ -70,9 +70,10 @@ function allItem() {
 allItem();
 
 var selectBoxId = [];
-function selectBatch (tracking, id) {
+function selectBatch (tracking) {
   selectBoxId = [];
   const allSiblingBoxes = document.getElementsByClassName(tracking);
+  console.log(allSiblingBoxes, tracking);
   for (let i = 0; i < allSiblingBoxes.length; i++) {
     const eachCheckBox = allSiblingBoxes[i].getElementsByTagName('input')[0];
     const eachContainerId = parseInt(eachCheckBox.parentElement.parentElement.getAttribute('id').split('_')[1]);
