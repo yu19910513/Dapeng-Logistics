@@ -159,6 +159,7 @@ function shippmentCreate() {
     amazon_box.type = 3;
     amazon_box.user_id = user_id;
     amazon_box.account_id = account_id;
+    amazon_box.tracking = container_id;
     boxCreate(amazon_box)
 };
 async function boxCreate(data) {

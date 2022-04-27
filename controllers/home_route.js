@@ -168,6 +168,7 @@ router.get('/request_amazon', withAuth, async (req, res) => {
       where: {
         user_id: req.session.user_id,
         status: 1,
+        type: [1,2]
       },
       attributes: [
         'id',
@@ -207,6 +208,58 @@ router.get('/request_amazon', withAuth, async (req, res) => {
     });
     const containers = containerData.map(container => container.get({ plain: true }));
     res.render('request_amazon', {containers, loggedIn: true, admin: req.session.admin, name: req.session.name, accountId: req.params.id});
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+router.get('/request_amazon_confirmation', withAuth, async (req, res) => {
+  try {
+    const containerData = await Container.findAll({
+      where: {
+        user_id: req.session.user_id,
+        status: 1,
+        type: 3
+      },
+      attributes: [
+        'id',
+        'user_id',
+        'account_id',
+        's3',
+        'notes',
+        'id',
+        'container_number',
+        'description',
+        'cost',
+        'requested_date',
+        'received_date',
+        'shipped_date',
+        'type',
+        'length',
+        'width',
+        'height',
+        'weight',
+        'volume',
+        'status',
+        'location',
+        'file',
+        'file_2',
+        'fba',
+        'bill_received',
+        'bill_storage',
+        'bill_shipped'
+      ],
+      include:
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        }
+    });
+    const containers = containerData.map(container => container.get({ plain: true }));
+    res.render('request_amazon_confirmation', {containers, loggedIn: true, admin: req.session.admin, name: req.session.name, accountId: req.params.id});
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
@@ -1181,6 +1234,7 @@ router.get('/request_amazon/:id', withAuth, async (req, res) => {
         user_id: req.session.user_id,
         account_id: req.params.id,
         status: 1,
+        type: [1,2]
       },
       attributes: [
         'id',
@@ -1220,6 +1274,59 @@ router.get('/request_amazon/:id', withAuth, async (req, res) => {
     });
     const containers = containerData.map(container => container.get({ plain: true }));
     res.render('request_amazon', {containers, loggedIn: true, admin: req.session.admin, name: req.session.name, accountId: req.params.id});
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+router.get('/request_amazon_confirmation/:id', withAuth, async (req, res) => {
+  try {
+    const containerData = await Container.findAll({
+      where: {
+        user_id: req.session.user_id,
+        account_id: req.params.id,
+        status: 1,
+        type: 3
+      },
+      attributes: [
+        'id',
+        'user_id',
+        'account_id',
+        's3',
+        'notes',
+        'id',
+        'container_number',
+        'description',
+        'cost',
+        'requested_date',
+        'received_date',
+        'shipped_date',
+        'type',
+        'length',
+        'width',
+        'height',
+        'weight',
+        'volume',
+        'status',
+        'location',
+        'file',
+        'file_2',
+        'fba',
+        'bill_received',
+        'bill_storage',
+        'bill_shipped'
+      ],
+      include:
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        }
+    });
+    const containers = containerData.map(container => container.get({ plain: true }));
+    res.render('request_amazon_confirmation', {containers, loggedIn: true, admin: req.session.admin, name: req.session.name, accountId: req.params.id});
   } catch (err) {
     console.log(err);
     res.status(500).json(err);

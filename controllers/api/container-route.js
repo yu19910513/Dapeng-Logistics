@@ -361,7 +361,9 @@ router.post('/amazon_box', withAuth, (req, res) => {
     height: req.body.height,
     volume: req.body.volume,
     weight: req.body.weight,
+    tracking: req.body.tracking,
     type: req.body.type,
+    description: `attention: shipping labels required`,
     received_date: new Date().toLocaleDateString("en-US")
   }, {returning: true})
       .then(dbBoxData => res.json(dbBoxData))
