@@ -50,9 +50,6 @@ function allItem() {
         containerMap.get(container_number).forEach(item => {
           const singleSKU = document.createElement('div');
           const singleQty = document.createElement('div');
-          singleQty.setAttribute('class','itemQ');
-          singleQty.setAttribute('id',`${item.container_id}_${item.id}_${item.qty_per_sku}`)
-          singleQty.setAttribute('onkeyup', `validationSKU(${item.container_id},${item.id},${item.qty_per_sku})`)
           singleSKU.innerHTML = item.item_number;
           singleQty.innerHTML = item.qty_per_sku;
           sku.appendChild(singleSKU);
@@ -71,42 +68,58 @@ function allItem() {
     })
   };
 allItem();
-//helper tools
-function validationSKU(container_id, item_id, qty_per_sku) {
-  const qtyInput = document.getElementById(`${container_id}_${item_id}_${qty_per_sku}`);
-  const qtysku = parseInt(qtyInput.innerHTML);
-  if (qtysku <= qty_per_sku && qtysku > 0) {
-    qtyInput.setAttribute('class', 'text-danger itemQ')
-  } else {
-    qtyInput.innerHTML = null;
-    qtyInput.setAttribute('class', 'itemQ')
-  };
-};
-function containerValidation(id) {
-  const eachContainer = document.getElementById((`container_${id}`));
-  const checkbox = eachContainer.getElementsByTagName('input');
-  const singleQty = eachContainer.querySelectorAll('.itemQ');
-  if (checkbox[0].checked) {
-    for (let i = 0; i < singleQty.length; i++) {
-      const div = singleQty[i];
-      div.setAttribute('contenteditable',true)
-    }
-  } else {
-    for (let i = 0; i < singleQty.length; i++) {
-      const div = singleQty[i];
-      const divInfo = singleQty[i].getAttribute('id').split('_');
-      div.innerHTML = divInfo[2];
-      div.removeAttribute('class','text-danger');
-      div.setAttribute('class', 'itemQ');
-      div.setAttribute('contenteditable',false)
-    }
+
+var selectBoxId = [];
+function selectBatch (tracking, id) {
+  selectBoxId = [];
+  const allSiblingBoxes = document.getElementsByClassName(tracking);
+  for (let i = 0; i < allSiblingBoxes.length; i++) {
+    const eachCheckBox = allSiblingBoxes[i].getElementsByTagName('input')[0];
+    const eachContainerId = parseInt(eachCheckBox.parentElement.parentElement.getAttribute('id').split('_')[1]);
+    selectBoxId.push(eachContainerId);
+    eachCheckBox.checked = true
+  }
+  const allOtherBoxes = document.querySelectorAll('tbody input');
+  for (let k = 0; k < allOtherBoxes.length; k++) {
+    allOtherBoxes[k].disabled = true
+  }
+}
+//helper function
+function resetCheckBox() {
+  const allOtherBoxes = document.querySelectorAll('tbody input');
+  for (let k = 0; k < allOtherBoxes.length; k++) {
+    allOtherBoxes[k].disabled = false;
+    allOtherBoxes[k].checked = false;
   }
 };
+
+function GetSelected() {
+  var confirmationBatch = new Object()
+  const code = new Date().valueOf();
+  var fba = document.getElementById('amazon_ref').value.trim()
+  fba = fba.toUpperCase();
+  const notes = document.getElementById('notes').value;
+  confirmationBatch.id = selectBoxId
+  console.log(confirmationBatch);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 // submit function
 var requestedObjArr = [];
 var requestedItemIdArr = [];
 var masterArr = [];
-function GetSelected() {
+function GetSelecte1d() {
   const code = new Date().valueOf();
   var fba = document.getElementById('amazon_ref').value.trim()
   fba = fba.toUpperCase();

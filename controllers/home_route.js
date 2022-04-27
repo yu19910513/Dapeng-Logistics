@@ -1293,6 +1293,7 @@ router.get('/request_amazon_confirmation/:id', withAuth, async (req, res) => {
         'id',
         'user_id',
         'account_id',
+        'tracking',
         's3',
         'notes',
         'id',
