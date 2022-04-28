@@ -2,13 +2,29 @@
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
 <div class="container">
   <a href="/admin_move_main" class="badge alert-light shadow-sm">China Request</a>
+  {{#if confirm}}
+  <a href="/admin_move_main_amazon" class="badge alert-light shadow-sm">Amazon Request</a>
+  <a href="/admin_confirm_amazon" class="badge alert-info shadow-sm">Amazon Confirm ({{confirms.length}})</a>
+  {{else}}
   <a href="/admin_move_main_amazon" class="badge alert-info shadow-sm">Amazon Request ({{requests.length}})</a>
+  <a href="/admin_confirm_amazon" class="badge alert-light shadow-sm">Amazon Confirm</a>
+  {{/if}}
 </div>
 <div class="uk-flex uk-flex-center@m uk-flex-right@l uk-margin-small-right mb-2">
-  <a href="/admin_move_amazon" class="rounded uk-button-small uk-button-primary">Manual Handling</a>
+  {{!-- <a href="/admin_move_amazon" class="rounded uk-button-small uk-button-primary">Manual Handling</a> --}}
 </div>
 <div class="container">
   <div class="row">
+  {{#if confirm}}
+    {{#each confirms as |confirm|}}
+      {{> confirm-card-amazon confirm }}
+    {{else}}
+    <h1 class="lead text-center">Great! You have completed all of the ship-out confirmation!</h1>
+    <div class="col-4 uk-align-center mt-2">
+      <a href="/" class="uk-button uk-button-default text-center" uk-icon="home"></a>
+    </div>
+    {{/each}}
+  {{else}}
     {{#each requests as |request|}}
       {{> requested-card-amazon request }}
     {{else}}
@@ -17,6 +33,7 @@
       <a href="/" class="uk-button uk-button-default text-center" uk-icon="home"></a>
     </div>
     {{/each}}
+  {{/if}}
   </div>
 </div>
 {{else}}

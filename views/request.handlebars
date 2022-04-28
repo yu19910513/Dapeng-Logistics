@@ -58,11 +58,11 @@
         </div>
 
         <div class="uk-navbar-item">
-            <a class="btn btn-sm btn-outline-danger" id='file_btn' href="#modal-files" uk-toggle>夹带档案(.pdf)</a>
-            <a class="btn btn-sm btn-outline-success" href="#modal-notes" uk-toggle>附注留言(notes)</a>
+            <a class="btn btn-sm btn-outline-danger" id='file_btn' href="#modal-files" uk-toggle uk-tooltip=".pdf">夹带档案</a>
+            <a class="btn btn-sm btn-outline-success" href="#modal-notes" uk-toggle uk-tooltip="Notes">附注留言</a>
         </div>
 
-        <a id="js-modal-confirm" class="btn btn-primary shadow-sm" value="Get Selected" onclick="validation_request()" uk-icon="arrow-right">Complete Request 完成出货通知</a>
+        <a id="js-modal-confirm" class="btn btn-primary shadow-sm" value="Get Selected" onclick="validation_request()" uk-icon="arrow-right" uk-tooltip="Complete Request">完成出货通知</a>
 
     </div>
 </nav>

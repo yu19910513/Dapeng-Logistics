@@ -1,4 +1,5 @@
-console.log(location.href, 'req_amazon sku_qty js');
+console.log(location.href, 'req_amazon_confirmation sku_qty js');
+const today = new Date().toLocaleDateString("en-US");
 const locationAddress = location.href.split('/');
 const account_id = locationAddress[locationAddress.length-1];
 
@@ -66,8 +67,7 @@ function allItem() {
         document.getElementById('noSign').style.display = '';
       }
     })
-  };
-allItem();
+  }; allItem();
 
 var selectBoxId = [];
 function selectBatch (tracking) {
@@ -78,6 +78,7 @@ function selectBatch (tracking) {
     const eachCheckBox = allSiblingBoxes[i].getElementsByTagName('input')[0];
     const eachContainerId = parseInt(eachCheckBox.parentElement.parentElement.getAttribute('id').split('_')[1]);
     selectBoxId.push(eachContainerId);
+    eachCheckBox.parentElement.setAttribute('class','border border-success rounded shadow-sm')
     eachCheckBox.checked = true
   }
   const allOtherBoxes = document.querySelectorAll('tbody input');
@@ -89,146 +90,49 @@ function selectBatch (tracking) {
 function resetCheckBox() {
   const allOtherBoxes = document.querySelectorAll('tbody input');
   for (let k = 0; k < allOtherBoxes.length; k++) {
+    allOtherBoxes[k].parentElement.setAttribute('class', '')
     allOtherBoxes[k].disabled = false;
     allOtherBoxes[k].checked = false;
   }
 };
 
+//init of submission
 function GetSelected() {
-  var confirmationBatch = new Object()
-  const code = new Date().valueOf();
-  var fba = document.getElementById('amazon_ref').value.trim()
-  fba = fba.toUpperCase();
-  const notes = document.getElementById('notes').value;
-  confirmationBatch.id = selectBoxId
-  console.log(confirmationBatch);
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-// submit function
-var requestedObjArr = [];
-var requestedItemIdArr = [];
-var masterArr = [];
-function GetSelecte1d() {
-  const code = new Date().valueOf();
-  var fba = document.getElementById('amazon_ref').value.trim()
-  fba = fba.toUpperCase();
-  const notes = document.getElementById('notes').value;
-  var table = document.getElementById("myTable");
-  var selectedSkus = table.querySelectorAll(".text-danger");
-  for (var i = 0; i < selectedSkus.length; i++) {
-    const eachSkuInfo = selectedSkus[i].getAttribute('id').split('_');
-    const container_id = parseInt(eachSkuInfo[0]);
-    const item_id = parseInt(eachSkuInfo[1]);
-    const original_qty = parseInt(eachSkuInfo[2]);
-
-    const location = locationRef.get(container_id);
-    const container_number = containerRef.get(container_id);
-    const selectedAcccountId = containerMap.get(container_number)[0].account_id;
-    masterAccountIdArr.push(selectedAcccountId);
-    const item_number = itemRef.get(item_id);
-    const qty_per_sku = parseInt(selectedSkus[i].innerHTML);
-    costCount = costCount + qty_per_sku;
-    const master_qty = original_qty - qty_per_sku;
-    /////// EACH master_item obj to update the master box
-    var master_item = new Object();
-    master_item.id = item_id;
-    master_item.qty_per_sku = master_qty;
-    master_item.container_id = container_id;
-    masterArr.push(master_item);
-    ////// EACH requested obj to insert into a new container
-    var requested_item = new Object();
-    requested_item.item_number = item_number;
-    requested_item.qty_per_sku = qty_per_sku;
-    if (account_id) {
-      requested_item.account_id = account_id
-     } else {
-      requested_item.account_id = masterAccountIdArr[0];
-     };
-    requested_item.description = `${container_number}:${location}`
-    requestedObjArr.push(requested_item);
-    requestedItemIdArr.push(item_id);
-  };
-   /////// create ONE new container
-   var requestedContainer = new Object();
-   if (account_id) {
-    requestedContainer.account_id = account_id
-   } else {
-    requestedContainer.account_id = masterAccountIdArr[0];
-   }
-   requestedContainer.cost = costCount;
-   requestedContainer.fba = fba;
-   requestedContainer.location = 'virtual';
-   requestedContainer.notes = notes;
-   requestedContainer.s3 = code;
-   if (fba) {
-    requestedContainer.container_number = `REQ-${fba}`
-   } else {
-    requestedContainer.container_number = `REQ-${code}`
-   };
-  if (requestedObjArr.length) {
-    updateMasterItem(masterArr);
-    createContainer(requestedObjArr, requestedContainer);
+  if (selectBoxId.length) {
+    var confirmationBatch = new Object()
+    const s3 = new Date().valueOf();
+    var fba = document.getElementById('amazon_ref').value.trim()
+    fba = fba.toUpperCase();
+    const notes = document.getElementById('notes').value;
+    confirmationBatch.requested_date = today;
+    confirmationBatch.id = selectBoxId;
+    confirmationBatch.s3 = s3;
+    confirmationBatch.fba = fba;
+    confirmationBatch.notes = notes;
+    confirmationBatch.status = 2;
+    updateContainer(confirmationBatch, s3)
   } else {
+    alert('no container was selected! please try again!');
     loader.style.display = 'none';
-    alert('You need to select at least one box! 您需要选择至少一个箱货')
   }
-
 };
-async function createContainer(requestedObjArr, requestedContainer) {
-  console.log('Container Created');
-  const response = await fetch('/api/container/amazon_request', {
-      method: 'post',
-      body: JSON.stringify(requestedContainer),
-      headers: { 'Content-Type': 'application/json' }
-    });
-
-    if (response.ok) {
-     console.log("amazon box inserted", `S3 = ${requestedContainer.s3}`);
-     findContainerId(requestedContainer.container_number, requestedContainer.s3, requestedObjArr);
-    } else {
-      alert('try again')
- }
-};
-function findContainerId(c_number, s3, objArr) {
-  console.log('getting container_id');
-  fetch(`/api/container/amazon_container/${c_number}`, {
-      method: 'GET'
-  }).then(function (response) {
-      return response.json();
-  }).then(function (data) {
-      console.log('container_id fetched');
-     const containerID = data.id
-     itemCreate(objArr, s3, containerID);
-  })
-};
-function itemCreate(objArr, s3, id) {
-  console.log('itemCreate');
-  for (let i = 0; i < objArr.length; i++) {
-    const item = objArr[i];
-    item.container_id = id;
-    loadingItems(item);
-  };
-  upload_file(s3)
-};
-function loadingItems(data) {
-  fetch('/api/item/new', {
-      method: 'post',
-      body: JSON.stringify(data),
-      headers: {'Content-Type': 'application/json'}
+async function updateContainer(data, s3) {
+  const response = await fetch(`/api/container/amazon_label_submission`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+    headers: {
+        'Content-Type': 'application/json'
+    }
   });
+  if (response.ok) {
+    upload_file(s3)
+  } else {
+    alert('fail')
+  }
 };
+
+
+//// file uploading function
 function upload_file(e) {
   const file = document.getElementById('label').files[0];
   const file_2 = document.getElementById('label_2').files[0];
@@ -295,39 +199,3 @@ async function upload2F_framwork_file2(file, e) {
       alert(response.statusText);
     }
 };
-//////// update masterBox ////////
-function updateMasterItem (arr) {
-  for (let i = 0; i < arr.length; i++) {
-    const item = arr[i];
-    if (item.qty_per_sku < 1) {
-      removeZeroItem(item)
-    } else {
-      updateRemainderItem(item)
-    }
-  }
-};
-function updateRemainderItem(data) {
-  fetch(`/api/item/updateQty_ExistedItemId/${data.container_id}&${data.id}`, {
-    method: 'PUT',
-    body: JSON.stringify(data),
-    headers: {'Content-Type': 'application/json'}
-});
-};
-function removeZeroItem(data) {
-  fetch(`/api/item/destroy/${data.id}`, {
-    method: 'DELETE',
-    headers: {'Content-Type': 'application/json'}
-});
-}
-
-function selectAll(id) {
-  const eachContainer = document.getElementById((`container_${id}`));
-  const checkbox = eachContainer.getElementsByTagName('input');
-  const singleQty = eachContainer.querySelectorAll('.itemQ');
-  if (checkbox[0].checked) {
-    for (let i = 0; i < singleQty.length; i++) {
-      const div = singleQty[i];
-      div.setAttribute('class','text-danger itemQ');
-    }
-  }
-}

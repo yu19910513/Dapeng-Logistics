@@ -373,5 +373,31 @@ router.post('/amazon_box', withAuth, (req, res) => {
       });
 });
 
+router.put('/amazon_label_submission', withAuth, (req, res) => {
+  Container.update({
+      status: req.body.status,
+      requested_date: req.body.requested_date,
+      notes: req.body.notes,
+      s3: req.body.s3,
+      fba: req.body.fba,
+      description: 'Labels submitted. Await labeling'
+    },
+    {
+      where: {
+        id: req.body.id
+      }
+    })
+    .then(dbContainerData => {
+      if (!dbContainerData[0]) {
+        res.status(404).json({ message: 'This Container does not exist!' });
+        return;
+      }
+      res.json(dbContainerData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
 
 module.exports = router;
