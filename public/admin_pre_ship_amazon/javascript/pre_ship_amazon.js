@@ -218,9 +218,6 @@ function loadingItems(data) {
     });
 };
 
-
-
-
 //helper functions
 function error() {
     var audio = new Audio('../media/wrong.mp3');
@@ -241,19 +238,26 @@ function eachBoxContent (arr, input) {
     if (arr) {
         const newTr = document.createElement('tr');
         const newBoxSku = document.createElement('td');
+        newBoxSku.setAttribute('contenteditable', true);
         const newBoxQty = document.createElement('td');
-        sku_list.appendChild(newTr);
         newTr.appendChild(newBoxSku);
         newTr.appendChild(newBoxQty);
         const tdPerRow = arr.querySelectorAll('td');
         newBoxSku.innerHTML = tdPerRow[0].innerText;
         newBoxQty.innerHTML = tdPerRow[1].innerText;
+        if (tdPerRow[1].innerHTML != "0") {
+            sku_list.appendChild(newTr);
+            tdPerRow[1].innerHTML = 0;
+        } else {
+            error()
+        }
     } else {
         if(!tdSkuArr.includes(input)) {
             tdSkuArr.push(input);
             skuQtyMap.set(input, 1);
             const newTr = document.createElement('tr');
             const newBoxSku = document.createElement('td');
+            newBoxSku.setAttribute('contenteditable', true);
             newBoxSku.setAttribute('id', input);
             const newBoxQty = document.createElement('td');
             newBoxQty.setAttribute('id', `${input}q`)
@@ -271,7 +275,6 @@ function eachBoxContent (arr, input) {
 };
 var instance = new Date().valueOf().toString().substring(5,13)+container_id;
 pre_shipN.innerHTML = `SP${instance}`;
-
 function removeItem() {
     console.log('preparing removal');
     var idarr = [];

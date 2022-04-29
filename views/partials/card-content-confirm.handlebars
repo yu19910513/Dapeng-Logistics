@@ -1,3 +1,22 @@
-<li class="p-2">
-    <button class="btn btn-sm shadow-sm lead">{{container_number}}</button class="btn btn-sm lead">
-</li>
+<tr>
+    <td>{{container_number}}</td>
+    <td><a class="uk-button uk-button-default" href="#{{container_number}}" uk-toggle onclick="skuseeker({{id}},{{container_number}}_ol)">SKU/QTY</a></td>
+     <td>{{location}}</td>
+</tr>
+
+
+
+<!-- This is the modal -->
+<div id="{{container_number}}" uk-modal>
+    <div class="uk-modal-dialog">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header">
+            <h2 class="lead text-center"><b>SKU/QTY</b></h2>
+        </div>
+        <div class="uk-modal-body text-center">
+            <ol id="{{container_number}}_ol">
+            {{!-- sku/qty content here --}}
+            </ol>
+        </div>
+    </div>
+</div>

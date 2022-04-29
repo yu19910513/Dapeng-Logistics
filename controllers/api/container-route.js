@@ -305,6 +305,31 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 });
 });
 
+router.put('/post-label', withAuth, (req, res) => {
+  Container.update({
+      status: req.body.status,
+      shipped_date: req.body.shipped_date,
+      description: `All tasks completed; shipped.`
+    },
+    {
+      where: {
+          tracking: req.body.tracking,
+          type: req.body.type
+      }
+    })
+    .then(dbContainerData => {
+      if (!dbContainerData[0]) {
+        res.status(404).json({ message: 'This Container does not exist!' });
+        return;
+      }
+      res.json(dbContainerData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
 //upload the second file to AWS and update file_2 when requested is submitted by client
 router.post('/upload_2', upload.single('file'), async (req, res) => {
   const file = req.file;

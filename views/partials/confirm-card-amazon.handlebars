@@ -1,32 +1,51 @@
-<div class="px-1 py-1 col-lg-4 col-md-4 col-sm-2" id="requested_card">
+<div class="px-1 py-1 col-lg-4 col-md-6 col-sm-10" id="requested_card">
 <div class="card bg-light shadow-sm text-center border-warning" id="{{0.id}}">
     <div class="lead mt-2">#{{0.tracking}}</div>
     <h5 class="card-title mt-3">{{0.user.name}} - {{0.account.name}}</h5>
     <p>Requested Date: {{0.requested_date}}</p>
  <div class="card-body">
-     <a href="/admin_pre_ship_amazon/{{0.id}}" class="btn btn-outline-primary btn-sm">Confirm</a>
+     <a class="btn btn-outline-primary btn-sm shadow-sm" uk-icon="icon: check" onclick="statusChange({{0.tracking}})">Confirm</a>
+     <a class="btn btn-sm btn-warning shadow-sm" href="#modal-container{{0.tracking}}" uk-toggle>Notes</a>
      {{#if 0.file}}
-        <a href="/pdf/{{0.file}}" class="btn btn-success btn-sm">File #1</a>
+        <a href="/pdf/{{0.file}}" class="btn btn-success btn-sm shadow-sm">Label File #1</a>
         {{#if 0.file_2}}
-        <a href="/pdf/{{0.file_2}}" class="btn btn-success btn-sm">File #2</a>
+        <a href="/pdf/{{0.file_2}}" class="btn btn-success btn-sm shadow-sm">File #2</a>
         {{/if}}
     {{else}}
-        <a href="" class="btn btn-danger btn-sm">No File</a>
+        <a href="" class="btn btn-danger btn-sm shadow-sm">No File</a>
     {{/if}}
 </div>
 
 <ul uk-accordion="multiple: true">
     <li class="uk-close">
-        <a class="uk-accordion-title" href="/admin_pre_ship_amazon/{{0.id}}"></a>
+        <a class="uk-accordion-title"></a>
         <div class="uk-accordion-content">
-            <ol class="mb-2">
+            <table class="uk-table uk-table-small uk-table-divider myTable" id="myTable">
+                <thead>
+                    <tr>
+                        <th>Container#</th>
+                        <th>Content</th>
+                        <th>Location</th>
+                    </tr>
+                </thead>
+                 <tbody>
                 {{#each this as |item|}}
                     {{> card-content-confirm item }}
                 {{/each}}
-            </ol>
-         <a href="/admin_pre_ship_amazon/{{0.container_id}}" class="btn btn-primary btn-sm">Confirm</a>
+                 <tbody>
+            </table>
+         <a class="btn btn-primary btn-sm" uk-icon="icon: check" onclick="statusChange({{0.tracking}})">Confirm</a>
         </div>
     </li>
 </ul>
 </div>
+</div>
+
+
+<div id="modal-container{{0.tracking}}"  uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <h4 class="lead">Notes ({{0.fba}}):</h4>
+        <p>{{0.notes}}</p>
+    </div>
 </div>
