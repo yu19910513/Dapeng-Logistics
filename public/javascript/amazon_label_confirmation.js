@@ -16,20 +16,21 @@ function skuseeker(id, number) {
 };
 
 async function statusChange(tracking) {
-    const response = await fetch(`/api/container/post-label`, {
-        method: 'PUT',
-        body: JSON.stringify({
-            shipped_date: today,
-            tracking: tracking,
-            status: 3,
-            type: 3
-          }),
-        headers: {'Content-Type': 'application/json'}
-    });
-
-    if (response.ok) {
-        alert('Success!')
-        location.reload()
+    if(confirm(`Ready to confirm shipping? Ending Date for billing will be set as ${today}`)){
+        const response = await fetch(`/api/container/post-label`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                shipped_date: today,
+                tracking: tracking,
+                status: 3,
+                type: 3
+              }),
+            headers: {'Content-Type': 'application/json'}
+        });
+        if (response.ok) {
+            alert('Success!')
+            location.reload()
+        }
     }
 }
 

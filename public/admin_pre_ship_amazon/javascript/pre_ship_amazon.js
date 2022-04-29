@@ -219,6 +219,33 @@ function loadingItems(data) {
 };
 
 //helper functions
+// function idChanger(sku) {
+//     const input = document.getElementById(sku).innerHTML;
+//     skuQtyMap.set(input, skuQtyMap.get(sku));
+//     skuQtyMap.delete(sku);
+//     tdSkuArr.filter(i => i != sku);
+//     tdSkuArr.push(input);
+//     document.getElementById(sku).setAttribute('onkeyup', `idChanger(${input})`);
+//     document.getElementById(sku).setAttribute('id', input);
+// }
+
+
+
+function printable() {
+    const displayElement = document.getElementById('assignFunction');
+    const notesElement = document.getElementById('notesFunction');
+    if (displayElement.style.display == 'none') {
+        notesElement.style.display = '';
+        displayElement.style.display = ''
+    } else {
+        displayElement.style.display = 'none';
+        notesElement.style.display = 'none';
+        window.print();
+        notesElement.style.display = '';
+        displayElement.style.display = ''
+    }
+
+}
 function error() {
     var audio = new Audio('../media/wrong.mp3');
     audio.play();
@@ -245,6 +272,7 @@ function eachBoxContent (arr, input) {
         const tdPerRow = arr.querySelectorAll('td');
         newBoxSku.innerHTML = tdPerRow[0].innerText;
         newBoxQty.innerHTML = tdPerRow[1].innerText;
+        // newBoxSku.setAttribute('onkeyup', `idChanger(${tdPerRow[0].innerText})`);
         if (tdPerRow[1].innerHTML != "0") {
             sku_list.appendChild(newTr);
             tdPerRow[1].innerHTML = 0;
@@ -259,6 +287,7 @@ function eachBoxContent (arr, input) {
             const newBoxSku = document.createElement('td');
             newBoxSku.setAttribute('contenteditable', true);
             newBoxSku.setAttribute('id', input);
+            // newBoxSku.setAttribute('onkeyup', `idChanger(${input})`);
             const newBoxQty = document.createElement('td');
             newBoxQty.setAttribute('id', `${input}q`)
             sku_list.appendChild(newTr);
@@ -275,7 +304,8 @@ function eachBoxContent (arr, input) {
 };
 var instance = new Date().valueOf().toString().substring(5,13)+container_id;
 pre_shipN.innerHTML = `SP${instance}`;
-document.getElementById('image').src = `http://bwipjs-api.metafloor.com/?bcid=code128&text=SP${instance}`
+document.getElementById('image').src = `http://bwipjs-api.metafloor.com/?bcid=code128&text=SP${instance}`;
+
 function removeItem() {
     console.log('preparing removal');
     var idarr = [];

@@ -1,14 +1,14 @@
 {{#if admin}}
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
 
-<div class="container col-md-5 col-sm-8">
+<div class="container col-md-5 col-sm-8" id="notesFunction">
 <div class="mb-2 card border-info p-2" uk-tooltip="Scan the targeted box first, then scan requested sku(s). If the client requested the whole box, scan the box twice to select all requested items" ><span class="lead">Notes:</span> <span id="notes"></spans></div>
 <div id="alert" class="text-danger text-center"></div>
 </div>
 
 <div class="container">
   <div class="row justify-content-md-center">
-    <div class="col-lg-5 col-md-6">
+    <div class="col-lg-5 col-md-6" id="assignFunction">
       <form class="shadow p-2 py-3 mt-2 rounded">
       <input type="text" class="form-control mb-3" id="scanned_item" placeholder="Scan..." aria-label="Username" aria-describedby="basic-addon1" onkeyup="delay(pre_check)">
     <div class="row justify-content-center p-3" id="pre_confirmTable">
@@ -27,7 +27,9 @@
     <div class="col-lg-4 col-md-5">
       <form class="shadow p-2 py-3 mt-2 rounded border border-info" id="creator_form">
         <div class="mb-2 text-center lead">
-        <div>#<span id="pre-shipN"></span></div>
+          <div>
+            <a uk-tooltip="printable" onclick="printable()">#<span id="pre-shipN"></span></a>
+          </div>
         <img class="rounded" src="" id="image" alt="Card image cap" >
         </div>
                 <div class="row">
