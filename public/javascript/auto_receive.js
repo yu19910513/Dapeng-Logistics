@@ -1,5 +1,5 @@
 function update() {
-    var scan_item = document.getElementById('scanned_item').value;
+    var scan_item = document.getElementById('scanned_item').value.toUpperCase();
     if (scan_item.length > 10 && scan_item.substring(0,2) == 'SW') {
         auto_receive(scan_item);
         localStorage.setItem('scan_item',scan_item);

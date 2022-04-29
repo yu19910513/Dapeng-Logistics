@@ -29,7 +29,7 @@ function boxQuery() {
     });
 };boxQuery();
 async function pre_check() {
-    const box_number = document.getElementById('scanned_item').value;
+    const box_number = document.getElementById('scanned_item').value.toUpperCase();
     const status = 3;
     const location = null;
     const shipped_date = new Date().toLocaleDateString("en-US");

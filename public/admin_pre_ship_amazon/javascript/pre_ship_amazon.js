@@ -275,6 +275,7 @@ function eachBoxContent (arr, input) {
 };
 var instance = new Date().valueOf().toString().substring(5,13)+container_id;
 pre_shipN.innerHTML = `SP${instance}`;
+document.getElementById('image').src = `http://bwipjs-api.metafloor.com/?bcid=code128&text=SP${instance}`
 function removeItem() {
     console.log('preparing removal');
     var idarr = [];
