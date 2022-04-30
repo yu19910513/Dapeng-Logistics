@@ -11,9 +11,21 @@ async function info(n) {
         return response.json();
     }).then(function (data) {
        if (n == 3) {
-        document.getElementById('aConfirm').innerHTML = data.length;
+        const requestsBatch = data.reduce(function (r, a) {
+            r[a.container.tracking] = r[a.container.tracking] || [];
+            r[a.container.tracking].push(a);
+            return r;
+          }, Object.create(null));
+          const trackings = Object.values(requestsBatch);
+        document.getElementById('aConfirm').innerHTML = trackings.length;
        } else if (n == 2) {
-        document.getElementById('aRequest').innerHTML = data.length
+        const requestsBatch = data.reduce(function (r, a) {
+            r[a.container_id] = r[a.container_id] || [];
+            r[a.container_id].push(a);
+            return r;
+          }, Object.create(null));
+          const containers = Object.values(requestsBatch);
+        document.getElementById('aRequest').innerHTML = containers.length
        }
     });
 };

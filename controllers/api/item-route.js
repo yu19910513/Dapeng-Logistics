@@ -498,41 +498,13 @@ router.get('/statusTWO/:type', withAuth, async (req, res) => {
             type: req.params.type
           },
           attributes: [
-            's3',
-            'notes',
-            'id',
-            'container_number',
-            'description',
-            'cost',
-            'requested_date',
-            'received_date',
-            'shipped_date',
-            'type',
-            'length',
-            'width',
-            'height',
-            'weight',
-            'volume',
-            'status',
-            'location',
-            'file',
-            'file_2',
-            'fba',
-            'bill_received',
-            'bill_storage',
-            'bill_shipped'
+            'tracking'
           ]
         },
       ]
     });
     const items = itemData.map(i => i.get({ plain: true }));
-    const requestsBatch = items.reduce(function (r, a) {
-      r[a.container_id] = r[a.container_id] || [];
-      r[a.container_id].push(a);
-      return r;
-    }, Object.create(null));
-    const containers = Object.values(requestsBatch);
-    res.json(containers);
+    res.json(items);
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
