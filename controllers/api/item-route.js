@@ -478,5 +478,66 @@ router.get('/amazonInventory', withAuth, async (req, res) => {
 
 });
 
+router.get('/statusTWO/:type', withAuth, async (req, res) => {
+  try {
+    const itemData = await Item.findAll({
+      attributes: [
+        'id',
+        'item_number',
+        'qty_per_sku',
+        'description',
+        'user_id',
+        'account_id',
+        'container_id'
+      ],
+      include: [
+        {
+          model: Container,
+          where: {
+            status: [2],
+            type: req.params.type
+          },
+          attributes: [
+            's3',
+            'notes',
+            'id',
+            'container_number',
+            'description',
+            'cost',
+            'requested_date',
+            'received_date',
+            'shipped_date',
+            'type',
+            'length',
+            'width',
+            'height',
+            'weight',
+            'volume',
+            'status',
+            'location',
+            'file',
+            'file_2',
+            'fba',
+            'bill_received',
+            'bill_storage',
+            'bill_shipped'
+          ]
+        },
+      ]
+    });
+    const items = itemData.map(i => i.get({ plain: true }));
+    const requestsBatch = items.reduce(function (r, a) {
+      r[a.container_id] = r[a.container_id] || [];
+      r[a.container_id].push(a);
+      return r;
+    }, Object.create(null));
+    const containers = Object.values(requestsBatch);
+    res.json(containers);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+
+});
 
 module.exports = router;

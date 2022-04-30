@@ -1,8 +1,7 @@
 
 <div class="px-1 py-1 col-4 " id="requested_card">
-<div class="card bg-light shadow-sm" id="{{0.s3}}">
-    <h5 class="card-title mt-3">Request from {{0.user.name}}</h5>
-    <h6>Acct: {{0.account.name}}</h6>
+<div class="card bg-light shadow-sm" id="{{0.s3}}" style="background-image:url('https://render.fineartamerica.com/images/rendered/default/greeting-card/images/artworkimages/medium/1/pink-vintage-color-trends-feather-texture-background-nattaya-mahaum.jpg?&targetx=-25&targety=0&imagewidth=750&imageheight=500&modelwidth=700&modelheight=500&backgroundcolor=F2B7CB&orientation=0');">
+    <h5 class="card-title mt-3">{{0.user.name}} - {{0.account.name}}</h5>
     <p>Requested Date: {{0.requested_date}}</p>
  <div class="card-body">
      <a href="#" class="btn btn-outline-primary btn-sm" onclick="pre_ship_scan({{0.s3}})">Proceed</a>
