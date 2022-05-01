@@ -1153,14 +1153,22 @@ router.get('/account/:id', withAuth, async (req, res) => {
             ]
       })
       const boxes = boxData.map(box => box.get({ plain: true }));
+      var accountInfo, dateInfo;
+      if(!boxes[0]) {
+        accountInfo = null;
+        dateInfo = null;
+      } else {
+        accountInfo = boxes[0].account.name;
+        dateInfo = boxes[0].batch.pending_date;
+      }
       res.render('master_home', {
         boxes,
         loggedIn: true,
         accountId: req.params.id,
         admin: req.session.admin,
         name: req.session.name,
-        account: boxes[0].account.name,
-        date: boxes[0].batch.pending_date
+        account: accountInfo,
+        date: dateInfo
       });
     } catch (err) {
       console.log(err);
