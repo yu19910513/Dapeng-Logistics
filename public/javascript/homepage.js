@@ -382,6 +382,7 @@ function newDateValidate(date) {
 };
 /////////////////////////////////
 const skuSelect = document.getElementById('skuSelect').querySelector('select');
+const bulkSelect = document.getElementById('bulkSelect').querySelector('select');
 const skuResult = document.getElementById("skuResult");
 const bodyParent = skuResult.querySelector('tbody');
 const totalAmount = document.getElementById('searchNumber');
@@ -396,10 +397,16 @@ function skuListing() {
   for (let i = 0; i < data.length; i++) {
     const singleSku = data[i].item_number;
     if (!skuArr.includes(singleSku)) {
+      //////single select code here//////
       const option = document.createElement('option');
       option.setAttribute('id', singleSku);
       option.innerHTML = singleSku;
       skuSelect.appendChild(option);
+      //////bulk select code here//////
+      const bulkOption = document.createElement('option');
+      bulkOption.setAttribute('id', singleSku);
+      bulkOption.innerHTML = singleSku;
+      bulkSelect.appendChild(bulkOption);
       skuArr.push(singleSku);
     }
 
@@ -448,6 +455,10 @@ function searchBySku() {
 // }
 function unattachList() {
   skuSelect.querySelectorAll('option').forEach(i => i.remove());
+  bulkSelect.querySelectorAll('option').forEach(i => i.remove());
+  // const defaultList = document.createElement('option');
+  // bulkSelect.prepend(defaultList);
+  // defaultList.innerHTML = 'select...'
 };
 function unattachTr() {
   totalAmount.innerHTML = 0;
@@ -457,4 +468,11 @@ function unattachTr() {
   const defaultTh = document.createElement('th');
   headerParent.appendChild(defaultTh);
   defaultTh.innerHTML = 'container/sku'
+};
+const collection = document.getElementById('collection');
+function skuCollection() {
+  const item = document.createElement('div');
+  collection.prepend(item);
+  item.innerHTML = bulkSelect.value
+
 }
