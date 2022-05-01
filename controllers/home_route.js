@@ -28,14 +28,57 @@ router.get('/', withAuth, async (req, res) => {
         ["name", "ASC"],
       ],
     });
+    const accountDataTwo = await Account.findAll({
+      where: {
+        user_id: req.session.user_id,
+      },
+      attributes: [
+        'id',
+        'name'
+      ],
+      include: [
+        {
+          model: Container,
+          where: {status: [1,2]},
+          attributes: [
+            'container_number'
+          ]
+        }
+      ],
+      order: [
+        ["name", "ASC"],
+      ],
+    });
     const pre_accounts = accountData.map(account => account.get({ plain: true }));
-    console.log(accounts);
+    const pre_accountsTwo = accountDataTwo.map(account => account.get({ plain: true }));
     var accounts = [];
-    for (let i = 0; i < pre_accounts.length; i++) {
-      const element = pre_accounts[i].boxes[0];
-      if (element) {
+    var accountIds = [];
+    var length;
+    if (pre_accounts.length > pre_accountsTwo.length) {
+      length = pre_accounts.length;
+    } else {
+      length = pre_accountsTwo.length;
+    }
+    for (let i = 0; i < length; i++) {
+      var element, elementtwo;
+      if (pre_accounts[i]) {
+        element = pre_accounts[i].boxes[0];
+      } else {
+        element = null;
+      }
+      if (element && !accountIds.includes(pre_accounts[i].id)) {
+        accountIds.push(pre_accounts[i].id)
         accounts.push(pre_accounts[i]);
-      };
+      }
+      if (pre_accountsTwo[i]) {
+        elementtwo = pre_accountsTwo[i].containers[0];
+      } else {
+        elementtwo = null
+      }
+      if (elementtwo && !accountIds.includes(pre_accountsTwo[i].id)) {
+        accountIds.push(pre_accountsTwo[i].id)
+        accounts.push(pre_accountsTwo[i]);
+      }
     }
     res.render('home', {
       accounts,
