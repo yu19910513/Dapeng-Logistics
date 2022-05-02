@@ -413,13 +413,12 @@ function skuListing() {
   }
 })
 };
-// var count = -1
 function searchBySku() {
   fetch(`/api/item/allItemPerNumber/${skuSelect.value}`, {
     method: 'GET'
-}).then(function (response) {
+  }).then(function (response) {
     return response.json();
-}).then(function (data) {
+  }).then(function (data) {
   unattachTr();
   const headerParent = skuResult.querySelector('thead tr');
   const headerChild = document.createElement('th');
@@ -447,18 +446,10 @@ function searchBySku() {
   totalAmount.innerHTML = qtyCount;
 })
 };
-// function emptyTd(x, trParent) {
-//   for (let n = 0; n < x; n++) {
-//     const emptytd = document.createElement('td');
-//     trParent.appendChild(emptytd);
-//   }
-// }
 function unattachList() {
   skuSelect.querySelectorAll('option').forEach(i => i.remove());
   bulkSelect.querySelectorAll('option').forEach(i => i.remove());
-  // const defaultList = document.createElement('option');
-  // bulkSelect.prepend(defaultList);
-  // defaultList.innerHTML = 'select...'
+  removeBulkHistory();
 };
 function unattachTr() {
   totalAmount.innerHTML = 0;
@@ -469,10 +460,93 @@ function unattachTr() {
   headerParent.appendChild(defaultTh);
   defaultTh.innerHTML = 'container/sku'
 };
+///////bulk selection & collection function ///////
+const bulkResult = document.getElementById("bulkResult");
 const collection = document.getElementById('collection');
+const bodyParent_bulk = bulkResult.querySelector('tbody');
+var bulkCollectionArr = [];
 function skuCollection() {
-  const item = document.createElement('div');
-  collection.prepend(item);
-  item.innerHTML = bulkSelect.value
+  const selectedSku = bulkSelect.value;
+  if (!bulkCollectionArr.includes(selectedSku)) {
+    bulkCollectionArr.push(selectedSku);
+    const item = document.createElement('div');
+    item.setAttribute('class', 'text-primary col-6')
+    collection.prepend(item);
+    item.innerHTML = selectedSku;
+  } else {
+    bulkCollectionArr = bulkCollectionArr.filter(i => i != selectedSku);
+    const allDiv = collection.querySelectorAll('div');
+    for (let i = 0; i < allDiv.length; i++) {
+      const skuToRemove = allDiv[i];
+      if (skuToRemove.innerText == selectedSku) {
+        skuToRemove.remove()
+      }
+    }
+  };
+};
+var count, containerArr;
+function searchByBulkSku() {
+  count = -1;
+  containerArr = [];
+  for (let i = 0; i < bulkCollectionArr.length; i++) {
+    fetch(`/api/item/allItemPerNumber/${bulkCollectionArr[i]}`, {
+      method: 'GET'
+    }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+    const headerParent = bulkResult.querySelector('thead tr');
+    const headerChild = document.createElement('th');
+    headerChild.setAttribute('class', 'shadow-sm text-center col-2')
+    headerParent.appendChild(headerChild);
+    headerChild.innerHTML = data[0].item_number;
+    count++
+    for (let i = 0; i < data.length; i++) {
+      const containerNumberPerItem = data[i].container.container_number;
+      if(!containerArr.includes(containerNumberPerItem)) {
+        containerArr.push(containerNumberPerItem);
+        const qtyPerItem= data[i].qty_per_sku;
+        const trParent = document.createElement('tr');
+        const bodyChild = document.createElement('td');
+        bodyChild.setAttribute('class', 'col-1')
+        trParent.appendChild(bodyChild);// first column
+        emptyTd(count, trParent);// middle colume - placement
+        const bodyChild_q = document.createElement('td');
+        bodyChild_q.setAttribute('class', 'shadow-sm bg-info text-center col-2');
+        bodyParent_bulk.appendChild(trParent);
+        trParent.appendChild(bodyChild_q);//last/ actual column
+        bodyChild.innerHTML = containerNumberPerItem;
+        bodyChild_q.innerHTML = qtyPerItem;
+      } else {
+        const index = containerArr.indexOf(containerNumberPerItem);
+        console.log(index);
+        const qtyPerItem= data[i].qty_per_sku;
+        const bodyChild_q = document.createElement('td');
+        bodyChild_q.setAttribute('class', 'shadow-sm bg-info text-center col-2')
+        bodyChild_q.innerHTML = qtyPerItem;
+        bodyParent_bulk.querySelectorAll('tr')[index].appendChild(bodyChild_q)
+      }
+    };
+  });
+  };
+}
+////helper functions////////
+function removeBulkHistory() {
+  bulkCollectionArr = [];
+  const allDiv = collection.querySelectorAll('div');
+  allDiv.forEach(i => i.remove());
+};
+function emptyTd(x, trParent) {
+  for (let n = 0; n < x; n++) {
+    const emptytd = document.createElement('td');
+    trParent.appendChild(emptytd);
+  }
+};
 
+function resetBulkResult() {
+ const headerArr = bulkResult.querySelectorAll('thead tr');
+ headerArr.forEach(i => i.remove());
+ bodyParent_bulk.querySelectorAll('tr').forEach(i => i.remove());
+ const orginTr = document.createElement('tr');
+ orginTr.innerHTML = `<th>container/sku</th>`;
+ bulkResult.querySelector('thead').appendChild(orginTr);
 }
