@@ -528,7 +528,7 @@ function searchByBulkSku() {
     };
   });
   };
-}
+};
 ////helper functions////////
 function removeBulkHistory() {
   bulkCollectionArr = [];
@@ -541,7 +541,6 @@ function emptyTd(x, trParent) {
     trParent.appendChild(emptytd);
   }
 };
-
 function resetBulkResult() {
  const headerArr = bulkResult.querySelectorAll('thead tr');
  headerArr.forEach(i => i.remove());
