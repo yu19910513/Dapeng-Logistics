@@ -488,18 +488,23 @@ var count, containerArr;
 function searchByBulkSku() {
   count = -1;
   containerArr = [];
+  bulkCollectionArr.sort();
+  const key = merger(bulkCollectionArr)
+  console.log(key);
   for (let i = 0; i < bulkCollectionArr.length; i++) {
     fetch(`/api/item/allItemPerNumber/${bulkCollectionArr[i]}`, {
       method: 'GET'
     }).then(function (response) {
       return response.json();
     }).then(function (data) {
+      //// create header ////
     const headerParent = bulkResult.querySelector('thead tr');
     const headerChild = document.createElement('th');
     headerChild.setAttribute('class', 'shadow-sm text-center col-2')
     headerParent.appendChild(headerChild);
     headerChild.innerHTML = data[0].item_number;
-    count++
+    count++ /// to used for calculating the amount of empty cells
+     /// create rows associated with that header ////
     for (let i = 0; i < data.length; i++) {
       const containerNumberPerItem = data[i].container.container_number;
       if(!containerArr.includes(containerNumberPerItem)) {
@@ -542,10 +547,55 @@ function emptyTd(x, trParent) {
   }
 };
 function resetBulkResult() {
+  removeBulkHistory();
  const headerArr = bulkResult.querySelectorAll('thead tr');
  headerArr.forEach(i => i.remove());
  bodyParent_bulk.querySelectorAll('tr').forEach(i => i.remove());
  const orginTr = document.createElement('tr');
- orginTr.innerHTML = `<th>container/sku</th>`;
+ orginTr.innerHTML = `<th onclick="sortSkuTable(0)">container/sku</th>`;
  bulkResult.querySelector('thead').appendChild(orginTr);
+};
+function sortSkuTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("bulkResult");
+  switching = true;
+  dir = "asc";
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount ++;
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+};
+function merger(array) {
+  var key = '-';
+ for (let i = 0; i < array.length; i++) {
+   key = key + "-" + array[i];
+ };
+//  key = key.split('-').filter(i => i != '');
+ return key
 }
