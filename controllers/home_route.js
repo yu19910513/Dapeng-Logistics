@@ -1556,13 +1556,20 @@ router.get('/amazon_overview_admin/:user_id', withAuth, async (req, res) => {
           ]
       })
     const containers = containerData.map(container => container.get({ plain: true }));
-    res.render('amazon_overview', {
+    if (req.session.admin) {
+      res.render('amazon_overview', {
       containers,
       loggedIn: true,
-      accountId: req.params.id,
       admin: req.session.admin,
       name: req.session.name
-    });
+    })
+    } else {
+      res.render('admin', {
+        loggedIn: true,
+        admin: req.session.admin,
+        name: req.session.name
+      })
+    }
   } catch (err) {
     console.log(err);
     res.status(500).json(err);

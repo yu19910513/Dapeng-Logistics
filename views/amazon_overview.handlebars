@@ -3,7 +3,10 @@
     {{#if accountName}}
     <div class="lead text-end">Account: {{accountName}} / Total Box(es): {{containers.length}}</div>
     {{/if}}
+    {{#if admin}}
+    {{else}}
     <a class="btn btn-white border-warning btn-sm shadow-sm" uk-icon="icon: home" href="/amazon/{{accountId}}"></a>
+    {{/if}}
     <div class="uk-overflow-auto">
     <table class="uk-table uk-table-small uk-table-divider myTable shadow-sm" id="myTable">
             <thead>
