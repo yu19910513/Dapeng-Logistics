@@ -1,16 +1,14 @@
-{{#if admin}}
-<script src="javascript/admin_redirect.js"></script>
-{{else}}
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
 <div class="container">
     {{#if accountName}}
     <div class="lead text-end">Account: {{accountName}} / Total Box(es): {{containers.length}}</div>
     {{/if}}
     <a class="btn btn-white border-warning btn-sm shadow-sm" uk-icon="icon: home" href="/amazon/{{accountId}}"></a>
+    <div class="uk-overflow-auto">
     <table class="uk-table uk-table-small uk-table-divider myTable shadow-sm" id="myTable">
             <thead>
                 <tr id="skuList">
-                    <th>Container \ SKU</th>
+                    <th onclick="sortTable(0)">Container \ SKU</th>
                 </tr>
             </thead>
             <tbody>
@@ -21,6 +19,6 @@
                     {{/each}}
             </tbody>
     </table>
+    </div>
 </div>
 <script src="javascript/amazon_overview.js"></script>
-{{/if}}

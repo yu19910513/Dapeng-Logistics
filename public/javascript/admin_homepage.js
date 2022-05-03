@@ -552,3 +552,255 @@ if (!localStorage.getItem('mode')) {
 } else if (localStorage.getItem('mode') == 'A') {
   modeChange();
 }
+/////// filter sku function /////////
+const skuSelect = document.getElementById('skuSelect').querySelector('select');
+const bulkSelect = document.getElementById('bulkSelect').querySelector('select');
+const skuResult = document.getElementById("skuResult");
+const bodyParent = skuResult.querySelector('tbody');
+const totalAmount = document.getElementById('searchNumber');
+function skuListing() {
+  unattachList();
+  var skuArr = [];
+  const selectedClientId = document.getElementById('userSelect').querySelector('select').value;
+  document.getElementById('masterSkuOverview').href = `/amazon_overview_admin/${selectedClientId}`
+  // localStorage.setItem('selectedClient', selectedClientId);
+  fetch(`/api/item/allItemPerClient/${selectedClientId}`, {
+    method: 'GET'
+}).then(function (response) {
+    return response.json();
+}).then(function (data) {
+  for (let i = 0; i < data.length; i++) {
+    const singleSku = data[i].item_number;
+    if (!skuArr.includes(singleSku)) {
+      //////single select code here//////
+      const option = document.createElement('option');
+      option.setAttribute('id', singleSku);
+      option.innerHTML = singleSku;
+      skuSelect.appendChild(option);
+      //////bulk select code here//////
+      const bulkOption = document.createElement('option');
+      bulkOption.setAttribute('id', singleSku);
+      bulkOption.innerHTML = singleSku;
+      bulkSelect.appendChild(bulkOption);
+      skuArr.push(singleSku);
+    }
+
+  }
+})
+};
+function searchBySku() {
+  fetch(`/api/item/allItemPerNumberAdmin/${skuSelect.value}&${document.getElementById('userSelect').querySelector('select').value}`, {
+    method: 'GET'
+  }).then(function (response) {
+    return response.json();
+  }).then(function (data) {
+  unattachTr();
+  const headerParent = skuResult.querySelector('thead tr');
+  const headerChild = document.createElement('th');
+  headerChild.setAttribute('class', 'shadow-sm text-center col-2')
+  headerParent.appendChild(headerChild);
+  headerChild.innerHTML = data[0].item_number;
+  // count++
+  var qtyCount = 0;
+  for (let i = 0; i < data.length; i++) {
+    const containerNumberPerItem = data[i].container.container_number;
+    const qtyPerItem= data[i].qty_per_sku;
+    const trParent = document.createElement('tr');
+    const bodyChild = document.createElement('td');
+    bodyChild.setAttribute('class', 'col-1')
+    trParent.appendChild(bodyChild);
+    // emptyTd(count, trParent);
+    const bodyChild_q = document.createElement('td');
+    bodyChild_q.setAttribute('class', 'shadow-sm bg-info text-center col-2');
+    bodyParent.appendChild(trParent);
+    trParent.appendChild(bodyChild_q);
+    bodyChild.innerHTML = containerNumberPerItem;
+    bodyChild_q.innerHTML = qtyPerItem;
+    qtyCount = qtyCount + qtyPerItem;
+  };
+  totalAmount.innerHTML = qtyCount;
+})
+};
+function unattachList() {
+  skuSelect.querySelectorAll('option').forEach(i => i.remove());
+  bulkSelect.querySelectorAll('option').forEach(i => i.remove());
+  removeBulkHistory();
+};
+function unattachTr() {
+  totalAmount.innerHTML = 0;
+  const headerParent = skuResult.querySelector('thead tr');
+  bodyParent.querySelectorAll('tr').forEach(i => i.remove());
+  headerParent.querySelectorAll('th').forEach(i => i.remove());
+  const defaultTh = document.createElement('th');
+  headerParent.appendChild(defaultTh);
+  defaultTh.innerHTML = 'container/sku'
+};
+///////bulk selection & collection function ///////
+const bulkResult = document.getElementById("bulkResult");
+const collection = document.getElementById('collection');
+const bodyParent_bulk = bulkResult.querySelector('tbody');
+var bulkCollectionArr = [];
+function skuCollection() {
+  const selectedSku = bulkSelect.value;
+  if (!bulkCollectionArr.includes(selectedSku)) {
+    bulkCollectionArr.push(selectedSku);
+    const item = document.createElement('div');
+    item.setAttribute('class', 'text-primary col-6')
+    collection.prepend(item);
+    item.innerHTML = selectedSku;
+  } else {
+    bulkCollectionArr = bulkCollectionArr.filter(i => i != selectedSku);
+    const allDiv = collection.querySelectorAll('div');
+    for (let i = 0; i < allDiv.length; i++) {
+      const skuToRemove = allDiv[i];
+      if (skuToRemove.innerText == selectedSku) {
+        skuToRemove.remove()
+      }
+    }
+  };
+};
+var count, containerArr, itemArr, sumMap;
+function searchByBulkSku() {
+  sumMap = new Map();
+  count = -1;
+  containerArr = [];
+  itemArr = [];
+  bulkCollectionArr.sort();
+  const id = merger(bulkCollectionArr)
+  fetch(`/api/item/allItemPerNumberAdmin/${id}&${document.getElementById('userSelect').querySelector('select').value}`, {
+    method: 'GET'
+  }).then(function (response) {
+    return response.json();
+  }).then(function (data) {
+    for (let i = 0; i < data.length; i++) {
+      const itemNumberPerItem = data[i].item_number;
+      if (!itemArr.includes(itemNumberPerItem)) {
+        sumMap.set(itemNumberPerItem, 0);
+        itemArr.push(itemNumberPerItem);
+        const headerParent = bulkResult.querySelector('thead tr');
+        const headerChild = document.createElement('th');
+        headerChild.setAttribute('class', 'shadow-sm text-center col-2')
+        headerParent.appendChild(headerChild);
+        sumMap.set(itemNumberPerItem, sumMap.get(itemNumberPerItem) + data[i].qty_per_sku);
+        headerChild.innerHTML = data[i].item_number + ` <span id="sum_${itemNumberPerItem}"><span>`;
+        count++ // to used for calculating the amount of empty cells
+      } else {
+        sumMap.set(itemNumberPerItem, sumMap.get(itemNumberPerItem) + data[i].qty_per_sku);
+      };
+      document.getElementById(`sum_${itemNumberPerItem}`).innerHTML = `(${sumMap.get(itemNumberPerItem)})`;
+     /// create rows associated with that header ////
+      const containerNumberPerItem = data[i].container.container_number;
+      if(!containerArr.includes(containerNumberPerItem)) {
+        containerArr.push(containerNumberPerItem);
+        const qtyPerItem= data[i].qty_per_sku;
+        const trParent = document.createElement('tr');
+        const bodyChild = document.createElement('td');
+        bodyChild.setAttribute('class', 'col-1')
+        trParent.appendChild(bodyChild);// first column
+        emptyTd(count, trParent);// middle colume - placement
+        const bodyChild_q = document.createElement('td');
+        bodyChild_q.setAttribute('class', 'shadow-sm bg-info text-center col-2');
+        bodyParent_bulk.appendChild(trParent);
+        trParent.appendChild(bodyChild_q);//last/ actual column
+        bodyChild.innerHTML = containerNumberPerItem;
+        bodyChild_q.innerHTML = qtyPerItem;
+      } else {
+        const y = containerArr.indexOf(containerNumberPerItem);
+        const x = itemArr.indexOf(itemNumberPerItem) + 1;
+        const qtyPerItem= data[i].qty_per_sku;
+        const bodyChild_q = document.createElement('td');
+        bodyChild_q.setAttribute('class', 'shadow-sm bg-info text-center col-2');
+        bodyChild_q.innerHTML = qtyPerItem;
+        const difference = x - bodyParent_bulk.querySelectorAll('tr')[y].querySelectorAll('td').length;
+        emptyTd(difference, bodyParent_bulk.querySelectorAll('tr')[y])
+        bodyParent_bulk.querySelectorAll('tr')[y].appendChild(bodyChild_q);
+        console.log(containerNumberPerItem, itemNumberPerItem, qtyPerItem)
+        console.log(x, y+1);
+      }
+    }
+  });
+
+};
+////helper functions////////
+function removeBulkHistory() {
+  bulkCollectionArr = [];
+  const allDiv = collection.querySelectorAll('div');
+  allDiv.forEach(i => i.remove());
+};
+function emptyTd(x, trParent) {
+  for (let n = 0; n < x; n++) {
+    const emptytd = document.createElement('td');
+    trParent.appendChild(emptytd);
+  }
+};
+function resetBulkResult() {
+  if (document.getElementById('userSelect').querySelector('select').value == 0) {
+    alert('You need to select a client first!');
+  }
+  removeBulkHistory();
+ const headerArr = bulkResult.querySelectorAll('thead tr');
+ headerArr.forEach(i => i.remove());
+ bodyParent_bulk.querySelectorAll('tr').forEach(i => i.remove());
+ const orginTr = document.createElement('tr');
+ orginTr.innerHTML = `<th onclick="sortSkuTable(0)">container/sku</th>`;
+ bulkResult.querySelector('thead').appendChild(orginTr);
+};
+function sortSkuTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("bulkResult");
+  switching = true;
+  dir = "asc";
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount ++;
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+};
+function merger(array) {
+  var key = '-';
+ for (let i = 0; i < array.length; i++) {
+   key = key + "-" + array[i];
+ };
+ return key
+};
+function clientListing() {
+  document.getElementById('userSelect').querySelectorAll('option').forEach(i => i.remove());
+  document.getElementById('userSelect').querySelector('select').innerHTML = `<option value="0">select client</option>`
+  fetch(`/api/user/`, {
+    method: 'GET'
+  }).then(function (response) {
+    return response.json();
+  }).then(function (data) {
+    for (let i = data.length-1 ; i >= 0; i--) {
+    const user = document.createElement('option');
+    user.innerHTML = data[i].name;
+    user.setAttribute('value', data[i].id);
+    document.getElementById('userSelect').querySelector('select').appendChild(user)
+    };
+  });
+};

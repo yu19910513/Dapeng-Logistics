@@ -87,17 +87,18 @@
             </form>
         </div>
         <div class="uk-modal-footer uk-text-right">
-            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
-            <a href="#bulkSearchResult" class="uk-button uk-button-primary" uk-toggle onclick="searchByBulkSku()">Search</a>
+          <a href="/amazon_overview/{{accountId}}" uk-icon="icon: file-text" uk-tooltip="view all sku inventory"></a>
+          <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+          <a href="#bulkSearchResult" class="uk-button uk-button-primary" uk-toggle onclick="searchByBulkSku()">Search</a>
         </div>
     </div>
 </div>
 {{!-- bulk search outcome --}}
-<div id="bulkSearchResult" uk-modal>
+<div id="bulkSearchResult" class='uk-modal-container' uk-modal>
     <div class="uk-modal-dialog">
         <button class="uk-modal-close-default" type="button" uk-close onclick="location.reload()"></button>
         <div class="uk-modal-header">
-            <h2 class="lead text-center">Search Result: <b><span id="searchNumber"></span></b> Items</h2>
+            <h2 class="lead text-center">Search Result</h2>
         </div>
         <div class="uk-modal-body">
            <table class="uk-table uk-table-small uk-table-divider bg-light shadow" id="bulkResult">

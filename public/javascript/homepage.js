@@ -484,28 +484,36 @@ function skuCollection() {
     }
   };
 };
-var count, containerArr;
+var count, containerArr, itemArr, sumMap;
 function searchByBulkSku() {
+  sumMap = new Map();
   count = -1;
   containerArr = [];
+  itemArr = [];
   bulkCollectionArr.sort();
-  const key = merger(bulkCollectionArr)
-  console.log(key);
-  for (let i = 0; i < bulkCollectionArr.length; i++) {
-    fetch(`/api/item/allItemPerNumber/${bulkCollectionArr[i]}`, {
-      method: 'GET'
-    }).then(function (response) {
-      return response.json();
-    }).then(function (data) {
-      //// create header ////
-    const headerParent = bulkResult.querySelector('thead tr');
-    const headerChild = document.createElement('th');
-    headerChild.setAttribute('class', 'shadow-sm text-center col-2')
-    headerParent.appendChild(headerChild);
-    headerChild.innerHTML = data[0].item_number;
-    count++ /// to used for calculating the amount of empty cells
-     /// create rows associated with that header ////
+  const id = merger(bulkCollectionArr)
+  fetch(`/api/item/allItemPerNumber/${id}`, {
+    method: 'GET'
+  }).then(function (response) {
+    return response.json();
+  }).then(function (data) {
     for (let i = 0; i < data.length; i++) {
+      const itemNumberPerItem = data[i].item_number;
+      if (!itemArr.includes(itemNumberPerItem)) {
+        sumMap.set(itemNumberPerItem, 0);
+        itemArr.push(itemNumberPerItem);
+        const headerParent = bulkResult.querySelector('thead tr');
+        const headerChild = document.createElement('th');
+        headerChild.setAttribute('class', 'shadow-sm text-center col-2')
+        headerParent.appendChild(headerChild);
+        sumMap.set(itemNumberPerItem, sumMap.get(itemNumberPerItem) + data[i].qty_per_sku);
+        headerChild.innerHTML = data[i].item_number + ` <span id="sum_${itemNumberPerItem}"><span>`;
+        count++ // to used for calculating the amount of empty cells
+      } else {
+        sumMap.set(itemNumberPerItem, sumMap.get(itemNumberPerItem) + data[i].qty_per_sku);
+      };
+      document.getElementById(`sum_${itemNumberPerItem}`).innerHTML = `(${sumMap.get(itemNumberPerItem)})`;
+     /// create rows associated with that header ////
       const containerNumberPerItem = data[i].container.container_number;
       if(!containerArr.includes(containerNumberPerItem)) {
         containerArr.push(containerNumberPerItem);
@@ -522,17 +530,21 @@ function searchByBulkSku() {
         bodyChild.innerHTML = containerNumberPerItem;
         bodyChild_q.innerHTML = qtyPerItem;
       } else {
-        const index = containerArr.indexOf(containerNumberPerItem);
-        console.log(index);
+        const y = containerArr.indexOf(containerNumberPerItem);
+        const x = itemArr.indexOf(itemNumberPerItem) + 1;
         const qtyPerItem= data[i].qty_per_sku;
         const bodyChild_q = document.createElement('td');
-        bodyChild_q.setAttribute('class', 'shadow-sm bg-info text-center col-2')
+        bodyChild_q.setAttribute('class', 'shadow-sm bg-info text-center col-2');
         bodyChild_q.innerHTML = qtyPerItem;
-        bodyParent_bulk.querySelectorAll('tr')[index].appendChild(bodyChild_q)
+        const difference = x - bodyParent_bulk.querySelectorAll('tr')[y].querySelectorAll('td').length;
+        emptyTd(difference, bodyParent_bulk.querySelectorAll('tr')[y])
+        bodyParent_bulk.querySelectorAll('tr')[y].appendChild(bodyChild_q);
+        console.log(containerNumberPerItem, itemNumberPerItem, qtyPerItem)
+        console.log(x, y+1);
       }
-    };
+    }
   });
-  };
+
 };
 ////helper functions////////
 function removeBulkHistory() {
@@ -596,6 +608,5 @@ function merger(array) {
  for (let i = 0; i < array.length; i++) {
    key = key + "-" + array[i];
  };
-//  key = key.split('-').filter(i => i != '');
  return key
 }
