@@ -518,7 +518,8 @@ router.post('/additional_charge', withAuth, (req, res) => {
 
 router.put('/bill_received_update', withAuth, (req, res) => {
   Container.update({
-      bill_received: req.body.bill
+      bill_received: req.body.bill,
+      cost: 0
     },
       {
       where: {

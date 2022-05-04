@@ -103,7 +103,7 @@ function next(user_id) {
         localStorage.setItem('user_name', pageData[0].user.name);
         //RECEIVED FOR LOOP
         for (let j = 0; j < pageData.length; j++) {
-           if(!pageData[j].bill_received && pageData[j].type == 1 && pageData[j].cost > 0) {
+           if(pageData[j].type == 1 && pageData[j].cost > 0) {
             received_billing(pageData, j);
             receivedCount = receivedCount + pageData[j].cost;
             receivedBoxArr.push(pageData[j].container_number)
