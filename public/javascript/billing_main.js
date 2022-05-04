@@ -600,10 +600,6 @@ function done() {
         document.getElementById("popup").style.display = "none";
     }
 };
-
-function clear() {
-    localStorage.clear()
-}
 ///tool
 const test = new Date('4/20/2022').getTime()
 console.log(test.toString());
