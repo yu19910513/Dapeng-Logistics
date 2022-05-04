@@ -601,7 +601,9 @@ function done() {
     }
 };
 
-
+function clear() {
+    localStorage.clear()
+}
 ///tool
 const test = new Date('4/20/2022').getTime()
 console.log(test.toString());

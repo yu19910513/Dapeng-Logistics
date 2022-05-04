@@ -467,4 +467,119 @@ router.get('/statusTWO', withAuth, async (req, res) => {
   }
 
 });
+////////////billing functions here///////////////////////////
+router.put('/xcharge_update', withAuth, (req, res) => {
+  Container.update({
+      status: 5,
+      bill_shipped: req.body.bill
+    },
+      {
+      where: {
+          container_number: req.body.arr
+      }
+    })
+    .then(dbContainerData => {
+      if (!dbContainerData[0]) {
+        res.status(404).json({ message: 'This Container does not exist!' });
+        return;
+      }
+      res.json(dbContainerData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+router.post('/additional_charge', withAuth, (req, res) => {
+  Container.create({
+    requested_date: new Date().toLocaleDateString("en-US"),
+    container_number: req.body.container_number,
+    account_id: req.body.account_id,
+    user_id: req.body.user_id,
+    description: req.body.description,
+    fba: req.body.fba,
+    qty_of_fee: req.body.qty_of_fee,
+    unit_fee: req.body.unit_fee,
+    weight: 0,
+    length: 0,
+    width: 0,
+    height: 0,
+    cost: req.body.cost,
+    status: 4,
+    type: 4
+  }, {returning: true})
+      .then(dbContainerData => res.json(dbContainerData))
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+});
+
+router.put('/bill_received_update', withAuth, (req, res) => {
+  Container.update({
+      bill_received: req.body.bill
+    },
+      {
+      where: {
+        container_number: req.body.arr
+      }
+    })
+    .then(dbContainerData => {
+      if (!dbContainerData[0]) {
+        res.status(404).json({ message: 'This Container does not exist!' });
+        return;
+      }
+      res.json(dbContainerData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+router.put('/bill_shipped_update', withAuth, (req, res) => {
+  Container.update({
+      bill_shipped: req.body.bill
+    },
+      {
+      where: {
+        container_number: req.body.arr
+      }
+    })
+    .then(dbContainerData => {
+      if (!dbContainerData[0]) {
+        res.status(404).json({ message: 'This Container does not exist!' });
+        return;
+      }
+      res.json(dbContainerData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+router.put('/bill_storage_update', withAuth, (req, res) => {
+  Container.update({
+      bill_storage: req.body.bill
+    },
+      {
+      where: {
+        container_number: req.body.arr
+      }
+    })
+    .then(dbContainerData => {
+      if (!dbContainerData[0]) {
+        res.status(404).json({ message: 'This Container does not exist!' });
+        return;
+      }
+      res.json(dbContainerData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
 module.exports = router;

@@ -545,6 +545,54 @@ router.get('/xc_per_user', withAuth, async (req, res) => {
   }
 
 });
+router.get('/xc_per_user_a/:user_id', withAuth, async (req, res) => {
+  try {
+    const xcData = await Container.findAll({
+      where: {
+        status:[4],
+        type: 4,
+        user_id: req.params.user_id
+      },
+      attributes: [
+        'id',
+        'container_number',
+        'description',
+        'cost',
+        'unit_fee',
+        'type',
+        'requested_date',
+        'shipped_date',
+        'fba',
+        'bill_received',
+        'bill_shipped',
+        'bill_storage',
+        'qty_of_fee'
+      ],
+      include: [
+        {
+          model: Account,
+          attributes: [
+            'id',
+            'name'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'id',
+            'name'
+          ]
+        }
+      ]
+    });
+    const extra_charges = xcData.map(charge => charge.get({ plain: true }));
+    res.json(extra_charges);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+
+});
 
 router.get('/accountsbyuser_id/:key', withAuth, async (req, res) => {
   try {

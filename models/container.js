@@ -115,6 +115,14 @@ Container.init(
             type: DataTypes.STRING,
             allowNull: true
         },
+        qty_of_fee: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
+        unit_fee: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
         custom_1: {
             type: DataTypes.STRING,
             allowNull: true

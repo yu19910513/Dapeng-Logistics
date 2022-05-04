@@ -67,12 +67,12 @@ var xchargeBoxArr = [];
 
 /// trigger fetch for additional charge data
 function xc_next(user_id) {
-    fetch('/api/user/xc_per_user', {
+    fetch(`/api/user/xc_per_user_a/${user_id}`, {
         method: 'GET'
     }).then(function (response) {
         return response.json();
     }).then(function (xcData) {
-        const selectedData = xcData[user_id];
+        const selectedData = xcData;
         if (selectedData) {
             for (let b = 0; b < selectedData.length; b++) {
                 xc_billing(selectedData, b);
@@ -110,8 +110,8 @@ function next(user_id) {
            }
         };
         var received_charge = receivedCount*receiving_cost.value;
-        receiving_total.innerHTML = received_charge;
-        receiving_total_2.innerHTML = received_charge;
+        receiving_total.innerHTML = received_charge.toFixed(2);
+        receiving_total_2.innerHTML = received_charge.toFixed(2);
 
         //STORAGE FOR LOOP
         for (let i = 0; i < pageData.length; i++) {
@@ -183,14 +183,14 @@ function storage_billing(pageData, i, lastBillDate) {
     if (lastBillDate == pageData[i].received_date) {
         storageBoxArr.push(pageData[i].container_number);
         received_date.innerHTML = pageData[i].received_date;
-        const dayCalInit = dayCalculatorInit(pageData[i].received_date, pageData[i].shipped_date);
+        const dayCalInit = dayCalculatorInit(pageData[i].received_date, pageData[i].shipped_date, pageData[i].type);
         billable.innerHTML =  dayCalInit
         storage_table.appendChild(container);
         const pre_cost = storage_cost.value*volumeNew*dayCalInit;
         total_st_charge = total_st_charge+pre_cost
         cost.innerHTML = `$${pre_cost.toFixed(5)}`
     } else {
-        const dayCalConti = dayCalculatorConti(pageData[i].received_date, lastBillDate, pageData[i].shipped_date);
+        const dayCalConti = dayCalculatorConti(pageData[i].received_date, lastBillDate, pageData[i].shipped_date, pageData[i].type);
         storageBoxArr.push(pageData[i].container_number);
         received_date.innerHTML = `${pageData[i].received_date} <br> L: <u>${lastBillDate}</u>`;
         billable.innerHTML = dayCalConti;
@@ -214,12 +214,16 @@ function monthValidate(s) {
     } return false
 };
 //billable day function: r = received_date; s = shipped_date if any
-function dayCalculatorInit(r,s) {
+function dayCalculatorInit(r,s, type) {
     var diff = main_calculator(r,s)
-    if (diff > 30) {
-    return diff-30
+    if (type != 3) {
+        if (diff > 30) {
+            return diff-30
+            } else {
+            return 0
+        }
     } else {
-    return 0
+        return diff
     }
 };
 function main_calculator(start, end) {
@@ -232,18 +236,22 @@ function main_calculator(start, end) {
     var Difference_In_Time = ending_date.getTime() - start_date.getTime();
     return Math.ceil(Difference_In_Time / (1000 * 3600 * 24)) + 1;
 };
-function dayCalculatorConti(r,b,s) {
-    var discount;
-    if (30 - main_calculator(r,b) < 0) {
-        discount = 0;
+function dayCalculatorConti(r,b,s, type) {
+    if (type != 3) {
+        var discount;
+        if (30 - main_calculator(r,b) < 0) {
+            discount = 0;
+        } else {
+            discount = 30 - main_calculator(r,b);
+        };
+        const result = main_calculator(b,s)-1-discount;
+        if (result < 0) {
+            return 0;
+        } else {
+            return result;
+        }
     } else {
-        discount = 30 - main_calculator(r,b);
-    };
-    const result = main_calculator(b,s)-1-discount;
-    if (result < 0) {
-        return 0;
-    } else {
-        return result;
+        return main_calculator(b,s)-1
     }
 };
 /////////////////////////////////////////////////
@@ -269,7 +277,7 @@ function received_billing(pageData, i) {
     container_number.innerHTML = pageData[i].container_number;
     description.innerHTML = pageData[i].description;
     received_date.innerHTML = pageData[i].received_date;
-    cost.innerHTML = `$${receiving_cost.value}`
+    cost.innerHTML = `$${(receiving_cost.value * pageData[i].cost).toFixed(2)}`
 };
 
 ////////////////////////////// SHIPPED FOR LOOP
@@ -310,8 +318,8 @@ function xc_billing(data, i) {
     const container_number = document.createElement('td');
     const fba = document.createElement('td');
     const description = document.createElement('td');
-    const qty_per_box = document.createElement('td');
-    const order = document.createElement('td');
+    const qty_of_fee = document.createElement('td');
+    const unit_fee = document.createElement('td');
     const cost = document.createElement('td');
     container.appendChild(date);
     container.appendChild(user);
@@ -319,8 +327,8 @@ function xc_billing(data, i) {
     container.appendChild(container_number);
     container.appendChild(fba);
     container.appendChild(description);
-    container.appendChild(qty_per_box);
-    container.appendChild(order);
+    container.appendChild(qty_of_fee);
+    container.appendChild(unit_fee);
     container.appendChild(cost);
     date.innerHTML = data[i].requested_date;
     user.innerHTML = data[i].user.name;
@@ -329,8 +337,8 @@ function xc_billing(data, i) {
     container_number.style.display = 'none';
     fba.innerHTML = data[i].fba;
     description.innerHTML = data[i].description;
-    order.innerHTML = data[i].order;
-    qty_per_box.innerHTML = data[i].qty_per_box;
+    unit_fee.innerHTML = data[i].unit_fee;
+    qty_of_fee.innerHTML = data[i].qty_of_fee;
     cost.innerHTML = `$${data[i].cost}`;
     total_xc_charge = total_xc_charge + data[i].cost;
 }
@@ -506,7 +514,7 @@ async function fetch_update(arr, bill, type) {
     document.getElementById('loader').style.display = '';
     document.getElementById('numberOfItems').innerHTML = `${arr.length} items`;
     document.getElementById('all_tables').style.display='none';
-    const response = await fetch(`/api/box/${type}_update`, {
+    const response = await fetch(`/api/container/${type}_update`, {
         method: 'PUT',
         body: JSON.stringify({
             arr,
@@ -548,8 +556,8 @@ function xcharge_create() {
                     container_number: dataTable.rows[i].cells[3].innerHTML,
                     fba: dataTable.rows[i].cells[4].innerHTML,
                     description: dataTable.rows[i].cells[5].innerHTML,
-                    qty_per_box: dataTable.rows[i].cells[6].innerHTML,
-                    order: dataTable.rows[i].cells[7].innerHTML,
+                    qty_of_fee: dataTable.rows[i].cells[6].innerHTML,
+                    unit_fee: dataTable.rows[i].cells[7].innerHTML,
                     cost: dataTable.rows[i].cells[8].innerHTML
                 };
                 loading_xc_data(single_XC_data)
@@ -570,7 +578,7 @@ function xcharge_create() {
 //fetch function for xc data
 const loading_xc_data = async(data) => {
     document.getElementById('loader').style.display = '';
-    const response = await fetch('/api/box/additional_charge', {
+    const response = await fetch('/api/container/additional_charge', {
         method: 'post',
         body: JSON.stringify(data),
         headers: { 'Content-Type': 'application/json' }
@@ -602,5 +610,5 @@ function done() {
 
 
 ///tool
-const test = new Date('4/20/2022').getTime()
+const test = new Date('5/02/2022').getTime()
 console.log(test.toString());
