@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const {User, Account, Batch, Box} = require('../../models');
+const {User, Account, Batch, Box, Container} = require('../../models');
 const {withAuth, adminAuth} = require('../../utils/auth');
 
 //get account info and send back to in-browawer js
@@ -395,10 +395,11 @@ router.get('/allBox_admin', withAuth, async (req, res) => {
 });
 
 //billing box data
-router.get('/billing_per_user', withAuth, async (req, res) => {
+router.get('/billing_per_user/:user_id', withAuth, async (req, res) => {
   try {
     const boxData = await Box.findAll({
       where: {
+        user_id: req.params.user_id,
         status:[1,2,3]
       },
       attributes: [
@@ -435,12 +436,57 @@ router.get('/billing_per_user', withAuth, async (req, res) => {
       ]
     });
     const boxes = boxData.map(box => box.get({ plain: true }));
-    const data = boxes.reduce(function (r, a) {
-      r[a.user.id] = r[a.user.id] || [];
-      r[a.user.id].push(a);
-      return r;
-    }, Object.create(null));
-    res.json(data);
+    res.json(boxes);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+
+});
+router.get('/billing_per_user_a/:user_id', withAuth, async (req, res) => {
+  try {
+    const containerDB = await Container.findAll({
+      where: {
+        user_id: req.params.user_id,
+        status:[1,2,3],
+        type: [1,3]
+      },
+      attributes: [
+        'id',
+        'container_number',
+        'description',
+        'cost',
+        'type',
+        'requested_date',
+        'received_date',
+        'shipped_date',
+        'weight',
+        'volume',
+        'status',
+        'fba',
+        'bill_received',
+        'bill_shipped',
+        'bill_storage'
+      ],
+      include: [
+        {
+          model: Account,
+          attributes: [
+            'id',
+            'name'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'id',
+            'name'
+          ]
+        }
+      ]
+    });
+    const containers = containerDB.map(container => container.get({ plain: true }));
+    res.json(containers);
   } catch (err) {
     console.log(err);
     res.status(500).json(err);

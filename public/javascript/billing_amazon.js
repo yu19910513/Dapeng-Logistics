@@ -36,8 +36,7 @@ function client_data() {
         client_list.appendChild(user)
         };
     });
-};
-client_data();
+};client_data();
 
 function unlock_select() {
     document.getElementById('client_list').disabled = false;
@@ -60,7 +59,7 @@ var total_xc_charge = 0;
 var receivedCount = 0;
 var shippedCount = 0;
 
-/////////////Array to store box_numbers to update their assoicated bill_shipped & bill_received
+/////////////Array to store container_numbers to update their assoicated bill_shipped & bill_received
 var shippedBoxArr = [];
 var receivedBoxArr = [];
 var storageBoxArr = [];
@@ -95,7 +94,7 @@ function next(user_id) {
     document.getElementById('s_only').disabled = false;
     document.getElementById('st_only').disabled = false;
     document.getElementById('all').disabled = false;
-    fetch(`/api/user/billing_per_user/${user_id}`, {
+    fetch(`/api/user/billing_per_user_a/${user_id}`, {
         method: 'GET'
     }).then(function (response) {
         return response.json();
@@ -104,10 +103,10 @@ function next(user_id) {
         localStorage.setItem('user_name', pageData[0].user.name);
         //RECEIVED FOR LOOP
         for (let j = 0; j < pageData.length; j++) {
-           if(!pageData[j].bill_received) {
+           if(!pageData[j].bill_received && pageData[j].type == 1 && pageData[j].cost > 0) {
             received_billing(pageData, j);
-            receivedCount++;
-            receivedBoxArr.push(pageData[j].box_number)
+            receivedCount = receivedCount + pageData[j].cost;
+            receivedBoxArr.push(pageData[j].container_number)
            }
         };
         var received_charge = receivedCount*receiving_cost.value;
@@ -116,7 +115,7 @@ function next(user_id) {
 
         //STORAGE FOR LOOP
         for (let i = 0; i < pageData.length; i++) {
-            if (!pageData[i].shipped_date || monthValidate(pageData[i].shipped_date)) {
+            if ((!pageData[i].shipped_date || monthValidate(pageData[i].shipped_date))) {
                 if(!(pageData[i].status == 3 && monthValidate(pageData[i].bill_storage))) {
                 storage_billing_1stStep(pageData, i);
                 }
@@ -128,10 +127,10 @@ function next(user_id) {
 
         //SHIPPED FOR LOOP
         for (let k = 0; k < pageData.length; k++) {
-            if(!pageData[k].bill_shipped && pageData[k].status == 3) {
+            if(!pageData[k].bill_shipped && pageData[k].status == 3 && pageData[k].type == 3) {
                 shipped_billing(pageData, k);
                 shippedCount++;
-                shippedBoxArr.push(pageData[k].box_number)
+                shippedBoxArr.push(pageData[k].container_number)
             }
         };
         var shipped_charge = shippedCount*shipping_cost.value;
@@ -159,7 +158,7 @@ function storage_billing(pageData, i, lastBillDate) {
     const container = document.createElement('tr');
     const user = document.createElement('td');
     const account = document.createElement('td');
-    const box_number = document.createElement('td');
+    const container_number = document.createElement('td');
     const description = document.createElement('td');
     const received_date = document.createElement('td');
     const ending_date = document.createElement('td');
@@ -168,7 +167,7 @@ function storage_billing(pageData, i, lastBillDate) {
     const cost = document.createElement('td');
     container.appendChild(user);
     container.appendChild(account);
-    container.appendChild(box_number);
+    container.appendChild(container_number);
     container.appendChild(description);
     container.appendChild(received_date);
     container.appendChild(ending_date);
@@ -177,12 +176,12 @@ function storage_billing(pageData, i, lastBillDate) {
     container.appendChild(cost);
     user.innerHTML = pageData[i].user.name;
     account.innerHTML = pageData[i].account.name;
-    box_number.innerHTML = pageData[i].box_number;
+    container_number.innerHTML = pageData[i].container_number;
     description.innerHTML = pageData[i].description;
     const volumeNew = pageData[i].volume/764555;
     volume.innerHTML = volumeNew.toFixed(10);
     if (lastBillDate == pageData[i].received_date) {
-        storageBoxArr.push(pageData[i].box_number);
+        storageBoxArr.push(pageData[i].container_number);
         received_date.innerHTML = pageData[i].received_date;
         const dayCalInit = dayCalculatorInit(pageData[i].received_date, pageData[i].shipped_date);
         billable.innerHTML =  dayCalInit
@@ -192,7 +191,7 @@ function storage_billing(pageData, i, lastBillDate) {
         cost.innerHTML = `$${pre_cost.toFixed(5)}`
     } else {
         const dayCalConti = dayCalculatorConti(pageData[i].received_date, lastBillDate, pageData[i].shipped_date);
-        storageBoxArr.push(pageData[i].box_number);
+        storageBoxArr.push(pageData[i].container_number);
         received_date.innerHTML = `${pageData[i].received_date} <br> L: <u>${lastBillDate}</u>`;
         billable.innerHTML = dayCalConti;
         const pre_cost = storage_cost.value*volumeNew*dayCalConti;
@@ -255,19 +254,19 @@ function received_billing(pageData, i) {
     received_table.appendChild(container);
     const user = document.createElement('td');
     const account = document.createElement('td');
-    const box_number = document.createElement('td');
+    const container_number = document.createElement('td');
     const description = document.createElement('td');
     const received_date = document.createElement('td');
     const cost = document.createElement('td');
     container.appendChild(user);
     container.appendChild(account);
-    container.appendChild(box_number);
+    container.appendChild(container_number);
     container.appendChild(description);
     container.appendChild(received_date);
     container.appendChild(cost);
     user.innerHTML = pageData[i].user.name;
     account.innerHTML = pageData[i].account.name;
-    box_number.innerHTML = pageData[i].box_number;
+    container_number.innerHTML = pageData[i].container_number;
     description.innerHTML = pageData[i].description;
     received_date.innerHTML = pageData[i].received_date;
     cost.innerHTML = `$${receiving_cost.value}`
@@ -279,21 +278,21 @@ function shipped_billing(pageData, i) {
     shipped_table.appendChild(container);
     const user = document.createElement('td');
     const account = document.createElement('td');
-    const box_number = document.createElement('td');
+    const container_number = document.createElement('td');
     const fba = document.createElement('td');
     const description = document.createElement('td');
     const shipped_date = document.createElement('td');
     const cost = document.createElement('td');
     container.appendChild(user);
     container.appendChild(account);
-    container.appendChild(box_number);
+    container.appendChild(container_number);
     container.appendChild(fba);
     container.appendChild(description);
     container.appendChild(shipped_date);
     container.appendChild(cost);
     user.innerHTML = pageData[i].user.name;
     account.innerHTML = pageData[i].account.name;
-    box_number.innerHTML = pageData[i].box_number;
+    container_number.innerHTML = pageData[i].container_number;
     fba.innerHTML = pageData[i].fba;
     description.innerHTML = pageData[i].description;
     shipped_date.innerHTML = pageData[i].shipped_date;
@@ -302,13 +301,13 @@ function shipped_billing(pageData, i) {
 
 ////////////////////////////// XC FOR LOOP
 function xc_billing(data, i) {
-    xchargeBoxArr.push(data[i].box_number)
+    xchargeBoxArr.push(data[i].container_number)
     const container = document.createElement('tr');
     xcharge_table.appendChild(container);
     const date = document.createElement('td');
     const user = document.createElement('td');
     const account = document.createElement('td');
-    const box_number = document.createElement('td');
+    const container_number = document.createElement('td');
     const fba = document.createElement('td');
     const description = document.createElement('td');
     const qty_per_box = document.createElement('td');
@@ -317,7 +316,7 @@ function xc_billing(data, i) {
     container.appendChild(date);
     container.appendChild(user);
     container.appendChild(account);
-    container.appendChild(box_number);
+    container.appendChild(container_number);
     container.appendChild(fba);
     container.appendChild(description);
     container.appendChild(qty_per_box);
@@ -326,8 +325,8 @@ function xc_billing(data, i) {
     date.innerHTML = data[i].requested_date;
     user.innerHTML = data[i].user.name;
     account.innerHTML = data[i].account.name;
-    box_number.innerHTML = data[i].box_number;
-    box_number.style.display = 'none';
+    container_number.innerHTML = data[i].container_number;
+    container_number.style.display = 'none';
     fba.innerHTML = data[i].fba;
     description.innerHTML = data[i].description;
     order.innerHTML = data[i].order;
@@ -546,7 +545,7 @@ function xcharge_create() {
                 const single_XC_data = {
                     user_id: user_id,
                     account_id: xc_account_id,
-                    box_number: dataTable.rows[i].cells[3].innerHTML,
+                    container_number: dataTable.rows[i].cells[3].innerHTML,
                     fba: dataTable.rows[i].cells[4].innerHTML,
                     description: dataTable.rows[i].cells[5].innerHTML,
                     qty_per_box: dataTable.rows[i].cells[6].innerHTML,
@@ -577,7 +576,7 @@ const loading_xc_data = async(data) => {
         headers: { 'Content-Type': 'application/json' }
     });
     if (response.ok) {
-        console.log(`charge id: ${data.box_number} is inserted successfully!`);
+        console.log(`charge id: ${data.container_number} is inserted successfully!`);
     } else {
         alert('try again')
     }

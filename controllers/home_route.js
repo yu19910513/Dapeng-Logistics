@@ -993,6 +993,19 @@ router.get('/billing', withAuth, async (req, res) => {
     console.log(err);
     res.status(500).json(err);
   }
+});
+
+router.get('/billing_amazon', withAuth, async (req, res) => {
+  try {
+    res.render('billing_amazon', {
+      loggedIn: true,
+      admin: req.session.admin,
+      name: req.session.name
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 })
 
 //client pending order page (in cards)
