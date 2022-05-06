@@ -1,8 +1,8 @@
-const tablet = document.querySelector('table')
+const table = document.querySelector('table')
 var prefix_map = new Map();
 var account_map = new Map();
 var verifyAccount_map = new Map();
-var rows = tablet.rows
+var rows = table.rows;
 var account_nameArr = [];
 var arr = [];
 
@@ -178,3 +178,37 @@ async function loadingBox(data) {
       }
 
 }
+
+
+var container_numberArr = [];
+var userArr = [];
+var accountArr = [];
+var itemArr = [];
+function init () {
+    for (let i = 2; i < rows.length; i++) {
+        const container_number = rows[i].cells[1].innerText;
+        arrFormation(container_numberArr, container_number)
+        const received_date = rows[i].cells[2];
+        const user = rows[i].cells[3].innerText;
+        arrFormation(userArr, user)
+        const account = rows[i].cells[4].innerText;
+        arrFormation(accountArr, account)
+        const item_number = rows[i].cells[5].innerText;
+        arrFormation(itemArr, item_number);
+        const description = rows[i].cells[6];
+        const length = rows[i].cells[7];
+        const width = rows[i].cells[8];
+        const height = rows[i].cells[9];
+    }
+} init()
+
+function arrFormation(arr, element) {
+    if (!arr.includes(element)) {
+        arr.push(element)
+    }
+}
+
+console.log(container_numberArr);
+console.log(userArr);
+console.log(accountArr);
+console.log(itemArr);

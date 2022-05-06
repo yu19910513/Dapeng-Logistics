@@ -1658,9 +1658,9 @@ router.get('/amazon_overview/:id', withAuth, async (req, res) => {
   }
 })
 
-// router.get('/rawData', withAuth, (req, res) => {
-//     res.render('rawData');
-// });
+router.get('/rawData', withAuth, (req, res) => {
+    res.render('rawData');
+});
 
 
   module.exports = router
