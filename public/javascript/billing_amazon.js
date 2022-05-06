@@ -79,7 +79,7 @@ function xc_next(user_id) {
             };
             xcharge_total_2.innerHTML = total_xc_charge;
             xcharge_total.innerHTML = total_xc_charge;
-            all_total.innerHTML = parseInt(all_total.innerHTML) + total_xc_charge;
+            all_total.innerHTML = parseFloat(all_total.innerText) + total_xc_charge;
         };
     })
 }
@@ -274,7 +274,7 @@ function received_billing(pageData, i) {
     container.appendChild(cost);
     user.innerHTML = pageData[i].user.name;
     account.innerHTML = pageData[i].account.name;
-    container_number.innerHTML = pageData[i].container_number;
+    container_number.innerHTML = pageData[i].container_number + ` (${pageData[i].cost})`;
     description.innerHTML = pageData[i].description;
     received_date.innerHTML = pageData[i].received_date;
     cost.innerHTML = `$${(receiving_cost.value * pageData[i].cost).toFixed(2)}`

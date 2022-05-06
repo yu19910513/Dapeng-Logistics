@@ -80,7 +80,7 @@ function xc_next(user_id) {
             };
             xcharge_total_2.innerHTML = total_xc_charge;
             xcharge_total.innerHTML = total_xc_charge;
-            all_total.innerHTML = parseInt(all_total.innerHTML) + total_xc_charge;
+            all_total.innerHTML = pparseFloat(all_total.innerHTML) + total_xc_charge;
         };
     })
 }
@@ -115,15 +115,8 @@ function next(user_id) {
         receiving_total_2.innerHTML = received_charge;
 
         //STORAGE FOR LOOP
-        // for (let i = 0; i < pageData.length; i++) {
-        //     if (!pageData[i].shipped_date || monthValidate(pageData[i].shipped_date)) {
-        //         if(!(pageData[i].status == 3 && monthValidate(pageData[i].bill_storage))) {
-        //         storage_billing_1stStep(pageData, i);
-        //         }
-        //     };
-        // };
         for (let i = 0; i < pageData.length; i++) {
-            if ((!pageData[i].shipped_date && pageData[i].status != 3) || !pageData[i].bill_shipped) {
+            if (!pageData[i].shipped_date || monthValidate(pageData[i].shipped_date)) {
                 if(!(pageData[i].status == 3 && monthValidate(pageData[i].bill_storage))) {
                 storage_billing_1stStep(pageData, i);
                 }
