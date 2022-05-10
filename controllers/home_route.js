@@ -25,7 +25,7 @@ router.get('/', withAuth, async (req, res) => {
         }
       ],
       order: [
-        ["name", "ASC"],
+        ["name", "DESC"],
       ],
     });
     const accountDataTwo = await Account.findAll({
@@ -68,7 +68,7 @@ router.get('/', withAuth, async (req, res) => {
       }
       if (element && !accountIds.includes(pre_accounts[i].id)) {
         accountIds.push(pre_accounts[i].id)
-        accounts.push(pre_accounts[i]);
+        accounts.unshift(pre_accounts[i]);
       }
       if (pre_accountsTwo[i]) {
         elementtwo = pre_accountsTwo[i].containers[0];
@@ -79,7 +79,7 @@ router.get('/', withAuth, async (req, res) => {
         accountIds.push(pre_accountsTwo[i].id)
         accounts.push(pre_accountsTwo[i]);
       }
-    }
+    };
     res.render('home', {
       accounts,
       loggedIn: true,

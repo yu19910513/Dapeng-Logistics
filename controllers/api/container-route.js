@@ -10,6 +10,24 @@ const util = require('util');
 const { log } = require('console');
 const unlinkFile = util.promisify(fs.unlink)
 
+router.get('/', withAuth, async (req, res) => {
+  try {
+    const containerData = await Container.findAll({
+      attributes: [
+        'container_number',
+        'user_id',
+        'account_id',
+        'id'
+      ],
+    });
+    const containers = containerData.map(container => container.get({ plain: true }));
+    res.json(containers);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+})
+
 router.put('/account_merge', withAuth, (req, res) => {
     Container.update({
         account_id: req.body.account_id_2
@@ -330,6 +348,26 @@ router.put('/post-label', withAuth, (req, res) => {
     });
 });
 
+router.post('/seeds', withAuth, (req, res) => {
+  Container.create({
+      user_id: req.body.user_id,
+      account_id: req.body.account_id,
+      container_number: req.body.container_number,
+      received_date: req.body.received_date,
+      cost: req.body.cost,
+      description: req.body.description,
+      length: req.body.length,
+      width: req.body.width,
+      height: req.body.height,
+      bill_received: req.body.bill_received,
+      bill_storage: req.body.bill_storage,
+      volume: req.body.volume
+  }).then(dbContainerData => res.json(dbContainerData))
+  .catch(err => {
+    console.log(err);
+    res.status(500).json(err);
+  });
+});
 //upload the second file to AWS and update file_2 when requested is submitted by client
 router.post('/upload_2', upload.single('file'), async (req, res) => {
   const file = req.file;

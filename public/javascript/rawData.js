@@ -1,3 +1,4 @@
+
 const table = document.querySelector('table');
 var rows = table.rows;
 // var prefix_map = new Map();
@@ -221,7 +222,7 @@ async function userPost(data) {
         headers: { 'Content-Type': 'application/json' }
     });
     if (response.ok) {
-        console.log('success');
+        console.log('success_client');
     } else {
         alert('This email is already registered with an existed account')
     }
@@ -291,43 +292,116 @@ function accountGet() {
         return response.json();
     }).then(function (data) {
         for (let a = 0; a < data.length; a++) {
-            accountMap.set(data[a].name, data[a].user_id);
+            containerMap.set(data[a].name, [data[a].user.name.toLowerCase(), data[a].user_id, data[a].id]);
         };
         containerFormation()
     })
 };
+var masterMap = new Map();
 function containerFormation() {
     for (let i = 2; i < rows.length; i++) {
-        const account = rows[i].cells[4].innerText;
-        const user = rows[i].cells[3].innerText.split(' ').join('').toLowerCase();
-        const container_number = rows[i].cells[1].innerText;
-        containerMap.set(container_number, userMap.get(account));
-        arrFormation(containerArr, container_number)///**** */
+        if (rows[i].cells[1].innerText && containerMap.get(rows[i].cells[4].innerText)) {
+            var container = new Object();
+            container.container_number = rows[i].cells[1].innerText;
+            container.received_date = rows[i].cells[2].innerText;
+            container.user = rows[i].cells[3].innerText.split(' ').join('').toLowerCase();
+            container.account = rows[i].cells[4].innerText;
+            container.cost = 0
+            container.description = rows[i].cells[6].innerText;
+            container.length = parseFloat(rows[i].cells[7].innerText)*2.54;
+            container.width = parseFloat(rows[i].cells[8].innerText)*2.54;
+            container.height = parseFloat(rows[i].cells[9].innerText)*2.54;
+            container.volume = container.length*container.width*container.height;
+            container.account_id = containerMap.get(container.account)[2];
+            container.user_id = containerMap.get(container.account)[1];
+            container.bill_received = new Date().valueOf();
+            container.bill_storage = new Date().valueOf();
+            arrFormation(containerArr, container.container_number);
+            masterMap.set(container.container_number, container);
+            console.log('count');
+        }
     };
     console.log(containerArr.length);
-    for (let j = 0; j < containerArr.length; j++) {
+};
+function continueContainerInsert(start, end) {
+    for (let j = start; j < end; j++) {
         if(containerArr[j]) {
-            const container = new Object();
-            const containerName = containerArr[j];
-            container.name = containerName;
-            container.prefix = containerName.substring(0,3);
-            container.user_id = containerMap.get(containerArr[j])
-            // containerPost(container);
+            containerPost(masterMap.get(containerArr[j]));
         }
     }
 };
-// for (let i = 0; i < rows.length; i++) {
-//     const container_number = rows[i].cells[1].innerText;
-//     arrFormation(container_numberArr, container_number)
-//     const received_date = rows[i].cells[2];
-//     const user = rows[i].cells[3].innerText;
-//     arrFormation(userArr, user)
-//     const account = rows[i].cells[4].innerText;
-//     arrFormation(accountArr, account)
-//     const item_number = rows[i].cells[5].innerText;
-//     arrFormation(itemArr, item_number);
-//     const description = rows[i].cells[6];
-//     const length = rows[i].cells[7];
-//     const width = rows[i].cells[8];
-//     const height = rows[i].cells[9];
-// };
+async function containerPost(data) {
+    const response = await fetch('/api/container/seeds', {
+        method: 'post',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+    });
+    if (response.ok) {
+        console.log('success_container');
+    } else {
+        alert('This email is already registered with an existed account')
+    }
+}
+
+
+//create Items
+var itemMap = new Map();
+function containerGet() {
+    fetch(`/api/container/`, {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        for (let a = 0; a < data.length; a++) {
+            itemMap.set(data[a].container_number, [data[a].id, data[a].account_id, data[a].user_id]);
+        };
+        itemFormation()
+    })
+};
+var itemQtyMap = new Map();
+var itemMasterMap = new Map();
+function itemFormation() {
+    for (let i = 2; i < rows.length; i++) {
+        if (rows[i].cells[1].innerText && itemMap.get(rows[i].cells[1].innerText)) {
+            if (!itemQtyMap.get(`${rows[i].cells[5].innerText}-${rows[i].cells[1].innerText}`)) {
+                itemQtyMap.set(`${rows[i].cells[5].innerText}-${rows[i].cells[1].innerText}`, 1)
+            } else {
+                itemQtyMap.set(`${rows[i].cells[5].innerText}-${rows[i].cells[1].innerText}`, itemQtyMap.get(`${rows[i].cells[5].innerText}-${rows[i].cells[1].innerText}`)+1)
+            }
+            var item = new Object();
+            item.item_number = `${rows[i].cells[5].innerText}-${rows[i].cells[1].innerText}`
+            item.container_id = itemMap.get(rows[i].cells[1].innerText)[0];
+            item.user_id = itemMap.get(rows[i].cells[1].innerText)[2];
+            item.account_id = itemMap.get(rows[i].cells[1].innerText)[1];
+            itemMasterMap.set(item.item_number, item)
+            arrFormation(itemArr, item.item_number);
+            console.log('count');
+        }
+    };
+    console.log(itemArr.length);
+};
+function continueItemInsert(start, end) {
+    for (let j = start; j < end; j++) {
+        if(itemArr[j]) {
+            itemPost({
+                item_number: itemMasterMap.get(itemArr[j]).item_number.split('-')[0],
+                user_id: itemMasterMap.get(itemArr[j]).user_id,
+                account_id: itemMasterMap.get(itemArr[j]).account_id,
+                container_id: itemMasterMap.get(itemArr[j]).container_id,
+                qty_per_sku: itemQtyMap.get(itemArr[j])
+            });
+        }
+    }
+};
+async function itemPost(data) {
+    const response = await fetch('/api/item/seeds', {
+        method: 'post',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+    });
+    if (response.ok) {
+        console.log('success_item');
+    } else {
+        alert('This email is already registered with an existed account')
+    }
+};
