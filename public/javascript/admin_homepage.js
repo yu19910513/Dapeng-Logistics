@@ -17,6 +17,7 @@ var locationArr = [];
 var locationArr_amazon = [];
 var preUpdateArr = [];
 var preUpdateContainerArr = [];
+var xcNumberArr = [];
 
 function allBox() {
     allItem();
@@ -34,6 +35,11 @@ function allBox() {
 
           //collect box_number
           boxNumberArr.push(box_number);
+
+          //collect xc box_number
+          if (box_number.substring(0,2) == 'AC' && !data[i].batch_id) {
+            xcNumberArr.push(box_number);
+          }
 
             // collect location data
             if (!locationArr.includes(location)) {
@@ -83,6 +89,13 @@ function box_searching() {
       const each_of_all = boxNumberArr[i];
       if (each_of_all) {
         buildingRow(each_of_all)
+      }
+    }
+  } else if (box_input == '/xc') {
+    for (let i = 0; i < boxNumberArr.length; i++) {
+    const eachXc = xcNumberArr[i];
+      if (eachXc) {
+        buildingRow(eachXc)
       }
     }
   }
@@ -144,12 +157,20 @@ function buildingRow(b) {
     account.innerHTML = objectMap.get(b).account.name;
     box_number.innerHTML = `<a href="/admin/box/${b}" >${b}</a>`;
     description.innerHTML = objectMap.get(b).description;
-    order.innerHTML = objectMap.get(b).order;
-    total_box.innerHTML = objectMap.get(b).batch.total_box;
+    if (!objectMap.get(b).batch_id) {
+      order.innerHTML = `$ ${objectMap.get(b).order}/ qty`;
+      date.innerHTML = `total $${objectMap.get(b).cost}`;
+      date.setAttribute('uk-tooltip', `received date ${newDateValidate(objectMap.get(b).received_date)} ; requested date ${newDateValidate(objectMap.get(b).requested_date)} ; shipped date ${newDateValidate(objectMap.get(b).shipped_date)} ; bill for receiving ${newDateValidate(new Date(objectMap.get(b).bill_received).toLocaleDateString("en-US"))} ; bill for storage ${newDateValidate(new Date(objectMap.get(b).bill_storage).toLocaleDateString("en-US"))} ; bill for shipping ${newDateValidate(new Date(objectMap.get(b).bill_shipped).toLocaleDateString("en-US"))}`)
+
+    } else {
+      order.innerHTML = objectMap.get(b).order;
+      total_box.innerHTML = objectMap.get(b).batch.total_box;
+      date.innerHTML = convertor(objectMap.get(b));
+      date.setAttribute('uk-tooltip', `pending date ${newDateValidate(objectMap.get(b).batch.pending_date)} ; received date ${newDateValidate(objectMap.get(b).received_date)} ; requested date ${newDateValidate(objectMap.get(b).requested_date)} ; shipped date ${newDateValidate(objectMap.get(b).shipped_date)} ; bill for receiving ${newDateValidate(new Date(objectMap.get(b).bill_received).toLocaleDateString("en-US"))} ; bill for storage ${newDateValidate(new Date(objectMap.get(b).bill_storage).toLocaleDateString("en-US"))} ; bill for shipping ${newDateValidate(new Date(objectMap.get(b).bill_shipped).toLocaleDateString("en-US"))}`)
+
+    }
     qty_per_box.innerHTML = objectMap.get(b).qty_per_box;
     location.innerHTML = objectMap.get(b).location;
-    date.innerHTML = convertor(objectMap.get(b));
-    date.setAttribute('uk-tooltip', `pending date ${newDateValidate(objectMap.get(b).batch.pending_date)} ; received date ${newDateValidate(objectMap.get(b).received_date)} ; requested date ${newDateValidate(objectMap.get(b).requested_date)} ; shipped date ${newDateValidate(objectMap.get(b).shipped_date)} ; bill for receiving ${newDateValidate(new Date(objectMap.get(b).bill_received).toLocaleDateString("en-US"))} ; bill for storage ${newDateValidate(new Date(objectMap.get(b).bill_storage).toLocaleDateString("en-US"))} ; bill for shipping ${newDateValidate(new Date(objectMap.get(b).bill_shipped).toLocaleDateString("en-US"))}`)
     status.innerHTML = convertor_status(objectMap.get(b).status);
     boxBody.appendChild(container);
 };
