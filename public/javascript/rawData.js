@@ -315,7 +315,7 @@ function containerFormation() {
             container.account_id = containerMap.get(container.account)[2];
             container.user_id = containerMap.get(container.account)[1];
             container.bill_received = new Date(rows[i].cells[2].innerText.trim()).valueOf();
-            container.bill_storage = new Date(3/31/2022).valueOf();
+            container.bill_storage = new Date('3/31/2022').valueOf();
             arrFormation(containerArr, container.container_number);
             masterMap.set(container.container_number, container);
             console.log('count');
