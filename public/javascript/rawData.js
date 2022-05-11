@@ -193,11 +193,11 @@ var containerMap = new Map();
 //create users
 function init () {
         for (let i = 2; i < rows.length; i++) {
-            const user = rows[i].cells[3].innerText;
+            const user = rows[i].cells[3].innerText.trim().toLowerCase();
             arrFormation(userArr, user)
         };
-        for (let j = 1; j < userArr.length; j++) {
-            if(userArr[j]) {
+        for (let j = 0; j < userArr.length; j++) {
+            if(userArr[j] && userArr[j] != 'yiwu') {
                 const user = new Object();
                 const username = userArr[j].split(' ').join('').toLowerCase();
                 user.name = username;
@@ -252,8 +252,8 @@ function userGet() {
 };
 function accountFormation() {
     for (let i = 2; i < rows.length; i++) {
-        const account = rows[i].cells[4].innerText;
-        const user = rows[i].cells[3].innerText.split(' ').join('').toLowerCase();
+        const account = rows[i].cells[4].innerText.trim();
+        const user = rows[i].cells[3].innerText.trim().split(' ').join('').toLowerCase();
         if(!accountMap.get(account) || accountMap.get(account) != userMap.get(user)){
             accountMap.set(account, userMap.get(user));
             arrFormation(accountArr, account)
@@ -300,22 +300,22 @@ function accountGet() {
 var masterMap = new Map();
 function containerFormation() {
     for (let i = 2; i < rows.length; i++) {
-        if (rows[i].cells[1].innerText && containerMap.get(rows[i].cells[4].innerText)) {
+        if (rows[i].cells[1].innerText.trim() && containerMap.get(rows[i].cells[4].innerText.trim())) {
             var container = new Object();
-            container.container_number = rows[i].cells[1].innerText;
-            container.received_date = rows[i].cells[2].innerText;
+            container.container_number = rows[i].cells[1].innerText.trim();
+            container.received_date = rows[i].cells[2].innerText.trim();
             container.user = rows[i].cells[3].innerText.split(' ').join('').toLowerCase();
-            container.account = rows[i].cells[4].innerText;
+            container.account = rows[i].cells[4].innerText.trim();
             container.cost = 0
             container.description = rows[i].cells[6].innerText;
-            container.length = parseFloat(rows[i].cells[7].innerText)*2.54;
-            container.width = parseFloat(rows[i].cells[8].innerText)*2.54;
-            container.height = parseFloat(rows[i].cells[9].innerText)*2.54;
+            container.length = parseFloat(rows[i].cells[7].innerText.trim())*2.54;
+            container.width = parseFloat(rows[i].cells[8].innerText.trim())*2.54;
+            container.height = parseFloat(rows[i].cells[9].innerText.trim())*2.54;
             container.volume = container.length*container.width*container.height;
             container.account_id = containerMap.get(container.account)[2];
             container.user_id = containerMap.get(container.account)[1];
-            container.bill_received = new Date().valueOf();
-            container.bill_storage = new Date().valueOf();
+            container.bill_received = new Date(rows[i].cells[2].innerText.trim()).valueOf();
+            container.bill_storage = new Date(3/31/2022).valueOf();
             arrFormation(containerArr, container.container_number);
             masterMap.set(container.container_number, container);
             console.log('count');
@@ -362,17 +362,17 @@ var itemQtyMap = new Map();
 var itemMasterMap = new Map();
 function itemFormation() {
     for (let i = 2; i < rows.length; i++) {
-        if (rows[i].cells[1].innerText && itemMap.get(rows[i].cells[1].innerText)) {
-            if (!itemQtyMap.get(`${rows[i].cells[5].innerText}-${rows[i].cells[1].innerText}`)) {
-                itemQtyMap.set(`${rows[i].cells[5].innerText}-${rows[i].cells[1].innerText}`, 1)
+        if (rows[i].cells[1].innerText.trim() && itemMap.get(rows[i].cells[1].innerText.trim())) {
+            if (!itemQtyMap.get(`${rows[i].cells[5].innerText.trim()}-${rows[i].cells[1].innerText.trim()}`)) {
+                itemQtyMap.set(`${rows[i].cells[5].innerText.trim()}-${rows[i].cells[1].innerText.trim()}`, 1)
             } else {
-                itemQtyMap.set(`${rows[i].cells[5].innerText}-${rows[i].cells[1].innerText}`, itemQtyMap.get(`${rows[i].cells[5].innerText}-${rows[i].cells[1].innerText}`)+1)
+                itemQtyMap.set(`${rows[i].cells[5].innerText.trim()}-${rows[i].cells[1].innerText.trim()}`, itemQtyMap.get(`${rows[i].cells[5].innerText.trim()}-${rows[i].cells[1].innerText.trim()}`)+1)
             }
             var item = new Object();
-            item.item_number = `${rows[i].cells[5].innerText}-${rows[i].cells[1].innerText}`
-            item.container_id = itemMap.get(rows[i].cells[1].innerText)[0];
-            item.user_id = itemMap.get(rows[i].cells[1].innerText)[2];
-            item.account_id = itemMap.get(rows[i].cells[1].innerText)[1];
+            item.item_number = `${rows[i].cells[5].innerText.trim()}-${rows[i].cells[1].innerText.trim()}`
+            item.container_id = itemMap.get(rows[i].cells[1].innerText.trim())[0];
+            item.user_id = itemMap.get(rows[i].cells[1].innerText.trim())[2];
+            item.account_id = itemMap.get(rows[i].cells[1].innerText.trim())[1];
             itemMasterMap.set(item.item_number, item)
             arrFormation(itemArr, item.item_number);
             console.log('count');
