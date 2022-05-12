@@ -73,6 +73,28 @@ router.put('/reqContainer', withAuth, (req, res) => {
     });
 });
 
+router.put('/number/:number', withAuth, (req, res) => {
+  Container.update({
+      location: req.body.location
+    },
+    {
+      where: {
+          container_number: req.params.number
+      }
+    })
+    .then(dbContainerData => {
+      if (!dbContainerData[0]) {
+        res.status(404).json({ message: 'This Container does not exist!' });
+        return;
+      }
+      res.json(dbContainerData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
 router.get('/amazon_container/:key', withAuth, async (req, res) => {
   try {
     const singleContainer = await Container.findOne({

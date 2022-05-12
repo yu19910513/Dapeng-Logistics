@@ -181,227 +181,280 @@ var rows = table.rows;
 // }
 
 
-var containerArr = [];
-var userArr = [];
-var accountArr = [];
-var itemArr = [];
+// var containerArr = [];
+// var userArr = [];
+// var accountArr = [];
+// var itemArr = [];
 
-var userMap = new Map();
-var accountMap = new Map();
-var containerMap = new Map();
+// var userMap = new Map();
+// var accountMap = new Map();
+// var containerMap = new Map();
 
-//create users
-function init () {
-        for (let i = 2; i < rows.length; i++) {
-            const user = rows[i].cells[3].innerText.trim().toLowerCase();
-            arrFormation(userArr, user)
-        };
-        for (let j = 0; j < userArr.length; j++) {
-            if(userArr[j] && userArr[j] != 'yiwu') {
-                const user = new Object();
-                const username = userArr[j].split(' ').join('').toLowerCase();
-                user.name = username;
-                user.username = username;
-                user.email = null;
-                user.password = `${username}password`;
-                user.admin = false;
-                userPost(user);
-            }
+// //create users
+// function init () {
+//         for (let i = 2; i < rows.length; i++) {
+//             const user = rows[i].cells[3].innerText.trim().toLowerCase();
+//             arrFormation(userArr, user)
+//         };
+//         for (let j = 0; j < userArr.length; j++) {
+//             if(userArr[j] && userArr[j] != 'yiwu') {
+//                 const user = new Object();
+//                 const username = userArr[j].split(' ').join('').toLowerCase();
+//                 user.name = username;
+//                 user.username = username;
+//                 user.email = null;
+//                 user.password = `${username}password`;
+//                 user.admin = false;
+//                 userPost(user);
+//             }
 
-        }
-}
-function arrFormation(arr, element) {
-    if (!arr.includes(element)) {
-        arr.push(element)
-    }
-}
-async function userPost(data) {
-    const response = await fetch('/api/user', {
-        method: 'post',
-        body: JSON.stringify(data),
-        headers: { 'Content-Type': 'application/json' }
-    });
-    if (response.ok) {
-        console.log('success_client');
-    } else {
-        alert('This email is already registered with an existed account')
-    }
-}
+//         }
+// }
+// function arrFormation(arr, element) {
+//     if (!arr.includes(element)) {
+//         arr.push(element)
+//     }
+// }
+// async function userPost(data) {
+//     const response = await fetch('/api/user', {
+//         method: 'post',
+//         body: JSON.stringify(data),
+//         headers: { 'Content-Type': 'application/json' }
+//     });
+//     if (response.ok) {
+//         console.log('success_client');
+//     } else {
+//         alert('This email is already registered with an existed account')
+//     }
+// }
 
-//create accounts
-function userGet() {
-    fetch(`/api/user/`, {
-        method: 'GET'
-    }).then(function (response) {
-        return response.json();
-    }).then(function (data) {
-        for (let i = 0; i < data.length; i++) {
-            userMap.set(data[i].name.toLowerCase(), data[i].id);
-        };
-        fetch(`/api/account/`, {
-            method: 'GET'
-        }).then(function (response) {
-            return response.json();
-        }).then(function (data) {
-            for (let a = 0; a < data.length; a++) {
-                accountMap.set(data[a].name, data[a].user_id);
-            }
-            accountFormation()
-        })
-    });
-};
-function accountFormation() {
-    for (let i = 2; i < rows.length; i++) {
-        const account = rows[i].cells[4].innerText.trim();
-        const user = rows[i].cells[3].innerText.trim().split(' ').join('').toLowerCase();
-        if(!accountMap.get(account) || accountMap.get(account) != userMap.get(user)){
-            accountMap.set(account, userMap.get(user));
-            arrFormation(accountArr, account)
+// //create accounts
+// function userGet() {
+//     fetch(`/api/user/`, {
+//         method: 'GET'
+//     }).then(function (response) {
+//         return response.json();
+//     }).then(function (data) {
+//         for (let i = 0; i < data.length; i++) {
+//             userMap.set(data[i].name.toLowerCase(), data[i].id);
+//         };
+//         fetch(`/api/account/`, {
+//             method: 'GET'
+//         }).then(function (response) {
+//             return response.json();
+//         }).then(function (data) {
+//             for (let a = 0; a < data.length; a++) {
+//                 accountMap.set(data[a].name, data[a].user_id);
+//             }
+//             accountFormation()
+//         })
+//     });
+// };
+// function accountFormation() {
+//     for (let i = 2; i < rows.length; i++) {
+//         const account = rows[i].cells[4].innerText.trim();
+//         const user = rows[i].cells[3].innerText.trim().split(' ').join('').toLowerCase();
+//         if(!accountMap.get(account) || accountMap.get(account) != userMap.get(user)){
+//             accountMap.set(account, userMap.get(user));
+//             arrFormation(accountArr, account)
+//         }
+//     };
+//     console.log(accountArr.length);
+//     for (let j = 0; j < accountArr.length; j++) {
+//         if(accountArr[j]) {
+//             const account = new Object();
+//             const accountName = accountArr[j];
+//             account.name = accountName;
+//             account.prefix = accountName.substring(0,3);
+//             account.user_id = accountMap.get(accountArr[j])
+//             accountPost(account);
+//         }
+//     }
+// };
+// async function accountPost(data) {
+//     const response = await fetch('/api/account/seeds', {
+//         method: 'post',
+//         body: JSON.stringify(data),
+//         headers: { 'Content-Type': 'application/json' }
+//     });
+//     if (response.ok) {
+//         console.log('success_account');
+//     } else {
+//         alert('This email is already registered with an existed account')
+//     }
+// }
+
+// //create Container
+// function accountGet() {
+//     fetch(`/api/account/`, {
+//         method: 'GET'
+//     }).then(function (response) {
+//         return response.json();
+//     }).then(function (data) {
+//         for (let a = 0; a < data.length; a++) {
+//             containerMap.set(data[a].name, [data[a].user.name.toLowerCase(), data[a].user_id, data[a].id]);
+//         };
+//         containerFormation()
+//     })
+// };
+// var masterMap = new Map();
+// function containerFormation() {
+//     for (let i = 2; i < rows.length; i++) {
+//         if (rows[i].cells[1].innerText.trim() && containerMap.get(rows[i].cells[4].innerText.trim())) {
+//             var container = new Object();
+//             container.container_number = rows[i].cells[1].innerText.trim();
+//             container.received_date = rows[i].cells[2].innerText.trim();
+//             container.user = rows[i].cells[3].innerText.split(' ').join('').toLowerCase();
+//             container.account = rows[i].cells[4].innerText.trim();
+//             container.cost = 0
+//             container.description = rows[i].cells[6].innerText;
+//             container.length = parseFloat(rows[i].cells[7].innerText.trim())*2.54;
+//             container.width = parseFloat(rows[i].cells[8].innerText.trim())*2.54;
+//             container.height = parseFloat(rows[i].cells[9].innerText.trim())*2.54;
+//             container.volume = container.length*container.width*container.height;
+//             container.account_id = containerMap.get(container.account)[2];
+//             container.user_id = containerMap.get(container.account)[1];
+//             container.bill_received = new Date(rows[i].cells[2].innerText.trim()).valueOf();
+//             container.bill_storage = new Date('3/31/2022').valueOf();
+//             arrFormation(containerArr, container.container_number);
+//             masterMap.set(container.container_number, container);
+//             console.log('count');
+//         }
+//     };
+//     console.log(containerArr.length);
+// };
+// function continueContainerInsert(start, end) {
+//     for (let j = start; j < end; j++) {
+//         if(containerArr[j]) {
+//             containerPost(masterMap.get(containerArr[j]));
+//         }
+//     }
+// };
+// async function containerPost(data) {
+//     const response = await fetch('/api/container/seeds', {
+//         method: 'post',
+//         body: JSON.stringify(data),
+//         headers: { 'Content-Type': 'application/json' }
+//     });
+//     if (response.ok) {
+//         console.log('success_container');
+//     } else {
+//         alert('This email is already registered with an existed account')
+//     }
+// }
+
+
+// //create Items
+// var itemMap = new Map();
+// function containerGet() {
+//     fetch(`/api/container/`, {
+//         method: 'GET'
+//     }).then(function (response) {
+//         return response.json();
+//     }).then(function (data) {
+//         for (let a = 0; a < data.length; a++) {
+//             itemMap.set(data[a].container_number, [data[a].id, data[a].account_id, data[a].user_id]);
+//         };
+//         itemFormation()
+//     })
+// };
+// var itemQtyMap = new Map();
+// var itemMasterMap = new Map();
+// function itemFormation() {
+//     for (let i = 2; i < rows.length; i++) {
+//         if (rows[i].cells[1].innerText.trim() && itemMap.get(rows[i].cells[1].innerText.trim())) {
+//             if (!itemQtyMap.get(`${rows[i].cells[5].innerText.trim()}-${rows[i].cells[1].innerText.trim()}`)) {
+//                 itemQtyMap.set(`${rows[i].cells[5].innerText.trim()}-${rows[i].cells[1].innerText.trim()}`, 1)
+//             } else {
+//                 itemQtyMap.set(`${rows[i].cells[5].innerText.trim()}-${rows[i].cells[1].innerText.trim()}`, itemQtyMap.get(`${rows[i].cells[5].innerText.trim()}-${rows[i].cells[1].innerText.trim()}`)+1)
+//             }
+//             var item = new Object();
+//             item.item_number = `${rows[i].cells[5].innerText.trim()}-${rows[i].cells[1].innerText.trim()}`
+//             item.container_id = itemMap.get(rows[i].cells[1].innerText.trim())[0];
+//             item.user_id = itemMap.get(rows[i].cells[1].innerText.trim())[2];
+//             item.account_id = itemMap.get(rows[i].cells[1].innerText.trim())[1];
+//             itemMasterMap.set(item.item_number, item)
+//             arrFormation(itemArr, item.item_number);
+//             console.log('count');
+//         }
+//     };
+//     console.log(itemArr.length);
+// };
+// function continueItemInsert(start, end) {
+//     for (let j = start; j < end; j++) {
+//         if(itemArr[j]) {
+//             itemPost({
+//                 item_number: itemMasterMap.get(itemArr[j]).item_number.split('-')[0],
+//                 user_id: itemMasterMap.get(itemArr[j]).user_id,
+//                 account_id: itemMasterMap.get(itemArr[j]).account_id,
+//                 container_id: itemMasterMap.get(itemArr[j]).container_id,
+//                 qty_per_sku: itemQtyMap.get(itemArr[j])
+//             });
+//         }
+//     }
+// };
+// async function itemPost(data) {
+//     const response = await fetch('/api/item/seeds', {
+//         method: 'post',
+//         body: JSON.stringify(data),
+//         headers: { 'Content-Type': 'application/json' }
+//     });
+//     if (response.ok) {
+//         console.log('success_item');
+//     } else {
+//         alert('This email is already registered with an existed account')
+//     }
+// };
+
+var boxArr = [];
+var unmatchedArr = []
+function locationInit () {
+    console.log(rows.length-1);
+    for (let i = 1; i < rows.length; i++) {
+        const box_number = rows[i].cells[1].innerText.trim();
+        const location = rows[i].cells[2].innerText.trim();
+        if (validation(boxArr, box_number)) {
+            locationPost(box_number, location)
+        } else {
+            unmatchedArr.push(box_number);
+            console.log('unmatched');
         }
     };
-    console.log(accountArr.length);
-    for (let j = 0; j < accountArr.length; j++) {
-        if(accountArr[j]) {
-            const account = new Object();
-            const accountName = accountArr[j];
-            account.name = accountName;
-            account.prefix = accountName.substring(0,3);
-            account.user_id = accountMap.get(accountArr[j])
-            accountPost(account);
-        }
-    }
-};
-async function accountPost(data) {
-    const response = await fetch('/api/account/seeds', {
-        method: 'post',
-        body: JSON.stringify(data),
-        headers: { 'Content-Type': 'application/json' }
-    });
-    if (response.ok) {
-        console.log('success_account');
+    console.log(unmatchedArr);
+}
+
+function validation(arr, number) {
+    if (arr.includes(number)) {
+        return true
     } else {
-        alert('This email is already registered with an existed account')
+        return false
     }
 }
 
-//create Container
-function accountGet() {
-    fetch(`/api/account/`, {
-        method: 'GET'
-    }).then(function (response) {
-        return response.json();
-    }).then(function (data) {
-        for (let a = 0; a < data.length; a++) {
-            containerMap.set(data[a].name, [data[a].user.name.toLowerCase(), data[a].user_id, data[a].id]);
-        };
-        containerFormation()
-    })
-};
-var masterMap = new Map();
-function containerFormation() {
-    for (let i = 2; i < rows.length; i++) {
-        if (rows[i].cells[1].innerText.trim() && containerMap.get(rows[i].cells[4].innerText.trim())) {
-            var container = new Object();
-            container.container_number = rows[i].cells[1].innerText.trim();
-            container.received_date = rows[i].cells[2].innerText.trim();
-            container.user = rows[i].cells[3].innerText.split(' ').join('').toLowerCase();
-            container.account = rows[i].cells[4].innerText.trim();
-            container.cost = 0
-            container.description = rows[i].cells[6].innerText;
-            container.length = parseFloat(rows[i].cells[7].innerText.trim())*2.54;
-            container.width = parseFloat(rows[i].cells[8].innerText.trim())*2.54;
-            container.height = parseFloat(rows[i].cells[9].innerText.trim())*2.54;
-            container.volume = container.length*container.width*container.height;
-            container.account_id = containerMap.get(container.account)[2];
-            container.user_id = containerMap.get(container.account)[1];
-            container.bill_received = new Date(rows[i].cells[2].innerText.trim()).valueOf();
-            container.bill_storage = new Date('3/31/2022').valueOf();
-            arrFormation(containerArr, container.container_number);
-            masterMap.set(container.container_number, container);
-            console.log('count');
-        }
-    };
-    console.log(containerArr.length);
-};
-function continueContainerInsert(start, end) {
-    for (let j = start; j < end; j++) {
-        if(containerArr[j]) {
-            containerPost(masterMap.get(containerArr[j]));
-        }
-    }
-};
-async function containerPost(data) {
-    const response = await fetch('/api/container/seeds', {
-        method: 'post',
-        body: JSON.stringify(data),
-        headers: { 'Content-Type': 'application/json' }
-    });
-    if (response.ok) {
-        console.log('success_container');
-    } else {
-        alert('This email is already registered with an existed account')
-    }
-}
-
-
-//create Items
-var itemMap = new Map();
-function containerGet() {
+function boxInit() {
     fetch(`/api/container/`, {
         method: 'GET'
     }).then(function (response) {
         return response.json();
     }).then(function (data) {
-        for (let a = 0; a < data.length; a++) {
-            itemMap.set(data[a].container_number, [data[a].id, data[a].account_id, data[a].user_id]);
-        };
-        itemFormation()
-    })
-};
-var itemQtyMap = new Map();
-var itemMasterMap = new Map();
-function itemFormation() {
-    for (let i = 2; i < rows.length; i++) {
-        if (rows[i].cells[1].innerText.trim() && itemMap.get(rows[i].cells[1].innerText.trim())) {
-            if (!itemQtyMap.get(`${rows[i].cells[5].innerText.trim()}-${rows[i].cells[1].innerText.trim()}`)) {
-                itemQtyMap.set(`${rows[i].cells[5].innerText.trim()}-${rows[i].cells[1].innerText.trim()}`, 1)
-            } else {
-                itemQtyMap.set(`${rows[i].cells[5].innerText.trim()}-${rows[i].cells[1].innerText.trim()}`, itemQtyMap.get(`${rows[i].cells[5].innerText.trim()}-${rows[i].cells[1].innerText.trim()}`)+1)
+        for (let i = 0; i < data.length; i++) {
+            const container_number = data[i].container_number;
+            if (!boxArr.includes(container_number)) {
+                boxArr.push(container_number)
             }
-            var item = new Object();
-            item.item_number = `${rows[i].cells[5].innerText.trim()}-${rows[i].cells[1].innerText.trim()}`
-            item.container_id = itemMap.get(rows[i].cells[1].innerText.trim())[0];
-            item.user_id = itemMap.get(rows[i].cells[1].innerText.trim())[2];
-            item.account_id = itemMap.get(rows[i].cells[1].innerText.trim())[1];
-            itemMasterMap.set(item.item_number, item)
-            arrFormation(itemArr, item.item_number);
-            console.log('count');
+
         }
-    };
-    console.log(itemArr.length);
-};
-function continueItemInsert(start, end) {
-    for (let j = start; j < end; j++) {
-        if(itemArr[j]) {
-            itemPost({
-                item_number: itemMasterMap.get(itemArr[j]).item_number.split('-')[0],
-                user_id: itemMasterMap.get(itemArr[j]).user_id,
-                account_id: itemMasterMap.get(itemArr[j]).account_id,
-                container_id: itemMasterMap.get(itemArr[j]).container_id,
-                qty_per_sku: itemQtyMap.get(itemArr[j])
-            });
-        }
-    }
-};
-async function itemPost(data) {
-    const response = await fetch('/api/item/seeds', {
-        method: 'post',
-        body: JSON.stringify(data),
+        console.log(boxArr);
+    })
+};boxInit();
+
+async function locationPost(number, location) {
+    const response = await fetch(`/api/container/number/${number}`, {
+        method: 'PUT',
+        body: JSON.stringify({location: location}),
         headers: { 'Content-Type': 'application/json' }
     });
     if (response.ok) {
-        console.log('success_item');
-    } else {
-        alert('This email is already registered with an existed account')
+        console.log('success_location');
     }
-};
+}
