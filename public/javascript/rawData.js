@@ -426,6 +426,7 @@ function locationInit () {
     console.log(`${boxArr.length} boxes not assigned location`);
     console.log(boxArr);
     console.log(`${non_repeat.length} non-repeated box number`);
+    console.log(non_repeat);
 }
 
 function validation(arr, number) {
