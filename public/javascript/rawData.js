@@ -416,7 +416,7 @@ function locationInit () {
         const box_number = rows[i].cells[1].innerText.trim();
         const location = rows[i].cells[2].innerText.trim();
         if (validation(boxArr, box_number)) {
-            arrFormation(non_repeat, box_number, repeated)
+            arrFormation(non_repeat, box_number)
             boxArr = boxArr.filter(i => i != box_number)
         } else {
             unmatchedArr.push(box_number);
@@ -467,10 +467,10 @@ async function locationPost(number, location) {
     }
 };
 
-function arrFormation(arr, element, arr_2) {
+function arrFormation(arr, element) {
     if (!arr.includes(element)) {
         arr.push(element)
     } else {
-        arr_2.push(element)
+        repeated.push(element)
     }
 }
