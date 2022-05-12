@@ -409,13 +409,14 @@ var rows = table.rows;
 var boxArr = [];
 var unmatchedArr = [];
 var non_repeat = [];
+var repeated = [];
 function locationInit () {
     console.log(rows.length-1);
     for (let i = 1; i < rows.length; i++) {
         const box_number = rows[i].cells[1].innerText.trim();
         const location = rows[i].cells[2].innerText.trim();
         if (validation(boxArr, box_number)) {
-            arrFormation(non_repeat, box_number)
+            arrFormation(non_repeat, box_number, repeated)
             boxArr = boxArr.filter(i => i != box_number)
         } else {
             unmatchedArr.push(box_number);
@@ -425,8 +426,10 @@ function locationInit () {
     console.log(unmatchedArr);
     console.log(`${boxArr.length} boxes not assigned location`);
     console.log(boxArr);
-    console.log(`${non_repeat.length} non-repeated box number`);
+    console.log(`${non_repeat.length} non-repeated box numbers`);
     console.log(non_repeat);
+    console.log(`${repeated.length} repeated box numbers`);
+    console.log(repeated);
 }
 
 function validation(arr, number) {
@@ -465,8 +468,10 @@ async function locationPost(number, location) {
     }
 };
 
-function arrFormation(arr, element) {
+function arrFormation(arr, element, arr_2) {
     if (!arr.includes(element)) {
         arr.push(element)
+    } else {
+        arr_2.push(element)
     }
 }
