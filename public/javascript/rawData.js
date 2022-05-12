@@ -420,14 +420,13 @@ function locationInit () {
             boxArr = boxArr.filter(i => i != box_number)
         } else {
             unmatchedArr.push(box_number);
-            console.log('unmatched');
+            console.log('boxes present on location sheet but not in the database');
         }
     };
     console.log(unmatchedArr);
     console.log(`${boxArr.length} boxes not assigned location`);
     console.log(boxArr);
     console.log(`${non_repeat.length} non-repeated box numbers`);
-    console.log(non_repeat);
     console.log(`${repeated.length} repeated box numbers`);
     console.log(repeated);
 }
@@ -453,7 +452,7 @@ function boxInit() {
             }
 
         }
-        console.log(boxArr);
+        console.log(`database: ${boxArr} amazon boxes`);
     })
 };boxInit();
 
