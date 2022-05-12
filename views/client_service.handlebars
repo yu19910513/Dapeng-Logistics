@@ -1,0 +1,26 @@
+{{#if admin}}
+<p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
+<div class="container">
+    <div class="uk-grid-item-match">
+        <div class="uk-card uk-card-default uk-card-body uk-width-1-3@m rounded bg-light border border-primary">
+            <h3 class="lead"><b>Password Update</b></h3>
+             <div class="form-group col">
+                <select name="user" id="user" class="uk-select uk-form-default rounded mt-1">
+                    <option value="">select client</option>
+                </select>
+            </div>
+
+             <div class="form-group col mt-3" id="password">
+                <label for="password">New Password </label>
+                <input class="uk-input uk-form-warning uk-form-width-medium rounded" type="password" placeholder="new password">
+            </div>
+
+            <button class="btn btn-outline-primary btn-sm mt-3" onclick="proceed()">Update</button>
+        </div>
+    </div>
+</div>
+
+<script src="javascript/client_setting.js"></script>
+{{else}}
+<script src="javascript/client_redirect.js"></script>
+{{/if}}

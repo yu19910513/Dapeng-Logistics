@@ -470,7 +470,5 @@ async function locationPost(number, location) {
 function arrFormation(arr, element) {
     if (!arr.includes(element)) {
         arr.push(element)
-    } else {
-        repeated.push(element)
     }
 }

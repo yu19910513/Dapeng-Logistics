@@ -396,6 +396,14 @@ router.get('/merger', withAuth, (req, res) => {
   } catch (error) {
     res.status(500).json(error)
   }
+});
+
+router.get('/client_service', withAuth, (req, res) => {
+  try {
+    res.render('client_service', {loggedIn: true, admin: req.session.admin, name: req.session.name});
+  } catch (error) {
+    res.status(500).json(error)
+  }
 })
 
 //admin request-handling page (manual)

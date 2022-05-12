@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const {User, Account, Batch, Box, Container} = require('../../models');
 const {withAuth, adminAuth} = require('../../utils/auth');
+const bcrypt = require('bcrypt');
 
 //get account info and send back to in-browawer js
 router.get('/account', withAuth, async (req, res) => {
@@ -36,6 +37,23 @@ router.get('/', withAuth, async (req, res) => {
     attributes: [
       'id',
       'name'
+    ]
+  });
+  const users = userDB.map(user => user.get({plain: true}));
+  res.json(users);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+router.get('/masterAll', withAuth, async (req, res) => {
+  try {
+  const userDB = await User.findAll({
+    attributes: [
+      'id',
+      'name',
+      'password'
     ]
   });
   const users = userDB.map(user => user.get({plain: true}));
@@ -139,6 +157,26 @@ router.post('/newUser', (req, res) => {
       admin: req.body.admin,
       username: req.body.username
     })
+    .then(userDB => res.json(userDB));
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+router.post('/newPassword/:id', withAuth, async (req, res) => {
+  try {
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    User.update(
+      {
+        password: hashedPassword
+      },
+      {
+        where: {
+          id: req.params.id
+        }
+      }
+    )
     .then(userDB => res.json(userDB));
   } catch (err) {
     console.log(err);
