@@ -263,7 +263,7 @@ function itemCreate() {
     };
     loader.style.display = 'none';
     alert(`1 container(#${amazon_box.container_number}) with ${itemCount} items is inserted to client_id: ${amazon_box.user_id}!`)
-    location.reload()
+    resetBoxSku();
 };
 function loadingItems(data) {
     fetch('/api/item/new', {
@@ -275,6 +275,10 @@ function loadingItems(data) {
 
 
 //tools
+function resetBoxSku() {
+sku_list.querySelectorAll('tr').forEach(i => i.remove());
+container_number.value = null;
+}
 function unattach() {
     if (client_list.value == 0) {
         password.style.display = '';
