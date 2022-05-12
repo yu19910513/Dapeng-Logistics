@@ -407,15 +407,16 @@ var rows = table.rows;
 // };
 
 var boxArr = [];
-var unmatchedArr = []
+var unmatchedArr = [];
+var non_repeat = [];
 function locationInit () {
     console.log(rows.length-1);
     for (let i = 1; i < rows.length; i++) {
         const box_number = rows[i].cells[1].innerText.trim();
         const location = rows[i].cells[2].innerText.trim();
         if (validation(boxArr, box_number)) {
+            arrFormation(non_repeat, box_number)
             boxArr = boxArr.filter(i => i != box_number)
-            // locationPost(box_number, location)
         } else {
             unmatchedArr.push(box_number);
             console.log('unmatched');
@@ -423,7 +424,8 @@ function locationInit () {
     };
     console.log(unmatchedArr);
     console.log(`${boxArr.length} boxes not assigned location`);
-    console.log(boxArr)
+    console.log(boxArr);
+    console.log(`${non_repeat.length} non-repeated box number`);
 }
 
 function validation(arr, number) {
@@ -459,5 +461,11 @@ async function locationPost(number, location) {
     });
     if (response.ok) {
         console.log('success_location');
+    }
+};
+
+function arrFormation(arr, element) {
+    if (!arr.includes(element)) {
+        arr.push(element)
     }
 }
