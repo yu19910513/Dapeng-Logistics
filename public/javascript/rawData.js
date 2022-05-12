@@ -414,13 +414,16 @@ function locationInit () {
         const box_number = rows[i].cells[1].innerText.trim();
         const location = rows[i].cells[2].innerText.trim();
         if (validation(boxArr, box_number)) {
-            locationPost(box_number, location)
+            boxArr = boxArr.filter(i => i != box_number)
+            // locationPost(box_number, location)
         } else {
             unmatchedArr.push(box_number);
             console.log('unmatched');
         }
     };
     console.log(unmatchedArr);
+    console.log(`${boxArr.length} boxes not assigned location`);
+    console.log(boxArr)
 }
 
 function validation(arr, number) {
