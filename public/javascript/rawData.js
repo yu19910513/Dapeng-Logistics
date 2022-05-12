@@ -452,7 +452,7 @@ function boxInit() {
             }
 
         }
-        console.log(`database: ${boxArr} amazon boxes`);
+        console.log(`database: ${boxArr.length} amazon boxes`);
     })
 };boxInit();
 
