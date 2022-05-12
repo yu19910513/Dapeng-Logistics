@@ -278,6 +278,7 @@ function loadingItems(data) {
 function resetBoxSku() {
 sku_list.querySelectorAll('tr').forEach(i => i.remove());
 container_number.value = null;
+skuArr = [];
 }
 function unattach() {
     if (client_list.value == 0) {
