@@ -411,7 +411,7 @@ var unmatchedArr = [];
 var non_repeat = [];
 var repeated = [];
 function locationInit () {
-    console.log(rows.length-1);
+    console.log(`location sheet: ${rows.length-1} boxes`);
     for (let i = 1; i < rows.length; i++) {
         const box_number = rows[i].cells[1].innerText.trim();
         const location = rows[i].cells[2].innerText.trim();
