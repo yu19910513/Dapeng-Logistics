@@ -276,12 +276,16 @@ function loadingItems(data) {
 
 //tools
 function resetBoxSku() {
-sku_list.querySelectorAll('tr').forEach(i => i.remove());
-container_number.value = null;
-skuArr = [];
-itemCount = 0;
-skuMap.clear();
-}
+    if (accountSelect.value == 0) {
+        location.reload();
+    } else {
+        sku_list.querySelectorAll('tr').forEach(i => i.remove());
+        container_number.value = null;
+        skuArr = [];
+        itemCount = 0;
+        skuMap.clear();
+    }
+};
 function unattach() {
     if (client_list.value == 0) {
         password.style.display = '';
