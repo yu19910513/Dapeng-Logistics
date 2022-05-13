@@ -20,7 +20,6 @@ var preUpdateContainerArr = [];
 var xcNumberArr = [];
 
 function allBox() {
-    allItem();
     fetch(`/api/user/allBox_admin`, {
         method: 'GET'
     }).then(function (response) {
@@ -70,7 +69,8 @@ function allBox() {
           locationMap.set(element, location_data[element])
         };
     });
-};allBox();
+};
+allItem();
 const boxTable = document.getElementById("boxTable");
 function box_searching() {
   unattach();
@@ -459,7 +459,8 @@ function allItem() {
         const element = locationArr_amazon[j];
         locationMap_amazon.set(element, location_data[element])
       };
-    }
+    };
+    allBox();
   })
 };
 const containerTable = document.getElementById("containerTable");
