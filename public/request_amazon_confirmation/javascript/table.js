@@ -92,9 +92,9 @@ function check_amazon() {
   var amazon = document.getElementById('amazon_ref').value.trim();
   amazon = amazon.toUpperCase();
   if (!no_file.checked && document.getElementById('amazon_ref').style.display == '' || no_file.checked) {
-    if ( amazon.substring(0,3) != 'FBA' || amazon.length != 12) {
-      alert('invalid amazon ref number! start with FBA following by XXXXXXXXX');
-    }
+    // if ( amazon.substring(0,3) != 'FBA' || amazon.length != 12) {
+    //   alert('invalid amazon ref number! start with FBA following by XXXXXXXXX');
+    // }
   } else {
    return
   }

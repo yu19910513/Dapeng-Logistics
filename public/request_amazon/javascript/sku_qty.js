@@ -227,7 +227,7 @@ function upload_file(e) {
     upload2F_framwork(file, file_2, e)
   } else {
     loader.style.display = 'none';
-    alert('Status updated successfully! No file was attached.出货通知已传送成功，无夹带档案');
+    // alert('Status updated successfully! No file was attached.出货通知已传送成功，无夹带档案');
     document.location.reload();
   }
 };
@@ -242,7 +242,7 @@ async function upload_framwork(file, e) {
     if (response.ok) {
       console.log(response);
       loader.style.display = 'none';
-      alert('Status updated successfully! 出货通知已传送成功! 一份档案已接收');
+      // alert('Status updated successfully! 出货通知已传送成功! 一份档案已接收');
       document.location.reload();
     } else {
       alert(response.statusText);
@@ -275,7 +275,7 @@ async function upload2F_framwork_file2(file, e) {
     if (response.ok) {
       console.log(response);
       loader.style.display = 'none';
-      alert('Status updated successfully! Two files uploaded 上传成功，两份档案已接收');
+      // alert('Status updated successfully! Two files uploaded 上传成功，两份档案已接收');
       document.location.reload();
     } else {
       alert(response.statusText);
