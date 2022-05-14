@@ -46,7 +46,6 @@
               <button class='btn btn-sm btn-primary mt-1' onclick="finalConfirmation()" uk-icon="check"></button>
             </div>
           </div>
-
           {{!-- <div class="uk-card bg-light shadow-sm ml-1 uk-card-body uk-width-2-3@m rounded border-dark">
               <h3 class="uk-text-default">Client Message:</h3>
           </div> --}}
@@ -168,9 +167,12 @@
         </div>
     </div>
 </div>
+<div class="text-end">
+   <button class="badge alert-secondary shadow-sm" id="advanceSearch" onclick="advanceSearch()" uk-tooltip="advanced search">+ Search</button>
+</div>
 {{!-- modal- for sku search ***********************--}}
-
-  <div class="badge alert-success" id="badge" onclick="modeChange()"><span id="mode">C</span> Mode</div>
+ <div id="advanceHide">
+  <div class="badge alert-success shadow-sm" id="badge" onclick="modeChange()"><span id="mode">C</span> Mode</div>
   <form class="uk-search uk-search-large" id="boxInput">
     <span uk-search-icon></span>
     <input class="uk-search-input" type="search" placeholder="China Box Search" id="myBoxInput" onkeyup="box_searching()">
@@ -179,17 +181,20 @@
     <span uk-search-icon></span>
     <input class="uk-search-input" type="search" placeholder="Amazon Box Search" id="myContainerInput" onkeyup="container_searching()">
   </form>
+ </div>
+{{!-- advance search function --}}
+ <div id="advanceShow" style="display: none">
+   <h1>//////////////////// advanced search function here /////////////////////////</h1>
+ </div>
 </div>
 {{!-- loader --}}
     <div id="loader" style="display: none;">
       <h1 class="text-center">Updating <span id="numberOfItems"></span>...</h1>
       <div class="loader container"></div>
     </div>
-
 {{!-- notes --}}
     <div class="container" id="boxTable" style="display: none;">
       <small id="searchNote" class="text-primary"></small>
-
 {{!-- box table --}}
       <table class="uk-table uk-table-small uk-table-divider text-center bg-light shadow">
             <thead>
@@ -210,7 +215,7 @@
             </tbody>
       </table>
     </div>
-
+{{!-- notes 2 --}}
     <div class="container" id="containerTable" style="display: none;">
       <small id="containerSearchNote" class="text-primary"></small>
 {{!-- contianer table --}}

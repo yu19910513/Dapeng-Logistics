@@ -826,3 +826,17 @@ function clientListing() {
     };
   });
 };
+
+
+const advanceBtn = document.getElementById('advanceSearch');
+function advanceSearch() {
+  if (advanceBtn.getAttribute('class') == 'badge alert-secondary shadow-sm') {
+    advanceBtn.setAttribute('class', 'badge alert-primary shadow-sm');
+    document.getElementById('advanceHide').style.display = 'none';
+    document.getElementById('advanceShow').style.display = '';
+  } else {
+    advanceBtn.setAttribute('class','badge alert-secondary shadow-sm');
+    document.getElementById('advanceHide').style.display = '';
+    document.getElementById('advanceShow').style.display = 'none';
+  }
+}
