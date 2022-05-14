@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const sequelize = require('../config/connection');
-const {User, Account, Batch, Box} = require('../models');
+const {User, Account, Batch, Box, Container, Item} = require('../models');
 const {withAuth, adminAuth} = require('../utils/auth');
 
 //admin page
@@ -146,6 +146,65 @@ router.get('/master_page', withAuth, async (req, res) => {
 
 });
 
+router.get('/master_page_amazon', withAuth, async (req, res) => {
+  try {
+    const boxData = await Container.findAll({
+      where:{
+        status: [1, 2, 3]
+      },
+      attributes: [
+        'tracking',
+        'id',
+        'container_number',
+        'description',
+        'cost',
+        'requested_date',
+        'received_date',
+        'shipped_date',
+        'length',
+        'width',
+        'height',
+        'weight',
+        'volume',
+        'status',
+        'location',
+        'file',
+        'file_2',
+        'notes'
+      ],
+      include: [
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'id',
+            'name',
+            'email'
+          ]
+        }
+      ]
+    });
+    const boxes = boxData.map(box => box.get({ plain: true }));
+    res.render('master_admin_amazon', {
+      boxes,
+      loggedIn: true,
+      admin: req.session.admin,
+      name: req.session.name,
+      shipped_date: req.body.shipped_date,
+      received_date: req.body.received_date,
+      requested_date: req.body.requested_date
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+
+});
 //admin bulk barcode for china shipment
 router.get('/batch/:id', withAuth, async (req, res) => {
   try {

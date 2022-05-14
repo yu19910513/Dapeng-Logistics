@@ -233,6 +233,7 @@ const update_select = document.getElementById('update_select');
 const edit_select = document.getElementById('edit_select');
 const update_date_select = document.getElementById('update_date_select');
 const update_date_btn = document.getElementById('update_date_btn');
+const homepage_btn = document.getElementById('homepage');
 ///security////
 function passcode(w) {
   let code = prompt("Please enter the passcode");
@@ -383,6 +384,8 @@ function modeChange() {
     edit_select.style.display = 'none';
     update_select.style.display = 'none';
     update_date_btn.style.display = 'none';
+    homepage_btn.href = '/admin/master_page_amazon';
+    homepage_btn.innerText ='Amazon Home';
     document.getElementById("badge").classList.add('alert-danger');
     document.getElementById("badge").classList.remove('alert-success');
     document.getElementById('myBoxInput').value = null;
@@ -394,6 +397,8 @@ function modeChange() {
     boxInput.style.display = '';
     edit_btn.style.display = '';
     update_btn.style.display = '';
+    homepage_btn.href = '/admin/master_page';
+    homepage_btn.innerText = 'Home Page';
     document.getElementById("badge").classList.add('alert-success');
     document.getElementById("badge").classList.remove('alert-danger');
     myContainerInput.value = null;
