@@ -155,7 +155,8 @@ router.get('/allItemAdmin', withAuth, async (req, res) => {
         {
           model: Account,
           attributes: [
-            'name'
+            'name',
+            'id'
           ]
         },
         {

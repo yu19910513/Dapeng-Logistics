@@ -7,71 +7,11 @@ const {withAuth, adminAuth} = require('../utils/auth');
 //admin home page
 router.get('/', withAuth, async (req, res) => {
   try {
-    // const boxData = await Box.findAll({
-    //   where:{
-    //     status: [0, 1, 2, 3]
-    //   },
-    //   attributes: [
-    //     'tracking',
-    //     'batch_id',
-    //     'id',
-    //     'box_number',
-    //     'description',
-    //     'cost',
-    //     'requested_date',
-    //     'received_date',
-    //     'shipped_date',
-    //     'order',
-    //     'qty_per_box',
-    //     'length',
-    //     'width',
-    //     'height',
-    //     'weight',
-    //     'volume',
-    //     'status',
-    //     'location',
-    //     'sku',
-    //     'file',
-    //     'file_2',
-    //     'notes'
-    //   ],
-    //   include: [
-    //     {
-    //       model: Batch,
-    //       attributes: [
-    //         'asn',
-    //         'pending_date',
-    //         'total_box'
-    //       ]
-    //     },
-    //     {
-    //       model: Account,
-    //       attributes: [
-    //         'name'
-    //       ]
-    //     },
-    //     {
-    //       model: User,
-    //       attributes: [
-    //         'id',
-    //         'name',
-    //         'email'
-    //       ]
-    //     }
-    //   ]
-    // });
-    // const boxes = boxData.map(box => box.get({ plain: true }));
-    res.render('admin', {
-      // boxes,
-      loggedIn: true,
-      admin: req.session.admin,
-      name: req.session.name
-    });
+    res.render('admin', {loggedIn: true, admin: req.session.admin, name: req.session.name});
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
   }
-
 });
 
 router.get('/master_page', withAuth, async (req, res) => {
@@ -148,12 +88,16 @@ router.get('/master_page', withAuth, async (req, res) => {
 
 router.get('/master_page_amazon', withAuth, async (req, res) => {
   try {
-    const boxData = await Container.findAll({
+    const containerDB = await Container.findAll({
       where:{
         status: [1, 2, 3]
       },
       attributes: [
-        'tracking',
+        'id',
+        'user_id',
+        'account_id',
+        's3',
+        'notes',
         'id',
         'container_number',
         'description',
@@ -161,6 +105,7 @@ router.get('/master_page_amazon', withAuth, async (req, res) => {
         'requested_date',
         'received_date',
         'shipped_date',
+        'type',
         'length',
         'width',
         'height',
@@ -170,7 +115,10 @@ router.get('/master_page_amazon', withAuth, async (req, res) => {
         'location',
         'file',
         'file_2',
-        'notes'
+        'fba',
+        'bill_received',
+        'bill_storage',
+        'bill_shipped'
       ],
       include: [
         {
@@ -183,15 +131,14 @@ router.get('/master_page_amazon', withAuth, async (req, res) => {
           model: User,
           attributes: [
             'id',
-            'name',
-            'email'
+            'name'
           ]
         }
       ]
     });
-    const boxes = boxData.map(box => box.get({ plain: true }));
+    const containers = containerDB.map(container => container.get({ plain: true }));
     res.render('master_admin_amazon', {
-      boxes,
+      containers,
       loggedIn: true,
       admin: req.session.admin,
       name: req.session.name,
@@ -205,6 +152,7 @@ router.get('/master_page_amazon', withAuth, async (req, res) => {
   }
 
 });
+
 //admin bulk barcode for china shipment
 router.get('/batch/:id', withAuth, async (req, res) => {
   try {

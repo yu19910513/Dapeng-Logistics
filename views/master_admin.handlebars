@@ -1,4 +1,5 @@
 {{#if admin}}
+<link rel="stylesheet" href="css/table_china.css">
 <div class="uk-overflow-auto">
     <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
     <div class="uk-margin">
@@ -15,11 +16,10 @@
             </div>
 
             <div class="uk-navbar-item">
-            <button type="button" id="inventory_btn" class="btn text-primary btn-light btn-lg border-primary shadow-sm" onclick="status_trigger(6)">
-                Inventory: <b><span class="text-primary" id="numberOfInventory"></span></b>
-                        <span class="sr-only">items</span>
+            <button type="button" id="inventory_btn" class="btn text-primary btn-light btn-sm border-primary shadow-sm" onclick="status_trigger(6)">
+                China Inventory: <b><span class="text-primary" id="numberOfInventory"></span></b>
             </button>
-            <a href="/billing" class="btn btn-lg btn-outline-info shadow-sm"><b>₿</b></a>
+            {{!-- <a href="/billing" class="btn btn-lg btn-outline-info shadow-sm"><b>₿</b></a> --}}
             </div>
 
             <div class="uk-navbar-item">
@@ -31,23 +31,21 @@
         </div>
     {{!-- </nav> --}}
     </div>
-
-        <table class="uk-table uk-table-small uk-table-divider myTable" id="myTable">
+     <div class="container">
+        <table class="uk-table uk-table-small uk-table-divider myTable shadow-sm" id="myTable">
             <thead>
                 <tr>
                     <th onclick="sortTable(0)">User</th>
                     <th onclick="sortTable(1)">Account</th>
-                    <th>Box number</th>
+                    <th onclick="sortTable(2)">Box number</th>
                     <th onclick="sortTable(3)">Item Description</th>
-                    <th>Box</th>
+                    <th >Box</th>
                     <th>of Box</th>
-                    <th>Qty per Box</th>
-                    <th>SKU</th>
-                    <th>Volume</th>
-                    <th onclick="sortTable(9)">Date</th>
-                    <th>Tracking</th>
-                    <th onclick="sortTable(11)">Status</th>
-                    <th onclick="sortTable(12)">Location</th>
+                    <th onclick="sortTable(6)">Qty per Box</th>
+                    <th onclick="sortTable(7)">SKU</th>
+                    <th onclick="sortTable(8)">Date</th>
+                    <th onclick="sortTable(9)">Status</th>
+                    <th onclick="sortTable(10)">Location</th>
                 </tr>
             </thead>
             <tbody>
@@ -62,6 +60,7 @@
 
             </tbody>
         </table>
+</div>
 </div>
 <script>
         (function(document) {

@@ -5,7 +5,7 @@ function number_item () {
     table = document.getElementById("myTable");
     tr = table.getElementsByTagName("tr");
     for (i = 0; i < tr.length; i++) {
-      td = tr[i].getElementsByTagName("td")[11];
+      td = tr[i].getElementsByTagName("td")[9];
       if (td) {
         txtValue = td.textContent || td.innerText;
         if (txtValue == 'Received' || txtValue == 'Requested') {
