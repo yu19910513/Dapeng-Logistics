@@ -500,7 +500,9 @@ function bill_confirm(arr, e) {
     } else if (e == 'st'){
         fetch_update(arr, today, 'bill_storage')
     } else if (e == 'x') {
-        fetch_update(arr, today, 'xcharge')
+        if (confirm('Friendly reminder: to SAVE all new inputs first before confirming the charge!')) {
+            fetch_update(arr, today, 'xcharge')
+        }
     }
 };
 async function fetch_update(arr, bill, type) {

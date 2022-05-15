@@ -56,9 +56,11 @@ function allItem() {
           qty.appendChild(singleQty)
         })
       } else {
-        emptyArr.push(tr[i]);
-        inventoryCount--
-        tr[i].style.display = 'none';
+        if (container_number.substring(0,2) != "AC") {
+          emptyArr.push(tr[i]);
+          inventoryCount--
+          tr[i].style.display = 'none';
+        }
       }
       };
       emptyArr.forEach(i => i.remove())
@@ -82,7 +84,7 @@ for (i = 1; i < (rows.length + 1); i++){
     } else if (data_status[7].innerHTML == 3) {
       rows[i].getElementsByTagName("td")[7].innerHTML = "Shipped"
     } else if (data_status[7].innerHTML == 4) {
-      rows[i].getElementsByTagName("td")[7].innerHTML = "Archived"
+      rows[i].getElementsByTagName("td")[7].innerHTML = "XC pre-billed"
     } else {
       rows[i].getElementsByTagName("td")[7].innerHTML = "Pending"
     }

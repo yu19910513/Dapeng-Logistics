@@ -90,7 +90,7 @@ router.get('/master_page_amazon', withAuth, async (req, res) => {
   try {
     const containerDB = await Container.findAll({
       where:{
-        status: [1, 2, 3]
+        status: [1, 2, 3, 4]
       },
       attributes: [
         'id',

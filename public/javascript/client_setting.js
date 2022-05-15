@@ -1,6 +1,6 @@
+//password update
 const client_list = document.getElementById("user");//****//
 const passwordTag = document.getElementById('password');
-
 function client_data() {
     fetch(`/api/user/masterAll`, {
         method: 'GET'
@@ -15,7 +15,6 @@ function client_data() {
         };
     });
 };client_data();
-
 async function proceed() {
     const password = passwordTag.querySelector('input').value.trim();
     const id = client_list.value;
@@ -37,5 +36,67 @@ async function proceed() {
         }
     } else {
         alert('Missing information or incorrect passcode!')
+    }
+};
+
+//bulk archieve//
+const bulkSelect = document.getElementById('statusChange');
+const daysPS = document.getElementById('maintenance').querySelector('input');
+function proceed_archieve() {
+ const statusValue = bulkSelect.value;
+ const code = prompt('Please enter the passcode to proceed the change')
+ if (daysPS.value > 0 && code == '0523') {
+    const time = new Date().getTime() - daysPS.value*24*3600*1000;
+    if (statusValue == 98) {
+        chinaBoxUpdate(time);
+     } else if (statusValue == 99) {
+        chinaBoxDelete(time);
+    }
+ } else {
+     alert('negative # of days is prohibited!')
+ }
+};
+async function chinaBoxDelete (time){
+    const response = await fetch(`/api/box/remove/${time}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (response.ok) {
+        amazonContainerDelete(time);
+    }
+};
+async function  amazonContainerDelete (time){
+    const response = await fetch(`/api/container/remove/${time}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (response.ok) {
+        location.reload()
+    }
+}
+async function chinaBoxUpdate (time){
+    const response = await fetch(`/api/box/archieve/${time}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (response.ok) {
+        amazonContainerUpdate(time);
+    }
+};
+async function  amazonContainerUpdate(time){
+    const response = await fetch(`/api/container/archieve/${time}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (response.ok) {
+        location.reload()
     }
 }

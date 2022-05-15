@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { route } = require('.');
 const {User, Account, Batch, Box, Container} = require('../../models');
 const {withAuth, adminAuth} = require('../../utils/auth');
+const { Op } = require("sequelize");
 
 const multer = require('multer');
 const upload = multer({dest: 'uploads/'});
@@ -419,6 +420,50 @@ router.delete('/destroy', withAuth, (req, res) => {
       });
 });
 
+router.delete('/remove/:time', withAuth, (req, res) => {
+  Box.destroy({
+      where: {
+        status: 98,
+        bill_shipped: {
+          [Op.lt]: req.params.time
+        }
+      }
+    })
+      .then(dbBoxData => {
+        if (!dbBoxData) {
+          res.status(404).json({ message: 'No box found with this id' });
+          return;
+        }
+        res.json(dbBoxData);
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+});
+
+router.put('/archieve/:time', withAuth, (req, res) => {
+  Box.update({
+    status: 98
+  },
+  {
+    where: {
+      status: 3,
+      bill_shipped: {
+        [Op.lt]: req.params.time
+      }
+    }
+  }).then(dbBoxData => {
+    if (!dbBoxData) {
+      res.status(404).json({ message: 'No box found with this id' });
+      return;
+    }
+    res.json(dbBoxData);
+  }).catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+  });
+});
 
 //// mannual update date of each status////////////////
 router.put('/dateUpdate_received_date', withAuth, (req, res) => {

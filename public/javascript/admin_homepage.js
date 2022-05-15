@@ -70,7 +70,6 @@ function allBox() {
         };
     });
 };
-allItem();
 const boxTable = document.getElementById("boxTable");
 function box_searching() {
   unattach();
@@ -91,11 +90,27 @@ function box_searching() {
         buildingRow(each_of_all)
       }
     }
-  } else if (box_input == '/xc') {
-    for (let i = 0; i < boxNumberArr.length; i++) {
-    const eachXc = xcNumberArr[i];
-      if (eachXc) {
-        buildingRow(eachXc)
+  } else if (box_input.substring(0,3) == '/xc') {
+    if (box_input == '/xc') {
+      for (let i = 0; i < boxNumberArr.length; i++) {
+        const eachXc = xcNumberArr[i];
+          if (eachXc) {
+            buildingRow(eachXc)
+          }
+        }
+    } else if (box_input == '/xc4'){
+      for (let i = 0; i < boxNumberArr.length; i++) {
+        const eachXc = xcNumberArr[i];
+        if (eachXc && objectMap.get(eachXc).status == 4) {
+          buildingRow(eachXc)
+        }
+      }
+    } else if (box_input == '/xc5') {
+      for (let i = 0; i < boxNumberArr.length; i++) {
+        const eachXc = xcNumberArr[i];
+        if (eachXc && objectMap.get(eachXc).status == 5) {
+          buildingRow(eachXc)
+        }
       }
     }
   }
@@ -468,6 +483,30 @@ function allItem() {
     allBox();
   })
 };
+
+var allXCArr = [];
+var fourXCArr = [];
+var fiveXCArr = [];
+function xcContainer() {
+  fetch(`/api/container/allXCAdmin`, {
+    method: 'GET'
+  }).then(function (response) {
+    return response.json();
+  }).then(function (data) {
+    for (let i = 0; i < data.length; i++) {
+      const aCharge = data[i];
+      if (!allXCArr.includes(aCharge)) {
+        allXCArr.push(aCharge);
+        if (!fourXCArr.includes(aCharge) && aCharge.status == 4) {
+          fourXCArr.push(aCharge)
+        };
+        if (!fiveXCArr.includes(aCharge) && aCharge.status == 5) {
+          fiveXCArr.push(aCharge)
+        }
+      }
+    }
+  })
+}
 const containerTable = document.getElementById("containerTable");
 function container_searching() {
   unattach();
@@ -491,7 +530,29 @@ function container_searching() {
   } else if (container_input[0] == '.' && container_input.length > 2) {
     document.getElementById('containerSearchNote').innerHTML = "This SKU does not exist in the system!"
     const skuSearchInput = container_input.substring(1,container_input.length);
-    item_search(skuSearchInput)
+    item_search(skuSearchInput);
+  } else if (container_input.substring(0,3) == '/xc') {
+    if (container_input == '/xc4') {
+      for (let i = 0; i < fourXCArr.length; i++) {
+        const each_of_xc = fourXCArr [i];
+        if (each_of_xc) {
+          buildingRow_amazon_xc(each_of_xc)
+        }
+      }
+    } else if (container_input == '/xc5') {
+      for (let i = 0; i < fiveXCArr.length; i++) {
+        const each_of_xc = fiveXCArr [i];
+        if (each_of_xc) {
+          buildingRow_amazon_xc(each_of_xc)
+        }
+      }
+    } else if (container_input == '/xc')
+    for (let i = 0; i < allXCArr.length; i++) {
+      const each_of_xc = allXCArr [i];
+      if (each_of_xc) {
+        buildingRow_amazon_xc(each_of_xc)
+      }
+    }
   }
 };
 function container_search(b) {
@@ -557,6 +618,36 @@ function buildingRow_amazon(b) {
   date.innerHTML = convertor_amazon(containerMap.get(b)[0].container);
   date.setAttribute('uk-tooltip', `received date ${newDateValidate(containerMap.get(b)[0].container.received_date)} ; requested date ${newDateValidate(containerMap.get(b)[0].container.requested_date)} ; shipped date ${newDateValidate(containerMap.get(b)[0].container.shipped_date)} ; bill for receiving ${newDateValidate(new Date(containerMap.get(b)[0].container.bill_received).toLocaleDateString("en-US"))} ; bill for storage ${newDateValidate(new Date(containerMap.get(b)[0].container.bill_storage).toLocaleDateString("en-US"))} ; bill for shipping ${newDateValidate(new Date(containerMap.get(b)[0].container.bill_shipped).toLocaleDateString("en-US"))}`)
   status.innerHTML = convertor_status(containerMap.get(b)[0].container.status);
+  containerBody.appendChild(container);
+};
+
+function buildingRow_amazon_xc(d) {
+  const containerBody = document.getElementById('containerBody')
+  const container = document.createElement('tr');
+  const user = document.createElement('td');
+  const account = document.createElement('td');
+  const container_number = document.createElement('td');
+  const item = document.createElement('td');
+  const qty_per_sku = document.createElement('td');
+  const location = document.createElement('td');
+  const date = document.createElement('td');
+  const status = document.createElement('td');
+  container.appendChild(user);
+  container.appendChild(account);
+  container.appendChild(container_number);
+  container.appendChild(item);
+  container.appendChild(qty_per_sku)
+  container.appendChild(location);
+  container.appendChild(date);
+  container.appendChild(status);
+  user.innerHTML = d.user.name;
+  account.innerHTML = d.account.name;
+  container_number.innerHTML = d.container_number;
+  item.innerHTML = `desc: ${d.description}`;
+  qty_per_sku.innerHTML = `#${d.qty_of_fee}`
+  location.innerHTML = `$ ${d.unit_fee}/qty`
+  date.innerHTML = `total: $${d.qty_of_fee*d.unit_fee}`;
+  status.innerHTML = convertor_status(d.status);
   containerBody.appendChild(container);
 };
 ///// helper functions //////
@@ -844,4 +935,7 @@ function advanceSearch() {
     document.getElementById('advanceHide').style.display = '';
     document.getElementById('advanceShow').style.display = 'none';
   }
-}
+};
+
+allItem();
+xcContainer();

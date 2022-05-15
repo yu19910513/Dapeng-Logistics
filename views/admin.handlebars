@@ -16,7 +16,7 @@
             <button class="btn btn-sm btn-outline-dark shadow-sm mt-1" uk-toggle="target: #modal-skuSearch" onclick="clientListing()" uk-tooltip="只限搜寻亞马逊回流货物">SKU Search</button>
             <a class="btn btn-sm btn-outline-info shadow-sm mt-1" href="/billing" uk-tooltip="title:帐簿; pos: bottom"><b>₿</b>illing</a>
             <a class="btn btn-sm btn-outline-success shadow-sm mt-1" href="/merger" uk-tooltip="title:账户合并; pos: bottom">Merger</a>
-            <a class="btn btn-sm btn-outline-light shadow-sm mt-1 text-secondary" href="/client_service" uk-tooltip="title:客户服务; pos: bottom">Client</a>
+            <a class="btn btn-sm btn-outline-light shadow-sm mt-1 text-secondary" href="/client_service" uk-tooltip="title:设定; pos: bottom">Setting</a>
             <a class="btn btn-sm btn-outline-danger shadow-sm mt-1" id="edit_btn" onclick="passcode('s')" uk-tooltip="title: 更改货品状态、收纳旧货品、或删除货品; pos: bottom">Edit/ Del</a>
             <a class="btn btn-sm btn-outline-primary shadow-sm mt-1" id="update_btn" onclick="passcode('d')" uk-tooltip="title: 更改货品状态日期（⚠️ 日期变更会影响存货计费）; pos: bottom">Redate</a>
             <select name="edit_selection" id="edit_select" class="uk-select uk-form-danger rounded uk-form-small uk-form-width-small mt-1" style="display: none;" onchange="preChangeConfirm()" uk-tooltip="update new STATUS to boxes">
@@ -46,9 +46,9 @@
               <button class='btn btn-sm btn-primary mt-1' onclick="finalConfirmation()" uk-icon="check"></button>
             </div>
           </div>
-          <div class="uk-card bg-light shadow-sm ml-1 uk-card-body uk-width-2-3@m rounded border-dark">
+          {{!-- <div class="uk-card bg-light shadow-sm ml-1 uk-card-body uk-width-2-3@m rounded border-dark">
               <h3 class="uk-text-default">Client Message:</h3>
-          </div>
+          </div> --}}
     </div>
   </div>
 
@@ -167,9 +167,9 @@
         </div>
     </div>
 </div>
-<div class="text-end">
+{{!-- <div class="text-end">
    <button class="badge alert-secondary shadow-sm" id="advanceSearch" onclick="advanceSearch()" uk-tooltip="advanced search">...</button>
-</div>
+</div> --}}
 {{!-- modal- for sku search ***********************--}}
  <div id="advanceHide">
   <div class="badge alert-success shadow-sm" id="badge" onclick="modeChange()"><span id="mode">C</span> Mode</div>

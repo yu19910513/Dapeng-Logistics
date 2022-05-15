@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const {User, Account, Batch, Box, Container, Item} = require('../../models');
 const {withAuth, adminAuth} = require('../../utils/auth');
-
+const { Op } = require("sequelize");
 const multer = require('multer');
 const upload = multer({dest: 'uploads/'});
 const { uploadFile, getFile} = require('../../utils/s3');
@@ -175,6 +175,53 @@ router.get('/allContainerAdmin', withAuth, async (req, res) => {
             'qty_per_sku'
           ]
         },
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'name'
+          ]
+        }
+      ]
+    });
+    const containers = containerData.map(container => container.get({ plain: true }));
+    res.json(containers);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+
+});
+
+router.get('/allXCAdmin', withAuth, async (req, res) => {
+  try {
+    const containerData = await Container.findAll({
+      where: {
+        status: [4,5]
+      },
+      attributes: [
+        'user_id',
+        'account_id',
+        'notes',
+        'id',
+        'container_number',
+        'description',
+        'cost',
+        'requested_date',
+        'received_date',
+        'shipped_date',
+        'type',
+        'status',
+        'location',
+        'qty_of_fee',
+        'unit_fee'
+      ],
+      include: [
         {
           model: Account,
           attributes: [
@@ -388,6 +435,51 @@ router.post('/seeds', withAuth, (req, res) => {
   .catch(err => {
     console.log(err);
     res.status(500).json(err);
+  });
+});
+
+router.delete('/remove/:time', withAuth, (req, res) => {
+  Container.destroy({
+      where: {
+        status: 98,
+        bill_shipped: {
+          [Op.lt]: req.params.time
+        }
+      }
+    })
+      .then(dbBoxData => {
+        if (!dbBoxData) {
+          res.status(404).json({ message: 'No box found with this id' });
+          return;
+        }
+        res.json(dbBoxData);
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+});
+
+router.put('/archieve/:time', withAuth, (req, res) => {
+  Container.update({
+    status: 98
+  },
+  {
+    where: {
+      status: 3,
+      bill_shipped: {
+        [Op.lt]: req.params.time
+      }
+    }
+  }).then(dbContainerData => {
+    if (!dbContainerData) {
+      res.status(404).json({ message: 'No Container found with this id' });
+      return;
+    }
+    res.json(dbContainerData);
+  }).catch(err => {
+        console.log(err);
+        res.status(500).json(err);
   });
 });
 //upload the second file to AWS and update file_2 when requested is submitted by client
