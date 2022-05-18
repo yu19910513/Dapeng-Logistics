@@ -520,7 +520,7 @@ function container_searching() {
    } else if (isCharacterALetter(container_input[0]) && !isNaN(container_input[1])) {
     document.getElementById('containerSearchNote').innerHTML = "This location is not associated with any container"
     location_search(container_input, locationArr_amazon)
-   } else if (container_input == '/all') {
+   } else if (container_input.toLowerCase() == '/all') {
     for (let i = 0; i < containerNumberArr.length; i++) {
       const each_of_all = containerNumberArr[i];
       if (each_of_all) {
@@ -551,6 +551,13 @@ function container_searching() {
       const each_of_xc = allXCArr [i];
       if (each_of_xc) {
         buildingRow_amazon_xc(each_of_xc)
+      }
+    }
+  } else if (container_input.toLowerCase() == '/sp') {
+    for (let i = 0; i < containerNumberArr.length; i++) {
+      const each_of_all = containerNumberArr[i];
+      if (each_of_all && each_of_all.substring(0,2) == 'SP') {
+        buildingRow_amazon(each_of_all)
       }
     }
   }
