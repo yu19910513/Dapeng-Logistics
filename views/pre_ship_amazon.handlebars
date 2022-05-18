@@ -28,7 +28,7 @@
       <form class="shadow p-2 py-3 mt-2 rounded border border-info" id="creator_form">
         <div class="mb-2 text-center lead">
           <div>
-            <a uk-tooltip="printable" onclick="printable()">#<span id="pre-shipN"></span></a>
+            <a uk-tooltip="printable" onclick="printable()" id="printable"><h2 id="pre-shipN"></h2></a>
           </div>
         <img class="rounded" src="" id="image" alt="Card image cap" >
         </div>
@@ -62,7 +62,7 @@
                         <tbody id="sku_list">
                         </tbody>
                     </table>
-                <a id="order_pre-check" class="btn btn-primary mt-3 text-white col-12" style="display: none;" onclick="shippmentCreate()">Ready to Seal</a>
+                <a id="order_pre-check" class="btn btn-primary mt-3 text-white col-12" style="display: none;" onclick="pre_create_checker()">Ready to Seal</a>
                 <a id="fake" class="btn btn-secondary mt-3 text-white col-12">Not Ready to Seal</a>
                 </div>
       </form>

@@ -603,7 +603,7 @@ function buildingRow_amazon(b) {
   container.appendChild(status);
   user.innerHTML = containerMap.get(b)[0].user.name
   account.innerHTML = containerMap.get(b)[0].account.name;
-  container_number.innerHTML = b;
+  container_number.innerHTML = `<a href="/admin/container/${b}" >${b}</a>`;
   for (let i = 0; i < containerMap.get(b).length; i++) {
     const singleItem = containerMap.get(b)[i];
     const listedItem = document.createElement('div');

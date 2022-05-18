@@ -14,6 +14,7 @@ var iidArr = [];
 var user_id, account_id;
 var selectedSkuArr = [];
 var skuArr = [];
+var printCheck = false
 
 var container_numberArr = [];
 function supplemental () {
@@ -65,6 +66,7 @@ function itemIdCollection() {
 };
 
 function pre_check() {
+    printCheck = false
     document.getElementById('alert').innerHTML = null;
     const value = input.value.trim();
     const all_td = document.querySelectorAll('#pre_confirmTable td');
@@ -230,10 +232,10 @@ function loadingItems(data) {
 // }
 
 
-
 function printable() {
     const displayElement = document.getElementById('assignFunction');
     const notesElement = document.getElementById('notesFunction');
+    printCheck = true;
     if (displayElement.style.display == 'none') {
         notesElement.style.display = '';
         displayElement.style.display = ''
@@ -254,6 +256,7 @@ function masterCheck () {
     if (length.value && height.value && weight.value && width.value) {
         document.getElementById('order_pre-check').style.display = '';
         document.getElementById('fake').style.display = 'none';
+        printCheck = false;
     } else {
         document.getElementById('order_pre-check').style.display = 'none'
         document.getElementById('fake').style.display = '';
@@ -338,4 +341,12 @@ function updateQty(data) {
           }),
         headers: {'Content-Type': 'application/json'}
     });
+};
+
+function pre_create_checker() {
+    if (printCheck) {
+        shippmentCreate()
+    } else {
+        printable()
+    }
 }

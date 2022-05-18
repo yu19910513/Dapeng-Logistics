@@ -274,6 +274,55 @@ router.get('/box/:id', withAuth, async (req, res) => {
       console.log(err);
       res.status(500).json(err);
     }
+});
+
+router.get('/container/:id', withAuth, async (req, res) => {
+  try {
+    const containerData = await Container.findAll({
+      where: {
+        container_number: req.params.id
+      },
+        attributes: [
+      'id',
+      'container_number',
+      'description',
+      'cost',
+      'received_date',
+      'length',
+      'width',
+      'height',
+      'weight',
+      'file',
+      'file_2',
+        ],
+          include: [
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'name'
+          ]
+        }
+          ]
+    })
+    const containers = containerData.map(container => container.get({ plain: true }));
+    res.render('shipping_label_amazon', {
+      containers,
+      loggedIn: true,
+      account: containers[0].account.name,
+      user: containers[0].user.name,
+      admin: req.session.admin,
+      name: req.session.name,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 })
 
   module.exports = router
