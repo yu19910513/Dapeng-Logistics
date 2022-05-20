@@ -85,7 +85,7 @@ function pre_check() {
             qty.setAttribute('id',`qty_${sku.innerText}_${value}`)
         };
         input.value = null;
-    } else if (container_numberArr.includes(value) && document.getElementById(value).getAttribute('class') == 'lead text-center rounded shadow-sm bg-info') {
+    } else if (container_numberArr.includes(value) && document.getElementById(value).getAttribute('class') == 'lead text-center rounded shadow-sm bg-info1') {
         const eachTable = document.getElementById(`t_${value}`);
         const rows = eachTable.rows;
         rows[0].setAttribute('class','bg-info');
