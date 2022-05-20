@@ -144,6 +144,7 @@ function pre_check() {
         const removedValue = value.substring(1,value.length);
         var rows = newContainerTable.rows;
         for (let r = 1; r < rows.length; r++) {
+            console.log(rows.length);
             const itemNumber = rows[r].cells[0].innerHTML;
             const itemQty = parseInt(rows[r].cells[1].innerHTML);
             removeItemMap.set(itemNumber, itemQty);
@@ -175,7 +176,8 @@ function pre_check() {
                 id_qtyMap.set(iid,id_qtyMap.get(iid) + 1);
             }
             input.value = null;
-        } else {
+        } else if (value[0] == '-' && value.length > 9 && !removeArr.includes(removedValue)){
+            input.value = null;
             error();
         }
     } else {
@@ -324,21 +326,33 @@ var skuQtyMap = new Map();
 var tdSkuArr = [];
 function eachBoxContent (arr, input) {
     if (arr) {
-        const newTr = document.createElement('tr');
-        const newBoxSku = document.createElement('td');
-        newBoxSku.setAttribute('contenteditable', true);
-        const newBoxQty = document.createElement('td');
-        newTr.appendChild(newBoxSku);
-        newTr.appendChild(newBoxQty);
         const tdPerRow = arr.querySelectorAll('td');
-        newBoxSku.innerHTML = tdPerRow[0].innerText;
-        newBoxQty.innerHTML = tdPerRow[1].innerText;
+        const boxSku = tdPerRow[0].innerText;
+        const boxQty = tdPerRow[1].innerText;
         // newBoxSku.setAttribute('onkeyup', `idChanger(${tdPerRow[0].innerText})`);
-        if (tdPerRow[1].innerHTML != "0") {
-            sku_list.appendChild(newTr);
+        if (boxQty != "0") {
             tdPerRow[1].innerHTML = 0;
+            if(!tdSkuArr.includes(boxSku)) {
+                const newTr = document.createElement('tr');
+                sku_list.appendChild(newTr);
+                const newBoxSku = document.createElement('td');
+                newBoxSku.setAttribute('contenteditable', true);
+                const newBoxQty = document.createElement('td');
+                newBoxSku.setAttribute('id', boxSku);
+                newBoxQty.setAttribute('id', `${boxSku}q`);
+                newTr.appendChild(newBoxSku);
+                newTr.appendChild(newBoxQty);
+                tdSkuArr.push(boxSku);
+                skuQtyMap.set(boxSku, parseInt(boxQty));
+                newBoxSku.innerHTML = boxSku;
+                newBoxQty.innerHTML = boxQty;
+
+            } else {
+                skuQtyMap.set(boxSku, skuQtyMap.get(boxSku)+ parseInt(boxQty))
+                document.getElementById(`${boxSku}q`).innerHTML = skuQtyMap.get(boxSku);
+            }
         } else {
-            error()
+            error();
         }
     } else {
         if(!tdSkuArr.includes(input)) {
