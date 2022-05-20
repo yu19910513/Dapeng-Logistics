@@ -2,6 +2,7 @@ const container_id = location.href.split('/').slice(-1)[0];
 const pre_shipN = document.getElementById('pre-shipN');
 const notes = document.getElementById('notes');
 const input = document.getElementById("scanned_item");
+const checkBox = document.getElementById('scanned_whole');
 const sku_list = document.getElementById('sku_list');
 const length = document.getElementById('new_len');
 const height = document.getElementById('new_hei');
@@ -65,6 +66,17 @@ function itemIdCollection() {
     })
 };
 
+//helper function for bulk check
+function auth() {
+    if (checkBox.checked) {
+        const passcode = prompt('Please enter passcode to enable bulk-check function');
+        if (passcode != '0523') {
+            checkBox.checked = false;
+            alert('The passcode is incorrect!')
+        }
+    }
+}
+//input function
 function pre_check() {
     printCheck = false
     document.getElementById('alert').innerHTML = null;
@@ -85,17 +97,21 @@ function pre_check() {
             qty.setAttribute('id',`qty_${sku.innerText}_${value}`)
         };
         input.value = null;
-    } else if (container_numberArr.includes(value) && document.getElementById(value).getAttribute('class') == 'lead text-center rounded shadow-sm bg-info1') {
-        const eachTable = document.getElementById(`t_${value}`);
-        const rows = eachTable.rows;
-        rows[0].setAttribute('class','bg-info');
-        for (let i = 1; i < rows.length; i++) {
-            rows[i].setAttribute('class','bg-info')
-            const sku = rows[i].getElementsByTagName("td")[0];
-            selectedSkuArr.push(`${sku.innerText}-${localStorage.getItem('selectedBox')}`);
-            eachBoxContent(rows[i])
-        };
-        input.value = null;
+    } else if (container_numberArr.includes(value) && document.getElementById(value).getAttribute('class') == 'lead text-center rounded shadow-sm bg-info') {
+        if (checkBox.checked) {
+            const eachTable = document.getElementById(`t_${value}`);
+            const rows = eachTable.rows;
+            rows[0].setAttribute('class','bg-info');
+            for (let i = 1; i < rows.length; i++) {
+                rows[i].setAttribute('class','bg-info')
+                const sku = rows[i].getElementsByTagName("td")[0];
+                selectedSkuArr.push(`${sku.innerText}-${localStorage.getItem('selectedBox')}`);
+                eachBoxContent(rows[i])
+            };
+            input.value = null;
+        } else {
+            input.value = null;
+        }
     } else if (skuArr.includes(`${value}-${localStorage.getItem('selectedBox')}`) && !selectedSkuArr.includes(`${value}-${localStorage.getItem('selectedBox')}`) && document.getElementById(localStorage.getItem('selectedBox')).getAttribute('class') == 'lead text-center rounded shadow-sm bg-info') {
         const qtyPerSKu = document.getElementById(`qty_${value}_${localStorage.getItem('selectedBox')}`);
         if (qtyPerSKu) {
@@ -349,4 +365,4 @@ function pre_create_checker() {
     } else {
         printable()
     }
-}
+};
