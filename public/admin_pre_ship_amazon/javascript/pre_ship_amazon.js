@@ -120,21 +120,63 @@ function pre_check() {
             if (newQty > 0) {
                 document.getElementById(`qty_${value}_${localStorage.getItem('selectedBox')}`).innerHTML = newQty;
                 id_qtyMap.set(iid,newQty);
-                iidArr.push(iid);
+                if (!iidArr.includes(iid)) {
+                    iidArr.push(iid); // arr to store updated info for master boxes
+                };
                 eachBoxContent(null, value);
                 input.value = null;
             } else if (newQty == 0) {
                 eachBoxContent(null, value);
-                iidArr.filter(id => id != iid)
+                iidArr = iidArr.filter(id => id != iid); // remove qty-0 item from upadte arr becuase it will be removed
                 document.getElementById(`qty_${value}_${localStorage.getItem('selectedBox')}`).innerHTML = newQty;
                 document.getElementById(`qty_${value}_${localStorage.getItem('selectedBox')}`).parentElement.setAttribute('class','bg-info');
-                selectedSkuArr.push(`${document.getElementById(`${value}_${localStorage.getItem('selectedBox')}`).innerHTML}-${localStorage.getItem('selectedBox')}`);
+                selectedSkuArr.push(`${document.getElementById(`${value}_${localStorage.getItem('selectedBox')}`).innerHTML}-${localStorage.getItem('selectedBox')}`);// deleteArr for 0-qty item
                 input.value = null;
             }
         } else {
             error();
             document.getElementById('alert').innerHTML = `${value} is not associated with the box: ${localStorage.getItem('selectedBox')}; please scan the right box first`;
             input.value = null;
+        }
+    } else if (value[0] == '-') {
+        var removeItemMap = new Map();
+        var removeArr = [];
+        const removedValue = value.substring(1,value.length);
+        var rows = newContainerTable.rows;
+        for (let r = 1; r < rows.length; r++) {
+            const itemNumber = rows[r].cells[0].innerHTML;
+            const itemQty = parseInt(rows[r].cells[1].innerHTML);
+            removeItemMap.set(itemNumber, itemQty);
+            removeArr.push(itemNumber);
+        };
+        if (removeArr.includes(removedValue)) {
+            const index = removeArr.indexOf(removedValue) + 1;
+            const masterQty =  document.getElementById(`qty_${removedValue}_${localStorage.getItem('selectedBox')}`)
+            if (removeItemMap.get(removedValue) > 1 && masterQty) {
+                rows[index].cells[1].innerHTML = removeItemMap.get(removedValue) - 1;
+                masterQty.innerHTML = parseInt(masterQty.innerHTML) + 1;
+                skuQtyMap.set(removedValue, skuQtyMap.get(removedValue) - 1)
+            } else if (removeItemMap.get(removedValue) == 1 && masterQty) {
+               masterQty.innerHTML = parseInt(masterQty.innerHTML) + 1;
+               tdSkuArr = tdSkuArr.filter(i => i != removedValue);
+               console.log(tdSkuArr);
+               skuQtyMap.delete(removedValue);
+               rows[index].remove();
+            };
+            const iid = item_numberMap.get(`${removedValue}-${localStorage.getItem('selectedBox')}`);
+            if(masterQty.parentElement.getAttribute('class') == 'bg-info') {
+                masterQty.parentElement.setAttribute('class', '');
+                if (!iidArr.includes(iid)) {
+                    iidArr.push(iid); // arr to store updated info for master boxes
+                };
+                id_qtyMap.set(iid,1);
+                selectedSkuArr = selectedSkuArr.filter( i => i != `${document.getElementById(`${removedValue}_${localStorage.getItem('selectedBox')}`).innerHTML}-${localStorage.getItem('selectedBox')}`);
+            } else {
+                id_qtyMap.set(iid,id_qtyMap.get(iid) + 1);
+            }
+            input.value = null;
+        } else {
+            error();
         }
     } else {
         error();
@@ -363,6 +405,6 @@ function pre_create_checker() {
     if (printCheck) {
         shippmentCreate()
     } else {
-        printable()
+        printable();
     }
 };
