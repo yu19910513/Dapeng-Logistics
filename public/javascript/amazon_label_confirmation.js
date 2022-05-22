@@ -16,14 +16,22 @@ function skuseeker(id, number) {
 };
 
 async function statusChange(tracking) {
-    if(confirm(`Ready to confirm shipping? Ending Date for billing will be set as ${today}`)){
+    var description;
+    const input = document.getElementById(`input${tracking}`).value;
+    if (!input) {
+        description = `All tasks completed; shipped.`
+    } else {
+        description = input;
+    };
+    if(confirm(`Ready to confirm shipping? Ending Date for billing will be set as ${today}. Admin Notes: ${description}`)){
         const response = await fetch(`/api/container/post-label`, {
             method: 'PUT',
             body: JSON.stringify({
                 shipped_date: today,
                 tracking: tracking,
                 status: 3,
-                type: 3
+                type: 3,
+                description: description
               }),
             headers: {'Content-Type': 'application/json'}
         });
@@ -32,8 +40,7 @@ async function statusChange(tracking) {
             location.reload()
         }
     }
-}
-
+};
 
 //helper function
 function unattach(number) {

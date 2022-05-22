@@ -396,7 +396,7 @@ router.put('/post-label', withAuth, (req, res) => {
   Container.update({
       status: req.body.status,
       shipped_date: req.body.shipped_date,
-      description: `All tasks completed; shipped.`
+      description: req.body.description
     },
     {
       where: {

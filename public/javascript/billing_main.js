@@ -116,10 +116,10 @@ function next(user_id) {
 
         //STORAGE FOR LOOP
         for (let i = 0; i < pageData.length; i++) {
-            if (!pageData[i].shipped_date || monthValidate(pageData[i].shipped_date)) {
-                if(!(pageData[i].status == 3 && monthValidate(pageData[i].bill_storage))) {
+            if (!pageData[i].shipped_date || validate(pageData[i].shipped_date, pageData[i].bill_storage)) {
+                // if(!(pageData[i].status == 3 && monthValidate(pageData[i].bill_storage))) {
                 storage_billing_1stStep(pageData, i);
-                }
+                // }
             };
         };
         // var storage_charge = total_billable_day*total_volume*storage_cost.value;
@@ -205,14 +205,24 @@ function storage_billing(pageData, i, lastBillDate) {
     } else {ending_date.innerHTML = new Date().toLocaleDateString("en-US");};
 };
 //month validation: only bill the box not shipped or shipped this month
-function monthValidate(s) {
-    const ending_year = new Date(s).getFullYear();
-    const this_year = new Date(today).getFullYear();
-    const ending_month= new Date(s).getMonth();
-    const thisMonth = new Date(today).getMonth();
-    if (ending_month == thisMonth && ending_year == this_year) {
+// function monthValidate(s) {
+//     const ending_year = new Date(s).getFullYear();
+//     const this_year = new Date(today).getFullYear();
+//     const ending_month= new Date(s).getMonth();
+//     const thisMonth = new Date(today).getMonth();
+//     if (ending_month == thisMonth && ending_year == this_year) {
+//         return true
+//     } return false
+// };
+function validate(s, bs) {
+    const shippedDate = new Date(s).getTime();
+    if (!bs) {
         return true
-    } return false
+    } else if ( shippedDate >= bs ) {
+        return true
+    } else {
+        return false
+    }
 };
 //billable day function: r = received_date; s = shipped_date if any
 function dayCalculatorInit(r,s) {
