@@ -430,10 +430,32 @@ router.delete('/remove/:time', withAuth, (req, res) => {
       }
     })
       .then(dbBoxData => {
-        if (!dbBoxData) {
-          res.status(404).json({ message: 'No box found with this id' });
-          return;
+        // if (!dbBoxData) {
+        //   res.status(404).json({ message: 'No box found with this id' });
+        //   return;
+        // }
+        res.json(dbBoxData);
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+});
+
+router.delete('/remove_xc/:time', withAuth, (req, res) => {
+  Box.destroy({
+      where: {
+        status: 5,
+        bill_shipped: {
+          [Op.lt]: req.params.time
         }
+      }
+    })
+      .then(dbBoxData => {
+        // if (!dbBoxData) {
+        //   res.status(404).json({ message: 'No xc found with this id' });
+        //   return;
+        // }
         res.json(dbBoxData);
       })
       .catch(err => {
