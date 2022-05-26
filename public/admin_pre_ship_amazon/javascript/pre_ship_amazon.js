@@ -15,7 +15,12 @@ var iidArr = [];
 var user_id, account_id;
 var selectedSkuArr = [];
 var skuArr = [];
-var printCheck = false
+var printCheck = false;
+if (!localStorage.getItem('sp_number')) {
+    localStorage.setItem('sp_number', 0)
+} else {
+    localStorage.setItem('sp_number', parseInt(localStorage.getItem('sp_number'))+1)
+};
 
 var container_numberArr = [];
 function supplemental () {
@@ -193,6 +198,7 @@ function delay(fn){
     timer = setTimeout(fn, 50)
 };
 async function updateReqContainer(container_id) {
+    localStorage.removeItem('sp_number');
     const id = container_id;
     const response = await fetch(`/api/container/destroyBulk`, {
         method: 'DELETE',
@@ -377,7 +383,23 @@ function eachBoxContent (arr, input) {
     }
 
 };
-var instance = new Date().valueOf().toString().substring(5,13)+container_id;
+
+function makeid(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() *
+ charactersLength));
+   }
+   return result;
+};
+
+var pad = "000"
+var ans = pad.substring(0, pad.length - localStorage.getItem('sp_number').length) + localStorage.getItem('sp_number')
+// const major_length = container_id.length + ans.length;
+// var instance = container_id + new Date().valueOf().toString().substring(2 + major_length,13) + ans;
+var instance = container_id + makeid(3) + ans;
 pre_shipN.innerHTML = `SP${instance}`;
 document.getElementById('image').src = `http://bwipjs-api.metafloor.com/?bcid=code128&text=SP${instance}`;
 
