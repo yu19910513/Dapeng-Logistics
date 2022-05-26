@@ -458,15 +458,15 @@ function modeChange() {
       mode.innerHTML = 'Refill';
       creater_form.style.display = 'none';
       quick_form.style.display ='';
-      document.getElementById("badge").classList.add('alert-danger');
-      document.getElementById("badge").classList.remove('alert-success');
+      document.getElementById("badge").classList.add('bg-danger');
+      document.getElementById("badge").classList.remove('bg-success');
     } else {
       localStorage.setItem('amazon_mode', 'C')
       mode.innerHTML = 'Create';
       creater_form.style.display = '';
       quick_form.style.display ='none';
-      document.getElementById("badge").classList.add('alert-success');
-      document.getElementById("badge").classList.remove('alert-danger');
+      document.getElementById("badge").classList.add('bg-success');
+      document.getElementById("badge").classList.remove('bg-danger');
     }
 };
 var quickContainerObj = new Object();

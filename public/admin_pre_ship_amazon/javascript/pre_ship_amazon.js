@@ -384,6 +384,7 @@ function eachBoxContent (arr, input) {
 
 };
 
+//helper function to make radnom code
 function makeid(length) {
     var result           = '';
     var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -394,9 +395,8 @@ function makeid(length) {
    }
    return result;
 };
-
-var pad = "000"
-var ans = pad.substring(0, pad.length - localStorage.getItem('sp_number').length) + localStorage.getItem('sp_number')
+var pad = "000";
+var ans = pad.substring(0, pad.length - localStorage.getItem('sp_number').length) + localStorage.getItem('sp_number');
 // const major_length = container_id.length + ans.length;
 // var instance = container_id + new Date().valueOf().toString().substring(2 + major_length,13) + ans;
 var instance = container_id + makeid(3) + ans;

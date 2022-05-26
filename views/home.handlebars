@@ -4,8 +4,8 @@
 {{else}}
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
 <div class="uk-flex uk-flex-center@m uk-flex-right@l uk-margin-small-right mb-2">
-  <button class="badge alert-info shadow-sm" uk-toggle="target: #modal-skuSearch" onclick="skuListing()" uk-tooltip="只限搜寻亞马逊回流货物">SKU关键搜寻页</button>
-  <a href="/master" class="badge alert-warning shadow-sm" uk-tooltip="此页面乘载大量资料，可能会降低使用速度与品质!">总库存浏览页</a>
+  <button class="badge bg-info shadow-sm" uk-toggle="target: #modal-skuSearch" onclick="skuListing()" uk-tooltip="只限搜寻亞马逊回流货物">SKU关键搜寻页</button>
+  <a href="/master" class="badge bg-warning shadow-sm" uk-tooltip="此页面乘载大量资料，可能会降低使用速度与品质!">总库存浏览页</a>
 </div>
 {{!-- modal- for sku search ***********************--}}
 {{!-- search form --}}
@@ -140,7 +140,7 @@
   <label class="form-check-label" for="boxSearch">
     Box # Search 讯息快搜
   </label>
-  <div class="badge alert-success" id="badge" onclick="modeChange()"><span id="mode">C</span> Mode</div>
+  <div class="badge bg-success" id="badge" onclick="modeChange()"><span id="mode">C</span> Mode</div>
 </div>
 
 

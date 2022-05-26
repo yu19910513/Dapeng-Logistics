@@ -401,8 +401,8 @@ function modeChange() {
     update_date_btn.style.display = 'none';
     homepage_btn.href = '/admin/master_page_amazon';
     homepage_btn.innerText ='Amazon Home';
-    document.getElementById("badge").classList.add('alert-danger');
-    document.getElementById("badge").classList.remove('alert-success');
+    document.getElementById("badge").classList.add('bg-danger');
+    document.getElementById("badge").classList.remove('bg-success');
     document.getElementById('myBoxInput').value = null;
     unattach();
   } else {
@@ -414,8 +414,8 @@ function modeChange() {
     update_btn.style.display = '';
     homepage_btn.href = '/admin/master_page';
     homepage_btn.innerText = 'Home Page';
-    document.getElementById("badge").classList.add('alert-success');
-    document.getElementById("badge").classList.remove('alert-danger');
+    document.getElementById("badge").classList.add('bg-success');
+    document.getElementById("badge").classList.remove('bg-danger');
     myContainerInput.value = null;
     unattach()
   }
@@ -933,12 +933,12 @@ function clientListing() {
 
 const advanceBtn = document.getElementById('advanceSearch');
 function advanceSearch() {
-  if (advanceBtn.getAttribute('class') == 'badge alert-secondary shadow-sm') {
-    advanceBtn.setAttribute('class', 'badge alert-primary shadow-sm');
+  if (advanceBtn.getAttribute('class') == 'badge bg-secondary shadow-sm') {
+    advanceBtn.setAttribute('class', 'badge bg-primary shadow-sm');
     document.getElementById('advanceHide').style.display = 'none';
     document.getElementById('advanceShow').style.display = '';
   } else {
-    advanceBtn.setAttribute('class','badge alert-secondary shadow-sm');
+    advanceBtn.setAttribute('class','badge bg-secondary shadow-sm');
     document.getElementById('advanceHide').style.display = '';
     document.getElementById('advanceShow').style.display = 'none';
   }

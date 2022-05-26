@@ -57,8 +57,8 @@ function box_show() {
     box_search_bar.style.display = '';
     containerTable.style.display = 'none';
     boxTable.style.display = '';
-    document.getElementById("badge").classList.add('alert-success');
-    document.getElementById("badge").classList.remove('alert-danger');
+    document.getElementById("badge").classList.add('bg-success');
+    document.getElementById("badge").classList.remove('bg-danger');
     containerInput.value = null;
     box_search_bar.value = null;
     unattach()
@@ -76,8 +76,8 @@ function account_show() {
   containerTable.style.display = 'none';
   boxTable.style.display = 'none';
   mode.innerHTML = 'C';
-  document.getElementById("badge").classList.add('alert-success');
-  document.getElementById("badge").classList.remove('alert-danger');
+  document.getElementById("badge").classList.add('bg-success');
+  document.getElementById("badge").classList.remove('bg-danger');
   containerInput.value = null;
   box_search_bar.value = null;
   document.getElementById('box_search').checked = false
@@ -208,8 +208,8 @@ function modeChange() {
       box_search_bar.style.display = 'none';
       containerTable.style.display = '';
       boxTable.style.display = 'none';
-      document.getElementById("badge").classList.add('alert-danger');
-      document.getElementById("badge").classList.remove('alert-success');
+      document.getElementById("badge").classList.add('bg-danger');
+      document.getElementById("badge").classList.remove('bg-success');
       containerInput.value = null;
       box_search_bar.value = null;
       unattach();
@@ -220,8 +220,8 @@ function modeChange() {
       box_search_bar.style.display = '';
       containerTable.style.display = 'none';
       boxTable.style.display = '';
-      document.getElementById("badge").classList.add('alert-success');
-      document.getElementById("badge").classList.remove('alert-danger');
+      document.getElementById("badge").classList.add('bg-success');
+      document.getElementById("badge").classList.remove('bg-danger');
       containerInput.value = null;
       box_search_bar.value = null;
       unattach()
