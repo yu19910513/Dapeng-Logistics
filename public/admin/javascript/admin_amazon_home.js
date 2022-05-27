@@ -38,16 +38,17 @@ function allItem() {
         containerMap.set(containerNumber, newData[i]);
       };
       var tr;
-      var skuCount = 0;
       var emptyArr = [];
       tr = containerTable.getElementsByTagName('tr');
       for (let i = 1; i < tr.length; i++) {
+        var skuCount = 0;
         const container_number = tr[i].getElementsByTagName('td')[2].innerHTML;
+        const container = tr[i].getElementsByTagName('td')[2];
         const sku = tr[i].getElementsByTagName('td')[3];
         const qty = tr[i].getElementsByTagName('td')[4];
         if(containerMap.get(container_number)){
-        containerMap.get(container_number).forEach(item => {
-          skuCount++;
+          containerMap.get(container_number).forEach(item => {
+          skuCount = skuCount + item.qty_per_sku;
           const singleSKU = document.createElement('div');
           const singleQty = document.createElement('div');
           singleSKU.innerHTML = item.item_number;
@@ -62,6 +63,7 @@ function allItem() {
           tr[i].style.display = 'none';
         }
       }
+      container.innerHTML = container.innerHTML + ` <small>(${skuCount})</small>`;
       };
       emptyArr.forEach(i => i.remove())
       numberOfItem.innerHTML = inventoryCount

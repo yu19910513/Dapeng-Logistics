@@ -590,6 +590,7 @@ function item_search(skuSearchInput) {
 };
 function buildingRow_amazon(b) {
   preUpdateContainerArr.push(containerMap.get(b));
+  var skuCount = 0;
   const containerBody = document.getElementById('containerBody')
   const container = document.createElement('tr');
   const user = document.createElement('td');
@@ -610,9 +611,9 @@ function buildingRow_amazon(b) {
   container.appendChild(status);
   user.innerHTML = containerMap.get(b)[0].user.name
   account.innerHTML = containerMap.get(b)[0].account.name;
-  container_number.innerHTML = `<a href="/admin/container/${b}" >${b}</a>`;
   for (let i = 0; i < containerMap.get(b).length; i++) {
     const singleItem = containerMap.get(b)[i];
+    skuCount = skuCount + singleItem.qty_per_sku;
     const listedItem = document.createElement('div');
     listedItem.setAttribute('uk-tooltip',`title: ${singleItem.description}`)
     const itemAmount = document.createElement('div');
@@ -621,6 +622,7 @@ function buildingRow_amazon(b) {
     item.appendChild(listedItem);
     qty_per_sku.appendChild(itemAmount);
   };
+  container_number.innerHTML = `<a href="/admin/container/${b}" >${b} <small>(${skuCount})</small></a>`;
   location.innerHTML = containerMap.get(b)[0].container.location;
   date.innerHTML = convertor_amazon(containerMap.get(b)[0].container);
   date.setAttribute('uk-tooltip', `received date ${newDateValidate(containerMap.get(b)[0].container.received_date)} ; requested date ${newDateValidate(containerMap.get(b)[0].container.requested_date)} ; shipped date ${newDateValidate(containerMap.get(b)[0].container.shipped_date)} ; bill for receiving ${newDateValidate(new Date(containerMap.get(b)[0].container.bill_received).toLocaleDateString("en-US"))} ; bill for storage ${newDateValidate(new Date(containerMap.get(b)[0].container.bill_storage).toLocaleDateString("en-US"))} ; bill for shipping ${newDateValidate(new Date(containerMap.get(b)[0].container.bill_shipped).toLocaleDateString("en-US"))}`)
