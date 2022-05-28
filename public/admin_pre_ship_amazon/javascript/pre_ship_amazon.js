@@ -462,5 +462,6 @@ function alter() {
     height.value = 0;
     weight.value = 0;
     width.value = 0;
+    document.getElementById('creator_form').setAttribute('class', 'shadow p-2 py-3 mt-2 rounded border border-danger bg-warning');
     masterCheck ();
 }
