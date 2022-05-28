@@ -1,7 +1,11 @@
 function deleteConfirm(id) {
     const code =  prompt(`Please enter the passcode to confirm the deletion of REQ box (id: ${id})`);
-    if (code == '0523' && confirm('Friednly reminder: all items assocaited with this REQ box will be removed!')) {
-        updateReqContainer(id);
+    if (code == '0523') {
+        if (confirm('Friednly reminder: all items assocaited with this REQ box will be removed!')) {
+            updateReqContainer(id);
+        }
+    } else {
+        alert('Incorrect passcode!')
     }
 };
 async function updateReqContainer(container_id) {
