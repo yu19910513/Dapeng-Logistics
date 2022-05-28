@@ -390,7 +390,8 @@ router.get('/allItemPerNumber/:itemArry', withAuth, async (req, res) => {
         {
           model: Container,
           where: {
-            status: [1,2]
+            status: [1,2],
+            type: [1,2,3]
           },
           attributes: [
             's3',
@@ -772,6 +773,12 @@ router.get('/amazonInventory_admin/:user_id', withAuth, async (req, res) => {
 });
 
 router.get('/statusTWO/:type', withAuth, async (req, res) => {
+  var type;
+  if (req.params.type == '2') {
+    type = [0,2]
+  } else {
+    type = 3
+  }
   try {
     const itemData = await Item.findAll({
       attributes: [
@@ -788,7 +795,7 @@ router.get('/statusTWO/:type', withAuth, async (req, res) => {
           model: Container,
           where: {
             status: [2],
-            type: req.params.type
+            type: type
           },
           attributes: [
             'tracking'

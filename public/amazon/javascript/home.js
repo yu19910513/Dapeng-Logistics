@@ -43,7 +43,7 @@ function allItem() {
         const container_number = tr[i].getElementsByTagName('td')[1].innerHTML;
         const sku = tr[i].getElementsByTagName('td')[2];
         const qty = tr[i].getElementsByTagName('td')[3];
-        if(containerMap.get(container_number)){
+        if(containerMap.get(container_number) && container_number.substring(0,1) != "T"){
         containerMap.get(container_number).forEach(item => {
           skuCount++;
           const singleSKU = document.createElement('div');

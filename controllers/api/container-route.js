@@ -550,6 +550,16 @@ router.delete('/destroyBulk', withAuth, (req, res) => {
 });
 
 router.post('/amazon_box', withAuth, (req, res) => {
+  var status, description, requested_date;
+  if (req.body.container_number[0] == "T") {
+    status = 2;
+    description = req.body.container_number,
+    requested_date = new Date().toLocaleDateString("en-US")
+  } else {
+    status = 1;
+    description = `attention: shipping labels required`;
+    requested_date = null;
+  };
   Container.create({
     container_number: req.body.container_number,
     account_id: req.body.account_id,
@@ -562,8 +572,10 @@ router.post('/amazon_box', withAuth, (req, res) => {
     weight: req.body.weight,
     tracking: req.body.tracking,
     type: req.body.type,
-    description: `attention: shipping labels required`,
-    received_date: new Date().toLocaleDateString("en-US")
+    status: status,
+    description: description,
+    received_date: new Date().toLocaleDateString("en-US"),
+    requested_date: requested_date
   }, {returning: true})
       .then(dbBoxData => res.json(dbBoxData))
       .catch(err => {

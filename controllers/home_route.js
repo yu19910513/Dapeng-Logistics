@@ -812,7 +812,7 @@ router.get('/admin_move_main_amazon', withAuth, async (req, res) => {
           model: Container,
           where: {
             status:2,
-            type: 2
+            type: [0,2]
           },
           attributes: [
             'id',

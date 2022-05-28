@@ -224,7 +224,12 @@ function shippmentCreate() {
     amazon_box.weight = weight.value.trim()*0.45;
     amazon_box.volume = length.value*width.value*height.value;
     amazon_box.container_number = pre_shipN.innerHTML;
-    amazon_box.type = 3;
+    if (amazon_box.container_number.substring(0,4) == 'TEMP') {
+        amazon_box.type = 0;
+        amazon_box.description = `${amazon_box.container_number}:N/A`
+    } else {
+        amazon_box.type = 3;
+    }
     amazon_box.user_id = user_id;
     amazon_box.account_id = account_id;
     amazon_box.tracking = container_id;
@@ -253,8 +258,8 @@ function findContainerId(c_number) {
         return response.json();
     }).then(function (data) {
         console.log('container_id fetched');
-        var instance = new Date().valueOf().toString().substring(5,13)+container_id;
-        pre_shipN.innerHTML = `SP${instance}`
+        // var instance = new Date().valueOf().toString().substring(5,13)+container_id;
+        // pre_shipN.innerHTML = `SP${instance}`
         amazon_box.id = data.id
         console.log(data.id);
         itemCreate()
@@ -276,7 +281,11 @@ function itemCreate() {
     removeItem();
     console.log('done');
     alert(`1 container(#${amazon_box.container_number}) with ${rows.length-1} items is inserted to client_id: ${amazon_box.user_id}!`)
-    location.reload()
+    if (amazon_box.container_number.substring(0,4) == 'TEMP') {
+        location.href = `/admin_pre_ship_amazon/${amazon_box.id}`
+    } else {
+        location.reload()
+    }
 };
 function loadingItems(data) {
     fetch('/api/item/new', {
@@ -444,3 +453,14 @@ function pre_create_checker() {
         printable();
     }
 };
+
+const alt_step = document.getElementById('alt_step')
+function alter() {
+    alt_step.disabled = true;
+    pre_shipN.innerHTML = `TEMP${container_id}`;
+    length.value = 0;
+    height.value = 0;
+    weight.value = 0;
+    width.value = 0;
+    masterCheck ();
+}

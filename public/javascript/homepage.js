@@ -261,12 +261,14 @@ function allItem() {
     const newData = Object.values(container_data);
     for (let i = 0; i < newData.length; i++) {
       const containerNumber = newData[i][0].container.container_number;
-      containerNumberArr.push(containerNumber);
-      containerMap.set(containerNumber, newData[i]);
-      if (newData[i][0].container.status == '1') {
-        receivedCount++
-      } else if (newData[i][0].container.status == '2') {
-        requestedCount++
+      if (containerNumber[0] != "T") {
+        containerNumberArr.push(containerNumber);
+        containerMap.set(containerNumber, newData[i]);
+        if (newData[i][0].container.status == '1') {
+          receivedCount++
+        } else if (newData[i][0].container.status == '2') {
+          requestedCount++
+        }
       }
     }
   })
