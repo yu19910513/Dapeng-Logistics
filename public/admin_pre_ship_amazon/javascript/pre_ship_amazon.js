@@ -464,4 +464,12 @@ function alter() {
     width.value = 0;
     document.getElementById('creator_form').setAttribute('class', 'shadow p-2 py-3 mt-2 rounded border border-danger bg-warning');
     masterCheck ();
-}
+};
+
+function deleteConfirm() {
+    const id = container_id;
+    const code =  prompt(`Please enter the passcode to confirm the DELETION of REQ box (id: ${id})`);
+    if (code == '0523' && confirm('Friednly reminder: all items assocaited with this REQ box will be removed!')) {
+        updateReqContainer(id);
+    }
+};

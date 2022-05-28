@@ -1,9 +1,10 @@
-<div class="px-1 py-1 col-lg-4 col-md-4 col-sm-2" id="requested_card">
+<div class="px-1 py-1 col-lg-4 col-md-6 col-sm-10" id="requested_card">
 <div class="card bg-light shadow-sm text-center border-info" id="{{0.container_id}}">
     <div class="lead mt-2">#{{0.container.container_number}}</div>
     <h5 class="card-title mt-3">{{0.user.name}} - {{0.account.name}}</h5>
     <p>Requested Date: {{0.container.requested_date}}</p>
  <div class="card-body">
+     <a onclick="deleteConfirm(`{{0.container_id}}`)" class="border border-warning rounded-circle" uk-icon="icon: trash"></a>
      <a href="/admin_pre_ship_amazon/{{0.container_id}}" class="btn btn-outline-primary btn-sm">Proceed</a>
      {{#if 0.container.file}}
         <a href="/pdf/{{0.container.file}}" class="btn btn-success btn-sm">File #1</a>
