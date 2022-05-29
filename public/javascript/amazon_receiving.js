@@ -284,6 +284,7 @@ function resetBoxSku() {
         skuArr = [];
         itemCount = 0;
         skuMap.clear();
+        masterCheck();
     }
 };
 function unattach() {
