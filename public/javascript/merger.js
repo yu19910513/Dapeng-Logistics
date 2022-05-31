@@ -56,7 +56,6 @@ function unattach() {
     accountIn.appendChild(selectOption);
     accountOut.appendChild(selectOption_2)
 };
-
 async function merge() {
     let code = prompt('Please enter the passcode to confirm the merge');
     const account_id_2 = accountIn.value;
@@ -106,8 +105,7 @@ async function merge() {
     } else {
         alert('missing information; please revise and try again')
     }
-}
-
+};
 async function batchUpdate(data) {
     const response = await fetch(`/api/batch/account_merge`, {
         method: 'PUT',
@@ -126,7 +124,6 @@ async function batchUpdate(data) {
         location.reload()
       }
 };
-
 function containerUpdate(data) {
     fetch(`/api/container/account_merge`, {
         method: 'PUT',
@@ -135,8 +132,7 @@ function containerUpdate(data) {
             'Content-Type': 'application/json'
         }
     })
-}
-
+};
 function itemUpdate(data) {
     fetch(`/api/item/account_merge`, {
         method: 'PUT',
@@ -145,8 +141,7 @@ function itemUpdate(data) {
             'Content-Type': 'application/json'
         }
     })
-}
-
+};
 function accountDelete(id) {
     fetch(`/api/account/destroy/${id}`, {
         method: 'DELETE',
@@ -155,10 +150,59 @@ function accountDelete(id) {
         }
       })
 };
-
 function self_delete() {
     if (accountIn.value == accountOut.value) {
         alert('You cannot merge one account to itslef!')
         location.reload();
     }
 };
+//helper functions
+const manual_input = document.getElementById('manualChecker');
+var timer = null;
+function delay(fn){
+    var time;
+    if (manual_input.checked) {
+        time = 2000
+    } else {
+        time = 50
+    };
+    clearTimeout(timer);
+    timer = setTimeout(fn, time)
+};
+function error() {
+  var audio = new Audio('../media/wrong.mp3');
+  audio.play();
+};
+function getContainer(input, div) {
+    fetch(`/api/container/amazon_container/${input}`, {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        if (!data.length) {
+            error();
+            div.querySelector('input').value = null;
+        } else {
+            div.querySelector('input').disabled = true;
+            div.querySelectorAll('p').forEach(i => i.remove());
+            const notes = document.createElement('p');
+            div.appendChild(notes);
+            notes.innerHTML = `User: ${data.user.name}, Account: ${data.account.name}`
+            const infoArr = `${data.user_id}-${data.account_id}`
+            localStorage.setItem(div.id, infoArr);
+            console.log( localStorage.getItem(div.id));
+        }
+    });
+}
+
+//container merger
+const fromDiv = document.getElementById('fromContainer');
+const toDiv = document.getElementById('toContainer');
+function fromInput() {
+    const input = fromDiv.querySelector('input').value.toUpperCase().trim();
+    getContainer(input, fromDiv)
+}
+function toInput() {
+    const input = toDiv.querySelector('input').value.toUpperCase().trim();
+    getContainer(input, toDiv)
+}

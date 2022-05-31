@@ -25,7 +25,7 @@ router.get('/', withAuth, async (req, res) => {
         }
       ],
       order: [
-        ["name", "DESC"],
+        ["name", "ASC"],
       ],
     });
     const accountDataTwo = await Account.findAll({
@@ -49,37 +49,35 @@ router.get('/', withAuth, async (req, res) => {
         ["name", "ASC"],
       ],
     });
-    const pre_accounts = accountData.map(account => account.get({ plain: true }));
-    const pre_accountsTwo = accountDataTwo.map(account => account.get({ plain: true }));
+    var pre_accounts = accountData.map(account => account.get({ plain: true }));
+    var pre_accountsTwo = accountDataTwo.map(account => account.get({ plain: true }));
     var accounts = [];
-    var accountIds = [];
-    var length;
-    if (pre_accounts.length > pre_accountsTwo.length) {
-      length = pre_accounts.length;
-    } else {
-      length = pre_accountsTwo.length;
-    }
-    for (let i = 0; i < length; i++) {
-      var element, elementtwo;
-      if (pre_accounts[i]) {
-        element = pre_accounts[i].boxes[0];
+    var account_idArr = [];
+    pre_accounts.forEach(i => {
+      accounts.push(i);
+      account_idArr.push(i.id)
+    });
+    pre_accountsTwo.forEach(i => {
+      if (!account_idArr.includes(i.id)) {
+        account_idArr.push(i.id);
+        accounts.push(i);
       } else {
-        element = null;
+        const index = account_idArr.indexOf(i.id);
+        accounts[index].containers = i.containers;
       }
-      if (element && !accountIds.includes(pre_accounts[i].id)) {
-        accountIds.push(pre_accounts[i].id)
-        accounts.unshift(pre_accounts[i]);
+    });
+    accounts.sort(function(a, b) {
+      const nameA = a.name.toUpperCase(); // ignore upper and lowercase
+      const nameB = b.name.toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return -1;
       }
-      if (pre_accountsTwo[i]) {
-        elementtwo = pre_accountsTwo[i].containers[0];
-      } else {
-        elementtwo = null
+      if (nameA > nameB) {
+        return 1;
       }
-      if (elementtwo && !accountIds.includes(pre_accountsTwo[i].id)) {
-        accountIds.push(pre_accountsTwo[i].id)
-        accounts.push(pre_accountsTwo[i]);
-      }
-    };
+      // names must be equal
+      return 0;
+    });
     res.render('home', {
       accounts,
       loggedIn: true,

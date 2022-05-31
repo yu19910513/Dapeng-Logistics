@@ -352,7 +352,7 @@ function updateCost(cost, id) {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'}
     });
-}
+};
 
 
 
