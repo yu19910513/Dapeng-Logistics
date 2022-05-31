@@ -183,26 +183,59 @@ function getContainer(input, div) {
             error();
             div.querySelector('input').value = null;
         } else {
-            div.querySelector('input').disabled = true;
+            const container = new Object();
             div.querySelectorAll('p').forEach(i => i.remove());
-            const notes = document.createElement('p');
-            div.appendChild(notes);
-            notes.innerHTML = `User: ${data.user.name}, Account: ${data.account.name}`
-            const infoArr = `${data.user_id}-${data.account_id}`
-            localStorage.setItem(div.id, infoArr);
-            console.log( localStorage.getItem(div.id));
+            if (containerMap.get(input)) {
+                div.querySelector('input').value = null;
+                error();
+            } else {
+                div.querySelector('input').disabled = true;
+                const notes = document.createElement('p');
+                div.appendChild(notes);
+                notes.innerHTML = `User: ${data.user.name}, Account: ${data.account.name}`;
+                localStorage.setItem(div.id, input);
+                container.user_id = data.user_id;
+                container.account_id = data.account_id;
+                container.id = data.id;
+                container.cost = data.cost;
+                containerMap.set(input, container);
+            }
+            if(containerMap.size == 2) {
+                document.getElementById('ataBtn').style.display = '';
+                document.getElementById('pBtn').style.display = '';
+            }
         }
     });
-}
-
+};
 //container merger
 const fromDiv = document.getElementById('fromContainer');
 const toDiv = document.getElementById('toContainer');
+var containerMap = new Map();
 function fromInput() {
     const input = fromDiv.querySelector('input').value.toUpperCase().trim();
-    getContainer(input, fromDiv)
-}
+    getContainer(input, fromDiv);
+    toDiv.querySelector('input').disabled = false;
+};
 function toInput() {
     const input = toDiv.querySelector('input').value.toUpperCase().trim();
-    getContainer(input, toDiv)
-}
+    getContainer(input, toDiv);
+};
+async function ataMerge() {
+    const fromData = containerMap.get(localStorage.getItem('fromContainer'));
+    const toData = containerMap.get(localStorage.getItem('toContainer'));
+    const response = await fetch(`/api/item/container_merge`, {
+        method: 'PUT',
+        body: JSON.stringify({
+            fromData,
+            toData
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (response.ok) {
+        //need to remove empty container (ensure it's billed)
+        //need to reconcile the items (merge item qty)
+        location.reload();
+    }
+};

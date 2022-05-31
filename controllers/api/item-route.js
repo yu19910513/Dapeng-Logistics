@@ -25,6 +25,32 @@ router.put('/account_merge', withAuth, (req, res) => {
       });
 });
 
+router.put('/container_merge', withAuth, (req, res) => {
+  const fromData = req.body.fromData;
+  const toData = req.body.toData;
+  Item.update({
+      account_id: toData.account_id,
+      user_id: toData.user_id,
+      container_id: toData.id
+    },
+    {
+      where: {
+        container_id: fromData.id
+      }
+    })
+    .then(dbItemData => {
+      if (!dbItemData[0]) {
+        res.status(404).json({ message: 'This Item does not exist!' });
+        return;
+      }
+      res.json(dbItemData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
 router.post('/new', withAuth, (req, res) => {
   var user_id;
   if(!req.body.user_id) {

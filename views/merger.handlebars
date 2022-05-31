@@ -36,13 +36,13 @@
                     </div>
                     <div class="mt-2" id="toContainer">
                         <label for="toBox">To</label>
-                        <input type="text" class="form-control" placeholder="Scan box number..." onkeyup="delay(toInput)">
+                        <input type="text" class="form-control" placeholder="Scan box number..." onkeyup="delay(toInput)" disabled>
                     </div>
                 </div>
             </form>
             <button class="btn btn-outline-info btn-sm mt-3" onclick="location.reload()">Reset</button>
-            <button class="btn btn-outline-danger btn-sm mt-3" onclick="ataMerge()">All-to-All Merge</button>
-            <button class="btn btn-outline-warning btn-sm mt-3" onclick="pMerge()">Partial Merge</button>
+            <button id="ataBtn" class="btn btn-outline-danger btn-sm mt-3" onclick="ataMerge()" style="display: none;">All-to-All Merge</button>
+            <button id="pBtn" class="btn btn-outline-warning btn-sm mt-3" onclick="pMerge()" style="display: none;">Partial Merge</button>
         </div>
     </div>
 </div>
