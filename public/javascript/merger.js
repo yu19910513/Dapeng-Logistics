@@ -162,7 +162,7 @@ var timer = null;
 function delay(fn){
     var time;
     if (manual_input.checked) {
-        time = 2000
+        time = 1500
     } else {
         time = 50
     };
@@ -177,9 +177,13 @@ function getContainer(input, div) {
     fetch(`/api/container/amazon_container/${input}`, {
         method: 'GET'
     }).then(function (response) {
-        return response.json();
+        if (response.status == 500) {
+            return null
+        } else {
+            return response.json();
+        }
     }).then(function (data) {
-        if (!data.length) {
+        if (!data) {
             error();
             div.querySelector('input').value = null;
         } else {
@@ -201,8 +205,20 @@ function getContainer(input, div) {
                 containerMap.set(input, container);
             }
             if(containerMap.size == 2) {
-                document.getElementById('ataBtn').style.display = '';
-                document.getElementById('pBtn').style.display = '';
+                const toNumber = localStorage.getItem('toContainer');
+                const fromNumber = localStorage.getItem('fromContainer')
+                if (toNumber[0] != fromNumber[0] && (toNumber[0] == "R" || fromNumber[0] == "R")) {
+                    if (fromNumber[0] != "R") {
+                        alert('Direct SKU transfer from physical box (AM, SP, and TEMP) to virtual box (REQ) is prohibited!');
+                        localStorage.clear();
+                        location.reload();
+                    } else {
+                        document.getElementById('pBtn').style.display = '';
+                    }
+                } else {
+                    document.getElementById('ataBtn').style.display = '';
+                    document.getElementById('pBtn').style.display = '';
+                }
             }
         }
     });
@@ -234,14 +250,21 @@ async function ataMerge() {
         }
     });
     if (response.ok) {
-        //need to remove empty container (ensure it's billed)
-        itemMerger(toData.id);
-        alert('success');
+        if (localStorage.getItem('toContainer').substring(0,3) == "REQ") {
+            removalQ();
+        } else {
+            itemMerger(toData.id);
+        };
+    } else {
+        alert(`${fromDiv.querySelector('input').value.toUpperCase().trim()} is an empty box and has zero item!`)
+        localStorage.clear();
+        location.reload();
     }
 };
 
 const itemArr = [];
 const objArr = [];
+var dCount = 0, uCount = 0;
 function itemMerger(container_id) {
     fetch(`/api/item/findAllPerContainer/${container_id}`, {
         method: 'GET'
@@ -258,7 +281,10 @@ function itemMerger(container_id) {
                 objArr[index].qty_per_sku = objArr[index].qty_per_sku + data[i].qty_per_sku;
                 updateExistedItem(objArr[index], data[i]);
             }
-
+        };
+        if (data.length == itemArr.length) {
+            console.log('no repeated boxes');
+            removalQ();
         }
     })
 };
@@ -273,6 +299,7 @@ async function updateExistedItem(data, deleteData) {
         }
     });
     if (response.ok) {
+        uCount++;
         console.log(`qty of ${data.item_number}(${data.id}) has been updated to ${data.qty_per_sku}`);
         deleteExistedItem(deleteData);
     }
@@ -285,6 +312,43 @@ async function deleteExistedItem(data) {
         }
     });
     if (response.ok) {
+        dCount--;
         console.log(`${data.item_number}(${data.id}) has been remove`);
+        checkpoint();
     }
 };
+async function deleteEmptyContainer (data) {
+    const response = await fetch(`/api/container/destroyBulk`, {
+        method: 'DELETE',
+        body: JSON.stringify({
+            id: data.id
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (response.ok) {
+        localStorage.clear();
+        location.reload();
+    }
+};
+function checkpoint() {
+    if (dCount*uCount != 0 && dCount+uCount == 0) {
+        removalQ()
+    }
+};
+function removalQ() {
+    if (confirm(`Remove empty container (${localStorage.getItem('fromContainer')})?`)) {
+        const fromData = containerMap.get(localStorage.getItem('fromContainer'));
+        if (fromData.cost == 0 || localStorage.getItem('fromContainer').substring(0,2) != 'AM') {
+            deleteEmptyContainer(fromData);
+        } else {
+            alert(`This container (${localStorage.getItem('fromContainer')}) cannot be removed because it has not been charged for receiving fee yet!`);
+            localStorage.clear();
+            location.reload();
+        }
+    } else {
+        localStorage.clear();
+        location.reload();
+    }
+}
