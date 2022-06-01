@@ -235,7 +235,56 @@ async function ataMerge() {
     });
     if (response.ok) {
         //need to remove empty container (ensure it's billed)
-        //need to reconcile the items (merge item qty)
-        location.reload();
+        itemMerger(toData.id);
+        alert('success');
+    }
+};
+
+const itemArr = [];
+const objArr = [];
+function itemMerger(container_id) {
+    fetch(`/api/item/findAllPerContainer/${container_id}`, {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        for (let i = 0; i < data.length; i++) {
+            const item_number = data[i].item_number;
+            if (!itemArr.includes(item_number)) {
+                itemArr.push(item_number);
+                objArr.push(data[i])
+            } else {
+                const index = itemArr.indexOf(item_number);
+                objArr[index].qty_per_sku = objArr[index].qty_per_sku + data[i].qty_per_sku;
+                updateExistedItem(objArr[index], data[i]);
+            }
+
+        }
+    })
+};
+async function updateExistedItem(data, deleteData) {
+    const response = await fetch(`/api/item/updateQtyPerItemId/${data.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+            qty_per_sku: data.qty_per_sku
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (response.ok) {
+        console.log(`qty of ${data.item_number}(${data.id}) has been updated to ${data.qty_per_sku}`);
+        deleteExistedItem(deleteData);
+    }
+};
+async function deleteExistedItem(data) {
+    const response = await fetch(`/api/item/destroy/${data.id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (response.ok) {
+        console.log(`${data.item_number}(${data.id}) has been remove`);
     }
 };
