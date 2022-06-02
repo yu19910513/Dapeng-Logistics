@@ -178,7 +178,7 @@ function storage_billing(pageData, i, lastBillDate) {
     account.innerHTML = pageData[i].account.name;
     container_number.innerHTML = pageData[i].container_number;
     description.innerHTML = pageData[i].description;
-    const volumeNew = pageData[i].volume/764555;
+    const volumeNew = pageData[i].length*pageData[i].height*pageData[i].width/764555;
     volume.innerHTML = volumeNew.toFixed(10);
     if (lastBillDate == pageData[i].received_date) {
         storageBoxArr.push(pageData[i].container_number);
