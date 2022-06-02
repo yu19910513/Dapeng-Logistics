@@ -222,7 +222,7 @@ function shippmentCreate() {
     amazon_box.width = width.value.trim()*2.54;
     amazon_box.height = height.value.trim()*2.54;
     amazon_box.weight = weight.value.trim()*0.45;
-    amazon_box.volume = length.value*width.value*height.value;
+    amazon_box.volume = amazon_box.width*amazon_box.height*amazon_box.length;
     amazon_box.container_number = pre_shipN.innerHTML;
     if (amazon_box.container_number.substring(0,4) == 'TEMP') {
         amazon_box.type = 0;
