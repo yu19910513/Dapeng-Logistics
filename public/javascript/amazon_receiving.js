@@ -576,31 +576,30 @@ function removeEmptyContainer() {
             for (let i = 0; i < data.length; i++) {
                 const container = data[i];
                 if(!allContainerArr.includes(container.id) && container.cost == 0) {
-                    emptyArr.push(container.container_number)
+                    emptyArr.push(container.id)
                 }; //cost == 0 means the empty box has been recently billed and ready to get reset
 
             };
             if (!emptyArr.length) {
                 alert('No empty container was found in the database')
             } else {
-                console.log(emptyArr);
-                // removeEmpty(emptyArr);
+                removeEmpty(emptyArr);
             }
           })
       });
 };
-// async function removeEmpty(Arr) {
-//     const response = await fetch(`/api/container/destroyBulk/`, {
-//         method: 'DELETE',
-//         body: JSON.stringify({
-//             id: Arr
-//         }),
-//         headers: {
-//             'Content-Type': 'application/json'
-//         }
-//     });
+async function removeEmpty(Arr) {
+    const response = await fetch(`/api/container/destroyBulk/`, {
+        method: 'DELETE',
+        body: JSON.stringify({
+            id: Arr
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
 
-//     if (response.ok) {
-//         alert(`Successfully remove ${Arr.length} empty containers! `)
-//     }
-// }
+    if (response.ok) {
+        alert(`Successfully remove ${Arr.length} empty containers! `)
+    }
+}
