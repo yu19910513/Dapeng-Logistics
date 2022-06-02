@@ -14,7 +14,12 @@ for (i = 1; i < (rows.length + 1); i++){
       rows[i].getElementsByTagName("td")[7].innerHTML = "Archived"
     } else {
       rows[i].getElementsByTagName("td")[7].innerHTML = "Pending"
-    }
+    };
+    rows[i].getElementsByTagName("td")[6].innerHTML =  parseFloat(data_status[6].innerHTML)*2.2
+     var sizeData  = data_status[5].innerHTML.split('x');
+     sizeData = sizeData.map(n => n*0.394);
+     console.log(sizeData);
+     rows[i].getElementsByTagName("td")[5].innerHTML = `${sizeData[0]} x ${sizeData[1]} x ${sizeData[2]}`
 };
 
 function clear_file() {
