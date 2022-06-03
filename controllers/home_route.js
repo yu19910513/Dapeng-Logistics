@@ -396,6 +396,121 @@ router.get('/merger', withAuth, (req, res) => {
   }
 });
 
+router.get('/partial_merge/:fromId&:toId', withAuth, async (req, res) => {
+  try {
+    const fromData = await Item.findAll({
+      where: {
+        container_id: req.params.fromId
+      },
+      attributes: [
+        'id',
+        'item_number',
+        'qty_per_sku',
+        'container_id',
+        'account_id',
+        'user_id',
+        'description'
+      ],
+      include: [
+        {
+          model: Container,
+          where: {
+            status:[1,2]
+          },
+          attributes: [
+            'id',
+            'container_number',
+            'description',
+            'cost',
+            'requested_date',
+            'received_date',
+            'location',
+            'file',
+            'file_2',
+            'notes',
+            's3',
+            'fba'
+          ]
+        },
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'id',
+            'name',
+          ]
+        }
+      ]
+    });
+    const toData = await Item.findAll({
+      where: {
+        container_id: req.params.toId
+      },
+      attributes: [
+        'id',
+        'item_number',
+        'qty_per_sku',
+        'container_id',
+        'account_id',
+        'user_id',
+        'description'
+      ],
+      include: [
+        {
+          model: Container,
+          where: {
+            status:[1,2]
+          },
+          attributes: [
+            'id',
+            'container_number',
+            'description',
+            'cost',
+            'requested_date',
+            'received_date',
+            'location',
+            'file',
+            'file_2',
+            'notes',
+            's3',
+            'fba'
+          ]
+        },
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'id',
+            'name',
+          ]
+        }
+      ]
+    });
+    const fromitem = fromData.map(item => item.get({ plain: true }));
+    const toitem = toData.map(item => item.get({ plain: true }));
+    const fromRequest = [fromitem];
+    const toRequest = [toitem];
+    var newBox = false;
+    if (!toitem.length) {
+      newBox = true
+    };
+    res.render('partial_merge', {fromRequest, toRequest, newBox, loggedIn: true, admin: req.session.admin, name: req.session.name});
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+})
+
 router.get('/client_service', withAuth, (req, res) => {
   try {
     res.render('client_service', {loggedIn: true, admin: req.session.admin, name: req.session.name});
@@ -1662,7 +1777,8 @@ router.get('/amazon_overview/:id', withAuth, async (req, res) => {
     console.log(err);
     res.status(500).json(err);
   }
-})
+});
+
 
 // router.get('/rawData', withAuth, (req, res) => {
 //     res.render('rawData');

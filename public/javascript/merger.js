@@ -351,4 +351,11 @@ function removalQ() {
         localStorage.clear();
         location.reload();
     }
+};
+function pMerge() {
+    const fromNumber = fromDiv.querySelector('input').value.toUpperCase().trim();
+    const toNumber = toDiv.querySelector('input').value.toUpperCase().trim();
+    const fromId = containerMap.get(fromNumber).id;
+    const toId = containerMap.get(toNumber).id;
+    location.href = `/partial_merge/${fromId}&${toId}`
 }
