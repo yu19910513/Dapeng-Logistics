@@ -498,12 +498,38 @@ router.get('/partial_merge/:fromId&:toId', withAuth, async (req, res) => {
     });
     const fromitem = fromData.map(item => item.get({ plain: true }));
     const toitem = toData.map(item => item.get({ plain: true }));
-    const fromRequest = [fromitem];
-    const toRequest = [toitem];
+    var fromRequest, toRequest;
     var newBox = false;
+
     if (!toitem.length) {
       newBox = true
     };
+
+    if (fromitem.length && fromitem[0].description && fromitem[0].description.includes(':')) {
+      fromitem.forEach(i => {i.reqboxfrom = true});
+      const requestsBatch = fromitem.reduce(function (r, a) {
+        r[a.description] = r[a.description] || [];
+        r[a.description].push(a);
+        return r;
+      }, Object.create(null));
+      fromRequest = Object.values(requestsBatch);
+    } else {
+      fromRequest = [fromitem]
+    };
+
+    if (toitem.length && toitem[0].description && toitem[0].description.includes(':')) {
+      toitem.forEach(i => {i.reqboxto = true});
+      const requestsBatch = toitem.reduce(function (r, a) {
+        r[a.description] = r[a.description] || [];
+        r[a.description].push(a);
+        return r;
+      }, Object.create(null));
+      toRequest = Object.values(requestsBatch);
+    } else {
+      toRequest = [toitem]
+    };
+
+
     res.render('partial_merge', {fromRequest, toRequest, newBox, loggedIn: true, admin: req.session.admin, name: req.session.name});
   } catch (err) {
     console.log(err);
