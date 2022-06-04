@@ -4,9 +4,31 @@
 <div class="container col-md-5 col-sm-8" id="notesFunction">
 <div id="alert" class="text-danger text-center"></div>
 </div>
-
 <div class="container">
     {{!-- from box --}}
+    <form class="p-2 py-3 mt-2 mb-1">
+        {{#if newBox}}
+        {{else}}
+        <a class="btn btn-outline-primary" href="/partial_merge/{{toBoxId}}&{{fromBoxId}}">Quick Swap</a>
+        {{/if}}
+        <a class="btn btn-outline-success" href="#boxReselect" uk-toggle>Container Change</a>
+        <a class="btn btn-outline-warning" href="/partial_merge/{{fromBoxId}}&new">New Container</a>
+    </form>
+<hr>
+<div id="boxReselect" class="uk-flex-top mt-2" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div>
+            <input type="text" class="form-control mb-3" id="fromContainer" placeholder="Container # (from)" aria-label="container" aria-describedby="basic-addon1" onkeyup="findId('fromContainer')">
+        </div>
+        <div>
+            <input type="text" class="form-control mb-3" id="toContainer" placeholder="Container # (to)" aria-label="container" aria-describedby="basic-addon1" onkeyup="findId('toContainer')">
+        </div>
+        <a class="uk-button uk-button-primary uk-button-small uk-align-right" id="okBtn" uk-icon="icon: arrow-right" disabled>ok</a>
+    </div>
+</div>
+
+
   <div class="row justify-content-md-center">
     <div class="col-lg-5 col-md-6" id="assignFunction">
         <h2>Transfer From:</h2>
@@ -73,6 +95,7 @@
                 </div>
       </form>
     </div>
+    {{!-- <script src="javascript/new_merge.js"></script> --}}
     {{else}}
     <div class="col-lg-5 col-md-6" id="assignFunction">
         <h2>Transfer To:</h2>
@@ -89,11 +112,10 @@
             </div>
         </form>
     </div>
+    {{!-- <script src="javascript/partial_merge.js"></script> --}}
     {{/if}}
   </div>
 </div>
-
-
 <script src="javascript/partial_merge.js"></script>
 {{else}}
 <script src="javascript/client_redirect.js"></script>

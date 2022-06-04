@@ -496,8 +496,19 @@ router.get('/partial_merge/:fromId&:toId', withAuth, async (req, res) => {
         }
       ]
     });
+    var  fromBoxId, toBoxId;
     const fromitem = fromData.map(item => item.get({ plain: true }));
+    if (fromitem[0]) {
+      fromBoxId = fromitem[0].container_id;
+    } else {
+      fromBoxId = null;
+    };
     const toitem = toData.map(item => item.get({ plain: true }));
+    if (toitem[0]) {
+      toBoxId = toitem[0].container_id;
+    } else {
+      toBoxId = null;
+    };
     var fromRequest, toRequest;
     var newBox = false;
 
@@ -530,7 +541,7 @@ router.get('/partial_merge/:fromId&:toId', withAuth, async (req, res) => {
     };
 
 
-    res.render('partial_merge', {fromRequest, toRequest, newBox, loggedIn: true, admin: req.session.admin, name: req.session.name});
+    res.render('partial_merge', {fromRequest, toRequest, newBox, fromBoxId, toBoxId, loggedIn: true, admin: req.session.admin, name: req.session.name});
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
