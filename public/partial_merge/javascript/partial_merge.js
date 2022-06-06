@@ -77,7 +77,9 @@ const sku_list = document.getElementById('sku_list');
 var sku_list_am;
 if (!sku_list) {
     sku_list_am = document.getElementById('to_confirmTable').querySelector('tbody');
+    sku_list_am.querySelectorAll('tr').forEach(tr => tr.setAttribute('class', 'bg-secondary'))
 };
+
 const length = document.getElementById('new_len');
 const height = document.getElementById('new_hei');
 const weight = document.getElementById('new_wei');
@@ -108,8 +110,8 @@ function supplemental () {
             account_id = data[0].account_id;
             console.log(user_id, account_id);
             // notes.innerHTML = data[0].notes;
-            const descriptionArr = document.querySelectorAll('h5');
-            const tableArr = document.querySelectorAll('table')
+            const descriptionArr = document.getElementById('from_confirmTable').querySelectorAll('h5');
+            const tableArr = document.getElementById('from_confirmTable').querySelectorAll('table')
             for (let i = 0; i < descriptionArr.length; i++) {
                 const container_number = descriptionArr[i].innerText.split(':')[0];
                 descriptionArr[i].setAttribute('id',container_number);
