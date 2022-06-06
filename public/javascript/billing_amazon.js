@@ -551,7 +551,7 @@ function xc_cost_calculator () {
         const total_cost = dataTable.rows[i].cells[8];
         const qty = dataTable.rows[i].cells[6].innerHTML;
         const unit_charge = dataTable.rows[i].cells[7].innerHTML;
-        total_cost.innerHTML = qty*unit_charge
+        total_cost.innerHTML = (qty*unit_charge).toFixed(2);
     }
 };
 var true_false_arr = [];
