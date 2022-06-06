@@ -52,14 +52,41 @@
   {{!-- divdie line --}}
   {{#if newBox}}
     <div class="col-lg-4 col-md-5">
-        <h2>Transfer To:</h2>
-      <form class="shadow p-2 py-3 mt-2 rounded border border-info" id="creator_form">
-        <div class="mb-2 text-center lead">
-          <div>
-            <a uk-tooltip="printable" onclick="printable()" id="printable"><h2 id="pre-shipN"></h2></a>
-          </div>
-        <img class="rounded" src="" id="image" alt="Card image cap" >
-        </div>
+        <h2>Transfer To: <span class="text-primary">New AM Box</span></h2>
+             <form class=" shadow p-4 rounded bg-light" id="creator_form">
+                  <div class="row">
+                        <div class="form-group col" id="scanDiv">
+                            <label for="scan" class="text-danger">Search</label>
+                            <input type="text" class="form-control" id="scan" placeholder="scan sku" onkeyup="delay(scanSKU)">
+                        </div>
+                        <div class="form-group col">
+                            <label for="Date">Date</label>
+                            <input type="text" class="form-control" id="today" value="" disabled>
+                        </div>
+                        <div class="form-group col">
+                            <label for="Client">Client</label>
+                            <select name="user" id="user" class="uk-select uk-form-default rounded mt-1" onchange="account_data()">
+                                <option value="">select client</option>
+                                <option value="0">--- create new client ---</option>
+                            </select>
+                            <input type="text" class="form-control rounded mt-1" id="newUserName" placeholder="username" style="display: none" onkeyup="masterCheck()">
+                            <input type="text" class="form-control rounded mt-1" id="newPassword" placeholder="password" style="display: none" onkeyup="masterCheck()">
+                        </div>
+                        <div class="form-group col" id="accountDiv">
+                            <label for="Account">Account</label>
+                            <select name="account" id="account" class="uk-select uk-form-default rounded mt-1" onchange="accountSelection()" disabled>
+                                <option value="">select account</option>
+                                <option value="0">--- create new account ---</option>
+                            </select>
+                            <input type="text" class="form-control rounded mt-1" id="newAccountInput" placeholder="new account name" style="display: none;" onkeyup="masterCheck()">
+                        </div>
+                  </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <input type="text" class="form-control" id="new_des" onkeyup="masterCheck()">
+                </div>
+
                 <div class="row">
                     <div class="col">
                     <label for="length">Length</label>
@@ -73,11 +100,17 @@
                         <label for="height">Height</label>
                         <input type="number" class="form-control" id="new_hei" placeholder="inch" onkeyup="masterCheck()">
                     </div>
-                    <div class="col">
-                        <label for="weight">Weight</label>
-                        <input type="number" class="form-control" id="new_wei" placeholder="lb" onkeyup="masterCheck()">
-                    </div>
                 </div>
+
+                <div class="form-group">
+                    <label for="container">Box Number <span id="uniqueMark"></span></label>
+                    <input type="text" class="form-control" id="new_container" onkeyup="masterCheck()" placeholder="new amazon box #">
+                </div>
+
+                {{!-- <div class="form-group">
+                    <label for="sku">SKU</label>
+                    <input type="text" class="form-control" id="sku" placeholder="sku" onkeyup="delay(itemInput)">
+                </div> --}}
 
                 <div class="form-group mt-3">
                     <table class="uk-table uk-table-small uk-table-divider bg-light shadow-sm" id="sku_table">
@@ -90,12 +123,13 @@
                         <tbody id="sku_list">
                         </tbody>
                     </table>
-                <a id="order_pre-check" class="btn btn-primary mt-3 text-white col-12" style="display: none;" onclick="pre_create_checker()">Ready to Seal</a>
-                <a id="fake" class="btn btn-secondary mt-3 text-white col-12">Not Ready to Seal</a>
+                <a id="order_pre-check" class="btn btn-primary mt-3 text-white col-12" style="display: none;" onclick="amazonCreate()">Ready to Create</a>
+                <a id="fake" class="btn btn-secondary mt-3 text-white col-12">Not Ready to Create</a>
                 </div>
-      </form>
+        </form>
     </div>
-    {{!-- <script src="javascript/new_merge.js"></script> --}}
+{{!--
+    <script src="javascript/amazon_receiving.js"></script> --}}
     {{else}}
     <div class="col-lg-5 col-md-6" id="assignFunction">
         <h2>Transfer To:</h2>
