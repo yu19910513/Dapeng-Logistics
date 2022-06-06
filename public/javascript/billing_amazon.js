@@ -187,7 +187,7 @@ function storage_billing(pageData, i, lastBillDate) {
         received_date.innerHTML = pageData[i].received_date;
         const dayCalInit = dayCalculatorInit(pageData[i].received_date, pageData[i].shipped_date, pageData[i].type);
         billable.innerHTML =  dayCalInit;
-        lbd.innerHTML = ' '
+        lbd.innerHTML = ' ';
         storage_table.appendChild(container);
         const pre_cost = storage_cost.value*volumeNew*dayCalInit;
         total_st_charge = total_st_charge+pre_cost

@@ -340,7 +340,7 @@ function checkpoint() {
 function removalQ() {
     if (confirm(`Remove empty container (${localStorage.getItem('fromContainer')})?`)) {
         const fromData = containerMap.get(localStorage.getItem('fromContainer'));
-        if (fromData.cost == 0 || localStorage.getItem('fromContainer').substring(0,2) != 'AM') {
+        if (parseInt(fromData.cost) == 0 || localStorage.getItem('fromContainer').substring(0,2) != 'AM') {
             deleteEmptyContainer(fromData);
         } else {
             alert(`This container (${localStorage.getItem('fromContainer')}) cannot be removed because it has not been charged for receiving fee yet!`);

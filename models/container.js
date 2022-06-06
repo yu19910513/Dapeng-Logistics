@@ -80,7 +80,7 @@ Container.init(
             allowNull: true
         },
         cost: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL(10,2),
             allowNull: true
         },
 
