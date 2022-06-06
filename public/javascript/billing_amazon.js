@@ -161,6 +161,7 @@ function storage_billing(pageData, i, lastBillDate) {
     const container_number = document.createElement('td');
     const description = document.createElement('td');
     const received_date = document.createElement('td');
+    const lbd = document.createElement('td');
     const ending_date = document.createElement('td');
     const volume = document.createElement('td');
     const billable = document.createElement('td');
@@ -170,6 +171,7 @@ function storage_billing(pageData, i, lastBillDate) {
     container.appendChild(container_number);
     container.appendChild(description);
     container.appendChild(received_date);
+    container.appendChild(lbd);
     container.appendChild(ending_date);
     container.appendChild(volume);
     container.appendChild(billable);
@@ -184,7 +186,8 @@ function storage_billing(pageData, i, lastBillDate) {
         storageBoxArr.push(pageData[i].container_number);
         received_date.innerHTML = pageData[i].received_date;
         const dayCalInit = dayCalculatorInit(pageData[i].received_date, pageData[i].shipped_date, pageData[i].type);
-        billable.innerHTML =  dayCalInit
+        billable.innerHTML =  dayCalInit;
+        lbd.innerHTML = ' '
         storage_table.appendChild(container);
         const pre_cost = storage_cost.value*volumeNew*dayCalInit;
         total_st_charge = total_st_charge+pre_cost
@@ -192,7 +195,8 @@ function storage_billing(pageData, i, lastBillDate) {
     } else {
         const dayCalConti = dayCalculatorConti(pageData[i].received_date, lastBillDate, pageData[i].shipped_date, pageData[i].type);
         storageBoxArr.push(pageData[i].container_number);
-        received_date.innerHTML = `${pageData[i].received_date} <br> L: <u>${lastBillDate}</u>`;
+        received_date.innerHTML = pageData[i].received_date;
+        lbd.innerHTML = lastBillDate;
         billable.innerHTML = dayCalConti;
         const pre_cost = storage_cost.value*volumeNew*dayCalConti;
         cost.innerHTML = `$${pre_cost.toFixed(5)}`;

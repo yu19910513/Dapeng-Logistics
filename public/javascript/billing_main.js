@@ -162,6 +162,7 @@ function storage_billing(pageData, i, lastBillDate) {
     const box_number = document.createElement('td');
     const description = document.createElement('td');
     const received_date = document.createElement('td');
+    const lbd = document.createElement('td');
     const ending_date = document.createElement('td');
     const volume = document.createElement('td');
     const billable = document.createElement('td');
@@ -171,6 +172,7 @@ function storage_billing(pageData, i, lastBillDate) {
     container.appendChild(box_number);
     container.appendChild(description);
     container.appendChild(received_date);
+    container.appendChild(lbd);
     container.appendChild(ending_date);
     container.appendChild(volume);
     container.appendChild(billable);
@@ -183,9 +185,10 @@ function storage_billing(pageData, i, lastBillDate) {
     volume.innerHTML = volumeNew.toFixed(10);
     if (lastBillDate == pageData[i].received_date) {
         storageBoxArr.push(pageData[i].box_number);
-        received_date.innerHTML = pageData[i].received_date;
+        received_date.innerHTML =  pageData[i].received_date;
         const dayCalInit = dayCalculatorInit(pageData[i].received_date, pageData[i].shipped_date);
-        billable.innerHTML =  dayCalInit
+        billable.innerHTML =  dayCalInit;
+        lbd.innerHTML = ' ';
         storage_table.appendChild(container);
         const pre_cost = storage_cost.value*volumeNew*dayCalInit;
         total_st_charge = total_st_charge+pre_cost
@@ -193,7 +196,8 @@ function storage_billing(pageData, i, lastBillDate) {
     } else {
         const dayCalConti = dayCalculatorConti(pageData[i].received_date, lastBillDate, pageData[i].shipped_date);
         storageBoxArr.push(pageData[i].box_number);
-        received_date.innerHTML = `${pageData[i].received_date} <br> L: <u>${lastBillDate}</u>`;
+        received_date.innerHTML = pageData[i].received_date;
+        lbd.innerHTML = lastBillDate;
         billable.innerHTML = dayCalConti;
         const pre_cost = storage_cost.value*volumeNew*dayCalConti;
         cost.innerHTML = `$${pre_cost.toFixed(5)}`;
