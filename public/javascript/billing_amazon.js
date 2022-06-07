@@ -354,7 +354,7 @@ function xc_billing(data, i) {
     unit_fee.innerHTML = data[i].unit_fee;
     qty_of_fee.innerHTML = data[i].qty_of_fee;
     cost.innerHTML = `$${data[i].cost}`;
-    total_xc_charge = total_xc_charge + data[i].cost;
+    total_xc_charge = total_xc_charge + parseFloat(data[i].cost);
 }
 
 //sorting
