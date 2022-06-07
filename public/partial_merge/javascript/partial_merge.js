@@ -204,12 +204,14 @@ function pre_check() {
             if (newQty > 0) {
                 document.getElementById(`qty_${value}_${localStorage.getItem('selectedBox')}`).innerHTML = newQty;
                 id_qtyMap.set(iid,newQty);
+                itemCount++
                 if (!iidArr.includes(iid)) {
                     iidArr.push(iid); // arr to store updated info for master boxes
                 };
                 eachBoxContent(null, value);
                 input.value = null;
             } else if (newQty == 0) {
+                itemCount++
                 eachBoxContent(null, value);
                 iidArr = iidArr.filter(id => id != iid); // remove qty-0 item from upadte arr becuase it will be removed
                 document.getElementById(`qty_${value}_${localStorage.getItem('selectedBox')}`).innerHTML = newQty;
@@ -241,7 +243,8 @@ function pre_check() {
         };
         if (removeArr.includes(removedValue)) {
             const index = removeArr.indexOf(removedValue) + 1;
-            const masterQty =  document.getElementById(`qty_${removedValue}_${localStorage.getItem('selectedBox')}`)
+            const masterQty =  document.getElementById(`qty_${removedValue}_${localStorage.getItem('selectedBox')}`);
+            itemCount--;
             if (removeItemMap.get(removedValue) > 1 && masterQty) {
                 rows[index].cells[1].innerHTML = removeItemMap.get(removedValue) - 1;
                 masterQty.innerHTML = parseInt(masterQty.innerHTML) + 1;
@@ -249,7 +252,7 @@ function pre_check() {
             } else if (removeItemMap.get(removedValue) == 1 && masterQty) {
                masterQty.innerHTML = parseInt(masterQty.innerHTML) + 1;
                tdSkuArr = tdSkuArr.filter(i => i != removedValue);
-               console.log(tdSkuArr);
+            //    console.log(tdSkuArr);
                skuQtyMap.delete(removedValue);
                rows[index].remove();
             };
@@ -446,11 +449,13 @@ function eachBoxContent (arr, input) {
                 newTr.appendChild(newBoxSku);
                 newTr.appendChild(newBoxQty);
                 tdSkuArr.push(boxSku);
+                itemCount = itemCount + parseInt(boxQty);
                 skuQtyMap.set(boxSku, parseInt(boxQty));
                 newBoxSku.innerHTML = boxSku;
                 newBoxQty.innerHTML = boxQty;
 
             } else {
+                itemCount = itemCount + parseInt(boxQty);
                 skuQtyMap.set(boxSku, skuQtyMap.get(boxSku)+ parseInt(boxQty))
                 document.getElementById(`${boxSku}q`).innerHTML = skuQtyMap.get(boxSku);
             }
@@ -592,7 +597,6 @@ const container_number = document.getElementById('new_container');//****//
 const sku_table = document.getElementById('sku_table');//****//
 var itemCount = 0;
 ///////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-date.value = today;
 var masterMap = new Map();
 var userMap = new Map();
 var accouuntMap = new Map();
@@ -610,7 +614,11 @@ function client_data() {
         client_list.appendChild(user)
         };
     });
-};client_data();
+};
+if (date) {
+    date.value = today;
+    client_data();
+};
 //////////////////////////account_data\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 function account_data() {
     unattach();
@@ -728,7 +736,7 @@ function amazonCreate() {
     } else if (checker) {
         amazon_box.cost += tempCost;
         updateCost(amazon_box.cost, amazon_box.id);
-        itemCreate();
+        itemCreate_newAM();
     } else {
         amazon_box.user_id = client_list.value;
         amazon_box.account_id = accountSelect.value;
@@ -821,10 +829,10 @@ function findContainerId(c_number) {
     }).then(function (data) {
         console.log('container_id fetched');
        amazon_box.id = data.id
-       itemCreate()
+       itemCreate_newAM()
     })
 };
-function itemCreate() {
+function itemCreate_newAM() {
     console.log('itemCreate');
     var rows = sku_table.rows;
     for (let i = 1; i < rows.length; i++) {
@@ -835,13 +843,13 @@ function itemCreate() {
         item.account_id = amazon_box.account_id;
         item.container_id = amazon_box.id;
         item.description = amazon_box.description;
-        loadingItems(item);
+        loadingItems_newAM(item);
     };
     // loader.style.display = 'none';
     alert(`1 container(#${amazon_box.container_number}) with ${itemCount} items is inserted to client_id: ${amazon_box.user_id}!`)
     resetBoxSku();
 };
-function loadingItems(data) {
+function loadingItems_newAM(data) {
     fetch('/api/item/new', {
         method: 'post',
         body: JSON.stringify(data),
@@ -859,7 +867,7 @@ function resetBoxSku() {
         container_number.value = null;
         skuArr = [];
         itemCount = 0;
-        skuMap.clear();
+        // skuMap.clear();
         masterCheck();
     }
 };
@@ -933,15 +941,67 @@ function updateCost(cost, id) {
 
 
 //////////scanned items\\\\\\\\\\\
+// var skuArr = [];
+// var skuMap = new Map()
+// function itemInput() {
+//     const skuValue = sku.value.trim().toUpperCase();
+//    if ((skuValue.substring(0,1) == 'X' && skuValue.length == 10) || (skuValue.length > 6 && skuValue.substring(0,1) != '-')) {
+//     if (skuArr.includes(skuValue)) {
+//         itemCount++;
+//         const skuAmount = document.getElementById(`${skuValue}c`);
+//         const totalAmount = parseInt(skuAmount.innerHTML) + 1;
+//         skuAmount.innerHTML = totalAmount;
+//         skuMap.set(skuValue, totalAmount);
+//     } else {
+//         itemCount++;
+//         skuArr.push(skuValue);
+//         skuMap.set(skuValue, 1);
+//         const trTag = document.createElement('tr');
+//         const skuLabel = document.createElement('td');
+//         const skuInit = document.createElement('td');
+//         trTag.appendChild(skuLabel);
+//         trTag.appendChild(skuInit);
+//         sku_list.prepend(trTag);
+//         trTag.setAttribute('id', `${skuValue}t`)
+//         skuInit.setAttribute('id', `${skuValue}c`);
+//         skuInit.innerHTML = 1;
+//         skuLabel.innerHTML = skuValue;
+//     };
+//     sku.value = null;
+//    } else if (skuValue.substring(0,1) == '-' && skuValue.length > 6) {
+//         const newSku = skuValue.substring(1, skuValue.length);
+//         const skuAmount = document.getElementById(`${newSku}c`);
+//         if (skuAmount) {
+//             itemCount--;
+//             const totalAmount = parseInt(skuAmount.innerHTML) - 1;
+//             const trTag = document.getElementById(`${newSku}t`)
+//             if (totalAmount < 1) {
+//                 trTag.remove();
+//                 skuMap.delete(newSku);
+//                 skuArr = skuArr.filter(i => i != newSku);
+//                 sku.value = null;
+//             } else {
+//                 skuAmount.innerHTML = totalAmount;
+//                 skuMap.set(newSku, totalAmount);
+//                 sku.value = null;
+//             }
+//         }
+//    }
 
+// };
 function scanSKU() {
     const sku_number = document.getElementById('scan');
     fetch(`/api/item/infoPerNumber/${sku_number.value}`, {
         method: 'GET'
     }).then(function (response) {
-        return response.json();
+        if (response.status == 500) {
+            return null
+        } else {
+            return response.json();
+        }
     }).then(function (data) {
-        if (data.item_number){
+        if (data && data.item_number){
+            console.log(data);
             document.getElementById("scanDiv").style.display = 'none';
             unattachUser();
             const user = document.createElement('option');
@@ -975,160 +1035,160 @@ function unattachUser() {
     accountSelect.disabled = false;
 };
 
-const creater_form = document.getElementById('creator_form');
-const quick_form = document.getElementById('qucik_receiving');
-const scanned_item = document.getElementById('scanned_item');
-const clientName_q = document.getElementById('clientName_q');
-const accountName_q = document.getElementById('accountName_q');
-const containerNumber_q = document.getElementById('containerNumber_q');
-const inserted_item = document.getElementById('inserted_item');
-function modeChange() {
-    if (mode.innerHTML == 'Create') {
-      localStorage.setItem('amazon_mode', 'Q');
-      mode.innerHTML = 'Refill';
-      creater_form.style.display = 'none';
-      quick_form.style.display ='';
-      document.getElementById("badge").classList.add('bg-danger');
-      document.getElementById("badge").classList.remove('bg-success');
-    } else {
-      localStorage.setItem('amazon_mode', 'C')
-      mode.innerHTML = 'Create';
-      creater_form.style.display = '';
-      quick_form.style.display ='none';
-      document.getElementById("badge").classList.add('bg-success');
-      document.getElementById("badge").classList.remove('bg-danger');
-    }
-};
-var quickContainerObj = new Object();
-function quickReceiving() {
-    const scannedBox = scanned_item.value.trim().toUpperCase();
-    if (scannedBox.substring(0,2) == 'AM' && scannedBox.length == 8) {
-        fetch(`/api/container/amazon_container/${scannedBox}`, {
-            method: 'GET'
-        }).then(function (response) {
-            return response.json();
-        }).then(function (data) {
-            quickContainerObj.user_id = data.user_id;
-            quickContainerObj.account_id = data.account_id;
-            quickContainerObj.container_id = data.id;
-            quickContainerObj.cost = data.cost;
-            quickContainerObj.container_number = scannedBox;
-            clientName_q.innerHTML = data.user.name;
-            accountName_q.innerHTML = data.account.name;
-            containerNumber_q.innerHTML = scannedBox;
-            scanned_item.value = null;
-        })
-    } else if (scannedBox.length > 4 && !scannedBox.includes('-')){
-        if (quickContainerObj.user_id) {
-            quickContainerObj.cost++;
-            quickContainerObj.item_number = scannedBox;
-            updateCost(quickContainerObj.cost, quickContainerObj.container_id);
-            duplicatationValidator(quickContainerObj);
-            // loadingItems(quickContainerObj);
-            scanned_item.value = null;
-            const newsku = document.createElement('div');
-            inserted_item.prepend(newsku);
-            newsku.innerHTML = `Insert <b>${scannedBox}</b> into <b>${quickContainerObj.container_number}</b>`
-        } else {
-            alert('You need to scan the existed amazon box first!');
-            scanned_item.value = null;
-        }
+// const creater_form = document.getElementById('creator_form');
+// const quick_form = document.getElementById('qucik_receiving');
+// const scanned_item = document.getElementById('scanned_item');
+// const clientName_q = document.getElementById('clientName_q');
+// const accountName_q = document.getElementById('accountName_q');
+// const containerNumber_q = document.getElementById('containerNumber_q');
+// const inserted_item = document.getElementById('inserted_item');
+// function modeChange() {
+//     if (mode.innerHTML == 'Create') {
+//       localStorage.setItem('amazon_mode', 'Q');
+//       mode.innerHTML = 'Refill';
+//       creater_form.style.display = 'none';
+//       quick_form.style.display ='';
+//       document.getElementById("badge").classList.add('bg-danger');
+//       document.getElementById("badge").classList.remove('bg-success');
+//     } else {
+//       localStorage.setItem('amazon_mode', 'C')
+//       mode.innerHTML = 'Create';
+//       creater_form.style.display = '';
+//       quick_form.style.display ='none';
+//       document.getElementById("badge").classList.add('bg-success');
+//       document.getElementById("badge").classList.remove('bg-danger');
+//     }
+// };
+// var quickContainerObj = new Object();
+// function quickReceiving() {
+//     const scannedBox = scanned_item.value.trim().toUpperCase();
+//     if (scannedBox.substring(0,2) == 'AM' && scannedBox.length == 8) {
+//         fetch(`/api/container/amazon_container/${scannedBox}`, {
+//             method: 'GET'
+//         }).then(function (response) {
+//             return response.json();
+//         }).then(function (data) {
+//             quickContainerObj.user_id = data.user_id;
+//             quickContainerObj.account_id = data.account_id;
+//             quickContainerObj.container_id = data.id;
+//             quickContainerObj.cost = data.cost;
+//             quickContainerObj.container_number = scannedBox;
+//             clientName_q.innerHTML = data.user.name;
+//             accountName_q.innerHTML = data.account.name;
+//             containerNumber_q.innerHTML = scannedBox;
+//             scanned_item.value = null;
+//         })
+//     } else if (scannedBox.length > 4 && !scannedBox.includes('-')){
+//         if (quickContainerObj.user_id) {
+//             quickContainerObj.cost++;
+//             quickContainerObj.item_number = scannedBox;
+//             updateCost(quickContainerObj.cost, quickContainerObj.container_id);
+//             duplicatationValidator(quickContainerObj);
+//             // loadingItems(quickContainerObj);
+//             scanned_item.value = null;
+//             const newsku = document.createElement('div');
+//             inserted_item.prepend(newsku);
+//             newsku.innerHTML = `Insert <b>${scannedBox}</b> into <b>${quickContainerObj.container_number}</b>`
+//         } else {
+//             alert('You need to scan the existed amazon box first!');
+//             scanned_item.value = null;
+//         }
 
-    }
-};
-// var timer = null;
-// function delay(fn){
-//     clearTimeout(timer);
-//     timer = setTimeout(fn, 100)
+//     }
+// };
+// // var timer = null;
+// // function delay(fn){
+// //     clearTimeout(timer);
+// //     timer = setTimeout(fn, 100)
+// // };
+
+// var itemchecker = false
+// function duplicatationValidator(obj) {
+//     fetch(`/api/item/findAllPerContainer/${obj.container_id}`, {
+//         method: 'GET'
+//     }).then(function (response) {
+//         return response.json();
+//     }).then(function (item) {
+//         for (let i = 0; i < item.length; i++) {
+//             var uniqueItemN = item[i];
+//             if(uniqueItemN.item_number == obj.item_number) {
+//                 uniqueItemN.qty_per_sku++
+//                 updateExistedItem(obj, uniqueItemN.qty_per_sku);
+//                 itemchecker = true
+//             };
+//         };
+//         if (itemchecker == false) {
+//             loadingItems(obj);
+//         } itemchecker = false;
+//     });
+// };
+// async function updateExistedItem(obj, newSkuQ) {
+//     const load = await fetch(`/api/item/updateQty_ExistedItem/${obj.container_id}&${obj.item_number}`, {
+//         method: 'PUT',
+//         body: JSON.stringify({
+//             qty_per_sku: newSkuQ
+//         }),
+//         headers: {'Content-Type': 'application/json'}
+//     })
 // };
 
-var itemchecker = false
-function duplicatationValidator(obj) {
-    fetch(`/api/item/findAllPerContainer/${obj.container_id}`, {
-        method: 'GET'
-    }).then(function (response) {
-        return response.json();
-    }).then(function (item) {
-        for (let i = 0; i < item.length; i++) {
-            var uniqueItemN = item[i];
-            if(uniqueItemN.item_number == obj.item_number) {
-                uniqueItemN.qty_per_sku++
-                updateExistedItem(obj, uniqueItemN.qty_per_sku);
-                itemchecker = true
-            };
-        };
-        if (itemchecker == false) {
-            loadingItems(obj);
-        } itemchecker = false;
-    });
-};
-async function updateExistedItem(obj, newSkuQ) {
-    const load = await fetch(`/api/item/updateQty_ExistedItem/${obj.container_id}&${obj.item_number}`, {
-        method: 'PUT',
-        body: JSON.stringify({
-            qty_per_sku: newSkuQ
-        }),
-        headers: {'Content-Type': 'application/json'}
-    })
-};
+// //reload
+// function reconciliation() {
+//     location.reload();
+// };
 
-//reload
-function reconciliation() {
-    location.reload();
-};
-
-if (localStorage.getItem('amazon_mode') == 'Q') {
-    document.getElementById('badge').click();
-}
+// if (localStorage.getItem('amazon_mode') == 'Q') {
+//     document.getElementById('badge').click();
+// }
 
 
-var allContainerArr = [];
-var emptyArr = [];
-function removeEmptyContainer() {
-    fetch(`/api/item/allItemAdmin`, {
-        method: 'GET'
-      }).then(function (response) {
-        return response.json();
-      }).then(function (data) {
-        for (let i = 0; i < data.length; i++) {
-            const item = data[i];
-            if(!allContainerArr.includes(item.container_id)) {
-                allContainerArr.push(item.container_id)
-            };
+// var allContainerArr = [];
+// var emptyArr = [];
+// function removeEmptyContainer() {
+//     fetch(`/api/item/allItemAdmin`, {
+//         method: 'GET'
+//       }).then(function (response) {
+//         return response.json();
+//       }).then(function (data) {
+//         for (let i = 0; i < data.length; i++) {
+//             const item = data[i];
+//             if(!allContainerArr.includes(item.container_id)) {
+//                 allContainerArr.push(item.container_id)
+//             };
 
-        };
-        fetch(`/api/container/allContainerAdmin`, {
-            method: 'GET'
-          }).then(function (response) {
-            return response.json();
-          }).then(function (data) {
-            for (let i = 0; i < data.length; i++) {
-                const container = data[i];
-                if(!allContainerArr.includes(container.id) && container.cost == 0) {
-                    emptyArr.push(container.id)
-                }; //cost == 0 means the empty box has been recently billed and ready to get reset
+//         };
+//         fetch(`/api/container/allContainerAdmin`, {
+//             method: 'GET'
+//           }).then(function (response) {
+//             return response.json();
+//           }).then(function (data) {
+//             for (let i = 0; i < data.length; i++) {
+//                 const container = data[i];
+//                 if(!allContainerArr.includes(container.id) && container.cost == 0) {
+//                     emptyArr.push(container.id)
+//                 }; //cost == 0 means the empty box has been recently billed and ready to get reset
 
-            };
-            if (!emptyArr.length) {
-                alert('No empty container was found in the database')
-            } else {
-                removeEmpty(emptyArr);
-            }
-          })
-      });
-};
-async function removeEmpty(Arr) {
-    const response = await fetch(`/api/container/destroyBulk/`, {
-        method: 'DELETE',
-        body: JSON.stringify({
-            id: Arr
-        }),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
+//             };
+//             if (!emptyArr.length) {
+//                 alert('No empty container was found in the database')
+//             } else {
+//                 removeEmpty(emptyArr);
+//             }
+//           })
+//       });
+// };
+// async function removeEmpty(Arr) {
+//     const response = await fetch(`/api/container/destroyBulk/`, {
+//         method: 'DELETE',
+//         body: JSON.stringify({
+//             id: Arr
+//         }),
+//         headers: {
+//             'Content-Type': 'application/json'
+//         }
+//     });
 
-    if (response.ok) {
-        alert(`Successfully remove ${Arr.length} empty containers! `)
-    }
-}
+//     if (response.ok) {
+//         alert(`Successfully remove ${Arr.length} empty containers! `)
+//     }
+// }
