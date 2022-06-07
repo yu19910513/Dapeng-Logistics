@@ -105,7 +105,7 @@ function next(user_id) {
         for (let j = 0; j < pageData.length; j++) {
            if(pageData[j].type == 1 && pageData[j].cost > 0 ) {
             received_billing(pageData, j);
-            receivedCount = receivedCount + pageData[j].cost;
+            receivedCount = receivedCount + parseInt(pageData[j].cost);
             receivedBoxArr.push(pageData[j].container_number)
            }
         };
@@ -288,7 +288,7 @@ function received_billing(pageData, i) {
     container.appendChild(cost);
     user.innerHTML = pageData[i].user.name;
     account.innerHTML = pageData[i].account.name;
-    container_number.innerHTML = pageData[i].container_number + ` (${pageData[i].cost})`;
+    container_number.innerHTML = pageData[i].container_number + ` (${parseInt(pageData[i].cost)})`;
     description.innerHTML = pageData[i].description;
     received_date.innerHTML = pageData[i].received_date;
     cost.innerHTML = `$${(receiving_cost.value * pageData[i].cost).toFixed(2)}`
