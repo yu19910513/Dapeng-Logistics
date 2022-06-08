@@ -265,6 +265,7 @@ function findContainerId(c_number) {
         itemCreate()
     })
 };
+var promises = [];
 function itemCreate() {
     console.log('itemCreate');
     var rows = newContainerTable.rows;
@@ -276,23 +277,28 @@ function itemCreate() {
         item.account_id = amazon_box.account_id;
         item.container_id = amazon_box.id;
         item.description = amazon_box.description;
-        loadingItems(item);
+        promises.push(loadingItems(item))
     };
     removeItem();
-    console.log('done');
-    alert(`1 container(#${amazon_box.container_number}) with ${rows.length-1} items is inserted to client_id: ${amazon_box.user_id}!`)
-    if (amazon_box.container_number.substring(0,4) == 'TEMP') {
-        location.href = `/admin_pre_ship_amazon/${amazon_box.id}`
-    } else {
-        location.reload()
-    }
+    Promise.all(promises).then(() => {
+        console.log('done');
+        alert(`1 container(#${amazon_box.container_number}) with ${rows.length-1} items is inserted to client_id: ${amazon_box.user_id}!`)
+        if (amazon_box.container_number.substring(0,4) == 'TEMP') {
+            location.href = `/admin_pre_ship_amazon/${amazon_box.id}`
+        } else {
+            location.reload()
+        }
+    }).catch((e) => {console.log(e)})
 };
-function loadingItems(data) {
-    fetch('/api/item/new', {
+async function loadingItems(data) {
+    const response = await fetch('/api/item/new', {
         method: 'post',
         body: JSON.stringify(data),
         headers: {'Content-Type': 'application/json'}
     });
+    if (response.ok) {
+        console.log(data.item_number);
+    }
 };
 
 //helper functions
@@ -418,17 +424,17 @@ function removeItem() {
     for (let i = 0; i < selectedSkuArr.length; i++) {
         idarr.push(item_numberMap.get(selectedSkuArr[i]))
     };
-    removeZeroItem(idarr);
+    promises.push(removeZeroItem(idarr));
     for (let k = 0; k < iidArr.length; k++) {
         var eachUpdatedItem = new Object();
         eachUpdatedItem.id = iidArr[k];
         eachUpdatedItem.qty_per_sku = id_qtyMap.get(iidArr[k]);
-        updateQty(eachUpdatedItem)
+        promises.push(updateQty(eachUpdatedItem));
     }
 };
-function removeZeroItem(id) {
+async function removeZeroItem(id) {
     console.log('bulk removal');
-    fetch(`/api/item/bulkDestroy/`, {
+    const response = await fetch(`/api/item/bulkDestroy/`, {
       method: 'DELETE',
       body: JSON.stringify({
         id: id
@@ -436,8 +442,8 @@ function removeZeroItem(id) {
       headers: {'Content-Type': 'application/json'}
     });
 };
-function updateQty(data) {
-    fetch(`/api/item/updateQtyPerItemId/${data.id}`, {
+async function updateQty(data) {
+    const response = await fetch(`/api/item/updateQtyPerItemId/${data.id}`, {
         method: 'PUT',
         body: JSON.stringify({
           qty_per_sku: data.qty_per_sku
@@ -468,9 +474,9 @@ function alter() {
 
 function deleteConfirm() {
     const id = container_id;
-    const code =  prompt(`Please enter the passcode to confirm the DELETION of REQ box (id: ${id})`);
+    const code =  prompt(`Please enter the passcode to confirm the DELETION of REQ/TEMP box (id: ${id})`);
     if (code == '0523') {
-        if (confirm('Friednly reminder: all items assocaited with this REQ box will be removed!')) {
+        if (confirm('Friednly reminder: all items assocaited with this REQ/TEMP box will be removed!')) {
             updateReqContainer(id);
         }
     } else {

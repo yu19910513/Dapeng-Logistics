@@ -145,7 +145,7 @@ function itemIdCollection() {
             }
         } else {
             console.log('no item in this container! box self-destroyed');
-            updateReqContainer(container_id);
+            // updateReqContainer(container_id);///// need to add cost element in it before deletion
         }
     })
 };
@@ -303,84 +303,84 @@ async function updateReqContainer(container_id) {
 
 };
 
-var amazon_box = new Object();
-function shippmentCreate() {
-    amazon_box.length = length.value.trim()*2.54;
-    amazon_box.width = width.value.trim()*2.54;
-    amazon_box.height = height.value.trim()*2.54;
-    amazon_box.weight = weight.value.trim()*0.45;
-    amazon_box.volume = amazon_box.width*amazon_box.height*amazon_box.length;
-    amazon_box.container_number = pre_shipN.innerHTML;
-    if (amazon_box.container_number.substring(0,4) == 'TEMP') {
-        amazon_box.type = 0;
-        amazon_box.description = `${amazon_box.container_number}:N/A`
-    } else {
-        amazon_box.type = 3;
-    }
-    amazon_box.user_id = user_id;
-    amazon_box.account_id = account_id;
-    amazon_box.tracking = container_id;
-    boxCreate(amazon_box)
-};
-async function boxCreate(data) {
-    console.log('boxCreate');
-    const response = await fetch('/api/container/amazon_box', {
-        method: 'post',
-        body: JSON.stringify(data),
-        headers: { 'Content-Type': 'application/json' }
-      });
+// var amazon_box = new Object();
+// function shippmentCreate() {
+//     amazon_box.length = length.value.trim()*2.54;
+//     amazon_box.width = width.value.trim()*2.54;
+//     amazon_box.height = height.value.trim()*2.54;
+//     amazon_box.weight = weight.value.trim()*0.45;
+//     amazon_box.volume = amazon_box.width*amazon_box.height*amazon_box.length;
+//     amazon_box.container_number = pre_shipN.innerHTML;
+//     if (amazon_box.container_number.substring(0,4) == 'TEMP') {
+//         amazon_box.type = 0;
+//         amazon_box.description = `${amazon_box.container_number}:N/A`
+//     } else {
+//         amazon_box.type = 3;
+//     }
+//     amazon_box.user_id = user_id;
+//     amazon_box.account_id = account_id;
+//     amazon_box.tracking = container_id;
+//     boxCreate(amazon_box)
+// };
+// async function boxCreate(data) {
+//     console.log('boxCreate');
+//     const response = await fetch('/api/container/amazon_box', {
+//         method: 'post',
+//         body: JSON.stringify(data),
+//         headers: { 'Content-Type': 'application/json' }
+//       });
 
-      if (response.ok) {
-       console.log("amazon box inserted");
-       findContainerId(data.container_number);
-      } else {
-        alert('try again')
-   }
-};
-function findContainerId(c_number) {
-    console.log('getting container_id');
-    fetch(`/api/container/amazon_container/${c_number}`, {
-        method: 'GET'
-    }).then(function (response) {
-        return response.json();
-    }).then(function (data) {
-        console.log('container_id fetched');
-        // var instance = new Date().valueOf().toString().substring(5,13)+container_id;
-        // pre_shipN.innerHTML = `SP${instance}`
-        amazon_box.id = data.id
-        console.log(data.id);
-        itemCreate()
-    })
-};
-function itemCreate() {
-    console.log('itemCreate');
-    var rows = newContainerTable.rows;
-    for (let i = 1; i < rows.length; i++) {
-        var item = new Object()
-        item.item_number = rows[i].cells[0].innerHTML;
-        item.qty_per_sku = parseInt(rows[i].cells[1].innerHTML);
-        item.user_id = amazon_box.user_id;
-        item.account_id = amazon_box.account_id;
-        item.container_id = amazon_box.id;
-        item.description = amazon_box.description;
-        loadingItems(item);
-    };
-    removeItem();
-    console.log('done');
-    alert(`1 container(#${amazon_box.container_number}) with ${rows.length-1} items is inserted to client_id: ${amazon_box.user_id}!`)
-    if (amazon_box.container_number.substring(0,4) == 'TEMP') {
-        location.href = `/admin_pre_ship_amazon/${amazon_box.id}`
-    } else {
-        location.reload()
-    }
-};
-function loadingItems(data) {
-    fetch('/api/item/new', {
-        method: 'post',
-        body: JSON.stringify(data),
-        headers: {'Content-Type': 'application/json'}
-    });
-};
+//       if (response.ok) {
+//        console.log("amazon box inserted");
+//        findContainerId(data.container_number);
+//       } else {
+//         alert('try again')
+//    }
+// };
+// function findContainerId(c_number) {
+//     console.log('getting container_id');
+//     fetch(`/api/container/amazon_container/${c_number}`, {
+//         method: 'GET'
+//     }).then(function (response) {
+//         return response.json();
+//     }).then(function (data) {
+//         console.log('container_id fetched');
+//         // var instance = new Date().valueOf().toString().substring(5,13)+container_id;
+//         // pre_shipN.innerHTML = `SP${instance}`
+//         amazon_box.id = data.id
+//         console.log(data.id);
+//         itemCreate()
+//     })
+// };
+// function itemCreate() {
+//     console.log('itemCreate');
+//     var rows = newContainerTable.rows;
+//     for (let i = 1; i < rows.length; i++) {
+//         var item = new Object()
+//         item.item_number = rows[i].cells[0].innerHTML;
+//         item.qty_per_sku = parseInt(rows[i].cells[1].innerHTML);
+//         item.user_id = amazon_box.user_id;
+//         item.account_id = amazon_box.account_id;
+//         item.container_id = amazon_box.id;
+//         item.description = amazon_box.description;
+//         loadingItems(item);
+//     };
+//     removeItem();
+//     console.log('done');
+//     alert(`1 container(#${amazon_box.container_number}) with ${rows.length-1} items is inserted to client_id: ${amazon_box.user_id}!`)
+//     if (amazon_box.container_number.substring(0,4) == 'TEMP') {
+//         location.href = `/admin_pre_ship_amazon/${amazon_box.id}`
+//     } else {
+//         location.reload()
+//     }
+// };
+// function loadingItems(data) {
+//     fetch('/api/item/new', {
+//         method: 'post',
+//         body: JSON.stringify(data),
+//         headers: {'Content-Type': 'application/json'}
+//     });
+// };
 
 //helper functions
 // function idChanger(sku) {
@@ -518,32 +518,39 @@ function removeItem() {
     for (let i = 0; i < selectedSkuArr.length; i++) {
         idarr.push(item_numberMap.get(selectedSkuArr[i]))
     };
-    removeZeroItem(idarr);
+    if (idarr.length) {
+        promises.push(removeZeroItem(idarr));
+    };
     for (let k = 0; k < iidArr.length; k++) {
         var eachUpdatedItem = new Object();
         eachUpdatedItem.id = iidArr[k];
         eachUpdatedItem.qty_per_sku = id_qtyMap.get(iidArr[k]);
-        updateQty(eachUpdatedItem)
+        promises.push(updateQty(eachUpdatedItem));
     }
 };
-function removeZeroItem(id) {
-    console.log('bulk removal');
-    fetch(`/api/item/bulkDestroy/`, {
+async function removeZeroItem(id) {
+    const response = await fetch(`/api/item/bulkDestroy/`, {
       method: 'DELETE',
       body: JSON.stringify({
         id: id
         }),
       headers: {'Content-Type': 'application/json'}
     });
+    if (response.ok) {
+        console.log('bulk removal for id: ' + id);
+    }
 };
-function updateQty(data) {
-    fetch(`/api/item/updateQtyPerItemId/${data.id}`, {
+async function updateQty(data) {
+    const response = await fetch(`/api/item/updateQtyPerItemId/${data.id}`, {
         method: 'PUT',
         body: JSON.stringify({
           qty_per_sku: data.qty_per_sku
           }),
         headers: {'Content-Type': 'application/json'}
     });
+    if (response.ok) {
+        console.log(`qty of item id: ${data.id} has been updated to ${data.qty_per_sku}`);
+    }
 };
 
 function pre_create_checker() {
@@ -832,6 +839,8 @@ function findContainerId(c_number) {
        itemCreate_newAM()
     })
 };
+
+var promises = [];
 function itemCreate_newAM() {
     console.log('itemCreate');
     var rows = sku_table.rows;
@@ -843,23 +852,34 @@ function itemCreate_newAM() {
         item.account_id = amazon_box.account_id;
         item.container_id = amazon_box.id;
         item.description = amazon_box.description;
-        loadingItems_newAM(item);
+        promises.push(loadingItems_newAM(item, rows[i]));
     };
-    // loader.style.display = 'none';
-    alert(`1 container(#${amazon_box.container_number}) with ${itemCount} items is inserted to client_id: ${amazon_box.user_id}!`)
-    resetBoxSku();
+    removeItem();
+    Promise.all(promises).then(() => {
+        // loader.style.display = 'none';
+        alert(`1 container(#${amazon_box.container_number}) with ${itemCount} items is inserted to client_id: ${amazon_box.user_id}!`)
+        // resetBoxSku();
+        location.reload();
+    }).catch((e) => {console.log(e)})
 };
-function loadingItems_newAM(data) {
-    fetch('/api/item/new', {
+async function loadingItems_newAM(data, row) {
+    const response = await fetch('/api/item/new', {
         method: 'post',
         body: JSON.stringify(data),
         headers: {'Content-Type': 'application/json'}
     });
+    if (response.ok) {
+        console.log(`inserted ${data.item_number}`);
+        row.setAttribute('class','bg-secondary');
+    } else {
+        alert('error occurs; please inform developers!')
+    }
 };
 
 
 //tools
 function resetBoxSku() {
+    console.log('reset process occurs');
     if (accountSelect.value == 0) {
         location.reload();
     } else {
@@ -869,6 +889,7 @@ function resetBoxSku() {
         itemCount = 0;
         // skuMap.clear();
         masterCheck();
+        promises = [];
     }
 };
 function unattach() {

@@ -248,6 +248,8 @@ function findContainerId(c_number) {
        itemCreate()
     })
 };
+
+var promises = [];
 function itemCreate() {
     console.log('itemCreate');
     var rows = sku_table.rows;
@@ -259,23 +261,32 @@ function itemCreate() {
         item.account_id = amazon_box.account_id;
         item.container_id = amazon_box.id;
         item.description = amazon_box.description;
-        loadingItems(item);
+        promises.push(loadingItems(item, rows[i]));
     };
-    loader.style.display = 'none';
-    alert(`1 container(#${amazon_box.container_number}) with ${itemCount} items is inserted to client_id: ${amazon_box.user_id}!`)
-    resetBoxSku();
+    Promise.all(promises).then(() => {
+        loader.style.display = 'none';
+        alert(`1 container(#${amazon_box.container_number}) with ${itemCount} items is inserted to client_id: ${amazon_box.user_id}!`)
+        resetBoxSku();
+    }).catch((e) => {console.log(e)})
 };
-function loadingItems(data) {
-    fetch('/api/item/new', {
+async function loadingItems(data, row) {
+    const response = await fetch('/api/item/new', {
         method: 'post',
         body: JSON.stringify(data),
         headers: {'Content-Type': 'application/json'}
     });
+    if (response.ok) {
+        console.log(`inserted ${data.item_number}`);
+        row.setAttribute('class','bg-secondary');
+    } else {
+        alert('error occurs; please inform developers!')
+    }
 };
 
 
 //tools
 function resetBoxSku() {
+    console.log('reset process occurs');
     if (accountSelect.value == 0) {
         location.reload();
     } else {
@@ -285,6 +296,7 @@ function resetBoxSku() {
         itemCount = 0;
         skuMap.clear();
         masterCheck();
+        promises = [];
     }
 };
 function unattach() {
