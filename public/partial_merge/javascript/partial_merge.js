@@ -151,7 +151,7 @@ function itemIdCollection() {
                 const item_id = data[i].id;
                 var box_number;
                 if (!data[i].description || !description.includes(':')) {
-                    const descriptionOne = document.querySelector('h5');
+                    const descriptionOne = document.getElementById('from_confirmTable').querySelector('h5');
                     box_number = descriptionOne.innerText.split(':')[0];
                 } else {
                     box_number = description.split(':')[0];
@@ -256,7 +256,12 @@ function pre_check() {
         }
         for (let r = 1; r < rows.length; r++) {
             console.log(rows.length);
-            const itemNumber = rows[r].cells[0].innerHTML;
+            var itemNumber;
+            if (rows[r].getAttribute('class')) {
+                itemNumber = rows[r].cells[0].innerHTML + "*";
+            } else {
+                itemNumber = rows[r].cells[0].innerHTML;
+            };
             const itemQty = parseInt(rows[r].cells[1].innerHTML);
             removeItemMap.set(itemNumber, itemQty);
             removeArr.push(itemNumber);
