@@ -1252,12 +1252,7 @@ function transferAM () {
     Promise.all(promises).then(() => {
         itemMerger(container_id_to);
     }).catch((e) => {console.log(e)})
-}
-
-
-
-
-
+};
 
 const itemArr = [];
 const objArr = [];
@@ -1317,3 +1312,9 @@ async function deleteExistedItem(data) {
         console.log(`${data.item_number}(${data.id}) has been remove`);
     }
 };
+
+
+
+//// minus function has bug
+//// auto delete function may be needed
+//// onclick for all needed

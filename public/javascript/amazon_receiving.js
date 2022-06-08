@@ -373,7 +373,7 @@ var skuArr = [];
 var skuMap = new Map()
 function itemInput() {
     const skuValue = sku.value.trim().toUpperCase();
-   if ((skuValue.substring(0,1) == 'X' && skuValue.length == 10) || (skuValue.length > 6 && skuValue.substring(0,1) != '-')) {
+   if ((skuValue.substring(0,1) == 'X' && skuValue.length == 10) || (skuValue.length > 2 && skuValue.substring(0,1) != '-')) {
     if (skuArr.includes(skuValue)) {
         itemCount++;
         const skuAmount = document.getElementById(`${skuValue}c`);
