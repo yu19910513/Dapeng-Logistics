@@ -31,7 +31,7 @@
 
   <div class="row justify-content-md-center">
     <div class="col-lg-5 col-md-6" id="assignFunction">
-        <h2>Transfer From:</h2>
+        <h2>Transfer From: <span id="fromBoxId{{fromBoxId}}">{{fromBoxId}}</span></h2>
         <form class="shadow p-2 py-3 mt-2 rounded">
         <input type="checkbox" id="scanned_whole" class="form-check-input" onclick="auth()"><small uk-tooltip="The bulk-select function allows admin to move all contents in one move by scanning the associated box number twice" class="text-success ml-2"> Bulk Select</small>
         {{!-- <input type="checkbox" id="alt_step" class="form-check-input" onclick="alter()"><small uk-tooltip="The 2-step sort allows admin to move all requested items into one single TEMP box and reassign into SP boxes" class="text-primary ml-2"> 2-Step Sort</small> --}}
@@ -132,7 +132,10 @@
     <script src="javascript/amazon_receiving.js"></script> --}}
     {{else}}
     <div class="col-lg-5 col-md-6" id="assignFunction">
-        <h2>Transfer To:</h2>
+        <h2>Transfer To: <span id="toBoxId{{toBoxId}}">{{toBoxId}}</span></h2>
+        <div class="row justify-content-center p-4">
+                <button class="btn btn-outline-dark" onclick="transferAM()">Confirm Transfer</button>
+        </div>
         <form class="shadow p-2 py-3 mt-2 rounded bg-success">
             <div class="row justify-content-center p-3" id="to_confirmTable">
                 {{#each toRequest as |request|}}

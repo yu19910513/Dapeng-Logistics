@@ -69,14 +69,16 @@ function error() {
 };
 
 const container_id = location.href.split('/').slice(-1)[0].split('&')[0];
+const container_id_to = parseInt(location.href.split('/').slice(-1)[0].split('&')[1].replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ''));
 const pre_shipN = document.getElementById('pre-shipN');
 const notes = document.getElementById('notes');
 const input = document.getElementById("scanned_item");
 const checkBox = document.getElementById('scanned_whole');
 const sku_list = document.getElementById('sku_list');
-var sku_list_am;
+var sku_list_am, sku_table_am;
 if (!sku_list) {
     sku_list_am = document.getElementById('to_confirmTable').querySelector('tbody');
+    sku_table_am = document.getElementById('to_confirmTable').querySelector('table');
     sku_list_am.querySelectorAll('tr').forEach(tr => tr.setAttribute('class', 'bg-secondary'))
 };
 
@@ -84,7 +86,7 @@ const newContainerTable = document.getElementById('sku_table');
 var item_numberMap = new Map();
 var id_qtyMap = new Map();
 var iidArr = [];
-var user_id, account_id;
+var user_id, account_id, user_id_to, account_id_to;
 var selectedSkuArr = [];
 var skuArr = [];
 var printCheck = false;
@@ -95,7 +97,7 @@ if (!localStorage.getItem('sp_number')) {
 };
 
 var container_numberArr = [];
-function supplemental () {
+function supplemental() {
     fetch(`/api/container/container/${container_id}`, {
         method: 'GET'
     }).then(function (response) {
@@ -104,7 +106,8 @@ function supplemental () {
         if (data.length) {
             user_id = data[0].user_id;
             account_id = data[0].account_id;
-            console.log(user_id, account_id);
+            document.getElementById(`fromBoxId${container_id}`).innerHTML = data[0].container_number;
+            // console.log(user_id, account_id, data[0].container_number);
             // notes.innerHTML = data[0].notes;
             const descriptionArr = document.getElementById('from_confirmTable').querySelectorAll('h5');
             const tableArr = document.getElementById('from_confirmTable').querySelectorAll('table')
@@ -120,6 +123,20 @@ function supplemental () {
         }
     })
 };supplemental();
+
+function supplemental_2() {
+    fetch(`/api/container/container/${container_id_to}`, {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        if (data.length) {
+            user_id_to = data[0].user_id;
+            account_id_to = data[0].account_id;
+            document.getElementById(`toBoxId${container_id_to}`).innerHTML = data[0].container_number;
+        }
+    })
+}
 
 function itemIdCollection() {
     fetch(`/api/item/findAllPerContainer/${container_id}`, {
@@ -142,6 +159,9 @@ function itemIdCollection() {
                 const itemCode = `${item_number}-${box_number}`;
                 item_numberMap.set(itemCode, item_id)
                 skuArr.push(itemCode)
+            };
+            if (container_id_to != NaN) {
+                supplemental_2();
             }
         } else {
             console.log('no item in this container! box self-destroyed');
@@ -1213,3 +1233,87 @@ function unattachUser() {
 //         alert(`Successfully remove ${Arr.length} empty containers! `)
 //     }
 // }
+///// am-to-am transfer //////
+function transferAM () {
+    const rows = sku_table_am.rows;
+    for (let i = 1; i < rows.length; i++) {
+        if (!rows[i].getAttribute('class')) {
+            var transferredItem = new Object();
+            transferredItem.item_number = rows[i].cells[0].innerText;
+            transferredItem.qty_per_sku = parseInt(rows[i].cells[1].innerText);
+            transferredItem.user_id = user_id_to;
+            transferredItem.account_id = account_id_to;
+            transferredItem.container_id = container_id_to;
+            transferredItem.description = null;
+            promises.push(loadingItems_newAM(transferredItem, rows[i]));
+        };
+    };
+    removeItem();
+    Promise.all(promises).then(() => {
+        itemMerger(container_id_to);
+    }).catch((e) => {console.log(e)})
+}
+
+
+
+
+
+
+const itemArr = [];
+const objArr = [];
+var promises_cleaning = [];
+function itemMerger(container_id) {
+    fetch(`/api/item/findAllPerContainer/${container_id}`, {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        for (let i = 0; i < data.length; i++) {
+            const item_number = data[i].item_number;
+            if (!itemArr.includes(item_number)) {
+                itemArr.push(item_number);
+                objArr.push(data[i])
+            } else {
+                const index = itemArr.indexOf(item_number);
+                objArr[index].qty_per_sku = objArr[index].qty_per_sku + data[i].qty_per_sku;
+                promises_cleaning.push(updateExistedItem(objArr[index]));
+                promises_cleaning.push(deleteExistedItem(data[i]));
+            }
+        };
+        Promise.all(promises_cleaning).then(() => {
+            alert(`The container(#${container_id_to}) with ${itemCount} items is inserted to client_id: ${user_id_to}!`)
+            location.reload();
+        }).catch((e) => {console.log(e)})
+        // if (data.length == itemArr.length) {
+        //     console.log('no repeated boxes');
+        //     removalQ();
+        // }
+    })
+};
+
+async function updateExistedItem(data) {
+    const response = await fetch(`/api/item/updateQtyPerItemId/${data.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+            qty_per_sku: data.qty_per_sku
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (response.ok) {
+        console.log(`qty of ${data.item_number}(${data.id}) has been updated to ${data.qty_per_sku}`);
+    }
+};
+
+async function deleteExistedItem(data) {
+    const response = await fetch(`/api/item/destroy/${data.id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (response.ok) {
+        console.log(`${data.item_number}(${data.id}) has been remove`);
+    }
+};
