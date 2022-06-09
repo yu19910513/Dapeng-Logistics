@@ -108,7 +108,7 @@ router.get('/amazon_container/:key', withAuth, async (req, res) => {
         'cost',
         'height',
         'width',
-        'length'
+        'length',
       ],
       include: [
         {

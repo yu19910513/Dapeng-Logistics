@@ -89,13 +89,14 @@ var iidArr = [];
 var user_id, account_id, user_id_to, account_id_to;
 var selectedSkuArr = [];
 var skuArr = [];
-var printCheck = false;
+// var printCheck = false;
 if (!localStorage.getItem('sp_number')) {
     localStorage.setItem('sp_number', 0)
 } else {
     localStorage.setItem('sp_number', parseInt(localStorage.getItem('sp_number'))+1)
 };
 
+var hrefPromises = [];
 var container_numberArr = [];
 function supplemental() {
     fetch(`/api/container/container/${container_id}`, {
@@ -107,19 +108,21 @@ function supplemental() {
             user_id = data[0].user_id;
             account_id = data[0].account_id;
             document.getElementById(`fromBoxId${container_id}`).innerHTML = data[0].container_number;
-            // console.log(user_id, account_id, data[0].container_number);
-            // notes.innerHTML = data[0].notes;
             const descriptionArr = document.getElementById('from_confirmTable').querySelectorAll('h5');
             const tableArr = document.getElementById('from_confirmTable').querySelectorAll('table')
             for (let i = 0; i < descriptionArr.length; i++) {
                 const container_number = descriptionArr[i].innerText.split(':')[0];
+                hrefPromises.push(idFinder(container_number, descriptionArr[i]));
                 descriptionArr[i].setAttribute('id',container_number);
                 tableArr[i].setAttribute('id', `t_${container_number}`);
                 container_numberArr.push(container_number);
             };
-            itemIdCollection();
+            Promise.all(hrefPromises).then(() => {
+                itemIdCollection()
+            }).catch((e) => {console.log(e)})
         } else {
-            window.location.replace('/admin_move_main_amazon');
+            alert('remove successfully')
+            window.location.replace(`/merger`);
         }
     })
 };supplemental();
@@ -133,7 +136,40 @@ function supplemental_2() {
         if (data.length) {
             user_id_to = data[0].user_id;
             account_id_to = data[0].account_id;
-            document.getElementById(`toBoxId${container_id_to}`).innerHTML = data[0].container_number;
+            const toBoxNumber =  document.getElementById(`toBoxId${container_id_to}`);
+            toBoxNumber.innerHTML = data[0].container_number;
+            const extraNotes = document.createElement('h6');
+            toBoxNumber.parentElement.appendChild(extraNotes);
+            extraNotes.innerHTML = `User: ${data[0].user.name}, Account: ${data[0].account.name}`
+        }
+    })
+};
+
+function idFinder(target_container, h5Element) {
+    fetch(`/api/container/amazon_container/${target_container}`, {
+        method: 'GET'
+    }).then(function (response) {
+        if (response.status != 200) {
+            return null;
+        } else {
+            return response.json();
+        };
+    }).then(function (data) {
+        if (data) {
+            if (container_id != data.id) {
+                const aTag = document.createElement('a');
+                h5Element.parentElement.prepend(aTag);
+                aTag.setAttribute('uk-icon','icon: check');
+                aTag.setAttribute('class','text-success');
+                aTag.setAttribute('uk-tooltip', `Redirect ${target_container} as the receiving container`)
+                aTag.href = `/partial_merge/${container_id}&${data.id}`;
+            }
+        } else {
+            const warning = document.createElement('span');
+            h5Element.parentElement.prepend(warning);
+            warning.setAttribute('uk-icon','icon: warning');
+            warning.setAttribute('uk-tooltip', `${target_container} no longer physically exists; please transfer to other boxes`);
+            warning.setAttribute('class','text-warning')
         }
     })
 }
@@ -182,7 +218,7 @@ function auth() {
 }
 //input function
 function pre_check() {
-    printCheck = false
+    // printCheck = false
     document.getElementById('alert').innerHTML = null;
     const value = input.value.trim();
     const all_td = document.querySelectorAll('#from_confirmTable td');
@@ -322,8 +358,7 @@ async function updateReqContainer(container_id) {
         }
     });
     if (response.ok) {
-        alert('this requested container has been confirmed for shipping!');
-        window.location.replace('/admin_move_main_amazon');
+        window.location.replace(`/merger`);
     }
 
 };
@@ -443,7 +478,7 @@ function masterCheck () {
     if (length.value && height.value && weight.value && width.value) {
         document.getElementById('order_pre-check').style.display = '';
         document.getElementById('fake').style.display = 'none';
-        printCheck = false;
+        // printCheck = false;
     } else {
         document.getElementById('order_pre-check').style.display = 'none'
         document.getElementById('fake').style.display = '';
@@ -578,13 +613,13 @@ async function updateQty(data) {
     }
 };
 
-function pre_create_checker() {
-    if (printCheck) {
-        shippmentCreate()
-    } else {
-        printable();
-    }
-};
+// function pre_create_checker() {
+//     if (printCheck) {
+//         shippmentCreate()
+//     } else {
+//         printable();
+//     }
+// };
 
 // const alt_step = document.getElementById('alt_step')
 // function alter() {
@@ -600,9 +635,9 @@ function pre_create_checker() {
 
 function deleteConfirm() {
     const id = container_id;
-    const code =  prompt(`Please enter the passcode to confirm the DELETION of REQ box (id: ${id})`);
+    const code =  prompt(`Please enter the passcode to confirm the DELETION of this box (id: ${id})`);
     if (code == '0523') {
-        if (confirm('Friednly reminder: all items assocaited with this REQ box will be removed!')) {
+        if (confirm('Friednly reminder: all items assocaited with this this box will be removed!')) {
             updateReqContainer(id);
         }
     } else {
@@ -1290,7 +1325,6 @@ function itemMerger(container_id) {
         // }
     })
 };
-
 async function updateExistedItem(data) {
     const response = await fetch(`/api/item/updateQtyPerItemId/${data.id}`, {
         method: 'PUT',
@@ -1305,7 +1339,6 @@ async function updateExistedItem(data) {
         console.log(`qty of ${data.item_number}(${data.id}) has been updated to ${data.qty_per_sku}`);
     }
 };
-
 async function deleteExistedItem(data) {
     const response = await fetch(`/api/item/destroy/${data.id}`, {
         method: 'DELETE',
@@ -1319,7 +1352,4 @@ async function deleteExistedItem(data) {
 };
 
 
-
-//// minus function has bug
-//// auto delete function may be needed
-//// onclick for all needed
+///delete function need protection for billing
