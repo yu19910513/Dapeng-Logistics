@@ -1,4 +1,5 @@
-const container_id = location.href.split('/').slice(-1)[0];
+const container_id = location.href.split('/').slice(-1)[0].replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '');
+console.log(container_id);
 const pre_shipN = document.getElementById('pre-shipN');
 const notes = document.getElementById('notes');
 const input = document.getElementById("scanned_item");
@@ -424,7 +425,11 @@ function removeItem() {
     for (let i = 0; i < selectedSkuArr.length; i++) {
         idarr.push(item_numberMap.get(selectedSkuArr[i]))
     };
-    promises.push(removeZeroItem(idarr));
+    if(idarr.length) {
+        promises.push(removeZeroItem(idarr));
+    } else {
+        console.log('all items still have remaining qty');
+    };
     for (let k = 0; k < iidArr.length; k++) {
         var eachUpdatedItem = new Object();
         eachUpdatedItem.id = iidArr[k];
