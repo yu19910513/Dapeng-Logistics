@@ -655,5 +655,15 @@ router.get('/accountsbyuser_id/:key', withAuth, async (req, res) => {
   }
 });
 
+router.get('/serverGoAround', withAuth, async (req, res) => {
+  try {
+    const sessionInfo = req.session.user_id;
+    res.json(sessionInfo);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
 
 module.exports = router;
