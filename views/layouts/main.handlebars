@@ -136,14 +136,13 @@
                         console.log((timeout + interval)/interval);
                     }).catch((e) => {console.log(e)})
                 } else {
-                    document.getElementById('session_timer').innerHTML = `<div class='text-danger text-center'>Session Expiration: 50 seconds</div>`
+                    document.getElementById('session_timer').innerHTML = `<div class='text-danger text-center'>Session Expires in 50 Seconds</div>`
                 }
             }
         } else {
-            window.location = "/"; // Redirect to "session expired" page.
+           timeOut(); // Redirect to "session expired" page.
         }
-    }
-
+    };
     async function serverGoAround() {
         const response = await fetch(`/api/user/serverGoAround`, {
         method: 'GET'
@@ -151,7 +150,17 @@
         return response.json();
         })
     };
-
+    async function timeOut() {
+        const res = await fetch('/api/user/logout', {
+            method: 'post',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if (res.ok) {
+            window.location = "/";
+        } else {
+            alert(res.statusText);
+        }
+    };
 </script>
 {{/if}}
 </body>
