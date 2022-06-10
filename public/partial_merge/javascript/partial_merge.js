@@ -98,6 +98,7 @@ if (!localStorage.getItem('sp_number')) {
 
 var hrefPromises = [];
 var container_numberArr = [];
+var deletable = true;
 function supplemental() {
     fetch(`/api/container/container/${container_id}`, {
         method: 'GET'
@@ -107,6 +108,12 @@ function supplemental() {
         if (data.length) {
             user_id = data[0].user_id;
             account_id = data[0].account_id;
+            if (data[0].type == 1 && parseInt(data[0].cost) != 0 ) {
+                deletable = false;
+            };
+            if (!document.getElementById(`fromBoxId${container_id}`)) {
+                window.location.replace(`/merger`);
+            };
             document.getElementById(`fromBoxId${container_id}`).innerHTML = data[0].container_number;
             const descriptionArr = document.getElementById('from_confirmTable').querySelectorAll('h5');
             const tableArr = document.getElementById('from_confirmTable').querySelectorAll('table')
@@ -638,12 +645,24 @@ function deleteConfirm() {
     const code =  prompt(`Please enter the passcode to confirm the DELETION of this box (id: ${id})`);
     if (code == '0523') {
         if (confirm('Friednly reminder: all items assocaited with this this box will be removed!')) {
-            updateReqContainer(id);
+            if (deletable) {
+                updateReqContainer(id);
+            } else {
+                removeItemsOnly(id);
+            }
         }
     } else {
         alert('Incorrect passcode!')
     }
 };
+// function redirectPostZero() {
+//     const id = container_id;
+//     if (deletable) {
+//         updateReqContainer(id);
+//     } else {
+//         removeItemsOnly(id);
+//     }
+// };
 
 
 const today = new Date().toLocaleDateString("en-US");//****//
@@ -1350,6 +1369,16 @@ async function deleteExistedItem(data) {
         console.log(`${data.item_number}(${data.id}) has been remove`);
     }
 };
-
-
+async function removeItemsOnly(id) {
+    const response = await fetch(`/api/item/destroyPerContainer/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (response.ok) {
+        alert(`Items associated with this box (id: ${id}) will be removed but the box remains in the database. This box still has pending receiving charge!`);
+        window.location.replace(`/merger`);
+    }
+}
 ///delete function need protection for billing

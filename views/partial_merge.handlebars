@@ -12,8 +12,8 @@
         <a class="btn btn-outline-primary" href="/partial_merge/{{toBoxId}}&{{fromBoxId}}">Quick Swap</a>
         {{/if}}
         <a class="btn btn-outline-success" href="#boxReselect" uk-toggle>Container Change</a>
-        <a class="btn btn-outline-warning" href="/partial_merge/{{fromBoxId}}&new">New Container</a>
-        <a class="btn btn-outline-danger" onclick="deleteConfirm()" >Delete Remainder</a>
+        <a class="btn btn-outline-warning" href="/partial_merge/{{fromBoxId}}&new" uk-tooltip="transfer TO a new AM container">New Container</a>
+        <a class="btn btn-outline-danger" onclick="deleteConfirm()" uk-tooltip="delete remaining items and box itself from transfer-from box">Delete Remainder</a>
     </form>
 <hr>
 <div id="boxReselect" class="uk-flex-top mt-2" uk-modal>
