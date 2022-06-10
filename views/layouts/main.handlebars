@@ -126,7 +126,7 @@
             }, interval);
             console.log(lastMinute/interval);
             if(lastMinute == interval) {
-                if(confirm('页面将在50秒后自动登出，如果仍在使用此页面，请按ok。Still using the page? If so, please press OK. Otherwise, the session will expire in 50 seconds.')) {
+                if(confirm('页面将在50秒后自动跳转，如果仍在使用此页面，请按ok。Still using the page? If so, please press OK. Otherwise, the session will expire in 50 seconds.')) {
                     const promisesForAction = [];
                     promisesForAction.push(serverGoAround());
                     Promise.all(promisesForAction).then(() => {
@@ -136,7 +136,7 @@
                         console.log((timeout + interval)/interval);
                     }).catch((e) => {console.log(e)})
                 } else {
-                    document.getElementById('session_timer').innerHTML = `<div class='text-danger text-center'>页面将在50秒之后转跳。<br>The session expires in 50 seconds.</div>`
+                    document.getElementById('session_timer').innerHTML = `<div class='text-danger text-center'>页面将在50秒之后跳转。<br>The session expires in 50 seconds.</div>`
                 }
             }
         } else {
