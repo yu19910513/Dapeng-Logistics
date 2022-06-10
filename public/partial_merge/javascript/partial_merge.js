@@ -99,6 +99,7 @@ if (!localStorage.getItem('sp_number')) {
 var hrefPromises = [];
 var container_numberArr = [];
 var deletable = true;
+const autoDelPromise = [];
 function supplemental() {
     fetch(`/api/container/container/${container_id}`, {
         method: 'GET'
@@ -112,7 +113,12 @@ function supplemental() {
                 deletable = false;
             };
             if (!document.getElementById(`fromBoxId${container_id}`)) {
-                window.location.replace(`/merger`);
+                if (data[0].type == 0 || data[0].type == 2 || data[0].type == 3 || parseInt(data[0].cost) == 0) {
+                    autoDelPromise.push(updateReqContainer(container_id))
+                };
+                Promise.all(autoDelPromise).then(() => {
+                    window.location.replace(`/merger`);
+                }).catch((e) => {console.log(e)})
             };
             document.getElementById(`fromBoxId${container_id}`).innerHTML = data[0].container_number;
             const descriptionArr = document.getElementById('from_confirmTable').querySelectorAll('h5');

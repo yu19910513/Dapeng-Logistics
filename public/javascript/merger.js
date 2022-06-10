@@ -162,7 +162,7 @@ var timer = null;
 function delay(fn){
     var time;
     if (manual_input.checked) {
-        time = 1500
+        time = 1200
     } else {
         time = 50
     };
@@ -234,7 +234,14 @@ function fromInput() {
 };
 function toInput() {
     const input = toDiv.querySelector('input').value.toUpperCase().trim();
-    getContainer(input, toDiv);
+    if (input == 'N' || input == 'NEW') {
+        localStorage.setItem(toDiv.id, 'new');
+        toDiv.querySelector('input').disabled = true;
+        toDiv.querySelector('input').value = 'New Container';
+        document.getElementById('pBtn').style.display = '';
+    } else {
+        getContainer(input, toDiv);
+    }
 };
 async function ataMerge() {
     const fromData = containerMap.get(localStorage.getItem('fromContainer'));
@@ -356,6 +363,11 @@ function pMerge() {
     const fromNumber = fromDiv.querySelector('input').value.toUpperCase().trim();
     const toNumber = toDiv.querySelector('input').value.toUpperCase().trim();
     const fromId = containerMap.get(fromNumber).id;
-    const toId = containerMap.get(toNumber).id;
+    var toId;
+    if (isNaN(toNumber)) {
+        toId = 'new'
+    } else {
+        toId = containerMap.get(toNumber).id;
+    };
     location.href = `/partial_merge/${fromId}&${toId}`
 }
