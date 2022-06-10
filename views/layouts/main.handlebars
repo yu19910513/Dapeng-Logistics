@@ -136,11 +136,12 @@
                         console.log((timeout + interval)/interval);
                     }).catch((e) => {console.log(e)})
                 } else {
-                    document.getElementById('session_timer').innerHTML = `<div class='text-danger text-center'>Session Expires in 50 Seconds</div>`
+                    document.getElementById('session_timer').innerHTML = `<div class='text-danger text-center'>页面将在50秒之后转跳。<br>The session expires in 50 seconds.</div>`
                 }
             }
         } else {
-           timeOut(); // Redirect to "session expired" page.
+        // Redirect to "session expired" page. --}}
+           window.location.reload();
         }
     };
     async function serverGoAround() {
@@ -149,17 +150,6 @@
         }).then(function (response) {
         return response.json();
         })
-    };
-    async function timeOut() {
-        const res = await fetch('/api/user/logout', {
-            method: 'post',
-            headers: { 'Content-Type': 'application/json' }
-        });
-        if (res.ok) {
-            window.location = "/";
-        } else {
-            alert(res.statusText);
-        }
     };
 </script>
 {{/if}}
