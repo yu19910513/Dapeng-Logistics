@@ -35,7 +35,7 @@
             <input type="file" class="mt-2 custom-file-input" id="label_2" accept=".pdf, .doc, .docx, .zip, .rar" style="display: none;">
         </div>
         <div class="uk-modal-footer uk-text-right">
-            <input type="text" class="form-control mb-3 border-warning" id="amazon_ref" placeholder="Additional Reference Number (if any)" aria-describedby="basic-addon1" style="display: none;">
+            <input type="text" class="form-control mb-3 border-warning" id="amazon_ref" placeholder="若有特别指示，请在“附注留言”区留言" aria-describedby="basic-addon1" style="display: none;" disabled>
             <button class="uk-button uk-button-default uk-modal-close" type="button" onclick="clear_file()">Clear 清除</button>
             <button class="uk-button uk-button-primary uk-modal-close" type="button" onclick="check_amazon()">Save 暂存</button>
         </div>
@@ -48,9 +48,9 @@
     <div class="uk-navbar-center">
         <div class="uk-navbar-item">
             <a class="btn btn-white border-warning btn-sm shadow-sm" href="/amazon/{{accountId}}" uk-icon="icon: home" uk-tooltip="Personal Homepage"></a>
-            <a class="btn btn-light btn-sm shadow-sm" href="/request/{{accountId}}" uk-tooltip="China Boxes">原始货物</a>
-            <a class="btn btn-secondary btn-sm shadow-sm" href="/request_amazon/{{accountId}}" uk-tooltip="Amazon Container">回流货物</a>
-            <a class="btn btn-light btn-sm shadow-sm" href="/request_amazon_confirmation/{{accountId}}" uk-tooltip="Amazon Container Ship-out">回流货物确认</a>
+            <a class="btn btn-light btn-sm shadow-sm" href="/request/{{accountId}}" uk-tooltip="中国跨海货物">海外货物</a>
+            <a class="btn btn-secondary btn-sm shadow-sm" href="/request_amazon/{{accountId}}" uk-tooltip="美国内地转运货物">亚马逊/其他货物</a>
+            <a class="btn btn-light btn-sm shadow-sm" href="/request_amazon_confirmation/{{accountId}}" uk-tooltip="转运货物标签确认">货物确认</a>
         </div>
 
         <div class="uk-navbar-item">
