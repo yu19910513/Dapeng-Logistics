@@ -217,7 +217,6 @@ router.get('/request_amazon', withAuth, async (req, res) => {
         'account_id',
         's3',
         'notes',
-        'id',
         'container_number',
         'description',
         'cost',
@@ -1519,7 +1518,6 @@ router.get('/request_amazon/:id', withAuth, async (req, res) => {
         'account_id',
         's3',
         'notes',
-        'id',
         'container_number',
         'description',
         'cost',
@@ -1827,6 +1825,8 @@ router.get('/dq_chinabox', withAuth, async (req, res) => {
       },
       attributes: [
         'id',
+        'user_id',
+        'account_id',
         'box_number',
         'order',
         'qty_per_box'
@@ -1835,14 +1835,12 @@ router.get('/dq_chinabox', withAuth, async (req, res) => {
         {
           model: Account,
           attributes: [
-            'id',
             'name'
           ]
         },
         {
           model: User,
           attributes: [
-            'id',
             'name'
           ]
         }
@@ -1858,50 +1856,54 @@ router.get('/dq_chinabox', withAuth, async (req, res) => {
 
 router.get('/dq_container', withAuth, async (req, res) => {
   try {
-    const containerData = await Container.findAll({
+    const containerData = await Item.findAll({
       where: {
         user_id: req.session.user_id,
-        status: 1,
-        type: [1,2]
       },
+      order: [
+        ['item_number', 'ASC']
+      ],
       attributes: [
         'id',
         'user_id',
         'account_id',
-        's3',
-        'notes',
-        'id',
-        'container_number',
-        'description',
-        'cost',
-        'requested_date',
-        'received_date',
-        'shipped_date',
-        'type',
-        'length',
-        'width',
-        'height',
-        'weight',
-        'volume',
-        'status',
-        'location',
-        'file',
-        'file_2',
-        'fba',
-        'bill_received',
-        'bill_storage',
-        'bill_shipped'
+        'container_id',
+        'item_number',
+        'qty_per_sku'
       ],
-      include:
+      include:[
+        {
+          model: Container,
+          where: {
+            status: 1,
+            type: 1
+          },
+          attributes: [
+            'container_number'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'name'
+          ]
+        },
         {
           model: Account,
           attributes: [
             'name'
           ]
         }
+      ]
     });
-    const containers = containerData.map(container => container.get({ plain: true }));
-    res.render('request_amazon', {containers, loggedIn: true, admin: req.session.admin, name: req.session.name, accountId: req.params.id});
+    const pre_containers = containerData.map(container => container.get({ plain: true }));
+    const requestsBatch = pre_containers.reduce(function (r, a) {
+      r[a.container_number] = r[a.container_number] || [];
+      r[a.container_number].push(a);
+      return r;
+    }, Object.create(null));
+    const containers = Object.values(requestsBatch);
+    res.render('delete_queue', {containers, loggedIn: true, china: false, amazon: true, admin: req.session.admin, name: req.session.name, accountId: req.params.id});
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
@@ -1910,50 +1912,54 @@ router.get('/dq_container', withAuth, async (req, res) => {
 
 router.get('/dq_sku', withAuth, async (req, res) => {
   try {
-    const containerData = await Container.findAll({
+    const itemData = await Item.findAll({
       where: {
         user_id: req.session.user_id,
-        status: 1,
-        type: [1,2]
       },
+      order: [
+        ['item_number', 'ASC']
+      ],
       attributes: [
         'id',
         'user_id',
         'account_id',
-        's3',
-        'notes',
-        'id',
-        'container_number',
-        'description',
-        'cost',
-        'requested_date',
-        'received_date',
-        'shipped_date',
-        'type',
-        'length',
-        'width',
-        'height',
-        'weight',
-        'volume',
-        'status',
-        'location',
-        'file',
-        'file_2',
-        'fba',
-        'bill_received',
-        'bill_storage',
-        'bill_shipped'
+        'container_id',
+        'item_number',
+        'qty_per_sku'
       ],
-      include:
+      include:[
+        {
+          model: Container,
+          where: {
+            status: 1,
+            type: 1
+          },
+          attributes: [
+            'container_number'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'name'
+          ]
+        },
         {
           model: Account,
           attributes: [
             'name'
           ]
         }
+      ]
     });
-    const containers = containerData.map(container => container.get({ plain: true }));
-    res.render('request_amazon', {containers, loggedIn: true, admin: req.session.admin, name: req.session.name, accountId: req.params.id});
+    const pre_items = itemData.map(item => item.get({ plain: true }));
+    const requestsBatch = pre_items.reduce(function (r, a) {
+      r[a.item_number] = r[a.item_number] || [];
+      r[a.item_number].push(a);
+      return r;
+    }, Object.create(null));
+    const items = Object.values(requestsBatch);
+    res.render('delete_queue', {items, loggedIn: true, china: false, amazon: false, admin: req.session.admin, name: req.session.name, accountId: req.params.id});
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
