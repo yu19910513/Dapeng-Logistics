@@ -347,7 +347,7 @@ function xc_billing(data, i) {
     order.innerHTML = data[i].order;
     qty_per_box.innerHTML = data[i].qty_per_box;
     cost.innerHTML = `$${data[i].cost}`;
-    total_xc_charge = total_xc_charge + data[i].cost;
+    total_xc_charge = total_xc_charge + parseFloat(data[i].cost);
 }
 
 //sorting
