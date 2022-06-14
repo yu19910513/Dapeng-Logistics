@@ -1823,6 +1823,9 @@ router.get('/dq_chinabox', withAuth, async (req, res) => {
         user_id: req.session.user_id,
         status: 1
       },
+      order: [
+        ['item_number', 'ASC']
+      ],
       attributes: [
         'id',
         'user_id',
@@ -1853,7 +1856,6 @@ router.get('/dq_chinabox', withAuth, async (req, res) => {
     res.status(500).json(err);
   }
 });
-
 router.get('/dq_container', withAuth, async (req, res) => {
   try {
     const containerData = await Item.findAll({
@@ -1909,7 +1911,6 @@ router.get('/dq_container', withAuth, async (req, res) => {
     res.status(500).json(err);
   }
 });
-
 router.get('/dq_sku', withAuth, async (req, res) => {
   try {
     const itemData = await Item.findAll({
@@ -1965,6 +1966,7 @@ router.get('/dq_sku', withAuth, async (req, res) => {
     res.status(500).json(err);
   }
 });
+///////////////////////////////
 // router.get('/rawData', withAuth, (req, res) => {
 //     res.render('rawData');
 // });

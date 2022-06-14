@@ -323,6 +323,29 @@ router.put('/updateCost/:cost&:id', withAuth, (req, res) => {
     });
 });
 
+router.put('/updatePostMerge', withAuth, (req, res) => {
+  Container.update({
+      shipped_date: req.body.shipped_date,
+      bill_shipped: req.body.bill_shipped
+    },
+    {
+      where: {
+        id: req.body.id
+      }
+    })
+    .then(dbContainerData => {
+      if (!dbContainerData[0]) {
+        res.status(404).json({ message: 'This Container does not exist!' });
+        return;
+      }
+      res.json(dbContainerData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
 router.put('/admin_relocating', withAuth, (req, res) => {
   Container.update({
       location: req.body.location_b

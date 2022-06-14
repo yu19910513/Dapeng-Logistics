@@ -339,24 +339,44 @@ async function deleteEmptyContainer (data) {
         location.reload();
     }
 };
+async function updateEmptyContainer (data) {
+    const response = await fetch(`/api/container/updatePostMerge`, {
+        method: 'PUT',
+        body: JSON.stringify({
+            id: data.id,
+            shipped_date: new Date().toLocaleDateString("en-US"),
+            bill_shipped: new Date().getTime()
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (response.ok) {
+        localStorage.clear();
+        location.reload();
+    }
+};
 function checkpoint() {
     if (dCount*uCount != 0 && dCount+uCount == 0) {
         removalQ()
     }
 };
 function removalQ() {
+    const fromData = containerMap.get(localStorage.getItem('fromContainer'));
     if (confirm(`Remove empty container (${localStorage.getItem('fromContainer')})?`)) {
-        const fromData = containerMap.get(localStorage.getItem('fromContainer'));
-        if (parseInt(fromData.cost) == 0 || localStorage.getItem('fromContainer').substring(0,2) != 'AM') {
+        if (localStorage.getItem('fromContainer').substring(0,2) != 'AM') {
             deleteEmptyContainer(fromData);
         } else {
-            alert(`This container (${localStorage.getItem('fromContainer')}) cannot be removed because it has not been charged for receiving fee yet!`);
+            alert(`This container (${localStorage.getItem('fromContainer')}) cannot be removed because it has not been charged for receiving/storage fee yet!`);
+            updateEmptyContainer(fromData);
+        }
+    } else {
+        if (localStorage.getItem('fromContainer').substring(0,2) == 'AM') {
+            updateEmptyContainer(fromData);
+        } else {
             localStorage.clear();
             location.reload();
         }
-    } else {
-        localStorage.clear();
-        location.reload();
     }
 };
 function pMerge() {
