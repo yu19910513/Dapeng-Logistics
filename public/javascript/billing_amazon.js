@@ -77,9 +77,9 @@ function xc_next(user_id) {
             for (let b = 0; b < selectedData.length; b++) {
                 xc_billing(selectedData, b);
             };
-            xcharge_total_2.innerHTML = total_xc_charge;
-            xcharge_total.innerHTML = total_xc_charge;
-            all_total.innerHTML = parseFloat(all_total.innerText) + total_xc_charge;
+            xcharge_total_2.innerHTML = total_xc_charge.toFixed(2);
+            xcharge_total.innerHTML = total_xc_charge.toFixed(2);
+            all_total.innerHTML = (parseFloat(all_total.innerText) + total_xc_charge).toFixed(2);
         };
     })
 }
