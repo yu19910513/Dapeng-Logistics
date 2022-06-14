@@ -80,7 +80,8 @@ function xc_next(user_id) {
             };
             xcharge_total_2.innerHTML = total_xc_charge;
             xcharge_total.innerHTML = total_xc_charge;
-            all_total.innerHTML = parseFloat(all_total.innerHTML) + total_xc_charge;
+            const subtotal = parseFloat(all_total.innerHTML) + total_xc_charge;
+            all_total.innerHTML = subtotal.toFixed(2);
         };
     })
 }
