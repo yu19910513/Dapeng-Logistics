@@ -1,7 +1,7 @@
 const accountIn = document.getElementById('accountIn');//****//
 const accountOut = document.getElementById('accountOut');//****//
 const client_list = document.getElementById("user");//****//
-
+localStorage.clear();
 function client_data() {
     fetch(`/api/user/`, {
         method: 'GET'
@@ -187,6 +187,7 @@ function getContainer(input, div) {
             error();
             div.querySelector('input').value = null;
         } else {
+            toDiv.querySelector('input').disabled = false;
             const container = new Object();
             div.querySelectorAll('p').forEach(i => i.remove());
             if (containerMap.get(input)) {
@@ -230,7 +231,6 @@ var containerMap = new Map();
 function fromInput() {
     const input = fromDiv.querySelector('input').value.toUpperCase().trim();
     getContainer(input, fromDiv);
-    toDiv.querySelector('input').disabled = false;
 };
 function toInput() {
     const input = toDiv.querySelector('input').value.toUpperCase().trim();
