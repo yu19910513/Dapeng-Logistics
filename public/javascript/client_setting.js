@@ -158,7 +158,11 @@ function proceed_removal() {
     console.log(time, today);
     if (time && today > time && code == '0523') {
         if (statusValue == 99) {
-           chinaBoxDelete_xc(time);
+           promises.push(chinaBoxDelete_xc(time));
+           promises.push(amazonContainerDelete_xc(time))
+           Promise.all(promises).then(() => {
+                location.reload()
+            }).catch((e) => {console.log(e)})
         };
     } else {
         alert('The target date should not be today or future date!')
@@ -172,7 +176,7 @@ function proceed_removal() {
            }
        });
        if (response.ok) {
-           amazonContainerDelete_xc(time);
+           console.log('XC of China boxes has beem removed!');
        }
    };
    async function  amazonContainerDelete_xc (time){
@@ -183,6 +187,6 @@ function proceed_removal() {
            }
        });
        if (response.ok) {
-           location.reload()
+        console.log('XC of amazon boxes has beem removed!');
        }
    };
