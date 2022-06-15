@@ -488,6 +488,31 @@ router.delete('/remove/:time', withAuth, (req, res) => {
       });
 });
 
+router.delete('/removeEmpty/:time', withAuth, (req, res) => {
+  Container.destroy({
+      where: {
+        status: 98,
+        bill_storage: {
+          [Op.lt]: req.params.time
+        },
+        shipped_date: {
+          [Op.ne]: null
+        }
+      }
+    })
+      .then(dbBoxData => {
+        // if (!dbBoxData) {
+        //   res.status(404).json({ message: 'No box found with this id' });
+        //   return;
+        // }
+        res.json(dbBoxData);
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+});
+
 router.delete('/remove_xc/:time', withAuth, (req, res) => {
   Container.destroy({
       where: {
@@ -519,6 +544,32 @@ router.put('/archieve/:time', withAuth, (req, res) => {
       status: 3,
       bill_shipped: {
         [Op.lt]: req.params.time
+      }
+    }
+  }).then(dbContainerData => {
+    if (!dbContainerData) {
+      res.status(404).json({ message: 'No Container found with this id' });
+      return;
+    }
+    res.json(dbContainerData);
+  }).catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+  });
+});
+
+router.put('/archieveEmpty/:time', withAuth, (req, res) => {
+  Container.update({
+    status: 98
+  },
+  {
+    where: {
+      status: [1,2],
+      bill_storage: {
+        [Op.lt]: req.params.time
+      },
+      shipped_date: {
+        [Op.ne]: null
       }
     }
   }).then(dbContainerData => {

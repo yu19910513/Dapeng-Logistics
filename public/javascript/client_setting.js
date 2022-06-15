@@ -40,6 +40,7 @@ async function proceed() {
 };
 
 //bulk archieve//
+const promises = [];
 const bulkSelect = document.getElementById('statusChange');
 const daysPS = document.getElementById('maintenance').querySelector('input');
 function proceed_archieve() {
@@ -49,9 +50,19 @@ function proceed_archieve() {
  const today = new Date().getTime();
  if (time && today > time && code == '0523') {
     if (statusValue == 98) {
-        chinaBoxUpdate(time);
+        promises.push(chinaBoxUpdate(time))
+        promises.push(amazonContainerUpdate(time))
+        promises.push(emptyContainerUpdate(time))
+        Promise.all(promises).then(() => {
+            location.reload()
+        }).catch((e) => {console.log(e)})
      } else if (statusValue == 99) {
-        chinaBoxDelete(time);
+        promises.push(chinaBoxDelete(time))
+        promises.push(amazonContainerDelete(time))
+        promises.push(emptyContainerDelete (time))
+        Promise.all(promises).then(() => {
+            location.reload()
+        }).catch((e) => {console.log(e)})
     }
  } else {
      alert('The target date should not be today or future date!')
@@ -65,7 +76,7 @@ async function chinaBoxDelete (time){
         }
     });
     if (response.ok) {
-        amazonContainerDelete(time);
+       console.log('china boxes are deleted');
     }
 };
 async function  amazonContainerDelete (time){
@@ -76,9 +87,21 @@ async function  amazonContainerDelete (time){
         }
     });
     if (response.ok) {
-        location.reload()
+        console.log('amazon boxes are deleted');
     }
-}
+};
+async function  emptyContainerDelete (time){
+    const response = await fetch(`/api/container/removeEmpty/${time}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (response.ok) {
+        console.log('empty amazon boxes are deleted');
+    }
+};
+////////update to archive////////////
 async function chinaBoxUpdate (time){
     const response = await fetch(`/api/box/archieve/${time}`, {
         method: 'PUT',
@@ -87,7 +110,7 @@ async function chinaBoxUpdate (time){
         }
     });
     if (response.ok) {
-        amazonContainerUpdate(time);
+        console.log('china boxes are updated');
     }
 };
 async function  amazonContainerUpdate(time){
@@ -98,7 +121,18 @@ async function  amazonContainerUpdate(time){
         }
     });
     if (response.ok) {
-        location.reload()
+        console.log('amazon boxes are updated');
+    }
+};
+async function  emptyContainerUpdate(time){
+    const response = await fetch(`/api/container/archieveEmpty/${time}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (response.ok) {
+        console.log('empty amazon boxes are updated');
     }
 };
 //helper function
