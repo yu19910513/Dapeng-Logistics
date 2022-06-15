@@ -1,5 +1,11 @@
 console.log('partial_merge');
-localStorage.clear();
+function localStorageSwap() {
+    const todata = localStorage.getItem('toContainer');
+    const fromdata = localStorage.getItem('fromContainer');
+    localStorage.setItem('toContainer', fromdata);
+    localStorage.setItem('fromContainer', todata);
+}
+// localStorage.clear();
 var containerMap = new Map();
 function getContainer(input, div) {
     fetch(`/api/container/amazon_container/${input}`, {
@@ -109,18 +115,22 @@ function supplemental() {
         if (data.length) {
             user_id = data[0].user_id;
             account_id = data[0].account_id;
-            if (data[0].type == 1 && parseInt(data[0].cost) != 0 ) {
+            if ([1,3].includes(data[0].type)) {
                 deletable = false;
             };
             if (!document.getElementById(`fromBoxId${container_id}`)) {
-                if (data[0].type == 0 || data[0].type == 2 || data[0].type == 3 || parseInt(data[0].cost) == 0) {
+                // if (data[0].type == 0 || data[0].type == 2 || data[0].type == 3 || parseInt(data[0].cost) == 0) {
+                if ([0,2].includes(data[0].type)) {
                     autoDelPromise.push(updateReqContainer(container_id))
-                };
+                } else if ([1,3].includes(data[0].type)) {
+                    autoDelPromise.push(updateEmptyContainer(container_id))
+                }
                 Promise.all(autoDelPromise).then(() => {
                     window.location.replace(`/merger`);
                 }).catch((e) => {console.log(e)})
+            } else {
+                document.getElementById(`fromBoxId${container_id}`).innerHTML = data[0].container_number;
             };
-            document.getElementById(`fromBoxId${container_id}`).innerHTML = data[0].container_number;
             const descriptionArr = document.getElementById('from_confirmTable').querySelectorAll('h5');
             const tableArr = document.getElementById('from_confirmTable').querySelectorAll('table')
             for (let i = 0; i < descriptionArr.length; i++) {
@@ -134,7 +144,6 @@ function supplemental() {
                 itemIdCollection()
             }).catch((e) => {console.log(e)})
         } else {
-            alert('remove successfully')
             window.location.replace(`/merger`);
         }
     })
@@ -808,6 +817,7 @@ function amazonCreate() {
     amazon_box.height = height.value.trim()*2.54;
     amazon_box.volume = amazon_box.length * amazon_box.width * amazon_box.height;
     amazon_box.container_number = container_number.value.trim().toUpperCase();
+    localStorage.setItem('refToNumber', amazon_box.container_number);
     amazon_box.cost = itemCount;
     const newAccountName = newAccountInput.value.trim();
     const username_d = username.value.trim();
@@ -1042,6 +1052,28 @@ function updateCost(cost, id) {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'}
     });
+};
+async function updateEmptyContainer (id) {
+    var updateddescription;
+    if (localStorage.getItem('refToNumber')) {
+        updateddescription = `items merged to a new container(${localStorage.getItem('refToNumber')}) via partial merge`
+    } else if (localStorage.getItem('toContainer')) {
+        updateddescription = `items merged to the exisited container(${localStorage.getItem('toContainer')}) via partial merge`
+    };
+    const response = await fetch(`/api/container/updatePostMerge`, {
+        method: 'PUT',
+        body: JSON.stringify({
+            description: updateddescription,
+            id: id,
+            shipped_date: new Date().toLocaleDateString("en-US")
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (response.ok) {
+        window.location.replace(`/merger`);
+    }
 };
 
 
@@ -1383,8 +1415,8 @@ async function removeItemsOnly(id) {
         }
     });
     if (response.ok) {
-        alert(`Items associated with this box (id: ${id}) will be removed but the box remains in the database. This box still has pending receiving charge!`);
-        window.location.replace(`/merger`);
+        alert(`Items associated with this box (id: ${id}) will be removed but the box remains in the database. This box still has pending receiving/storage charge!`);
+        updateEmptyContainer(id)
     }
 }
 ///delete function need protection for billing

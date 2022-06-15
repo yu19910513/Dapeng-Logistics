@@ -106,9 +106,13 @@ router.get('/amazon_container/:key', withAuth, async (req, res) => {
         'user_id',
         'account_id',
         'cost',
+        'type',
+        'status',
+        'description',
         'height',
         'width',
         'length',
+        'shipped_date'
       ],
       include: [
         {
@@ -326,7 +330,8 @@ router.put('/updateCost/:cost&:id', withAuth, (req, res) => {
 router.put('/updatePostMerge', withAuth, (req, res) => {
   Container.update({
       shipped_date: req.body.shipped_date,
-      bill_shipped: req.body.bill_shipped
+      description: req.body.description
+      // bill_shipped: req.body.bill_shipped
     },
     {
       where: {

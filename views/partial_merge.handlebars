@@ -9,7 +9,7 @@
     <form class="p-2 py-3 mt-2 mb-1">
         {{#if newBox}}
         {{else}}
-        <a class="btn btn-outline-primary" href="/partial_merge/{{toBoxId}}&{{fromBoxId}}">Quick Swap</a>
+        <a class="btn btn-outline-primary" href="/partial_merge/{{toBoxId}}&{{fromBoxId}}" onclick="localStorageSwap()">Quick Swap</a>
         {{/if}}
         <a class="btn btn-outline-success" href="#boxReselect" uk-toggle>Container Change</a>
         <a class="btn btn-outline-warning" href="/partial_merge/{{fromBoxId}}&new" uk-tooltip="transfer TO a new AM container">New Container</a>

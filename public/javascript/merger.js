@@ -183,7 +183,7 @@ function getContainer(input, div) {
             return response.json();
         }
     }).then(function (data) {
-        if (!data) {
+        if (!data || ![1,2].includes(data.status) || data.shipped_date) {
             error();
             div.querySelector('input').value = null;
         } else {
@@ -202,7 +202,9 @@ function getContainer(input, div) {
                 container.user_id = data.user_id;
                 container.account_id = data.account_id;
                 container.id = data.id;
+                container.description = data.description;
                 container.cost = data.cost;
+                container.type = data.type;
                 containerMap.set(input, container);
             }
             if(containerMap.size == 2) {
@@ -343,9 +345,10 @@ async function updateEmptyContainer (data) {
     const response = await fetch(`/api/container/updatePostMerge`, {
         method: 'PUT',
         body: JSON.stringify({
+            description: data.description,
             id: data.id,
             shipped_date: new Date().toLocaleDateString("en-US"),
-            bill_shipped: new Date().getTime()
+            // bill_shipped: new Date().getTime()
         }),
         headers: {
             'Content-Type': 'application/json'
@@ -363,15 +366,18 @@ function checkpoint() {
 };
 function removalQ() {
     const fromData = containerMap.get(localStorage.getItem('fromContainer'));
+    console.log(fromData.type);
     if (confirm(`Remove empty container (${localStorage.getItem('fromContainer')})?`)) {
-        if (localStorage.getItem('fromContainer').substring(0,2) != 'AM') {
+        if (![1,3].includes(fromData.type)) {
             deleteEmptyContainer(fromData);
         } else {
             alert(`This container (${localStorage.getItem('fromContainer')}) cannot be removed because it has not been charged for receiving/storage fee yet!`);
+            fromData.description = `items merged to ${localStorage.getItem('toContainer')}`;
             updateEmptyContainer(fromData);
         }
     } else {
-        if (localStorage.getItem('fromContainer').substring(0,2) == 'AM') {
+        if ([1,3].includes(fromData.type)) {
+            fromData.description = `items merged to ${localStorage.getItem('toContainer')}`;
             updateEmptyContainer(fromData);
         } else {
             localStorage.clear();
@@ -384,7 +390,7 @@ function pMerge() {
     const toNumber = toDiv.querySelector('input').value.toUpperCase().trim();
     const fromId = containerMap.get(fromNumber).id;
     var toId;
-    if (isNaN(toNumber)) {
+    if (!containerMap.get(toNumber)) {
         toId = 'new'
     } else {
         toId = containerMap.get(toNumber).id;
