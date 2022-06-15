@@ -773,7 +773,7 @@ function containerChecker(cNumber) {
                 amazon_box.id = data.id;
                 amazon_box.user_id = data.user_id;
                 amazon_box.account_id = data.account_id;
-                tempCost = data.cost;
+                tempCost = parseFloat(data.cost);
                 length.value = (data.length/2.54).toFixed(2);
                 width.value = (data.width/2.54).toFixed(2);
                 height.value = (data.height/2.54).toFixed(2);
@@ -788,7 +788,7 @@ function containerChecker(cNumber) {
                 amazon_box.id = data.id;
                 amazon_box.user_id = data.user_id;
                 amazon_box.account_id = data.account_id;
-                tempCost = data.cost;
+                tempCost = parseFloat(data.cost);
                 length.value = (data.length/2.54).toFixed(2);
                 width.value = (data.width/2.54).toFixed(2);
                 height.value = (data.height/2.54).toFixed(2);
@@ -818,7 +818,8 @@ function amazonCreate() {
     amazon_box.volume = amazon_box.length * amazon_box.width * amazon_box.height;
     amazon_box.container_number = container_number.value.trim().toUpperCase();
     localStorage.setItem('refToNumber', amazon_box.container_number);
-    amazon_box.cost = itemCount;
+    // amazon_box.cost = itemCount;
+    amazon_box.cost = 0;
     const newAccountName = newAccountInput.value.trim();
     const username_d = username.value.trim();
     const password_d = password.value.trim();

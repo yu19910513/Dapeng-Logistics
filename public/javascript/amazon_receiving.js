@@ -88,7 +88,7 @@ function containerChecker(cNumber) {
                 amazon_box.id = data.id;
                 amazon_box.user_id = data.user_id;
                 amazon_box.account_id = data.account_id;
-                tempCost = data.cost;
+                tempCost = parseFloat(data.cost);
                 length.value = (data.length/2.54).toFixed(2);
                 width.value = (data.width/2.54).toFixed(2);
                 height.value = (data.height/2.54).toFixed(2);
@@ -103,7 +103,7 @@ function containerChecker(cNumber) {
                 amazon_box.id = data.id;
                 amazon_box.user_id = data.user_id;
                 amazon_box.account_id = data.account_id;
-                tempCost = data.cost;
+                tempCost = parseFloat(data.cost);
                 length.value = (data.length/2.54).toFixed(2);
                 width.value = (data.width/2.54).toFixed(2);
                 height.value = (data.height/2.54).toFixed(2);
@@ -588,9 +588,9 @@ function removeEmptyContainer() {
             for (let i = 0; i < data.length; i++) {
                 const container = data[i];
                 if(!allContainerArr.includes(container.id)) {
-                    if (container.type == 0 || container.type == 2 || container.type == 3) {
+                    if ([0,2].includes(container.type)) {
                         emptyArr.push(container.id)
-                    } else if (parseInt(container.cost) == 0) {
+                    } else if (parseInt(container.cost) == 0 && !container.bill_received) {
                         emptyArr.push(container.id)
                     }
                 }; //cost == 0 means the empty box has been recently billed and ready to get reset
