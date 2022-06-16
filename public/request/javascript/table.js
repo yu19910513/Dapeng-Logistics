@@ -62,14 +62,64 @@ function clear_noFile_radio() {
 function validation_request() {
   const file = document.getElementById('label').files[0];
   const file_2 = document.getElementById('label_2').files[0];
+  console.log(file);
   var check_label = document.getElementById('label_not_required')
   if (!file && !file_2 && !check_label.checked) {
     alert('The shipping label is missing! Please attach a pdf file and try again! 无夹带档案！请夹带档案或者勾选无夹带档案栏，然后再试一遍。')
   } else {
-    loader.style.display = '';
-    GetSelected()
+    var fileName, fileName_2;
+    var fba = document.getElementById('amazon_ref').value.trim()
+    fba = fba.toUpperCase();
+    var notes = document.getElementById('notes').value;
+    var confirmationArr = [];
+    var table = document.getElementById("myTable");
+    var checkBoxes = table.getElementsByTagName("input");
+    for (var i = 0; i < checkBoxes.length; i++) {
+      if (checkBoxes[i].checked) {
+      var row = checkBoxes[i].parentNode.parentNode;
+      var eachBox = `<tr>
+      <td>${row.cells[2].innerHTML}<td>
+      <td>${row.cells[3].innerHTML}<td>
+      <td>${row.cells[7].innerHTML}<td>
+      </tr>`;
+      confirmationArr.push(eachBox)
+      }
+    };
+    if (confirmationArr.length) {
+      confirmationArr = confirmationArr.join('');
+      if (file) {
+        fileName = file.name
+      } else {
+        fileName = `no file`
+      };
+      if (file_2) {
+        fileName_2 = file_2.name
+      } else {
+        fileName_2 = `no file`
+      };
+      UIkit.modal.confirm(`<small class='text-primary'>此页为检查页面，若发现输入/选择错误，请按“Cancel”并更改；若所有输入皆正确，请按“OK”完成通知</small><table class="uk-table uk-table-small uk-table-divider">
+      <thead>
+        <tr>
+        <th>箱码/ 细目/ SKU</th>
+        <th></th>
+        <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      ${confirmationArr}
+      </tbody>
+      </table><hr><b>附注留言</b>: ${notes}<hr><b>FBA:</b> ${fba}<hr><b>档案:</b> <u>${fileName}</u> & <u>${fileName_2}</u>`).then(function () {
+        loader.style.display = '';
+        GetSelected()
+    }, function () {
+        console.log('Rejected.')
+    });
+    } else {
+      alert('You need to select at least one box! 您需要选择至少一个箱货')
+    }
   }
 };
+
 
 async function editStatus(event, n) {
   var s3 = new Date().valueOf() + 1;

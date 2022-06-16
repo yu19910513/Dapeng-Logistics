@@ -159,7 +159,7 @@ function proceed_removal() {
     if (time && today > time && code == '0523') {
         if (statusValue == 99) {
            promises.push(chinaBoxDelete_xc(time));
-           promises.push(amazonContainerDelete_xc(time))
+           promises.push(amazonContainerDelete_xc(time));
            Promise.all(promises).then(() => {
                 location.reload()
             }).catch((e) => {console.log(e)})
