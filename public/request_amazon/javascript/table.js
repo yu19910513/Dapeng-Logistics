@@ -35,17 +35,7 @@ function clear_noFile_radio() {
     no_file.checked = false;
   }
 };
-function validation_request() {
-  const file = document.getElementById('label').files[0];
-  const file_2 = document.getElementById('label_2').files[0];
-  var check_label = document.getElementById('label_not_required')
-  if (!file && !file_2 && !check_label.checked) {
-    alert('The shipping label is missing! Please attach a pdf file and try again! 无夹带档案！请夹带档案或者勾选无夹带档案栏，然后再试一遍。')
-  } else {
-    loader.style.display = '';
-    GetSelected()
-  }
-};
+
 function sortTable(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById("myTable");

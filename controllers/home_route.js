@@ -1824,7 +1824,7 @@ router.get('/dq_chinabox', withAuth, async (req, res) => {
         status: 1
       },
       order: [
-        ['item_number', 'ASC']
+        ['box_number', 'ASC']
       ],
       attributes: [
         'id',

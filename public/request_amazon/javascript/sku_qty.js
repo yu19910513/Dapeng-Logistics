@@ -304,7 +304,7 @@ function removeZeroItem(data) {
     method: 'DELETE',
     headers: {'Content-Type': 'application/json'}
 });
-}
+};
 
 function selectAll(id) {
   const eachContainer = document.getElementById((`container_${id}`));
@@ -316,4 +316,81 @@ function selectAll(id) {
       div.setAttribute('class','text-danger itemQ');
     }
   }
-}
+};
+
+
+////// request init & pre check ////////
+function validation_request() {
+  const file = document.getElementById('label').files[0];
+  const file_2 = document.getElementById('label_2').files[0];
+  var check_label = document.getElementById('label_not_required')
+  if (!file && !file_2 && !check_label.checked) {
+    alert('The shipping label is missing! Please attach a pdf file and try again! 无夹带档案！请夹带档案或者勾选无夹带档案栏，然后再试一遍。')
+  } else {
+    preCheckPage(file, file_2)
+  }
+};
+function preCheckPage(file, file_2) {
+  var fileName, fileName_2;
+  var confirmationArr = [];
+  var noRepeatArr = [];
+  const notes = document.getElementById('notes').value;
+  var table = document.getElementById("myTable");
+  var selectedSkus = table.querySelectorAll(".text-danger");
+  for (var i = 0; i < selectedSkus.length; i++) {
+    var eachBox;
+    const eachSkuInfo = selectedSkus[i].getAttribute('id').split('_');
+    const container_id = parseInt(eachSkuInfo[0]);
+    const item_id = parseInt(eachSkuInfo[1]);
+    const item_number = itemRef.get(item_id);
+    const qty_per_sku = parseInt(selectedSkus[i].innerHTML);
+    const container_number = containerRef.get(container_id);
+    if (!noRepeatArr.includes(container_number)) {
+      noRepeatArr.push(container_number);
+      eachBox = `<tr>
+      <td class='text-primary'><b>${container_number}</b><td>
+      <td>${item_number}<td>
+      <td>${qty_per_sku}<td>
+      </tr>`;
+    } else {
+      eachBox = `<tr>
+      <td><td>
+      <td>${item_number}<td>
+      <td>${qty_per_sku}<td>
+      </tr>`;
+    }
+      confirmationArr.push(eachBox)
+  };
+  if (selectedSkus.length) {
+    confirmationArr = confirmationArr.join('');
+      if (file) {
+        fileName = file.name
+      } else {
+        fileName = `no file`
+      };
+      if (file_2) {
+        fileName_2 = file_2.name
+      } else {
+        fileName_2 = `no file`
+      };
+      UIkit.modal.confirm(`<small class='text-primary' uk-tooltip="title: This page is a pre-check step before proceeding the confirmation. Please review your request order. If there is any input error, simply click “Cancel” and correct it. Otherwise, click “OK” to continue; pos: right">此页为检查页面，若发现输入/选择错误，请按“Cancel”并更改；若所有输入皆正确，请按“OK”完成通知</small><table class="uk-table uk-table-small uk-table-divider">
+      <thead>
+        <tr>
+        <th>箱码/ SKU/ 数量</th>
+        <th></th>
+        <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      ${confirmationArr}
+      </tbody>
+      </table><hr><b>附注留言</b>: ${notes}<hr><b>档案:</b> <u>${fileName}</u> & <u>${fileName_2}</u>`).then(function () {
+        loader.style.display = '';
+        GetSelected()
+    }, function () {
+        console.log('Rejected.')
+    });
+  } else {
+    alert('You need to select at least one box! 您需要选择至少一个SKU')
+  }
+};

@@ -78,7 +78,7 @@ function validation_request() {
       if (checkBoxes[i].checked) {
       var row = checkBoxes[i].parentNode.parentNode;
       var eachBox = `<tr>
-      <td>${row.cells[2].innerHTML}<td>
+      <td class='text-primary'>${row.cells[2].innerHTML}<td>
       <td>${row.cells[3].innerHTML}<td>
       <td>${row.cells[7].innerHTML}<td>
       </tr>`;
@@ -97,7 +97,7 @@ function validation_request() {
       } else {
         fileName_2 = `no file`
       };
-      UIkit.modal.confirm(`<small class='text-primary'>此页为检查页面，若发现输入/选择错误，请按“Cancel”并更改；若所有输入皆正确，请按“OK”完成通知</small><table class="uk-table uk-table-small uk-table-divider">
+      UIkit.modal.confirm(`<small class='text-primary' uk-tooltip="title: This page is a pre-check step before proceeding the confirmation. Please review your request order. If there is any input error, simply click “Cancel” and correct it. Otherwise, click “OK” to continue; pos: right">此页为检查页面，若发现输入/选择错误，请按“Cancel”并更改；若所有输入皆正确，请按“OK”完成通知</small><table class="uk-table uk-table-small uk-table-divider">
       <thead>
         <tr>
         <th>箱码/ 细目/ SKU</th>
