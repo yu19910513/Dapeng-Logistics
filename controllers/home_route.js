@@ -1831,6 +1831,8 @@ router.get('/dq_chinabox', withAuth, async (req, res) => {
         'user_id',
         'account_id',
         'box_number',
+        'sku',
+        'description',
         'order',
         'qty_per_box'
       ],
@@ -1900,8 +1902,8 @@ router.get('/dq_container', withAuth, async (req, res) => {
     });
     const pre_containers = containerData.map(container => container.get({ plain: true }));
     const requestsBatch = pre_containers.reduce(function (r, a) {
-      r[a.container_number] = r[a.container_number] || [];
-      r[a.container_number].push(a);
+      r[a.container_id] = r[a.container_id] || [];
+      r[a.container_id].push(a);
       return r;
     }, Object.create(null));
     const containers = Object.values(requestsBatch);
