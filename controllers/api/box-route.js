@@ -355,6 +355,28 @@ router.put('/xcharge_update', withAuth, (req, res) => {
     });
 });
 
+router.put(`/client_archive/:box_number`, withAuth, (req, res) => {
+  Box.update({
+      status: 98,
+    },
+      {
+      where: {
+          box_number: req.params.box_number
+      }
+    })
+    .then(dbBoxData => {
+      if (!dbBoxData[0]) {
+        res.status(404).json({ message: 'This Box does not exist!' });
+        return;
+      }
+      res.json(dbBoxData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
 router.post('/additional_charge', withAuth, (req, res) => {
   Box.create({
     requested_date: new Date().toLocaleDateString("en-US"),
@@ -370,6 +392,31 @@ router.post('/additional_charge', withAuth, (req, res) => {
     width: 0,
     height: 0,
     cost: req.body.cost,
+    status: 4
+  }, {returning: true})
+      .then(dbBoxData => res.json(dbBoxData))
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+});
+
+router.post('/delete_request', withAuth, (req, res) => {
+  Box.create({
+    requested_date: new Date().toLocaleDateString("en-US"),
+    box_number: req.body.box_number,
+    account_id: req.body.account_id,
+    user_id: req.session.user_id,
+    description: req.body.description,
+    notes: req.body.notes,
+    fba: `del req`,
+    qty_per_box: 0,
+    order: 0,
+    weight: 0,
+    length: 0,
+    width: 0,
+    height: 0,
+    cost: 0,
     status: 4
   }, {returning: true})
       .then(dbBoxData => res.json(dbBoxData))

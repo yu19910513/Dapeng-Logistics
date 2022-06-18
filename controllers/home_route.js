@@ -1920,7 +1920,7 @@ router.get('/dq_sku', withAuth, async (req, res) => {
         user_id: req.session.user_id,
       },
       order: [
-        ['item_number', 'ASC']
+        ['account_id', 'ASC']
       ],
       attributes: [
         'id',
