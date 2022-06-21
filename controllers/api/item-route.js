@@ -857,4 +857,25 @@ router.get('/statusTWO/:type', withAuth, async (req, res) => {
 
 });
 
+router.put(`/client_archive/:item_number`, withAuth, (req, res) => {
+  Item.update({
+      item_number: req.body.item_number
+    },
+      {
+      where: {
+        item_number: req.params.item_number
+      }
+    })
+    .then(dbItemData => {
+      if (!dbItemData[0]) {
+        res.status(404).json({ message: 'This item does not exist!' });
+        return;
+      }
+      res.json(dbItemData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
 module.exports = router;
