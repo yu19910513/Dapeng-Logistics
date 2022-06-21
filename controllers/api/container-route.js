@@ -848,4 +848,52 @@ router.put('/bill_storage_update', withAuth, (req, res) => {
     });
 });
 
+router.post('/delete_request', withAuth, (req, res) => {
+  Container.create({
+    requested_date: new Date().toLocaleDateString("en-US"),
+    container_number: req.body.container_number,
+    account_id: req.body.account_id,
+    user_id: req.session.user_id,
+    description: req.body.description,
+    notes: req.body.notes,
+    fba: `del req`,
+    qty_of_fee: 0,
+    unit_fee: 0,
+    weight: 0,
+    length: 0,
+    width: 0,
+    height: 0,
+    cost: 0,
+    status: 4,
+    type: 4
+  }, {returning: true})
+      .then(dbBoxData => res.json(dbBoxData))
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+});
+
+router.put(`/client_archive/:container_number`, withAuth, (req, res) => {
+  Container.update({
+      status: 98,
+    },
+      {
+      where: {
+        container_number: req.params.container_number
+      }
+    })
+    .then(dbContainerData => {
+      if (!dbContainerData[0]) {
+        res.status(404).json({ message: 'This container does not exist!' });
+        return;
+      }
+      res.json(dbContainerData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
 module.exports = router;

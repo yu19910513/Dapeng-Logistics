@@ -20,7 +20,21 @@
 <nav class="uk-navbar-container uk-navbar-transparent" uk-navbar>
     <div class="uk-navbar-center">
         <div class="uk-navbar-item">
-            {{!-- link to other pages --}}
+             {{#if china}}
+                    <button href="/dq_chinabox" class="btn btn-outline-secondary btn-sm shadow-sm rounded" disabled uk-tooltip="China Box">跨海货物</button>
+                    <a href="/dq_container" class="btn btn-outline-primary btn-sm shadow-sm rounded" uk-tooltip="Amazon/Walmart Container">美国转运货物</a>
+                    <a href="/dq_sku" class="btn btn-outline-primary btn-sm shadow-sm rounded" uk-tooltip="Container Items">转运货品(SKUs)</a>
+                {{else}}
+                    {{#if amazon}}
+                        <a href="/dq_chinabox" class="btn btn-outline-primary btn-sm shadow-sm rounded" uk-tooltip="China Box">跨海货物</a>
+                        <button href="/dq_container" class="btn btn-outline-secondary btn-sm shadow-sm rounded" disabled uk-tooltip="Amazon/Walmart Container">美国转运货物</button>
+                        <a href="/dq_sku" class="btn btn-outline-primary btn-sm shadow-sm rounded" uk-tooltip="Container Items">转运货品(SKUs)</a>
+                    {{else}}
+                        <a href="/dq_chinabox" class="btn btn-outline-primary btn-sm shadow-sm rounded" uk-tooltip="China Box">跨海货物</a>
+                        <a href="/dq_container" class="btn btn-outline-primary btn-sm shadow-sm rounded" uk-tooltip="Amazon/Walmart Container">美国转运货物</a>
+                        <button href="/dq_sku" class="btn btn-outline-secondary btn-sm shadow-sm rounded" disabled uk-tooltip="Container Items">转运货品(SKUs)</button>
+                    {{/if}}
+                {{/if}}
         </div>
 
         <div class="uk-navbar-item">
@@ -64,7 +78,7 @@
                 {{#each boxes as |box|}}
                     {{> dq_china box }}
                 {{else}}
-                <h3 class="text-center">NO ORDER WAS FOUND!</h3>
+                <h3 class="text-center">NO BOX WAS FOUND!</h3>
                 {{/each}}
             </tbody>
         </table>
@@ -84,10 +98,11 @@
                 {{#each containers as |container|}}
                     {{> dq_container container }}
                 {{else}}
-                <h3 class="text-center">NO ORDER WAS FOUND!</h3>
+                <h3 class="text-center">NO CONTAINER WAS FOUND!</h3>
                 {{/each}}
                 </tbody>
             </table>
+            <script src="javascript/dq_container.js"></script>
         {{else}}
             <table class="skuTable table table-hover shadow-sm table-striped" id="skuTable">
                 <thead>
@@ -102,10 +117,11 @@
                 {{#each items as |item|}}
                     {{> dq_item item }}
                 {{else}}
-                <h3 class="text-center">NO ORDER WAS FOUND!</h3>
+                <h3 class="text-center">NO ITEM WAS FOUND!</h3>
                 {{/each}}
                 </tbody>
             </table>
+            <script src="javascript/dq_sku.js"></script>
         {{/if}}
     {{/if}}
     <footer class="row">
