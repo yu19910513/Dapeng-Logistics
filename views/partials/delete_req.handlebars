@@ -1,0 +1,11 @@
+<tr>
+    {{#if box_number}}
+        <td class="text-danger">{{user.name}}: {{account.name}}</td>
+        <td>{{box_number}}</td>
+    {{else}}
+        <td class="text-success">{{user.name}}: {{account.name}}</td>
+        <td>{{container_number}}</td>
+    {{/if}}
+    <td><a>{{description}}</a></td>
+    <td>{{notes}}</td>
+</tr>

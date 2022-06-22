@@ -1972,6 +1972,126 @@ router.get('/dq_sku', withAuth, async (req, res) => {
 // router.get('/rawData', withAuth, (req, res) => {
 //     res.render('rawData');
 // });
+router.get('/delete_queue_admin', withAuth, async(req, res) => {
+  try {
+    const boxData = await Box.findAll({
+      where: {
+        status: 4,
+        cost: '0.00'
+      },
+      order: [
+        ['id', 'ASC']
+      ],
+      attributes: [
+        'id',
+        'user_id',
+        'account_id',
+        'box_number',
+        'notes',
+        'description',
+        'order',
+        'qty_per_box'
+      ],
+      include:[
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'name'
+          ]
+        }
+      ]
+    });
+    const containerData = await Container.findAll({
+      where: {
+        status: 4,
+        cost: '0.00'
+      },
+      order: [
+        ['id', 'ASC']
+      ],
+      attributes: [
+        'id',
+        'user_id',
+        'account_id',
+        'container_number',
+        'notes',
+        'description',
+        'unit_fee',
+        'qty_of_fee'
+      ],
+      include:[
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'name'
+          ]
+        }
+      ]
+    });
+    const xc_boxes = boxData.map(box => box.get({ plain: true }));
+    const xc_containers = containerData.map(container => container.get({ plain: true }));
+    res.render('delete_queue_admin', {xc_boxes, xc_containers, loggedIn: true, admin: req.session.admin, name: req.session.name});
+  } catch (error) {
+    res.status(500).json(error)
+  }
+});
 
+// router.get('/dq_chinabox_admin/:xc_box&:detailarr', withAuth, async (req, res) => {
+//   try {
+//     const xc_box = req.params.xc_box;
+//     const detailarr = req.params.detailarr;
+//     const itemArr = detailarr.split('-x-');
+//     const boxData = await Box.findAll({
+//       where: {
+//         box_number: itemArr,
+//         cost: '0.00'
+//       },
+//       order: [
+//         ['id', 'ASC']
+//       ],
+//       attributes: [
+//         'id',
+//         'user_id',
+//         'account_id',
+//         'container_number',
+//         'notes',
+//         'description',
+//         'unit_fee',
+//         'qty_of_fee'
+//       ],
+//       include:[
+//         {
+//           model: Account,
+//           attributes: [
+//             'name'
+//           ]
+//         },
+//         {
+//           model: User,
+//           attributes: [
+//             'name'
+//           ]
+//         }
+//       ]
+//     });
+//     })
+//     res.render('dq_handle_admin', {fromRequest, toRequest, newBox, fromBoxId, toBoxId, loggedIn: true, admin: req.session.admin, name: req.session.name});
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json(err);
+//   }
+// })
 
   module.exports = router
