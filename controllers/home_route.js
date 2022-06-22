@@ -2048,11 +2048,19 @@ router.get('/delete_queue_admin', withAuth, async(req, res) => {
   }
 });
 
-// router.get('/dq_chinabox_admin/:xc_box&:detailarr', withAuth, async (req, res) => {
+// router.get('/dq_handle_admin/:code&:xc_box&:detailarr', withAuth, async (req, res) => {
 //   try {
 //     const xc_box = req.params.xc_box;
 //     const detailarr = req.params.detailarr;
 //     const itemArr = detailarr.split('-x-');
+//     const code = req.params.code;
+//     if (code == 'chinabox') {
+
+//     } else if (code == 'container') {
+
+//     } else if (code == 'sku') {
+
+//     }
 //     const boxData = await Box.findAll({
 //       where: {
 //         box_number: itemArr,
