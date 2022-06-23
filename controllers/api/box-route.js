@@ -377,6 +377,28 @@ router.put(`/client_archive/:box_number`, withAuth, (req, res) => {
     });
 });
 
+router.put(`/reversal_archive/:box_number`, withAuth, (req, res) => {
+  Box.update({
+      status: 1,
+    },
+      {
+      where: {
+          box_number: req.params.box_number
+      }
+    })
+    .then(dbBoxData => {
+      if (!dbBoxData[0]) {
+        res.status(404).json({ message: 'This Box does not exist!' });
+        return;
+      }
+      res.json(dbBoxData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
 router.post('/additional_charge', withAuth, (req, res) => {
   Box.create({
     requested_date: new Date().toLocaleDateString("en-US"),
@@ -452,6 +474,25 @@ router.delete('/destroy', withAuth, (req, res) => {
   Box.destroy({
       where: {
         id: req.body.box_id
+      }
+    })
+      .then(dbBoxData => {
+        if (!dbBoxData) {
+          res.status(404).json({ message: 'No box found with this id' });
+          return;
+        }
+        res.json(dbBoxData);
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+});
+
+router.delete('/removebynumber/:box_number', withAuth, (req, res) => {
+  Box.destroy({
+      where: {
+        box_number: req.params.box_number
       }
     })
       .then(dbBoxData => {

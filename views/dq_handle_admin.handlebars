@@ -1,0 +1,95 @@
+{{#if admin}}
+<div class="container">
+        <div class="row">
+            <div class="col-sm-8 col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Ref: {{xc_number}}</h5>
+                        <hr>
+                        <p class="card-text">{{xc_notes}}</p>
+                    </div>
+                </div>
+            </div>
+    {{#if china}}
+            <div class="col-sm-8 col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-hover table-striped shadow-sm chinaTable" id="chinaTable">
+                            <thead>
+                                <tr class="bg-danger text-light">
+                                    <th onclick="location.reload()" scope="col" uk-tooltip="可多项目复选"><b></b></th>
+                                    <th scope="col"><b>Acct</b></th>
+                                    <th scope="col"><b>Box Number</b></th>
+                                    <th scope="col"><b>Location</b></th>
+                                </tr>
+                            </thead>
+                             <tbody>
+                                {{#each boxes as |box|}}
+                                    {{> dq_handle_china box }}
+                                {{else}}
+                                    <h3 class="text-center">NO BOX WAS FOUND!</h3>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{else}}
+        {{#if amazon}}
+            <div class="col-sm-8 col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-hover table-striped shadow-sm containerTable" id="containerTable">
+                                <thead>
+                                    <tr class="bg-warning">
+                                        <th onclick="location.reload()" scope="col" uk-tooltip="可多项目复选"><b></b></th>
+                                        <th scope="col"><b>Acct</b></th>
+                                        <th scope="col"><b>Container Number</b></th>
+                                        <th scope="col"><b>SKUs</b></th>
+                                        <th scope="col"><b>Location</b></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each containers as |container|}}
+                                        {{> dq_handle_container container }}
+                                    {{else}}
+                                        <h3 class="text-center">NO CONTAINER WAS FOUND! </h3>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{else}}
+            <div class="col-sm-8 col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-hover table-striped shadow-sm skuTable" id="skuTable">
+                                <thead>
+                                    <tr class="bg-info">
+                                        <th onclick="location.reload()" scope="col" uk-tooltip="可多项目复选"><b></b></th>
+                                        <th scope="col"><b>Acct</b></th>
+                                        <th scope="col"><b>SKUs</b></th>
+                                        <th scope="col"><b>Containers</b></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each items as |item|}}
+                                        {{> dq_handle_sku item }}
+                                    {{else}}
+                                        <h3 class="text-center">NO ITEM WAS FOUND! </h3>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{/if}}
+    {{/if}}
+</div>
+{{else}}
+<script src="javascript/client_redirect.js"></script>
+{{/if}}

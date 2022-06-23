@@ -628,6 +628,24 @@ router.delete('/destroyBulk', withAuth, (req, res) => {
   });
 });
 
+router.delete('/removebynumber/:container_number', withAuth, (req, res) => {
+  Container.destroy({
+    where: {
+      container_number: req.params.container_number
+    }
+  }).then(dbContainerData => {
+    if (!dbContainerData) {
+      res.status(404).json({ message: 'No Container found with this id' });
+      return;
+    }
+    res.json(dbContainerData);
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json(err);
+  });
+});
+
 router.post('/amazon_box', withAuth, (req, res) => {
   var status, description, requested_date;
   if (req.body.container_number[0] == "T") {
@@ -877,6 +895,28 @@ router.post('/delete_request', withAuth, (req, res) => {
 router.put(`/client_archive/:container_number`, withAuth, (req, res) => {
   Container.update({
       status: 98,
+    },
+      {
+      where: {
+        container_number: req.params.container_number
+      }
+    })
+    .then(dbContainerData => {
+      if (!dbContainerData[0]) {
+        res.status(404).json({ message: 'This container does not exist!' });
+        return;
+      }
+      res.json(dbContainerData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+router.put(`/reversal_archive/:container_number`, withAuth, (req, res) => {
+  Container.update({
+      status: 1,
     },
       {
       where: {

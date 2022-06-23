@@ -2048,58 +2048,185 @@ router.get('/delete_queue_admin', withAuth, async(req, res) => {
   }
 });
 
-// router.get('/dq_handle_admin/:code&:xc_box&:detailarr', withAuth, async (req, res) => {
-//   try {
-//     const xc_box = req.params.xc_box;
-//     const detailarr = req.params.detailarr;
-//     const itemArr = detailarr.split('-x-');
-//     const code = req.params.code;
-//     if (code == 'chinabox') {
-
-//     } else if (code == 'container') {
-
-//     } else if (code == 'sku') {
-
-//     }
-//     const boxData = await Box.findAll({
-//       where: {
-//         box_number: itemArr,
-//         cost: '0.00'
-//       },
-//       order: [
-//         ['id', 'ASC']
-//       ],
-//       attributes: [
-//         'id',
-//         'user_id',
-//         'account_id',
-//         'container_number',
-//         'notes',
-//         'description',
-//         'unit_fee',
-//         'qty_of_fee'
-//       ],
-//       include:[
-//         {
-//           model: Account,
-//           attributes: [
-//             'name'
-//           ]
-//         },
-//         {
-//           model: User,
-//           attributes: [
-//             'name'
-//           ]
-//         }
-//       ]
-//     });
-//     })
-//     res.render('dq_handle_admin', {fromRequest, toRequest, newBox, fromBoxId, toBoxId, loggedIn: true, admin: req.session.admin, name: req.session.name});
-//   } catch (err) {
-//     console.log(err);
-//     res.status(500).json(err);
-//   }
-// })
+router.get('/dq_handle_admin/:code&:xc_box&:detailarr', withAuth, async (req, res) => {
+  try {
+    const xc_box = req.params.xc_box;
+    const detailarr = req.params.detailarr;
+    const itemArr = detailarr.split('-x-');
+    console.log(itemArr, detailarr);
+    const code = req.params.code;
+    if (code == 'chinabox') {
+      const boxData = await Box.findAll({
+        where: {
+          box_number: itemArr,
+        },
+        order: [
+          ['id', 'ASC']
+        ],
+        attributes: [
+          'id',
+          'user_id',
+          'account_id',
+          'box_number',
+          'location',
+          'description'
+        ],
+        include:[
+          {
+            model: Account,
+            attributes: [
+              'name'
+            ]
+          },
+          {
+            model: User,
+            attributes: [
+              'name'
+            ]
+          }
+        ]
+      });
+      const xcData = await Box.findOne({
+        where: {
+          box_number: xc_box
+        },
+        attributes: [
+          'id',
+          'user_id',
+          'account_id',
+          'box_number',
+          'notes'
+        ],
+      });
+      const boxes = boxData.map(box => box.get({ plain: true }));
+      const xc = xcData.get({plain: true});
+      res.render('dq_handle_admin', {boxes, xc_number: xc.box_number, xc_notes: xc.notes, china: true, amazon: false, loggedIn: true, admin: req.session.admin, name: req.session.name});
+    } else if (code == 'container') {
+      const containerData = await Item.findAll({
+        order: [
+          ['item_number', 'ASC']
+        ],
+        attributes: [
+          'id',
+          'user_id',
+          'account_id',
+          'container_id',
+          'item_number',
+          'qty_per_sku'
+        ],
+        include:[
+          {
+            model: Container,
+            where: {
+              container_number: itemArr
+            },
+            attributes: [
+              'container_number',
+              'location'
+            ]
+          },
+          {
+            model: User,
+            attributes: [
+              'name'
+            ]
+          },
+          {
+            model: Account,
+            attributes: [
+              'name'
+            ]
+          }
+        ]
+      });
+      const xcData = await Container.findOne({
+        where: {
+          container_number: xc_box
+        },
+        attributes: [
+          'id',
+          'user_id',
+          'account_id',
+          'container_number',
+          'notes'
+        ],
+      });
+      const pre_containers = containerData.map(container => container.get({ plain: true }));
+      const requestsBatch = pre_containers.reduce(function (r, a) {
+        r[a.container_id] = r[a.container_id] || [];
+        r[a.container_id].push(a);
+        return r;
+      }, Object.create(null));
+      const containers = Object.values(requestsBatch);
+      const xc = xcData.get({plain: true});
+      res.render('dq_handle_admin', {containers, xc_number: xc.container_number, xc_notes: xc.notes, china: false, amazon: true, loggedIn: true, admin: req.session.admin, name: req.session.name});
+    } else if (code == 'sku') {
+      var modifiedArr = [];
+      itemArr.forEach(item => {modifiedArr.push(`del-${item}`)});
+      console.log(modifiedArr);
+      const itemData = await Item.findAll({
+        where: {
+          item_number: modifiedArr
+        },
+        order: [
+          [{model: Container, as: 'Container'}, 'location', 'ASC'],
+        ],
+        attributes: [
+          'id',
+          'user_id',
+          'account_id',
+          'container_id',
+          'item_number',
+          'qty_per_sku'
+        ],
+        include:[
+          {
+            model: Container,
+            attributes: [
+              'container_number',
+              'location'
+            ]
+          },
+          {
+            model: User,
+            attributes: [
+              'name'
+            ]
+          },
+          {
+            model: Account,
+            attributes: [
+              'name'
+            ]
+          }
+        ]
+      });
+      const xcData = await Container.findOne({
+        where: {
+          container_number: xc_box
+        },
+        attributes: [
+          'id',
+          'user_id',
+          'account_id',
+          'container_number',
+          'notes'
+        ],
+      });
+      const pre_items = itemData.map(item => item.get({ plain: true }));
+      const requestsBatch = pre_items.reduce(function (r, a) {
+        r[a.item_number] = r[a.item_number] || [];
+        r[a.item_number].push(a);
+        return r;
+      }, Object.create(null));
+      const items = Object.values(requestsBatch);
+      const xc = xcData.get({plain: true});
+      res.render('dq_handle_admin', {items, xc_number: xc.container_number, xc_notes: xc.notes, china: false, amazon: false, loggedIn: true, admin: req.session.admin, name: req.session.name});
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+})
 
   module.exports = router
