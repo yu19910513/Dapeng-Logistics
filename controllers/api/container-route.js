@@ -920,6 +920,30 @@ router.put(`/reversal_archive/:container_number`, withAuth, (req, res) => {
     },
       {
       where: {
+        container_number: req.params.container_number,
+        status: 98
+      }
+    })
+    .then(dbContainerData => {
+      if (!dbContainerData[0]) {
+        res.status(404).json({ message: 'This container does not exist!' });
+        return;
+      }
+      res.json(dbContainerData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
+router.put(`/dq_confirm/:container_number`, withAuth, (req, res) => {
+  Container.update({
+      status: 1,
+      shipped_date: new Date().toLocaleDateString("en-US")
+    },
+      {
+      where: {
         container_number: req.params.container_number
       }
     })
@@ -936,4 +960,28 @@ router.put(`/reversal_archive/:container_number`, withAuth, (req, res) => {
     });
 });
 
+router.put('/xc_addCharge/:container_number', withAuth, (req, res) => {
+  Container.update({
+    unit_fee: req.body.unit_fee,
+    qty_of_fee: req.body.qty_of_fee,
+    cost: req.body.cost,
+    description: req.body.description
+    },
+    {
+      where: {
+        container_number: req.params.container_number
+      }
+    })
+    .then(dbContainerData => {
+      if (!dbContainerData[0]) {
+        res.status(404).json({ message: 'This Container does not exist!' });
+        return;
+      }
+      res.json(dbContainerData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
 module.exports = router;

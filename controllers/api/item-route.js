@@ -645,6 +645,25 @@ Item.destroy({
   });
 });
 
+router.delete('/dq_confirm/:item_number', withAuth, (req, res) => {
+  Item.destroy({
+    where: {
+      item_number: req.params.item_number
+    }
+  })
+    .then(dbItemData => {
+      if (!dbItemData) {
+        res.status(404).json({ message: 'No item found with this id' });
+        return;
+      }
+      res.json(dbItemData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
 router.delete('/bulkDestroy/', withAuth, (req, res) => {
   Item.destroy({
     where: {

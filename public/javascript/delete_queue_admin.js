@@ -68,7 +68,7 @@ const reverseReq = async (code, eachNumber) => {
           if (response.ok) {
             console.log(`${eachNumber} is reversed back to status 1!`)
           } else {
-            alert(`fail to delete ${eachNumber}`)
+            alert(`fail to reverse ${eachNumber}`)
         }
     } else if (code == 'a') {
         const response = await fetch(`/api/container/reversal_archive/${eachNumber}`, {
@@ -78,7 +78,7 @@ const reverseReq = async (code, eachNumber) => {
           if (response.ok) {
             console.log(`${eachNumber} is reversed back to status 1!`)
           } else {
-            alert(`fail to delete ${eachNumber}`)
+            alert(`fail to reverse ${eachNumber}`)
         }
     } else if (code == 's') {
         const response = await fetch(`/api/item/reversal_archive/${eachNumber}`, {
@@ -88,7 +88,7 @@ const reverseReq = async (code, eachNumber) => {
           if (response.ok) {
             console.log(`${eachNumber} is reversed back to status 1!`)
           } else {
-            alert(`fail to delete ${eachNumber}`)
+            alert(`fail to reverse ${eachNumber}`)
         }
     }
 };

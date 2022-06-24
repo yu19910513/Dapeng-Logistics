@@ -2,9 +2,32 @@
 <div class="container">
         <div class="row">
             <div class="col-sm-8 col-md-4">
-                <div class="card">
+                <div class="card" id="controller">
                     <div class="card-body">
                         <h5 class="card-title text-center">Ref: {{xc_number}}</h5>
+                        <hr>
+                        <div>
+                            <form>
+                                <div class="row">
+                                    <div class="col" id="scanGroup">
+                                        <input type="text" id="scanInput" class="form-control border border-info" placeholder="Scan" onkeyup="displayInfo()">
+                                    </div>
+                                    <div class="col">
+                                        <select class="form-control">
+                                            <option value="99" selected>DELETE</option>
+                                            <option value="-1">REVERSE</option>
+                                            <option value="0">DESTROY (not recommended)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <button class="btn btn-outline-primary form-control" onclick="proceed()">Proceed</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div id="info" class="mt-2">
+
+                            </div>
+                        </div>
                         <hr>
                         <p class="card-text">{{xc_notes}}</p>
                     </div>
@@ -14,7 +37,7 @@
             <div class="col-sm-8 col-md-8">
                 <div class="card">
                     <div class="card-body">
-                        <table class="table table-hover table-striped shadow-sm chinaTable" id="chinaTable">
+                        <table class="table table-hover table-striped shadow-sm" id="dqTable">
                             <thead>
                                 <tr class="bg-danger text-light">
                                     <th onclick="location.reload()" scope="col" uk-tooltip="可多项目复选"><b></b></th>
@@ -27,7 +50,7 @@
                                 {{#each boxes as |box|}}
                                     {{> dq_handle_china box }}
                                 {{else}}
-                                    <h3 class="text-center">NO BOX WAS FOUND!</h3>
+                                    {{> xc_charge}}
                                 {{/each}}
                             </tbody>
                         </table>
@@ -40,7 +63,7 @@
             <div class="col-sm-8 col-md-8">
                     <div class="card">
                         <div class="card-body">
-                            <table class="table table-hover table-striped shadow-sm containerTable" id="containerTable">
+                            <table class="table table-hover table-striped shadow-sm" id="dqTable">
                                 <thead>
                                     <tr class="bg-warning">
                                         <th onclick="location.reload()" scope="col" uk-tooltip="可多项目复选"><b></b></th>
@@ -54,7 +77,7 @@
                                     {{#each containers as |container|}}
                                         {{> dq_handle_container container }}
                                     {{else}}
-                                        <h3 class="text-center">NO CONTAINER WAS FOUND! </h3>
+                                        {{> xc_charge}}
                                     {{/each}}
                                 </tbody>
                             </table>
@@ -66,7 +89,7 @@
             <div class="col-sm-8 col-md-8">
                     <div class="card">
                         <div class="card-body">
-                            <table class="table table-hover table-striped shadow-sm skuTable" id="skuTable">
+                            <table class="table table-hover table-striped shadow-sm" id="dqTable">
                                 <thead>
                                     <tr class="bg-info">
                                         <th onclick="location.reload()" scope="col" uk-tooltip="可多项目复选"><b></b></th>
@@ -79,7 +102,7 @@
                                     {{#each items as |item|}}
                                         {{> dq_handle_sku item }}
                                     {{else}}
-                                        <h3 class="text-center">NO ITEM WAS FOUND! </h3>
+                                        {{> xc_charge}}
                                     {{/each}}
                                 </tbody>
                             </table>
@@ -90,6 +113,7 @@
         {{/if}}
     {{/if}}
 </div>
+<script src="javascript/del_req_handling.js"></script>
 {{else}}
 <script src="javascript/client_redirect.js"></script>
 {{/if}}

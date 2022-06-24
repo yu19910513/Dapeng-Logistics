@@ -383,7 +383,8 @@ router.put(`/reversal_archive/:box_number`, withAuth, (req, res) => {
     },
       {
       where: {
-          box_number: req.params.box_number
+        box_number: req.params.box_number,
+        status: 98
       }
     })
     .then(dbBoxData => {
@@ -508,6 +509,30 @@ router.delete('/removebynumber/:box_number', withAuth, (req, res) => {
       });
 });
 
+router.put('/dq_confirm/:box_number', withAuth, (req, res) => {
+  Box.update({
+    status: 3,
+    bill_shipped: new Date().getTime(),
+    shipped_date: new Date().toLocaleDateString("en-US")
+  },
+  {
+  where:{
+    box_number: req.params.box_number
+  }
+  }).
+  then(dbBoxData => {
+    if (!dbBoxData) {
+      res.status(404).json({ message: 'No box found with this id' });
+      return;
+    }
+    res.json(dbBoxData);
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json(err);
+  });
+});
+
 router.delete('/remove/:time', withAuth, (req, res) => {
   Box.destroy({
       where: {
@@ -573,6 +598,31 @@ router.put('/archieve/:time', withAuth, (req, res) => {
         console.log(err);
         res.status(500).json(err);
   });
+});
+
+router.put('/xc_addCharge/:box_number', withAuth, (req, res) => {
+  Box.update({
+    order: req.body.order,
+    qty_per_box: req.body.qty_per_box,
+    cost: req.body.cost,
+    description: req.body.description
+    },
+    {
+      where: {
+        box_number: req.params.box_number
+      }
+    })
+    .then(dbBoxData => {
+      if (!dbBoxData[0]) {
+        res.status(404).json({ message: 'This Box does not exist!' });
+        return;
+      }
+      res.json(dbBoxData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 //// mannual update date of each status////////////////
