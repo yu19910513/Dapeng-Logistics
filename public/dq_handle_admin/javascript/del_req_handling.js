@@ -12,13 +12,17 @@ const secondaryTargets = [];
 /////////////////////////////////////
 for (let i = 1; i < rows.length; i++) {
     var primaryItem = rows[i].cells[2].innerText.toUpperCase();
+    var secondaryItems = rows[i].cells[3].querySelectorAll('u');
     if (pageType == 'sku') {
         primaryItem = primaryItem.split('-').pop();
+        secondaryItems.forEach(i => secondaryTargets.push(i.innerText.toUpperCase()))
     } else if (pageType == 'container') {
         containerIdMap.set(rows[i].cells[2].innerText, rows[i].cells[2].id);
+        secondaryItems.forEach(i => secondaryTargets.push(i.innerText.toUpperCase()))
     }
     primaryTargets.push(primaryItem);
 };
+/////input timer/////
 var timer = null;
 function delay(){
     var time = 1200;
@@ -29,6 +33,7 @@ function delay(){
 const displayInfo = () => {
     const scan_value = scan_input.value.toUpperCase().trim();
     const index = primaryTargets.indexOf(scan_value);
+    const index_2 = secondaryTargets.indexOf(scan_value);
     if (pageType == 'chinabox' && index > -1) {
         checkboxes[index].checked = true;
         scan_input.value = null;
