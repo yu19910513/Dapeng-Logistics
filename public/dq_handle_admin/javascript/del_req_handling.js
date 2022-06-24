@@ -8,17 +8,20 @@ const checkboxes = table.querySelectorAll('input');
 const infoPanel = document.getElementById('info');
 const containerIdMap = new Map();
 const primaryTargets = [];
-const secondaryTargets = [];
+const primarySecondaryMap = new Map();
 /////////////////////////////////////
 for (let i = 1; i < rows.length; i++) {
+    const secondaryTargets = [];
     var primaryItem = rows[i].cells[2].innerText.toUpperCase();
     var secondaryItems = rows[i].cells[3].querySelectorAll('u');
     if (pageType == 'sku') {
         primaryItem = primaryItem.split('-').pop();
         secondaryItems.forEach(i => secondaryTargets.push(i.innerText.toUpperCase()))
+        primarySecondaryMap.set(primaryItem, secondaryTargets);
     } else if (pageType == 'container') {
         containerIdMap.set(rows[i].cells[2].innerText, rows[i].cells[2].id);
-        secondaryItems.forEach(i => secondaryTargets.push(i.innerText.toUpperCase()))
+        secondaryItems.forEach(i => secondaryTargets.push(i.innerText.toUpperCase()));
+        primarySecondaryMap.set(primaryItem, secondaryTargets); /////  container_number with an array of its own skus OR item_number with an array of its own containers /////
     }
     primaryTargets.push(primaryItem);
 };
@@ -33,7 +36,6 @@ function delay(){
 const displayInfo = () => {
     const scan_value = scan_input.value.toUpperCase().trim();
     const index = primaryTargets.indexOf(scan_value);
-    const index_2 = secondaryTargets.indexOf(scan_value);
     if (pageType == 'chinabox' && index > -1) {
         checkboxes[index].checked = true;
         scan_input.value = null;
@@ -116,8 +118,20 @@ const proceed = () => {
         alert('No item was selected')
     }
 };
-
-
+const undisable = () => {
+    const code = prompt('Please enter passcode to enable mannual checkbox!');
+    if (code == '0523') {
+        if (checkboxes[0].disabled) {
+            checkboxes.forEach(i => {i.disabled = false})
+         } else {
+            checkboxes.forEach(i => {i.disabled = true})
+        }
+    } else if (code == '3250') {
+        checkboxes.forEach(i => {i.checked = true})
+    } else {
+        alert('Incorrect passcode')
+    }
+}
 
 //// all of PUTS & DELETE functions
 const skuProcess = async (item_number) => {
