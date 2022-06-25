@@ -323,7 +323,9 @@ function shipped_billing(pageData, i) {
 
 ////////////////////////////// XC FOR LOOP
 function xc_billing(data, i) {
-    xchargeBoxArr.push(data[i].container_number)
+    if (data[i].cost > 0) {
+        xchargeBoxArr.push(data[i].container_number)
+    };
     const container = document.createElement('tr');
     xcharge_table.appendChild(container);
     const date = document.createElement('td');
