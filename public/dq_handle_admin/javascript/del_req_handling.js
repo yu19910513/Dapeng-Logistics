@@ -5,48 +5,65 @@ const table = document.querySelector('table');
 const rows = table.rows;
 const scan_input = document.getElementById('scanInput');
 const checkboxes = table.querySelectorAll('input');
+const uDataArr = table.querySelectorAll('u');// secondary data
 const infoPanel = document.getElementById('info');
 const containerIdMap = new Map();
 const primaryTargets = [];
+var secondaryTargets = [];
 const primarySecondaryMap = new Map();
-/////////////////////////////////////
+///////////////////////////////////// (data collection for proceed function)
 for (let i = 1; i < rows.length; i++) {
-    const secondaryTargets = [];
     var primaryItem = rows[i].cells[2].innerText.toUpperCase();
     var secondaryItems = rows[i].cells[3].querySelectorAll('u');
     if (pageType == 'sku') {
         primaryItem = primaryItem.split('-').pop();
-        secondaryItems.forEach(i => secondaryTargets.push(i.innerText.toUpperCase()))
-        primarySecondaryMap.set(primaryItem, secondaryTargets);
+        secondaryItems.forEach(i => primarySecondaryMap.set(i.innerText, primaryItem))
     } else if (pageType == 'container') {
         containerIdMap.set(rows[i].cells[2].innerText, rows[i].cells[2].id);
-        secondaryItems.forEach(i => secondaryTargets.push(i.innerText.toUpperCase()));
-        primarySecondaryMap.set(primaryItem, secondaryTargets); /////  container_number with an array of its own skus OR item_number with an array of its own containers /////
     }
     primaryTargets.push(primaryItem);
 };
+uDataArr.forEach(i => secondaryTargets.push(i.innerText.toUpperCase()));
 /////input timer/////
 var timer = null;
-function delay(){
+function delay(scan_value){
     var time = 1200;
     clearTimeout(timer);
-    timer = setTimeout(()=>{scan_input.value = null}, time)
+    timer = setTimeout(()=>{
+        scan_input.value = null;
+        infoPanel.innerHTML = `<h1 class='mt-2'>${scan_value}</h1><br><h2 class='text-danger'><b>Wrong</b> <span uk-icon="close"></span></h2>`
+        error();
+    }, time)
 };
 ////////////////////////////////////
 const displayInfo = () => {
     const scan_value = scan_input.value.toUpperCase().trim();
     const index = primaryTargets.indexOf(scan_value);
+    const index_2 = secondaryTargets.indexOf(scan_value);
     if (pageType == 'chinabox' && index > -1) {
         checkboxes[index].checked = true;
+        infoPanel.innerHTML = `<h1 class='mt-2'>${scan_value}</h1><br><h2 class='text-success'><b>Correct</b> <span uk-icon="check"></span></h2>`
         scan_input.value = null;
     } else if (pageType == 'container' && index > -1) {
         checkboxes[index].checked = true;
+        infoPanel.innerHTML = `<h1 class='mt-2'>${scan_value}</h1><br><h2 class='text-success'><b>Correct</b> <span uk-icon="check"></span></h2>`
         scan_input.value = null;
-    } else if (pageType == 'sku' && index > -1) {
-        checkboxes[index].checked = true;
-        scan_input.value = null;
+    } else if (pageType == 'sku' && (index > -1 || index_2 > -1)) {
+        if (index > -1) {
+            // checkboxes[index].checked = true;
+            infoPanel.innerHTML = `<h1 class='mt-2'>${scan_value}</h1><br><h2 class='text-success'><b>Correct</b> <span uk-icon="check"></span></h2>`
+            scan_input.value = null;
+        } else {
+            uDataArr[index_2].setAttribute('class','bg-secondary');
+            const qty = uDataArr[index_2].parentElement.innerText.split('(')[1].split(')')[0];
+            const leadTarget = primarySecondaryMap.get(scan_value);
+            infoPanel.innerHTML = `<h1 class='mt-2'>${scan_value}</h1><br><h1 class='text-primary'>${leadTarget} (${qty})</h1>`
+            secondaryTargets[index_2] = null;
+            scan_input.value = null;
+            emptyChecker(secondaryTargets)
+        }
     } else {
-        delay();
+        delay(scan_value);
     }
 };
 /////////////////////////////////////
@@ -131,7 +148,16 @@ const undisable = () => {
     } else {
         alert('Incorrect passcode')
     }
-}
+};
+function error() {
+    var audio = new Audio('../media/wrong.mp3');
+    audio.play();
+};
+const emptyChecker = (arr) => {
+    if (arr.join('').length < 1) {
+        checkboxes.forEach(i => {i.checked = true})
+    }
+};
 
 //// all of PUTS & DELETE functions
 const skuProcess = async (item_number) => {
