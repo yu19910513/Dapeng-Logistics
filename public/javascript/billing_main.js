@@ -4,6 +4,19 @@ const today = new Date().toLocaleDateString("en-US");
 const shipping_cost = document.getElementById('shipping_cost');
 const receiving_cost = document.getElementById('receiving_cost');
 const storage_cost = document.getElementById('storage_cost');
+const cost_cache = ["shipping_cost", "receiving_cost", "storage_cost"];
+const cost_retainer = (arr) => {
+    arr.forEach(cost => {
+        if (localStorage.getItem(cost)) {
+            document.getElementById(cost).value = parseFloat(localStorage.getItem(cost))
+        }
+    })
+}; cost_retainer(cost_cache);
+const cost_updater = (arr) => {
+    arr.forEach(cost => {
+        localStorage.setItem(cost, document.getElementById(cost).value)
+    })
+};
 // charge display
 const shipping_total = document.getElementById('shipping_total');
 const storage_total = document.getElementById('storage_total');
@@ -21,7 +34,7 @@ const received_table = document.getElementById('received_table');
 const shipped_table = document.getElementById('shipped_table');
 const xcharge_table = document.getElementById('xcharge_table');
 
-
+const userAndIdMap = new Map ();
 document.getElementById('today').innerHTML = today;
 function client_data() {
     fetch(`/api/user/`, {
@@ -33,6 +46,7 @@ function client_data() {
         const user = document.createElement('option');
         user.innerHTML = data[i].name;
         user.setAttribute('value', data[i].id);
+        userAndIdMap.set(data[i].id, data[i].name);
         client_list.appendChild(user)
         };
     });
@@ -47,9 +61,11 @@ function unlock_select() {
 //when specific user is selected
 function client() {
  if (client_list.value != 0) {
+    cost_updater(cost_cache);
     const user_id = client_list.value
     document.getElementById('client_list').disabled = true;
     localStorage.setItem('user_id', user_id);
+    localStorage.setItem('user_name', userAndIdMap.get(parseInt(user_id)));
     next(user_id);
  }
 };
@@ -102,7 +118,6 @@ function next(user_id) {
         return response.json();
     }).then(function (data) {
         const pageData = data;
-        localStorage.setItem('user_name', pageData[0].user.name);
         //RECEIVED FOR LOOP
         for (let j = 0; j < pageData.length; j++) {
            if(!pageData[j].bill_received) {
@@ -452,7 +467,7 @@ function x_only() {
 
 // rest page
 function reset() {
-    localStorage.removeItem('user_id');
+    localStorage.clear();
     location.reload()
 };
 
