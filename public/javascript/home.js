@@ -1,4 +1,4 @@
-console.log(location.href, 'master home.js');
+console.log(location.href, 'master home js');
 function number_item () {
     var numberOfItem = document.getElementById('numberOfInventory');
     var arr =[]
