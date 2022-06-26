@@ -21,92 +21,54 @@
 </head>
 <body>
 {{#if loggedIn}}
-   <nav class="uk-navbar-container uk-margin uk-navbar-attached" id="nav_bar" uk-navbar>
-        <div class="uk-navbar-center">
-
-            <div class="uk-navbar-center-left"><div>
-                <ul class="uk-navbar-nav">
-{{#if admin}}
-                    {{!-- <li class="uk-active">
-                        <a href="/admin" uk-icon="icon: home">Home</a>
-                    </li> --}}
-
-                    <li>
-                        <a href="/admin_move_main" uk-tooltip="出货通知"><b>Shipping</b> Queue</a>
-                    </li>
-
-                    <li>
-                        <a href="/admin_receiving_main" uk-tooltip="海外货品接收"><b>Receiving</b> Queue</a>
-                    </li>
-
-                    <li>
-                        <a href="/box_location" onclick="resetLocalStorage()" uk-tooltip="载入货架"><b>Allocation</b> Queue</a>
-                    </li>
-{{else}}
-
-                    <li class="create_order" onclick="accountList()"><a href="#createneworder" uk-toggle>新订单</a></li>
-                                <div id="createneworder" uk-modal>
-                                    <div class="uk-modal-dialog">
-
-                                        <button class="uk-modal-close-default" type="button" uk-close></button>
-
-                                        <div class="uk-modal-header uk-background-muted uk-text-center">
-                                            <h4 class="uk-modal-title">Account Options<br><small>帐户名选择</small></h4>
-                                        </div>
-                                            <p class="uk-margin-medium-left uk-margin-medium-right uk-margin-medium-top uk-margin-medium-bottom">Before creating a new shipment, please select an existed account to where the new order will be assigned. If you would like to create a new account, select "Create New Account" and continue. <br><small>创造新订单前，请选择一个已注册帐户，如欲创立新帐户名，选择“create new account”然后“确认”。</small></p>
-                                        <form class="uk-form-horizontal uk-margin-small uk-margin-small-left">
-                                            <div class="uk-margin">
-                                                <label class="uk-form-label" for="form-horizontal-select"><span uk-icon="icon: user"></span>USER: {{name}}</label>
-                                                <div class="uk-form-controls uk-form-width-medium">
-                                                    <select class="uk-select accountList" id="accountList">
-                                                        <option>Create New Account</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="uk-modal-footer uk-text-right">
-                                                <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
-                                                <a class="uk-button uk-button-primary" id="account_selection" uk-icon="icon:  arrow-right" href="/neworder">Continue(确认)</a>
-                                            </div>
-                                        </form>
-
-                                    </div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light p-3" id="nav_bar">
+    <a class="navbar-brand" href="/" uk-tooltip="回到主页"><img src="/media/panpan-0-1.png" width="120" height="auto" class="d-inline-block align-top" alt="logo"></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#dapengitems" aria-controls="dapengitems" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="dapengitems">
+        <ul class="navbar-nav mr-auto">
+            {{#if admin}}
+            <li class="nav-item shadow-sm rounded border-start text-center"><a class="nav-link" href="/admin_move_main" uk-tooltip="出货通知"><b>Ship-Out</b></a></li>
+            <li class="nav-item shadow-sm rounded border-start text-center"><a class="nav-link" href="/admin_receiving_main" uk-tooltip="海外货品接收"><b>Reception</b>🇨🇳</a></li>
+            <li class="nav-item shadow-sm rounded border-start text-center"><a class="nav-link" href="/amazon_receiving" uk-tooltip="亚马逊货品接收"><b>Reception</b>🇺🇸</a></li>
+            <li class="nav-item shadow-sm rounded border-start text-center"><a class="nav-link" href="/box_location" onclick="resetLocalStorage()" uk-tooltip="载入货架"><b>Allocation</b> </a></li>
+            <li class="nav-item shadow-sm rounded border-start text-center"><a class="nav-link" href="/delete_queue_admin" uk-tooltip="货物删除请求"><b>Deletion</b></a></li>
+            <li class="nav-item shadow-sm rounded border-start text-center"><a class="nav-link logout">Log Out<span uk-icon="icon: sign-out"></span></a></li>
+            {{else}}
+            <li class="create_order nav-item shadow-sm rounded border-start text-center" onclick="accountList()"><a class="nav-link" href="#createneworder" uk-toggle>新订单</a></li>
+            {{!-- uk-toogle --}}
+                <div id="createneworder" uk-modal>
+                    <div class="uk-modal-dialog">
+                        <button class="uk-modal-close-default" type="button" uk-close></button>
+                        <div class="uk-modal-header uk-background-muted uk-text-center">
+                            <h4 class="uk-modal-title">Account Options<br><small>帐户名选择</small></h4>
+                        </div>
+                        <p class="uk-margin-medium-left uk-margin-medium-right uk-margin-medium-top uk-margin-medium-bottom">Before creating a new shipment, please select an existed account to where the new order will be assigned. If you would like to create a new account, select "Create New Account" and continue. <br><small>创造新订单前，请选择一个已注册帐户，如欲创立新帐户名，选择“create new account”然后“确认”。</small></p>
+                        <form class="uk-form-horizontal uk-margin-small uk-margin-small-left">
+                            <div class="uk-margin">
+                                <label class="uk-form-label" for="form-horizontal-select"><span uk-icon="icon: user"></span>USER: {{name}}</label>
+                                <div class="uk-form-controls uk-form-width-medium">
+                                    <select class="uk-select accountList" id="accountList">
+                                        <option>Create New Account</option>
+                                    </select>
                                 </div>
-
-                    <li><a href="/client_label">总挂单</a></li>
-{{/if}}
-                </ul>
-            </div>
-            </div>
-
-            <a class="uk-navbar-item uk-logo" href="/" uk-tooltip="回到主页"><img src="/media/panpan-0-1.png" style="width: 185px;" alt="logo">
-
-                {{!-- <div class="dropdown-content">
-                    <div class="text-dark" href="#">大鹏库存</div>
-                </div> --}}
-
-            </a>
-            <div class="uk-navbar-center-right">
-                <ul class="uk-navbar-nav">
-{{#if admin}}
-                    <li>
-                        <a href="/amazon_receiving" uk-tooltip="亚马逊货品接收"><b>Amazon</b></a>
-                    </li>
-
-                    <li>
-                        <a href="/delete_queue_admin" uk-tooltip="货物删除请求"><b>Delete</b> Queue</a>
-                    </li>
-
-                    <li><a class="logout" uk-icon="icon: sign-out">Log Out</a></li>
-{{else}}
-                    <li><a href="/request">总出货</a></li>
-                    <li><a href="/dq_chinabox" uk-tooltip="delete queue">删除请求</a></li>
-                    <li><a class="logout" uk-icon="icon: sign-out">登出</a></li>
-{{/if}}
-                </ul>
-            </div></div>
-        </div>
-    </nav>
+                            </div>
+                            <div class="uk-modal-footer uk-text-right">
+                                <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+                                <a class="uk-button uk-button-primary" id="account_selection" uk-icon="icon:  arrow-right" href="/neworder">Continue(确认)</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            <li class="nav-item shadow-sm rounded border-start text-center"><a class="nav-link" href="/client_label">总挂单</a></li>
+            <li class="nav-item shadow-sm rounded border-start text-center"><a class="nav-link" href="/request">总出货</a></li>
+            <li class="nav-item shadow-sm rounded border-start text-center"><a class="nav-link" href="/dq_chinabox" uk-tooltip="delete queue">删除请求</a></li>
+            <li class="nav-item shadow-sm rounded border-start text-center"><a class="nav-link logout">登出<span uk-icon="icon: sign-out"></span></a></li>
+            {{/if}}
+        </ul>
+    </div>
+</nav>
 {{/if}}
 <small id="session_timer"></small>
 <main>

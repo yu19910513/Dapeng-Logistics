@@ -22,7 +22,7 @@
   }
 
   li a:hover {
-    text-decoration: underline;
+    background: #798EA4
 }
 
 /* li a:after {
