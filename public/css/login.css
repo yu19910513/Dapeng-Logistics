@@ -21,8 +21,8 @@
     }
   }
 
-  li a:hover {
-    background: #798EA4
+  nav li a:hover {
+    background: #a0d2eb
 }
 
 /* li a:after {

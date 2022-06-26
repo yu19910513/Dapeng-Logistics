@@ -22,6 +22,7 @@
 <body>
 {{#if loggedIn}}
 <nav class="navbar navbar-expand-lg navbar-light bg-light p-3" id="nav_bar">
+    <div class="container">
     <a class="navbar-brand" href="/" uk-tooltip="回到主页"><img src="/media/panpan-0-1.png" width="120" height="auto" class="d-inline-block align-top" alt="logo"></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#dapengitems" aria-controls="dapengitems" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -29,14 +30,14 @@
     <div class="collapse navbar-collapse" id="dapengitems">
         <ul class="navbar-nav mr-auto">
             {{#if admin}}
-            <li class="nav-item shadow-sm rounded border-start text-center"><a class="nav-link" href="/admin_move_main" uk-tooltip="出货通知"><b>Ship-Out</b></a></li>
-            <li class="nav-item shadow-sm rounded border-start text-center"><a class="nav-link" href="/admin_receiving_main" uk-tooltip="海外货品接收"><b>Reception</b>🇨🇳</a></li>
-            <li class="nav-item shadow-sm rounded border-start text-center"><a class="nav-link" href="/amazon_receiving" uk-tooltip="亚马逊货品接收"><b>Reception</b>🇺🇸</a></li>
-            <li class="nav-item shadow-sm rounded border-start text-center"><a class="nav-link" href="/box_location" onclick="resetLocalStorage()" uk-tooltip="载入货架"><b>Allocation</b> </a></li>
-            <li class="nav-item shadow-sm rounded border-start text-center"><a class="nav-link" href="/delete_queue_admin" uk-tooltip="货物删除请求"><b>Deletion</b></a></li>
-            <li class="nav-item shadow-sm rounded border-start text-center"><a class="nav-link logout">Log Out<span uk-icon="icon: sign-out"></span></a></li>
+            <li class="nav-item"><a class="nav-link rounded-sm text-center text-dark" href="/admin_move_main" uk-tooltip="出货通知">Ship-Out</a></li>
+            <li class="nav-item"><a class="nav-link rounded-sm text-center text-dark" href="/admin_receiving_main" uk-tooltip="海外货品接收">Reception🇨🇳</a></li>
+            <li class="nav-item"><a class="nav-link rounded-sm text-center text-dark" href="/amazon_receiving" uk-tooltip="亚马逊货品接收">Reception🇺🇸</a></li>
+            <li class="nav-item"><a class="nav-link rounded-sm text-center text-dark" href="/box_location" onclick="resetLocalStorage()" uk-tooltip="载入货架">Allocation</a></li>
+            <li class="nav-item"><a class="nav-link rounded-sm text-center text-dark" href="/delete_queue_admin" uk-tooltip="货物删除请求">Deletion</a></li>
+            <li class="nav-item"><a class="nav-link logout rounded-sm text-center text-dark" style="background-color: #E0EEEE;">Log Out<span uk-icon="icon: sign-out"></span></a></li>
             {{else}}
-            <li class="create_order nav-item shadow-sm rounded border-start text-center" onclick="accountList()"><a class="nav-link" href="#createneworder" uk-toggle>新订单</a></li>
+            <li class="create_order nav-item" onclick="accountList()"><a class="nav-link rounded-sm text-center text-dark" href="#createneworder" uk-toggle>新订单</a></li>
             {{!-- uk-toogle --}}
                 <div id="createneworder" uk-modal>
                     <div class="uk-modal-dialog">
@@ -61,12 +62,13 @@
                         </form>
                     </div>
                 </div>
-            <li class="nav-item shadow-sm rounded border-start text-center"><a class="nav-link" href="/client_label">总挂单</a></li>
-            <li class="nav-item shadow-sm rounded border-start text-center"><a class="nav-link" href="/request">总出货</a></li>
-            <li class="nav-item shadow-sm rounded border-start text-center"><a class="nav-link" href="/dq_chinabox" uk-tooltip="delete queue">删除请求</a></li>
-            <li class="nav-item shadow-sm rounded border-start text-center"><a class="nav-link logout">登出<span uk-icon="icon: sign-out"></span></a></li>
+            <li class="nav-item"><a class="nav-link rounded-sm text-center text-dark" href="/client_label">总挂单</a></li>
+            <li class="nav-item"><a class="nav-link rounded-sm text-center text-dark" href="/request">总出货</a></li>
+            <li class="nav-item"><a class="nav-link rounded-sm text-center text-dark" href="/dq_chinabox" uk-tooltip="delete queue">删除请求</a></li>
+            <li class="nav-item"><a class="nav-link logout rounded-sm text-center text-dark" style="background-color: #E0EEEE">登出<span uk-icon="icon: sign-out"></span></a></li>
             {{/if}}
         </ul>
+    </div>
     </div>
 </nav>
 {{/if}}
