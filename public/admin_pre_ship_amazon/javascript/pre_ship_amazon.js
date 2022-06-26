@@ -321,20 +321,11 @@ async function loadingItems(data) {
 
 function printable() {
     console.log(totalItem);
-    const displayElement = document.getElementById('assignFunction');
-    const notesElement = document.getElementById('notesFunction');
+    const hideables = [document.getElementById('assignFunction'),document.getElementById('notesFunction'), document.getElementById('topline')];
     printCheck = true;
-    if (displayElement.style.display == 'none') {
-        notesElement.style.display = '';
-        displayElement.style.display = ''
-    } else {
-        displayElement.style.display = 'none';
-        notesElement.style.display = 'none';
-        window.print();
-        notesElement.style.display = '';
-        displayElement.style.display = ''
-    }
-
+    hideables.forEach(i => i.style.display = 'none')
+    window.print();
+    hideables.forEach(i => i.style.display = '')
 }
 function error() {
     var audio = new Audio('../media/wrong.mp3');

@@ -1,5 +1,5 @@
 {{#if admin}}
-<p class="uk-heading-line uk-text-right uk-margin-small-right"><a onclick="deleteConfirm()" class="border border-danger rounded-circle" uk-icon="icon: trash" uk-tooltip="Remove remaining items and destroy the REQ box"></a> <span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
+<p class="uk-heading-line uk-text-right uk-margin-small-right" id="topline"><a onclick="deleteConfirm()" class="border border-danger rounded-circle" uk-icon="icon: trash" uk-tooltip="Remove remaining items and destroy the REQ box"></a> <span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
 
 <div class="container col-md-5 col-sm-8" id="notesFunction">
 <div class="mb-2 card border-info p-2" uk-tooltip="Scan the targeted box first, then scan requested sku(s). If the client requested the whole box, scan the box twice to select all requested items" ><span class="lead">Notes:</span> <span id="notes"></spans></div>

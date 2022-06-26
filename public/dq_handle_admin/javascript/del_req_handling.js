@@ -27,7 +27,7 @@ uDataArr.forEach(i => secondaryTargets.push(i.innerText.toUpperCase()));
 /////input timer/////
 var timer = null;
 function delay(scan_value){
-    var time = 1200;
+    var time = 800;
     clearTimeout(timer);
     timer = setTimeout(()=>{
         scan_input.value = null;
