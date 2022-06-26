@@ -68,11 +68,6 @@ const displayInfo = () => {
 };
 /////////////////////////////////////
 const proceed = () => {
-    const passcode = prompt('Enter passcode to proceed')
-    if (passcode != '0523') {
-        alert('Incorrect password');
-        return
-    };
     const promises = [];
     var count = 0;
     for (let i = 0; i < checkboxes.length; i++) {
