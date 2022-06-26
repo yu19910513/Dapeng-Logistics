@@ -81,4 +81,20 @@ function preCheckPage() {
             console.log('Rejected.')
         });
     }
+};
+
+//////welcome page//////
+if (!localStorage.getItem('reminder')) {
+    UIkit.modal.confirm(`
+    <p class='text-primary text-center' uk-tooltip="title: The item-removal page allows clients to remove item(s)/merchandise(s) from his or her associated account. For merchandises directed came abroad, clients may choose the whole box; for Amazon/Walmart merchandises, client can choose either whole box or single sku for the removal process.; pos: right">此页为删除请求页面，使用者有三种选择模式：</p><br>
+    <ol>
+        <li><span class="text-primary">1. 跨海货物</span>(国内出口到美国存储的整箱货物): 勾选要移除的<span class="text-danger">整箱</span>货品，仓库管理员会即时为您销毁，若有特别需求，请留言在备注栏</li>
+        <li><span class="text-primary">2. 美国转运货物</span>(美国亚马逊或其他物流公司回流的境内货物): 勾选要移除的<span class="text-danger">整箱</span>货品，仓库管理员会即时为您销毁，若有特别需求，请留言在备注栏</li>
+        <li><span class="text-primary">3. 转运货品SKUs</span>(<u>美国转运货物</u>的单项物件): 勾选要移除的<span class="text-danger">单项</span>SKU，仓库管理员会把所有相关货箱中的此物件(SKU)即时销毁，若有特别需求，请留言在备注栏</li>
+    </ol>
+    <hr>
+    <p class="text-center" uk-tooltip="title: Each request is limited for a total of 15 checked items. If your request contains more than 15 checked items, please seperate them into two or more batches.; pos: right">*一次不得勾选超过15样。若有必要，请分批请求*</p>
+`).then(function () {
+    localStorage.setItem('reminder', true);
+});
 }
