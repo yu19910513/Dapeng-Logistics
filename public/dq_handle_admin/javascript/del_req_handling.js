@@ -275,3 +275,12 @@ const updateCharge_amazon = async (data, container_number) => {
         alert('try again')
     }
 };
+
+
+///print function///
+const hideables = [document.getElementById("controller"), document.getElementById("topline"), document.querySelector('thead')]
+const printTable = () => {
+    hideables.forEach(i => i.style.display = 'none');
+    window.print();
+    hideables.forEach(i => i.style.display = '');
+}

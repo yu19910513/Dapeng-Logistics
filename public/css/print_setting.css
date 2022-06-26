@@ -11,6 +11,9 @@
     #barcode_btn {
         display: none;
     }
+    footer {
+        display: none;
+    }
     #box_bar {
         page-break-before: always;
     }

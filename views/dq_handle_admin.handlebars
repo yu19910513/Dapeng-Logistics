@@ -1,4 +1,5 @@
 {{#if admin}}
+<p class="uk-heading-line uk-text-right uk-margin-small-right" id="topline"><a uk-icon="icon: print" onclick="printTable()"><span class="uk-text-bold uk-label uk-label-danger"></span></a></p>
 <div class="container">
         <div class="row">
             <div class="col-sm-8 col-md-4">
@@ -13,7 +14,7 @@
                                         <input type="text" id="scanInput" class="form-control border border-info" placeholder="Scan" onkeyup="displayInfo()">
                                     </div>
                                     <div class="col">
-                                        <select class="form-control">
+                                        <select class="form-control uk-select">
                                             <option value="99" selected>DELETE</option>
                                             <option value="-1">REVERSE</option>
                                             {{!-- <option value="0">DESTROY (not recommended)</option> --}}
@@ -38,7 +39,7 @@
                         <table class="table table-hover table-striped shadow-sm" id="dqTable">
                             <thead>
                                 <tr class="bg-danger text-light">
-                                    <th onclick="undisable()" scope="col" uk-icon="check" uk-tooltip="enable mannual checkbox"></th>
+                                    <th onclick="undisable()" scope="col" uk-icon="check" uk-tooltip="enable mannual checkbox" class="shadow-sm rounded-circle"></th>
                                     <th scope="col"><b>Acct</b></th>
                                     <th scope="col"><b>Box Number</b></th>
                                     <th scope="col"><b>Location</b></th>
@@ -64,7 +65,7 @@
                             <table class="table table-hover table-striped shadow-sm" id="dqTable">
                                 <thead>
                                     <tr class="bg-warning">
-                                        <th onclick="undisable()" scope="col" uk-icon="check" uk-tooltip="enable mannual checkbox"></th>
+                                        <th onclick="undisable()" scope="col" uk-icon="check" uk-tooltip="To enable mannual checkbox" class="shadow-sm border border-light rounded-circle"></th>
                                         <th scope="col"><b>Acct</b></th>
                                         <th scope="col"><b>Container Number</b></th>
                                         <th scope="col"><b>SKUs</b></th>
@@ -90,7 +91,7 @@
                             <table class="table table-hover table-striped shadow-sm" id="dqTable">
                                 <thead>
                                     <tr class="bg-info">
-                                        <th onclick="undisable()" scope="col" uk-icon="check" uk-tooltip="enable mannual checkbox"></th>
+                                        <th onclick="undisable()" scope="col" uk-icon="check" uk-tooltip="enable mannual checkbox" class="shadow-sm rounded-circle"></th>
                                         <th scope="col"><b>Acct</b></th>
                                         <th scope="col"><b>SKUs</b></th>
                                         <th scope="col"><b>Containers</b></th>
