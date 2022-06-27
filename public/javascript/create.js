@@ -78,7 +78,7 @@ function precheck() {
         prefix.value = prefix.value + "0"
     };
     document.getElementById("export-btn").disabled = false;
-    fixedInfo.innerHTML = 'Account 帐户名:' + account.value + "</br>" + 'ASN:' + asn + "</br>" + 'Pending Date 挂单日期(美): ' + pending_date;
+    fixedInfo.innerHTML = '子用户名: ' + account.value + "</br>" + 'ASN: ' + asn + "</br>" + '挂单日期(美): ' + pending_date;
     const pre_digcode_2 = Math.floor(1000000000 + Math.random() * 9000000000);
     const pre_digcode = parseInt(String(new Date().valueOf() + pre_digcode_2).substring(4, 11));
     localStorage.setItem('total_box',total_box);
@@ -280,7 +280,7 @@ const dimensionChecker = () => {
     var checker = true;
     const dataTable = document.getElementById( "ordertable" );
     for ( var i = 1; i < dataTable.rows.length; i++ ) {
-        const dimension = [parseInt(dataTable.rows[i].cells[6].innerText), parseInt(dataTable.rows[i].cells[9].innerText), parseInt(dataTable.rows[i].cells[8].innerText), parseInt(dataTable.rows[i].cells[7].innerText)]
+        const dimension = [parseInt(dataTable.rows[i].cells[6].innerText), parseInt(dataTable.rows[i].cells[3].innerText), parseInt(dataTable.rows[i].cells[9].innerText), parseInt(dataTable.rows[i].cells[8].innerText), parseInt(dataTable.rows[i].cells[7].innerText)]
         if (dimension.includes(NaN) || dimension.includes(0)) {
             console.log(`The first error: the row #${i} need to get fixed!`);
             checker = false;
