@@ -67,10 +67,10 @@ function masterCheck() {
 };
 function precheck() {
     const desscription = document.querySelector('#new_des').value.trim();
-    const length = document.querySelector('#new_len').value.trim();
-    const width = document.querySelector('#new_wid').value.trim();
-    const height = document.querySelector('#new_hei').value.trim();
-    const weight = document.querySelector('#new_wei').value.trim();
+    const length = parseFloat(document.querySelector('#new_len').value.trim());
+    const width = parseFloat(document.querySelector('#new_wid').value.trim());
+    const height = parseFloat(document.querySelector('#new_hei').value.trim());
+    const weight = parseFloat(document.querySelector('#new_wei').value.trim());
     const qty_per_box = document.querySelector('#new_qty').value.trim();
     const sku = document.querySelector('#new_sku').value.trim();
     const total_box = parseInt(document.querySelector('#new_tot').value.trim());
@@ -265,12 +265,29 @@ function boxInsertNewAccount() {
 };
 
 function exportData() {
-    const total_box = parseInt(localStorage.getItem('total_box'));
-    if (savedAccount != "Create New Account") {
-        loadingBatch1({asn, pending_date, total_box, savedAccount_id});
-        }else {
-        loadingAccount({name: account.value.trim(), prefix: prefix.value.toUpperCase()});
+    if (dimensionChecker()) {
+        const total_box = parseInt(localStorage.getItem('total_box'));
+        if (savedAccount != "Create New Account") {
+            loadingBatch1({asn, pending_date, total_box, savedAccount_id});
+            }else {
+            loadingAccount({name: account.value.trim(), prefix: prefix.value.toUpperCase()});
+        }
+    } else {
+        alert('尺寸只限数字输入，请更正后重试! The dimension values (hiegh, weight, width, and length) should only be integers and not 0! Please fix and try again')
     }
+};
+const dimensionChecker = () => {
+    var checker = true;
+    const dataTable = document.getElementById( "ordertable" );
+    for ( var i = 1; i < dataTable.rows.length; i++ ) {
+        const dimension = [parseInt(dataTable.rows[i].cells[6].innerText), parseInt(dataTable.rows[i].cells[9].innerText), parseInt(dataTable.rows[i].cells[8].innerText), parseInt(dataTable.rows[i].cells[7].innerText)]
+        if (dimension.includes(NaN) || dimension.includes(0)) {
+            console.log(`The first error: the row #${i} need to get fixed!`);
+            checker = false;
+            break
+        };
+    };
+    return checker
 }
 
 async function loadingBox(data) {
