@@ -9,7 +9,7 @@ for (i = 1; i < (rows.length + 1); i++){
       rows[i].getElementsByTagName("td")[10].innerHTML = "Requested"
     } else if (data_status[10].innerHTML == 3) {
       rows[i].getElementsByTagName("td")[10].innerHTML = "Shipped"
-    } else if (data_status[10].innerHTML == 4) {
+    } else if (data_status[10].innerHTML == 98) {
       rows[i].getElementsByTagName("td")[10].innerHTML = "Archived"
     } else {
       rows[i].getElementsByTagName("td")[10].innerHTML = "Pending"

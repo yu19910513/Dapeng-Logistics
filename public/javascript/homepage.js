@@ -181,13 +181,15 @@ function convertor(object) {
 
 function convertor_status(s) {
   if (s == 0) {
-    return 'pending'
+    return '挂单'
   } else if ( s == 1) {
-    return 'received'
+    return '存货'
   } else if (s == 2) {
-    return 'requested'
+    return '通知寄出'
   } else if (s ==3) {
-    return 'shipped'
+    return '完成出货'
+  } else if (s == 98) {
+    return '档案备存'
   }
 }
 
