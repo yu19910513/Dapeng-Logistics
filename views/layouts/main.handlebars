@@ -43,9 +43,9 @@
                     <div class="uk-modal-dialog">
                         <button class="uk-modal-close-default" type="button" uk-close></button>
                         <div class="uk-modal-header uk-background-muted uk-text-center">
-                            <h4 class="uk-modal-title">Account Options<br><small>帐户名选择</small></h4>
+                            <h4 class="lead">帐号<u class="text-primary">子用户</u>选择</h4>
                         </div>
-                        <p class="uk-margin-medium-left uk-margin-medium-right uk-margin-medium-top uk-margin-medium-bottom">Before creating a new shipment, please select an existed account to where the new order will be assigned. If you would like to create a new account, select "Create New Account" and continue. <br><small>创造新订单前，请选择一个已注册帐户，如欲创立新帐户名，选择“create new account”然后“确认”。</small></p>
+                        <p class="uk-margin-medium-left uk-margin-medium-right uk-margin-medium-top uk-margin-medium-bottom">Before creating a new shipment, please select an existed account to where the new order will be assigned. If you would like to create a new account, select "Create New Account" and continue. <br><small>创造新订单前，请选择一个已注册子用户，如欲创立新子用户名，选择“create new account”然后“确认”。</small></p>
                         <form class="uk-form-horizontal uk-margin-small uk-margin-small-left">
                             <div class="uk-margin">
                                 <label class="uk-form-label" for="form-horizontal-select"><span uk-icon="icon: user"></span>USER: {{name}}</label>
@@ -63,6 +63,7 @@
                     </div>
                 </div>
             <li class="nav-item"><a class="nav-link rounded-sm text-center text-dark" href="/client_label">总挂单</a></li>
+            <li class="nav-item"><a class="nav-link rounded-sm text-center text-dark" href="/master" >总库存</a></li>
             <li class="nav-item"><a class="nav-link rounded-sm text-center text-dark" href="/request">总出货</a></li>
             <li class="nav-item"><a class="nav-link rounded-sm text-center text-dark" href="/dq_chinabox" uk-tooltip="delete queue">删除请求</a></li>
             <li class="nav-item"><a class="nav-link logout rounded-sm text-center text-dark" style="background-color: #E0EEEE">登出<span uk-icon="icon: sign-out"></span></a></li>

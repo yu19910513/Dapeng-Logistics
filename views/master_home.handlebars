@@ -8,11 +8,11 @@
 
             <div class="uk-navbar-item">
             <div class="uk-grid-small uk-child-width-auto uk-grid">
-                <label><input id="radio" class="uk-radio" type="radio" value='1' name="radio2" onclick="status_trigger(1)">All 全交易</label>
-                <label><input id="radio" class="uk-radio" type="radio" value='2' name="radio2" onclick="status_trigger(2)">Pending 挂单</label>
-                <label><input id="radio" class="uk-radio" type="radio" value='3' name="radio2" onclick="status_trigger(3)">Received 存货</label>
-                <label><input id="radio" class="uk-radio" type="radio" value='4' name="radio2" onclick="status_trigger(4)">Requested 出货通知</label>
-                <label><input  id="radio"class="uk-radio" type="radio" value='5' name="radio2" onclick="status_trigger(5)">Shipped 已出货</label>
+                <label><input id="radio" class="uk-radio" type="radio" value='1' name="radio2" onclick="status_trigger(1)">全交易</label>
+                <label><input id="radio" class="uk-radio" type="radio" value='2' name="radio2" onclick="status_trigger(2)">挂单 (Pending)</label>
+                <label><input id="radio" class="uk-radio" type="radio" value='3' name="radio2" onclick="status_trigger(3)">存货 (Received)</label>
+                <label><input id="radio" class="uk-radio" type="radio" value='4' name="radio2" onclick="status_trigger(4)">出货通知 (Requested)</label>
+                <label><input  id="radio"class="uk-radio" type="radio" value='5' name="radio2" onclick="status_trigger(5)">已出货 (Shipped)</label>
             </div>
             </div>
 
@@ -51,17 +51,17 @@
         <table class="uk-table uk-table-small uk-table-divider myTable text-center shadow-sm" id="myTable">
             <thead>
                 <tr>
-                    <th onclick="sortTable(0)">Account 帐户</th>
-                    <th onclick="sortTable(1)">Box number 箱码</th>
-                    <th onclick="sortTable(2)">Item Description 细目</th>
-                    <th>Box</th>
-                    <th>of Box</th>
-                    <th>Qty per Box 物件量</th>
+                    <th onclick="sortTable(0)">子用户</th>
+                    <th onclick="sortTable(1)">箱码</th>
+                    <th onclick="sortTable(2)">货品描述</th>
+                    <th>Box#</th>
+                    <th>箱总数(of Boxes)</th>
+                    <th>单箱货量</th>
                     <th>SKU</th>
-                    <th onclick="sortTable(7)">Batch Labels 标签</th>
-                    <th>Tracking</th>
-                    <th onclick="sortTable(9)">Date 日期</th>
-                    <th onclick="sortTable(10)">Status 状态</th>
+                    <th onclick="sortTable(7)">出口标签</th>
+                    <th>单号</th>
+                    <th onclick="sortTable(9)">日期</th>
+                    <th onclick="sortTable(10)">状态</th>
                 </tr>
             </thead>
             <tbody>

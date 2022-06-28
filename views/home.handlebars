@@ -2,10 +2,10 @@
   <h3 class="text-center uk-text-bold">Loading admin files...</h3>
   <script src="javascript/admin_redirect.js"></script>
 {{else}}
-<p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
+<p class="uk-heading-line uk-text-right uk-margin-small-right"><span>所在页面 <span class="uk-text-bold uk-label">{{name}}的主面板</span></span></p>
 <div class="uk-flex uk-flex-center@m uk-flex-right@l uk-margin-small-right mb-2">
-  <button class="badge bg-info shadow-sm" uk-toggle="target: #modal-skuSearch" onclick="skuListing()" uk-tooltip="只限搜寻亞马逊回流货物">SKU关键搜寻页</button>
-  <a href="/master" class="badge bg-warning shadow-sm" uk-tooltip="此页面乘载大量资料，可能会降低使用速度与品质!">总库存浏览页</a>
+  <button class="badge bg-info shadow-sm" uk-toggle="target: #modal-skuSearch" onclick="skuListing()" uk-tooltip="只限美国转运货物">SKU查询</button>
+  {{!-- <a href="/master" class="badge bg-warning shadow-sm" uk-tooltip="此页面乘载大量资料，可能会降低使用速度与品质!">总库存浏览页</a> --}}
 </div>
 {{!-- modal- for sku search ***********************--}}
 {{!-- search form --}}
@@ -123,8 +123,8 @@
 <div class="container">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item active" >Pending Count 挂单总数: <span id="pending_c"></span> </li>
-      <li class="breadcrumb-item active" >Inventory Count 库存量: <span id="inventory_c"></span></li>
+      <li class="breadcrumb-item active">挂单总数: <span id="pending_c"></span> </li>
+      <li class="breadcrumb-item active">库存量: <span id="inventory_c"></span></li>
     </ol>
   </nav>
 
@@ -132,13 +132,13 @@
   <div class="form-check">
   <input class="form-check-input" type="radio" name="account_checkbox" id="account_search" onclick="account_show()" checked>
   <label class="form-check-label" for="accountSearch">
-   Account Search 帐号查找
+   子用户查找
   </label>
 </div>
 <div class="form-check">
   <input class="form-check-input" type="radio" name="box_checkbox" id="box_search" onclick="box_show()">
   <label class="form-check-label" for="boxSearch">
-    Box # Search 讯息快搜
+    货品讯息快搜
   </label>
   <div class="badge bg-success" id="badge" onclick="modeChange()"><span id="mode">C</span> Mode</div>
 </div>
@@ -146,13 +146,13 @@
 
   <form class="uk-search uk-search-large" id="accountInput">
     <span uk-search-icon></span>
-    <input class="uk-search-input" type="search" placeholder="请输入帐号" id="myInput" onkeyup="filterFunction()">
+    <input class="uk-search-input" type="search" placeholder="子用户查询" id="myInput" onkeyup="filterFunction()">
   </form>
 
   <form class="uk-search uk-search-large" id="boxInput" style="display: none;">
     <span uk-search-icon></span>
-    <input class="uk-search-input" type="search" placeholder="请输入货物代码" id="myBoxInput" onkeyup="box_searching()" uk-tooltip="快搜引擎会依据货物代码中的任何连续三位以上数字/字母来搜查 (例：若想查询SWLYA******, 可用SWL、LYA、WLYA等等来搜查)">
-    <input class="uk-search-input" type="search" placeholder="Amazon 货件搜查" id="containerInput" onkeyup="container_searching()" style="display: none;">
+    <input class="uk-search-input" type="search" placeholder="跨海货物查询" id="myBoxInput" onkeyup="box_searching()" uk-tooltip="快搜引擎会依据货物代码中的任何连续三位以上数字/字母来搜查 (例：若想查询SWLYA******, 可用SWL、LYA、WLYA等等来搜查)">
+    <input class="uk-search-input" type="search" placeholder="美国转运货件查询" id="containerInput" onkeyup="container_searching()" style="display: none;">
   </form>
 </div>
 
@@ -168,15 +168,15 @@
 <table class="uk-table uk-table-small uk-table-divider bg-light shadow">
             <thead>
                 <tr>
-                    <th>Account 帐户</th>
-                    <th>Box number 箱码</th>
-                    <th >Item Description 细目</th>
-                    <th>Box</th>
-                    <th>of Box</th>
-                    <th>Qty per Box 物件量</th>
+                    <th>子用户</th>
+                    <th>箱码</th>
+                    <th>货品描述</th>
+                    <th>Box#</th>
+                    <th>箱总数(of Boxes)</th>
+                    <th>单箱货量</th>
                     <th>SKU</th>
-                    <th >Date 日期</th>
-                    <th >Status 状态</th>
+                    <th>日期</th>
+                    <th>状态</th>
                 </tr>
             </thead>
             <tbody id="boxBody">
@@ -191,13 +191,13 @@
 <table class="uk-table uk-table-small uk-table-divider bg-light shadow">
   <thead>
     <tr>
-      <th>Account 帐户</th>
-      <th>Box number 箱码</th>
+      <th>子用户</th>
+      <th>箱码</th>
       <th>SKU</th>
-      <th>Qty 数量</th>
-      <th>Description 细目</th>
-      <th>Date 日期</th>
-      <th>Status 状态</th>
+      <th>数量</th>
+      <th>货品描述</th>
+      <th>日期</th>
+      <th>状态</th>
     </tr>
   </thead>
     <tbody id="containerBody">
