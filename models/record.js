@@ -37,9 +37,18 @@ Record.init(
             type: DataTypes.STRING,
             allowNull: true
         },
+        action_notes: {
+            type: DataTypes.TEXT('long'),
+            allowNull: true
+        },
         bill: {
             type: DataTypes.STRING,
             allowNull: true
+        },
+        type: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            defaultValue: 0
         },
         date: {
             type: DataTypes.DATEONLY,
