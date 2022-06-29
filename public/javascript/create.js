@@ -14,10 +14,7 @@ if (savedAccount != "Create New Account") {
 } else {
     account.disabled = false;
     prefix.disabled = false;
-}
-
-
-
+};
 class Box{
     constructor(account, prefix, batch, desscription, length, weight, height, width, total_box, order, qty_per_box, sku){
         this.account = account;
@@ -33,9 +30,8 @@ class Box{
         this.qty_per_box = qty_per_box;
         this.sku = sku;
     }
-}
+};
 const fixedInfo = document.getElementById('fixedInfo');
-
 function prefix_check() {
     if (prefix.value.length > 3) {
         alert('Prefix is limited for 2-3 letters 单位缩写限制二到三个英文字母!');
@@ -154,11 +150,9 @@ document.getElementById('order_pre-check').addEventListener('click', precheck);
 
 function reset() {
     location.reload();
-}
-
+};
 var batch_map = new Map();
 var account_map = new Map();
-
 function findBatchId1() {
     fetch(`/api/user/batch`, {
         method: 'GET'
@@ -172,7 +166,6 @@ function findBatchId1() {
         boxInsertExistedAccount()
     });
 };
-
 function findBatchId() {
     fetch(`/api/user/batch`, {
         method: 'GET'
@@ -186,8 +179,6 @@ function findBatchId() {
         boxInsertNewAccount()
     });
 };
-
-
 function findAccountId() {
     fetch(`/api/user/account`, {
         method: 'GET'
@@ -202,9 +193,8 @@ function findAccountId() {
         loadingBatch({asn, pending_date, total_box, account_id})
     });
 };
-
 function boxInsertExistedAccount() {
-    // var arr = [];
+    const promises = [];
     console.log(batch_map.get(asn));
     var dataTable = document.getElementById( "ordertable" );
     for ( var i = 1; i < dataTable.rows.length; i++ ) {
@@ -226,16 +216,16 @@ function boxInsertExistedAccount() {
             height: height,
             volume: volume
         };
-        // arr.push(orderdata.box_number);
-        loadingBox(orderdata);
+        promises.push(loadingBox(orderdata));
+        promises.push(record(orderdata));
     };
-    alert('Orders Placed!');
-    // barcode(arr);
-    window.location.replace(`/batch/${batch_map.get(asn)}`);
+    Promise.all(promises).then(() => {
+        alert('Orders Placed!');
+        window.location.replace(`/batch/${batch_map.get(asn)}`)
+    }).catch((e) => {console.log(e)})
 };
-
 function boxInsertNewAccount() {
-    // var new_account_arr = [];
+    const promises = [];
     var dataTable = document.getElementById( "ordertable" );
     for ( var i = 1; i < dataTable.rows.length; i++ ) {
         const length = parseInt(dataTable.rows[i].cells[7].innerHTML);
@@ -256,14 +246,14 @@ function boxInsertNewAccount() {
             height: height,
             volume: volume
         };
-        // new_account_arr.push(newBox.box_number);
-        loadingBox(newBox)
-    }
-    alert('Orders Placed!');
-    // barcode(new_account_arr);
-    window.location.replace(`/batch/${batch_map.get(asn)}`)
+        promises.push(loadingBox(newBox));
+        promises.push(record(newBox));
+    };
+    Promise.all(promises).then(() => {
+        alert('Orders Placed!');
+        window.location.replace(`/batch/${batch_map.get(asn)}`)
+    }).catch((e) => {console.log(e)})
 };
-
 function exportData() {
     if (dimensionChecker()) {
         const total_box = parseInt(localStorage.getItem('total_box'));
@@ -289,7 +279,6 @@ const dimensionChecker = () => {
     };
     return checker
 }
-
 async function loadingBox(data) {
     const response = await fetch('/api/box', {
         method: 'post',
@@ -301,8 +290,7 @@ async function loadingBox(data) {
       } else {
         alert('try again')
     }
-}
-
+};///////loading box
 async function loadingBatch1(data) {
      const response = await fetch('/api/batch', {
          method: 'post',
@@ -317,9 +305,8 @@ async function loadingBatch1(data) {
          alert('try again')
        }
 
- }
-
- async function loadingBatch(data) {
+};
+async function loadingBatch(data) {
     const response = await fetch('/api/batch/new', {
         method: 'post',
         body: JSON.stringify(data),
@@ -333,9 +320,8 @@ async function loadingBatch1(data) {
         alert('try again')
       }
 
-}
-
- async function loadingAccount(data) {
+};
+async function loadingAccount(data) {
      const response = await fetch('/api/account', {
          method: 'post',
          body: JSON.stringify(data),
@@ -349,4 +335,32 @@ async function loadingBatch1(data) {
          alert('try again')
     }
 
- }
+};
+
+const record = async (data) => {
+    var accountInfo = savedAccount
+    if (savedAccount == 'Create New Account') {
+       accountInfo =  account.value.trim()
+    };
+    const ref_number = data.box_number;
+    const status_to = 0;
+    const date = new Date().toISOString().split('T')[0];
+    const action = `Client Creating (Acct: ${accountInfo})`
+    const sub_number = asn;
+    const response = await fetch(`/api/record/neworder_china`, {
+      method: 'POST',
+      body: JSON.stringify({
+          ref_number,
+          status_to,
+          date,
+          action,
+          sub_number
+      }),
+      headers: {
+          'Content-Type': 'application/json'
+      }
+    });
+    if (response.ok) {
+        console.log('record fetched!');
+    }
+};

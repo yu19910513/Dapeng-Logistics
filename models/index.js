@@ -5,9 +5,13 @@ const Batch = require('./batch');
 const Container = require('./container');
 const Item = require('./item');
 const Document = require('./document');
+const Record = require('./record');
 
 //Level 1: User
 User.hasMany(Document, {
+    foreignKey: "user_id"
+});
+User.hasMany(Record, {
     foreignKey: "user_id"
 });
 User.hasMany(Account, {
@@ -52,6 +56,9 @@ Container.hasMany(Item, {
 Document.belongsTo(User, {
     foreignKey: "user_id"
 });
+Record.belongsTo(User, {
+    foreignKey: "user_id"
+});
 Account.belongsTo(User, {
     foreignKey: "user_id"
 });
@@ -90,4 +97,4 @@ Item.belongsTo(Container, {
 
 
 
-module.exports = {User, Document, Account, Batch, Box, Container, Item};
+module.exports = {User, Document, Record, Account, Batch, Box, Container, Item};
