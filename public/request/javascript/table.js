@@ -16,7 +16,6 @@ for (i = 1; i < (rows.length + 1); i++){
       rows[i].getElementsByTagName("td")[10].innerHTML = "Pending"
     }
 };
-
 function show_all() {
   var table, tr, td, i, txtValue, a, b, c, d;
   a = "received".toUpperCase();
@@ -38,7 +37,6 @@ function show_all() {
     }
   }
 };
-
 function clear_file() {
   document.getElementById('label').value = null;
   document.getElementById('label_2').value = null;
@@ -50,7 +48,6 @@ function clear_file() {
     document.getElementById('amazon_ref').style.display = ''
   }
 };
-
 function clear_noFile_radio() {
   const no_file = document.getElementById("label_not_required");
   if (no_file.checked) {
@@ -119,8 +116,6 @@ function validation_request() {
     }
   }
 };
-
-
 async function editStatus(event, n) {
   var s3 = new Date().valueOf() + 1;
   var notes = n;
@@ -155,7 +150,6 @@ async function editStatus(event, n) {
   upload_file(s3)
 
 };
-
 function upload_file(e) {
   const file = document.getElementById('label').files[0];
   const file_2 = document.getElementById('label_2').files[0];
@@ -171,13 +165,11 @@ function upload_file(e) {
     // alert('Status updated successfully! No file was attached.出货通知已传送成功，无夹带档案');
     document.location.reload();
   }
-}
-
+};
 async function upload_framwork(file, e) {
   let formData = new FormData();
     formData.append('file', file);
     formData.append('s3',e)
-
     const response = await fetch(`/api/box/upload`, {
       method: 'POST',
       body: formData
@@ -191,7 +183,6 @@ async function upload_framwork(file, e) {
       alert(response.statusText);
     }
 };
-
 async function upload2F_framwork(file, file_2, e) {
   let formData = new FormData();
     formData.append('file', file);
@@ -207,7 +198,6 @@ async function upload2F_framwork(file, file_2, e) {
       alert(response.statusText);
     }
 };
-
 async function upload2F_framwork_file2(file, e) {
   let formData = new FormData();
     formData.append('file', file);
@@ -226,7 +216,6 @@ async function upload2F_framwork_file2(file, e) {
       alert(response.statusText);
     }
 };
-
 function GetSelected() {
   var fba = document.getElementById('amazon_ref').value.trim()
   fba = fba.toUpperCase();
@@ -234,35 +223,35 @@ function GetSelected() {
   var confirmationArr = [];
   var table = document.getElementById("myTable");
   var checkBoxes = table.getElementsByTagName("input");
-    for (var i = 0; i < checkBoxes.length; i++) {
-            var confirmation = new Object
-            if (checkBoxes[i].checked) {
-                var row = checkBoxes[i].parentNode.parentNode;
-                confirmation.account = row.cells[1].innerHTML;
-                confirmation.box_number = row.cells[2].innerHTML;
-                confirmation.description = row.cells[3].innerHTML;
-                confirmation.order = row.cells[4].innerHTML;
-                confirmation.total_box = row.cells[5].innerHTML;
-                confirmation.qty_per_box = row.cells[6].innerHTML;
-                confirmation.status = row.cells[10].innerHTML;
-                confirmation.fba = fba;
-                confirmationArr.push(confirmation)
-            }
-      };
-      if (confirmationArr.length) {
-        editStatus(confirmationArr, notes)
-      } else {
-        loader.style.display = 'none';
-        alert('You need to select at least one box! 您需要选择至少一个箱货')
-      }
-
+  for (var i = 0; i < checkBoxes.length; i++) {
+    var confirmation = new Object
+    if (checkBoxes[i].checked) {
+        var row = checkBoxes[i].parentNode.parentNode;
+        confirmation.account = row.cells[1].innerHTML;
+        confirmation.box_number = row.cells[2].innerHTML;
+        confirmation.description = row.cells[3].innerHTML;
+        confirmation.order = row.cells[4].innerHTML;
+        confirmation.total_box = row.cells[5].innerHTML;
+        confirmation.qty_per_box = row.cells[6].innerHTML;
+        confirmation.status = row.cells[10].innerHTML;
+        confirmation.fba = fba;
+        confirmationArr.push(confirmation)
+    }
+  };
+  if (confirmationArr.length) {
+    editStatus(confirmationArr, notes)
+  } else {
+    loader.style.display = 'none';
+    alert('You need to select at least one box! 您需要选择至少一个箱货')
+  }
 };
-
-async function editStatus(event, n) {
-  var s3 = new Date().valueOf() + 1;
+function editStatus(event, n) {
+  const promises = [];
+  const s3 = new Date().valueOf() + 1;
   var notes = n;
   for (let i = 0; i < event.length; i++) {
     const fba = event[i].fba;
+    const account = event[i].account;
     const box_number = event[i].box_number
     var requested_date = new Date().toLocaleDateString("en-US");
     var status = event[i].status;
@@ -276,25 +265,13 @@ async function editStatus(event, n) {
       } else {
         status = 4
       }
-    const response = await fetch(`/api/box/status_client`, {
-      method: 'PUT',
-      body: JSON.stringify({
-          box_number,
-          status,
-          requested_date,
-          s3,
-          notes,
-          fba
-      }),
-      headers: {
-          'Content-Type': 'application/json'
-      }
-    });
+    promises.push((statusUpdate(box_number, status, requested_date, s3, notes, fba)));
+    promises.push(record(box_number, s3, account))
   };
-  upload_file(s3)
-
+  Promise.all(promises).then(() => {
+    upload_file(s3)
+  }).catch((e) => {console.log(e)})
 };
-
 function sortTable(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById("myTable");
@@ -331,7 +308,6 @@ function sortTable(n) {
     }
   }
 };
-
 function status_trigger(n) {
   if (n == 2) {
     const pending = 'Pending';
@@ -353,7 +329,6 @@ function status_trigger(n) {
     show_all();
   }
 };
-
 function filter_status(txt) {
   var filter, table, tr, td, i, txtValue;
   console.log(txt);
@@ -372,7 +347,6 @@ function filter_status(txt) {
     }
   }
 };
-
 function filter_status_i(txt, txt_2) {
   var filter, filter_2, table, tr, td, i, txtValue;
   filter = txt.toUpperCase();
@@ -392,7 +366,6 @@ function filter_status_i(txt, txt_2) {
   };
   reset_filter();
 };
-
 function reset_filter() {
  const radiolist =  document.getElementsByTagName('input');
  for (let i = 0; i < radiolist.length; i++) {
@@ -401,13 +374,11 @@ function reset_filter() {
    }
  }
 };
-
 function second_file() {
   document.getElementById('label_2').style.display = '';
   document.getElementById('amazon_ref').style.display= '';
   clear_noFile_radio()
 };
-
 function check_amazon() {
   const no_file = document.getElementById("label_not_required");
   var amazon = document.getElementById('amazon_ref').value.trim();
@@ -436,7 +407,6 @@ function accountList() {
         }
     });
 };
-
 function saveAccount() {
     var selectedOption = document.querySelector('#accountList').value;
 
@@ -449,4 +419,49 @@ function saveAccount() {
     } else {
         localStorage.setItem('account', selectedOption);
     }
-}
+};
+
+async function record (box_number, s3, account) {
+  const ref_number = box_number;
+  const status_from = 1;
+  const status_to = 2;
+  const date = new Date().toISOString().split('T')[0];
+  const action = `China Box Request (Acct: ${account})`
+  const sub_number = s3;
+  const response = await fetch(`/api/record/request_china`, {
+    method: 'POST',
+    body: JSON.stringify({
+        ref_number,
+        status_from,
+        status_to,
+        date,
+        action,
+        sub_number
+    }),
+    headers: {
+        'Content-Type': 'application/json'
+    }
+  });
+  if (response.ok) {
+      console.log('record fetched!');
+  }
+};
+async function statusUpdate (box_number, status, requested_date, s3, notes, fba) {
+  const response = await fetch(`/api/box/status_client`, {
+    method: 'PUT',
+    body: JSON.stringify({
+        box_number,
+        status,
+        requested_date,
+        s3,
+        notes,
+        fba
+    }),
+    headers: {
+        'Content-Type': 'application/json'
+    }
+  });
+  if (response.ok) {
+    console.log(`${box_number} was updated!`);
+  }
+};

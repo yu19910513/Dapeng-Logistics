@@ -8,35 +8,39 @@ var shippedCount = 0;
 var objectMap = new Map();
 var boxNumberArr = [];
 
-
-function allBox() {
-  allItem()
-    fetch(`/api/user/allBox`, {
-        method: 'GET'
-    }).then(function (response) {
-        return response.json();
-    }).then(function (data) {
-        for (let i = 0; i < data.length; i++) {
-          const status = data[i].status;
-          const box_number = data[i].box_number;
-          objectMap.set(box_number, data[i]);
-          boxNumberArr.push(box_number);
-            if (status == 0 ) {
-              pendingCount++
-            } else if (status == 1) {
-              receivedCount++
-            } else if (status == 2) {
-              requestedCount++
-            } else if (status == 3){
-              shippedCount++
-            }
-        };
-        var inventoryCount = receivedCount + requestedCount;
-        pending_count.innerHTML = pendingCount;
-        inventory_count.innerHTML = `${inventoryCount} (${requestedCount} requested)`
-    });
+const inventory_promises = [];
+const init = () => {
+  inventory_promises.push(allBox());
+  inventory_promises.push(allItem());
+  Promise.all(inventory_promises).then(() => {
+    var inventoryCount = receivedCount + requestedCount;
+    pending_count.innerHTML = pendingCount;
+    inventory_count.innerHTML = `${inventoryCount} (${requestedCount} requested)`
+}).catch((e) => {console.log(e)})
+}
+const allBox = async () => {
+  await fetch(`/api/user/allBox`, {
+    method: 'GET'
+  }).then(function (response) {
+    return response.json();
+  }).then(function (data) {
+    for (let i = 0; i < data.length; i++) {
+      const status = data[i].status;
+      const box_number = data[i].box_number;
+      objectMap.set(box_number, data[i]);
+      boxNumberArr.push(box_number);
+        if (status == 0 ) {
+          pendingCount++
+        } else if (status == 1) {
+          receivedCount++
+        } else if (status == 2) {
+          requestedCount++
+        } else if (status == 3){
+          shippedCount++
+        }
+    };
+  });
 };
-allBox()
 
 const accounts_content = document.getElementById("myDropdown");
 const accountInput = document.getElementById("accountInput");
@@ -232,8 +236,8 @@ function modeChange() {
 };
 var containerMap = new Map();
 var skuMap = new Map();
-function allItem() {
-  fetch(`/api/item/allItem`, {
+const allItem = async () => {
+  await fetch(`/api/item/allItem`, {
     method: 'GET'
   }).then(function (response) {
     return response.json();
@@ -614,3 +618,4 @@ function merger(array) {
  };
  return key
 }
+init();
