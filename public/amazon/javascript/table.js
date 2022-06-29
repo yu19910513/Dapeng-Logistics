@@ -1,15 +1,16 @@
+console.log('amazon_ table.js');
 var loader = document.getElementById('loader');
 var table = document.getElementById("myTable");
 var rows = table.rows;
-for (i = 1; i < (rows.length + 1); i++){
-  var data_status = rows[i].getElementsByTagName('td');
-    if (data_status[6].innerHTML == 1) {
+for (i = 1; i < rows.length; i++){
+  var data_status = parseInt(rows[i].cells[6].innerText);
+    if (data_status == 1) {
       rows[i].getElementsByTagName("td")[6].innerHTML = "Received"
-    } else if (data_status[6].innerHTML == 2) {
+    } else if (data_status == 2) {
       rows[i].getElementsByTagName("td")[6].innerHTML = "Requested"
-    } else if (data_status[6].innerHTML == 3) {
+    } else if (data_status == 3) {
       rows[i].getElementsByTagName("td")[6].innerHTML = "Shipped"
-    } else if (data_status[6].innerHTML == 4) {
+    } else if (data_status == 4) {
       rows[i].getElementsByTagName("td")[6].innerHTML = "Archived"
     } else {
       rows[i].getElementsByTagName("td")[6].innerHTML = "Pending"

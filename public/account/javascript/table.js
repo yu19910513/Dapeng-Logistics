@@ -2,21 +2,20 @@ console.log(location.href, 'account table.js');
 var loader = document.getElementById('loader');
 var table = document.getElementById("myTable");
 var rows = table.rows;
-for (i = 1; i < (rows.length + 1); i++){
-  var data_status = rows[i].getElementsByTagName('td');
-    if (data_status[10].innerHTML == 1) {
+for (i = 1; i < rows.length; i++){
+  var data_status = parseInt(rows[i].cells[9].innerText);
+    if (data_status == 1) {
       rows[i].getElementsByTagName("td")[10].innerHTML = "Received"
-    } else if (data_status[10].innerHTML == 2) {
+    } else if (data_status == 2) {
       rows[i].getElementsByTagName("td")[10].innerHTML = "Requested"
-    } else if (data_status[10].innerHTML == 3) {
+    } else if (data_status == 3) {
       rows[i].getElementsByTagName("td")[10].innerHTML = "Shipped"
-    } else if (data_status[10].innerHTML == 4) {
+    } else if (data_status == 4) {
       rows[i].getElementsByTagName("td")[10].innerHTML = "Archived"
     } else {
       rows[i].getElementsByTagName("td")[10].innerHTML = "Pending"
     }
 };
-
 function show_all() {
   var table, tr, td, i, txtValue, a, b, c, d;
   a = "received".toUpperCase();
@@ -38,8 +37,6 @@ function show_all() {
     }
   }
 };
-
-
 function sortTable(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById("myTable");
@@ -76,7 +73,6 @@ function sortTable(n) {
     }
   }
 };
-
 function status_trigger(n) {
   if (n == 2) {
     const pending = 'Pending';
@@ -98,7 +94,6 @@ function status_trigger(n) {
     show_all();
   }
 };
-
 function filter_status(txt) {
   var filter, table, tr, td, i, txtValue;
   filter = txt.toUpperCase();
@@ -116,7 +111,6 @@ function filter_status(txt) {
     }
   }
 };
-
 function filter_status_i(txt, txt_2) {
   var filter, filter_2, table, tr, td, i, txtValue;
   filter = txt.toUpperCase();
@@ -136,7 +130,6 @@ function filter_status_i(txt, txt_2) {
   };
   reset_filter();
 };
-
 function reset_filter() {
  const radiolist =  document.getElementsByTagName('input');
  for (let i = 0; i < radiolist.length; i++) {
@@ -145,33 +138,31 @@ function reset_filter() {
    }
  }
 };
+// var map = new Map();
+// function accountList() {
+//     fetch(`/api/user/account`, {
+//         method: 'GET'
+//     }).then(function (response) {
+//         return response.json();
+//     }).then(function (data) {
+//         for (let i = 0; i < data.length; i++) {
+//             const option = document.createElement('option');
+//             option.innerHTML = data[i].name + " (prefix: "+ data[i].prefix.toUpperCase() + ")";
+//             document.querySelector('#accountList').appendChild(option);
+//             map.set(data[i].name, data[i].id);
+//         }
+//     });
+// };
+// function saveAccount() {
+//     var selectedOption = document.querySelector('#accountList').value;
 
-var map = new Map();
-function accountList() {
-    fetch(`/api/user/account`, {
-        method: 'GET'
-    }).then(function (response) {
-        return response.json();
-    }).then(function (data) {
-        for (let i = 0; i < data.length; i++) {
-            const option = document.createElement('option');
-            option.innerHTML = data[i].name + " (prefix: "+ data[i].prefix.toUpperCase() + ")";
-            document.querySelector('#accountList').appendChild(option);
-            map.set(data[i].name, data[i].id);
-        }
-    });
-};
-
-function saveAccount() {
-    var selectedOption = document.querySelector('#accountList').value;
-
-    if(selectedOption != 'Create New Account'){
-        var accountSaved = selectedOption.split(' (prefix:');
-        var prefixSaved = accountSaved[1].split(')');
-        localStorage.setItem('account', accountSaved[0]);
-        localStorage.setItem('prefix', prefixSaved[0]);
-        localStorage.setItem('account_id', map.get(accountSaved[0]));
-    } else {
-        localStorage.setItem('account', selectedOption);
-    }
-}
+//     if(selectedOption != 'Create New Account'){
+//         var accountSaved = selectedOption.split(' (prefix:');
+//         var prefixSaved = accountSaved[1].split(')');
+//         localStorage.setItem('account', accountSaved[0]);
+//         localStorage.setItem('prefix', prefixSaved[0]);
+//         localStorage.setItem('account_id', map.get(accountSaved[0]));
+//     } else {
+//         localStorage.setItem('account', selectedOption);
+//     }
+// }

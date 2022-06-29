@@ -1,20 +1,22 @@
-console.log(location.href, 'request table js');
+console.log(location.href, 'request_china.js');
 var loader = document.getElementById('loader');
 var table = document.getElementById("myTable");
 var rows = table.rows;
-for (i = 1; i < (rows.length + 1); i++){
-  var data_status = rows[i].getElementsByTagName('td');
-    if (data_status[10].innerHTML == 1) {
-      rows[i].getElementsByTagName("td")[10].innerHTML = "Received"
-    } else if (data_status[10].innerHTML == 2) {
-      rows[i].getElementsByTagName("td")[10].innerHTML = "Requested"
-    } else if (data_status[10].innerHTML == 3) {
-      rows[i].getElementsByTagName("td")[10].innerHTML = "Shipped"
-    } else if (data_status[10].innerHTML == 4) {
-      rows[i].getElementsByTagName("td")[10].innerHTML = "Archived"
-    } else {
-      rows[i].getElementsByTagName("td")[10].innerHTML = "Pending"
-    }
+const status_conversion = () => {
+  for (i = 1; i < rows.length; i++){
+    var data_status = parseInt(rows[i].cells[10].innerText);
+      if (data_status == 1) {
+        rows[i].getElementsByTagName("td")[10].innerHTML = "Received"
+      } else if (data_status == 2) {
+        rows[i].getElementsByTagName("td")[10].innerHTML = "Requested"
+      } else if (data_status == 3) {
+        rows[i].getElementsByTagName("td")[10].innerHTML = "Shipped"
+      } else if (data_status == 4) {
+        rows[i].getElementsByTagName("td")[10].innerHTML = "Archived"
+      } else {
+        rows[i].getElementsByTagName("td")[10].innerHTML = "Pending"
+      }
+  }
 };
 function show_all() {
   var table, tr, td, i, txtValue, a, b, c, d;
@@ -55,7 +57,7 @@ function clear_noFile_radio() {
     no_file.checked = false;
   }
 
-}
+};
 function validation_request() {
   const file = document.getElementById('label').files[0];
   const file_2 = document.getElementById('label_2').files[0];
@@ -391,37 +393,37 @@ function check_amazon() {
    return
   }
 }
+///////create new order///////
+// var map = new Map();
+// function accountList() {
+//     fetch(`/api/user/account`, {
+//         method: 'GET'
+//     }).then(function (response) {
+//         return response.json();
+//     }).then(function (data) {
+//         for (let i = 0; i < data.length; i++) {
+//             const option = document.createElement('option');
+//             option.innerHTML = data[i].name + " (prefix: "+ data[i].prefix.toUpperCase() + ")";
+//             document.querySelector('#accountList').appendChild(option);
+//             map.set(data[i].name, data[i].id);
+//         }
+//     });
+// };
+// function saveAccount() {
+//     var selectedOption = document.querySelector('#accountList').value;
 
-var map = new Map();
-function accountList() {
-    fetch(`/api/user/account`, {
-        method: 'GET'
-    }).then(function (response) {
-        return response.json();
-    }).then(function (data) {
-        for (let i = 0; i < data.length; i++) {
-            const option = document.createElement('option');
-            option.innerHTML = data[i].name + " (prefix: "+ data[i].prefix.toUpperCase() + ")";
-            document.querySelector('#accountList').appendChild(option);
-            map.set(data[i].name, data[i].id);
-        }
-    });
-};
-function saveAccount() {
-    var selectedOption = document.querySelector('#accountList').value;
+//     if(selectedOption != 'Create New Account'){
+//         var accountSaved = selectedOption.split(' (prefix:');
+//         var prefixSaved = accountSaved[1].split(')');
+//         localStorage.setItem('account', accountSaved[0]);
+//         localStorage.setItem('prefix', prefixSaved[0]);
+//         localStorage.setItem('account_id', map.get(accountSaved[0]));
+//     } else {
+//         localStorage.setItem('account', selectedOption);
+//     }
+// };
 
-    if(selectedOption != 'Create New Account'){
-        var accountSaved = selectedOption.split(' (prefix:');
-        var prefixSaved = accountSaved[1].split(')');
-        localStorage.setItem('account', accountSaved[0]);
-        localStorage.setItem('prefix', prefixSaved[0]);
-        localStorage.setItem('account_id', map.get(accountSaved[0]));
-    } else {
-        localStorage.setItem('account', selectedOption);
-    }
-};
-
-async function record (box_number, s3, account) {
+const record = async (box_number, s3, account) => {
   const ref_number = box_number;
   const status_from = 1;
   const status_to = 2;
@@ -446,7 +448,7 @@ async function record (box_number, s3, account) {
       console.log('record fetched!');
   }
 };
-async function statusUpdate (box_number, status, requested_date, s3, notes, fba) {
+const statusUpdate = async (box_number, status, requested_date, s3, notes, fba) => {
   const response = await fetch(`/api/box/status_client`, {
     method: 'PUT',
     body: JSON.stringify({
@@ -465,3 +467,4 @@ async function statusUpdate (box_number, status, requested_date, s3, notes, fba)
     console.log(`${box_number} was updated!`);
   }
 };
+status_conversion();
