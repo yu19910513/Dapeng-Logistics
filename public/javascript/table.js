@@ -4,15 +4,15 @@ var rows = table.rows;
 for (i = 1; i < rows.length; i++){
   var data_status = parseInt(rows[i].cells[10].innerText);
     if (data_status == 1) {
-      rows[i].cells[10].innerHTML = "Received"
+      rows[i].cells[10].innerHTML = "存货"
     } else if (data_status == 2) {
-      rows[i].cells[10].innerHTML = "Requested"
+      rows[i].cells[10].innerHTML = "通知寄出"
     } else if (data_status == 3) {
-      rows[i].cells[10].innerHTML = "Shipped"
+      rows[i].cells[10].innerHTML = "完成出货"
     } else if (data_status == 98) {
-      rows[i].cells[10].innerHTML = "Archived"
+      rows[i].cells[10].innerHTML = "汇整"
     } else {
-      rows[i].cells[10].innerHTML = "Pending"
+      rows[i].cells[10].innerHTML = "挂单"
     }
 };
 
@@ -57,20 +57,20 @@ function sortTable(n) {
 //////sort by status
 function status_trigger(n) {
   if (n == 2) {
-    const pending = 'Pending';
+    const pending = '挂单';
     filter_status(pending)
   } else if (n == 3) {
-    const received = 'Received';
+    const received = '存货';
     filter_status(received)
   } else if (n == 4) {
-    const requested = 'Requested';
+    const requested = '通知寄出';
     filter_status(requested)
   } else if (n == 5) {
-    const shipped = 'Shipped';
+    const shipped = '完成出货';
     filter_status(shipped)
   } else if (n == 6) {
-    const received = 'Received';
-    const requested = 'Requested';
+    const received = '存货';
+    const requested = '通知寄出';
     filter_status_i(received, requested)
   } else {
     show_all();
@@ -78,10 +78,10 @@ function status_trigger(n) {
 };
 function show_all() {
   var table, tr, td, i, txtValue, a, b, c, d;
-  a = "received".toUpperCase();
-  b = "requested".toUpperCase();
-  c = "pending".toUpperCase();
-  d = "shipped".toUpperCase();
+  a = "存货".toUpperCase();
+  b = "通知寄出".toUpperCase();
+  c = "挂单".toUpperCase();
+  d = "完成出货".toUpperCase();
   table = document.getElementById("myTable");
   tr = table.getElementsByTagName("tr");
 

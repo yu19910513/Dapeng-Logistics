@@ -5,15 +5,7 @@ var rows = table.rows;
 for (i = 1; i < rows.length; i++){
   var data_status = parseInt(rows[i].cells[7].innerText);
     if (data_status == 1) {
-      rows[i].getElementsByTagName("td")[7].innerHTML = "Received"
-    // } else if (data_status == 2) {
-    //   rows[i].getElementsByTagName("td")[7].innerHTML = "Requested"
-    // } else if (data_status == 3) {
-    //   rows[i].getElementsByTagName("td")[7].innerHTML = "Shipped"
-    // } else if (data_status == 4) {
-    //   rows[i].getElementsByTagName("td")[7].innerHTML = "Archived"
-    // } else {
-    //   rows[i].getElementsByTagName("td")[7].innerHTML = "Pending"
+      rows[i].cells[7].innerHTML = "请夹带运输标签与确认"
     };
     rows[i].getElementsByTagName("td")[6].innerHTML =  Math.ceil(parseFloat(rows[i].getElementsByTagName("td")[6].innerText)*2.2)
     var sizeData  = rows[i].getElementsByTagName("td")[5].innerText.split('x');

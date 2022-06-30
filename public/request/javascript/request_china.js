@@ -6,15 +6,7 @@ const status_conversion = () => {
   for (i = 1; i < rows.length; i++){
     var data_status = parseInt(rows[i].cells[10].innerText);
       if (data_status == 1) {
-        rows[i].getElementsByTagName("td")[10].innerHTML = "Received"
-      } else if (data_status == 2) {
-        rows[i].getElementsByTagName("td")[10].innerHTML = "Requested"
-      } else if (data_status == 3) {
-        rows[i].getElementsByTagName("td")[10].innerHTML = "Shipped"
-      } else if (data_status == 4) {
-        rows[i].getElementsByTagName("td")[10].innerHTML = "Archived"
-      } else {
-        rows[i].getElementsByTagName("td")[10].innerHTML = "Pending"
+        rows[i].cells[10].innerHTML = "存货"
       }
   }
 };

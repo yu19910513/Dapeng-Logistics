@@ -1,17 +1,17 @@
 var table = document.getElementById("myTable");
 var rows = table.rows;
-for (i = 1; i < (rows.length + 1); i++){
-  var data_status = rows[i].getElementsByTagName('td');
-    if (data_status[9].innerHTML == 1) {
-      rows[i].getElementsByTagName("td")[9].innerHTML = "Received"
-    } else if (data_status[9].innerHTML == 2) {
-      rows[i].getElementsByTagName("td")[9].innerHTML = "Requested"
-    } else if (data_status[9].innerHTML == 3) {
-      rows[i].getElementsByTagName("td")[9].innerHTML = "Shipped"
-    } else if (data_status[9].innerHTML == 4) {
-      rows[i].getElementsByTagName("td")[9].innerHTML = "Archived"
+for (i = 1; i < rows.length; i++){
+  var data_status = rows[i].cells[9].innerText;
+    if (data_status == 1) {
+      rows[i].cells[9].innerHTML = "Received"
+    } else if (data_status == 2) {
+      rows[i].cells[9].innerHTML = "Requested"
+    } else if (data_status == 3) {
+      rows[i].cells[9].innerHTML = "Shipped"
+    } else if (data_status == 4) {
+      rows[i].cells[9].innerHTML = "Archived"
     } else {
-      rows[i].getElementsByTagName("td")[9].innerHTML = "Pending"
+      rows[i].cells[9].innerHTML = "Pending"
     }
 };
 
