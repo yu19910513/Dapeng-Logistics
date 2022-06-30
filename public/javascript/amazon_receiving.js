@@ -262,6 +262,7 @@ function itemCreate() {
         item.container_id = amazon_box.id;
         item.description = amazon_box.description;
         promises.push(loadingItems(item, rows[i]));
+        // promises.push(record_item(item, amazon_box))
     };
     Promise.all(promises).then(() => {
         loader.style.display = 'none';
@@ -332,6 +333,10 @@ function masterCheck() {
     const container_d = container_number.value.trim();
     const client_list_d = client_list.value;
     const account_d = accountSelect.value;
+    // var selectedAccount = accountSelect.querySelectorAll('option');
+    // selectedAccount = selectedAccount.filter(i => i.value != accountSelect.value)
+    // console.log(selectedAccount);
+
     if (description_d && length_d && width_d && height_d && container_d.substring(0,2).toUpperCase() == 'AM' && container_d.length == 8 && client_list_d && account_d && validation(client_list_d, account_d)) {
         containerChecker(container_d);
         document.getElementById('order_pre-check').style.display = '';
@@ -617,4 +622,65 @@ async function removeEmpty(Arr) {
     if (response.ok) {
         alert(`Successfully remove ${Arr.length} empty containers! `)
     }
-}
+};
+
+
+
+/////////record keeping/////////
+// const record_container = async (container_number, user_id, account, itemArr) => {
+//     const ref_number = container_number;
+//     const user_id = user_id
+//     const status_to = 1;
+//     const date = new Date().toISOString().split('T')[0];
+//     const action = `Admin Creating Container(for Acct: ${account})`
+//     const sub_number = JSON.stringify(itemArr);
+//     const response = await fetch(`/api/record/create_container`, {
+//       method: 'POST',
+//       body: JSON.stringify({
+//           user_id,
+//           ref_number,
+//           status_to,
+//           date,
+//           action,
+//           sub_number
+//       }),
+//       headers: {
+//           'Content-Type': 'application/json'
+//       }
+//     });
+//     if (response.ok) {
+//         console.log('record fetched!');
+//     }
+// };
+const record_item = async (itemData, containerData) => {
+    var account;
+    if (newAccount.name) {
+        account = newAccount.name
+    } else {
+        accountSelect.querySelectorAll('option').filter(i => i.value != accountSelect.value)[0].innerText
+    }
+    const ref_number = itemData.item_number;
+    const user_id = itemData.user_id;
+    const qty_to = itemData.qty_per_sku;
+    const date = new Date().toISOString().split('T')[0];
+    const action = `Admin Creating Item(for Acct: ${account})`
+    const sub_number = container_number;
+    const response = await fetch(`/api/record/create_item`, {
+      method: 'POST',
+      body: JSON.stringify({
+          user_id,
+          qty_to,
+          ref_number,
+          status_to,
+          date,
+          action,
+          sub_number
+      }),
+      headers: {
+          'Content-Type': 'application/json'
+      }
+    });
+    if (response.ok) {
+        console.log('record fetched!');
+    }
+};

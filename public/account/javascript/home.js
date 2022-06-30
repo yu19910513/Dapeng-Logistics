@@ -1,3 +1,4 @@
+console.log('account home.js');
 function number_item () {
     var numberOfItem = document.getElementById('numberOfInventory');
     var arr =[]
@@ -14,7 +15,6 @@ function number_item () {
       }
     };
     numberOfItem.innerHTML = arr.length
-
   }
 setInterval (number_item(), 1000);
 document.getElementById('inventory_btn').click();

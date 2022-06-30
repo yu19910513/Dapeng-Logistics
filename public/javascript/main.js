@@ -1,4 +1,4 @@
-console.log(location.href, 'main js');
+console.log(location.href, 'root main js');
 var map = new Map();
 function accountList() {
     document.querySelector('#accountList').querySelectorAll('option').forEach(i => i.remove())

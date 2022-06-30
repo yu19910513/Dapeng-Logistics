@@ -1,4 +1,4 @@
-console.log(location.href, 'main js');
+console.log(location.href, 'account main js');
 var map = new Map();
 function accountList() {
     document.querySelector('#accountList').querySelectorAll('option').forEach(i => i.remove())
@@ -18,7 +18,6 @@ function accountList() {
         }
     });
 };
-
 function saveAccount() {
     var selectedOption = document.querySelector('#accountList').value;
     if(selectedOption != 'Create New Account'){
@@ -30,8 +29,7 @@ function saveAccount() {
     } else {
         localStorage.setItem('account', selectedOption);
     }
-}
-
+};
 if (document.querySelector("#account_selection")) {
     document.querySelector("#account_selection").addEventListener("click", saveAccount);
 };
