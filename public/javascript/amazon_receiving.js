@@ -652,35 +652,35 @@ async function removeEmpty(Arr) {
 //         console.log('record fetched!');
 //     }
 // };
-const record_item = async (itemData, containerData) => {
-    var account;
-    if (newAccount.name) {
-        account = newAccount.name
-    } else {
-        accountSelect.querySelectorAll('option').filter(i => i.value != accountSelect.value)[0].innerText
-    }
-    const ref_number = itemData.item_number;
-    const user_id = itemData.user_id;
-    const qty_to = itemData.qty_per_sku;
-    const date = new Date().toISOString().split('T')[0];
-    const action = `Admin Creating Item(for Acct: ${account})`
-    const sub_number = container_number;
-    const response = await fetch(`/api/record/create_item`, {
-      method: 'POST',
-      body: JSON.stringify({
-          user_id,
-          qty_to,
-          ref_number,
-          status_to,
-          date,
-          action,
-          sub_number
-      }),
-      headers: {
-          'Content-Type': 'application/json'
-      }
-    });
-    if (response.ok) {
-        console.log('record fetched!');
-    }
-};
+// const record_item = async (itemData, containerData) => {
+//     var account;
+//     if (newAccount.name) {
+//         account = newAccount.name
+//     } else {
+//         accountSelect.querySelectorAll('option').filter(i => i.value != accountSelect.value)[0].innerText
+//     }
+//     const ref_number = itemData.item_number;
+//     const user_id = itemData.user_id;
+//     const qty_to = itemData.qty_per_sku;
+//     const date = new Date().toISOString().split('T')[0];
+//     const action = `Admin Creating Item(for Acct: ${account})`
+//     const sub_number = container_number;
+//     const response = await fetch(`/api/record/create_item`, {
+//       method: 'POST',
+//       body: JSON.stringify({
+//           user_id,
+//           qty_to,
+//           ref_number,
+//           status_to,
+//           date,
+//           action,
+//           sub_number
+//       }),
+//       headers: {
+//           'Content-Type': 'application/json'
+//       }
+//     });
+//     if (response.ok) {
+//         console.log('record fetched!');
+//     }
+// };

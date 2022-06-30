@@ -4,15 +4,15 @@ var rows = table.rows;
 for (i = 1; i < rows.length; i++){
   var data_status = parseInt(rows[i].cells[10].innerText);
     if (data_status == 1) {
-      rows[i].getElementsByTagName("td")[10].innerHTML = "Received"
+      rows[i].cells[10].innerHTML = "Received"
     } else if (data_status == 2) {
-      rows[i].getElementsByTagName("td")[10].innerHTML = "Requested"
+      rows[i].cells[10].innerHTML = "Requested"
     } else if (data_status == 3) {
-      rows[i].getElementsByTagName("td")[10].innerHTML = "Shipped"
+      rows[i].cells[10].innerHTML = "Shipped"
     } else if (data_status == 98) {
-      rows[i].getElementsByTagName("td")[10].innerHTML = "Archived"
+      rows[i].cells[10].innerHTML = "Archived"
     } else {
-      rows[i].getElementsByTagName("td")[10].innerHTML = "Pending"
+      rows[i].cells[10].innerHTML = "Pending"
     }
 };
 
@@ -84,7 +84,6 @@ function show_all() {
   d = "shipped".toUpperCase();
   table = document.getElementById("myTable");
   tr = table.getElementsByTagName("tr");
-
   for (i = 0; i < tr.length; i++) {
     td = tr[i].getElementsByTagName("td")[10];
     if (td) {
