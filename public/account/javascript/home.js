@@ -9,7 +9,7 @@ function number_item () {
       td = tr[i].getElementsByTagName("td")[10];
       if (td) {
         txtValue = td.textContent || td.innerText;
-        if (txtValue == 'Received' || txtValue == 'Requested') {
+        if (txtValue == '存货' || txtValue == '通知寄出') {
           arr.push(td)
         }
       }
