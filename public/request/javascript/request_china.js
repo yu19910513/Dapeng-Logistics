@@ -108,17 +108,7 @@ async function editStatus(event, n) {
   for (let i = 0; i < event.length; i++) {
     const box_number = event[i].box_number
     var requested_date = new Date().toLocaleDateString("en-US");
-    var status = event[i].status;
-    console.log(status);
-    if(status == 'Pending'){
-        status = 1;
-      } else if (status == 'Received') {
-        status = 2;
-      } else if (status == 'Requested') {
-        status = 3;
-      } else {
-        status = 4
-      }
+    var status = 2;
     const response = await fetch(`/api/box/status_client`, {
       method: 'PUT',
       body: JSON.stringify({
