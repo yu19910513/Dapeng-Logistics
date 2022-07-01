@@ -321,8 +321,12 @@ async function loadingItems(data) {
 
 function printable() {
     console.log(totalItem);
-    const hideables = [document.getElementById('assignFunction'),document.getElementById('notesFunction'), document.getElementById('topline')];
     printCheck = true;
+    const hideables = [
+        document.getElementById('assignFunction'),
+        document.getElementById('notesFunction'),
+        document.getElementById('topline')
+    ];
     hideables.forEach(i => i.style.display = 'none')
     window.print();
     hideables.forEach(i => i.style.display = '')
