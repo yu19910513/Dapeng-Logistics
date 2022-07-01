@@ -86,24 +86,25 @@ function error() {
   audio.play();
 };
 
-const record = async (number, user_id) => {
-  const user_id = user_id;
-  const ref_number = number;
-  const status_from = 0;
-  const status_to = 1;
-  const received_date = new Date().toISOString().split('T')[0];
-  const action = 'Receiving'
-  const response = await fetch(`/api/record/receiving_china`, {
-    method: 'POST',
-    body: JSON.stringify({
-        ref_number,
-        status_from,
-        status_to,
-        received_date,
-        action
-    }),
-    headers: {
-        'Content-Type': 'application/json'
-    }
-  });
-}
+// const record = async (number, user) => {
+//   const user_id = user;
+//   const ref_number = number;
+//   const status_from = 0;
+//   const status_to = 1;
+//   const received_date = new Date().toISOString().split('T')[0];
+//   const action = 'Receiving'
+//   const response = await fetch(`/api/record/receiving_china`, {
+//     method: 'POST',
+//     body: JSON.stringify({
+//       user_id,
+//       ref_number,
+//       status_from,
+//       status_to,
+//       received_date,
+//       action
+//     }),
+//     headers: {
+//         'Content-Type': 'application/json'
+//     }
+//   });
+// }

@@ -1,19 +1,9 @@
 console.log(location.href, 'master admin_table js');
 var table = document.getElementById("myTable");
 var rows = table.rows;
-for (i = 1; i < (rows.length + 1); i++){
+for (i = 1; i < rows.length; i++){
   var data_status = rows[i].getElementsByTagName('td');
-    if (data_status[11].innerHTML == 1) {
-      rows[i].getElementsByTagName("td")[11].innerHTML = "Received"
-    } else if (data_status[11].innerHTML == 2) {
-      rows[i].getElementsByTagName("td")[11].innerHTML = "Requested"
-    } else if (data_status[11].innerHTML == 3) {
-      rows[i].getElementsByTagName("td")[11].innerHTML = "Shipped"
-    } else if (data_status[11].innerHTML == 4) {
-      rows[i].getElementsByTagName("td")[11].innerHTML = "Archived"
-    } else {
-      rows[i].getElementsByTagName("td")[11].innerHTML = "Pending"
-    }
+  rows[i].getElementsByTagName("td")[11].innerHTML = "Pending"
 };
 
 
