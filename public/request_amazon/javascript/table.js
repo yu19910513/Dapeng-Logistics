@@ -2,12 +2,6 @@ console.log(location.href, 'req_amazon table');
 var loader = document.getElementById('loader');
 var table = document.getElementById("myTable");
 var rows = table.rows;
-for (i = 1; i < rows.length; i++){
-  var data_status = parseInt(rows[i].cells[7].innerText);
-    if (data_status == 1) {
-      rows[i].cells[7].innerHTML = "存货"
-    }
-};
 
 function clear_file() {
   document.getElementById('label').value = null;

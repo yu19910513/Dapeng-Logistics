@@ -2,14 +2,6 @@ console.log(location.href, 'request_china.js');
 var loader = document.getElementById('loader');
 var table = document.getElementById("myTable");
 var rows = table.rows;
-const status_conversion = () => {
-  for (i = 1; i < rows.length; i++){
-    var data_status = parseInt(rows[i].cells[10].innerText);
-      if (data_status == 1) {
-        rows[i].cells[10].innerHTML = "存货"
-      }
-  }
-};
 function show_all() {
   var table, tr, td, i, txtValue, a, b, c, d;
   a = "received".toUpperCase();
@@ -459,4 +451,3 @@ const statusUpdate = async (box_number, status, requested_date, s3, notes, fba) 
     console.log(`${box_number} was updated!`);
   }
 };
-status_conversion();
