@@ -102,30 +102,6 @@ function validation_request() {
     }
   }
 };
-async function editStatus(event, n) {
-  var s3 = new Date().valueOf() + 1;
-  var notes = n;
-  for (let i = 0; i < event.length; i++) {
-    const box_number = event[i].box_number
-    var requested_date = new Date().toLocaleDateString("en-US");
-    var status = 2;
-    const response = await fetch(`/api/box/status_client`, {
-      method: 'PUT',
-      body: JSON.stringify({
-          box_number,
-          status,
-          requested_date,
-          s3,
-          notes
-      }),
-      headers: {
-          'Content-Type': 'application/json'
-      }
-    });
-  };
-  upload_file(s3)
-
-};
 function upload_file(e) {
   const file = document.getElementById('label').files[0];
   const file_2 = document.getElementById('label_2').files[0];
@@ -230,17 +206,8 @@ function editStatus(event, n) {
     const account = event[i].account;
     const box_number = event[i].box_number
     var requested_date = new Date().toLocaleDateString("en-US");
-    var status = event[i].status;
+    var status = 2;
     console.log(status);
-    if(status == 'Pending'){
-        status = 1;
-      } else if (status == 'Received') {
-        status = 2;
-      } else if (status == 'Requested') {
-        status = 3;
-      } else {
-        status = 4
-      }
     promises.push((statusUpdate(box_number, status, requested_date, s3, notes, fba)));
     promises.push(record(box_number, s3, account))
   };
