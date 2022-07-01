@@ -1,18 +1,31 @@
-var table = document.getElementById("myTable");
-var rows = table.rows;
-for (i = 1; i < rows.length; i++){
-  var data_status = rows[i].cells[9].innerText;
-    if (data_status == 1) {
-      rows[i].cells[9].innerHTML = "Received"
-    } else if (data_status == 2) {
-      rows[i].cells[9].innerHTML = "Requested"
-    } else if (data_status == 3) {
-      rows[i].cells[9].innerHTML = "Shipped"
-    } else if (data_status == 4) {
-      rows[i].cells[9].innerHTML = "Archived"
-    } else {
-      rows[i].cells[9].innerHTML = "Pending"
-    }
+const table = document.getElementById("myTable");
+const numberOfItem = document.getElementById('numberOfInventory');
+const rows = table.rows;
+var inventoryCount = 0;
+const init = () => {
+  for (i = 1; i < rows.length; i++){
+    var data_status = rows[i].cells[9].innerText;
+      if (data_status == 1) {
+        inventoryCount++;
+        rows[i].cells[9].innerHTML = "Received"
+      } else if (data_status == 2) {
+        inventoryCount++;
+        rows[i].cells[9].innerHTML = "Requested"
+      } else if (data_status == 3) {
+        rows[i].cells[9].innerHTML = "Shipped"
+      } else if (data_status == 4) {
+        rows[i].cells[9].innerHTML = "Archived"
+      } else {
+        rows[i].cells[9].innerHTML = "Pending"
+      }
+  };
+  numberOfItem.innerHTML = inventoryCount;
+  status_trigger(6);
+  document.getElementById('loader').remove();
+};
+
+if (localStorage.getItem('user_id')) {
+localStorage.removeItem('user_id');
 };
 
 
@@ -146,3 +159,5 @@ function reset_filter() {
     }
   }
 };
+
+init();

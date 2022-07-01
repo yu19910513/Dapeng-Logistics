@@ -3,23 +3,6 @@ var numberOfItem = document.getElementById('numberOfInventory');
 const containerTable = document.getElementById('myTable');
 var containerMap = new Map();
 
-//count # of boxes
-function number_item () {
-    var table, tr, td, txtValue, sku;
-    table = document.getElementById("myTable");
-    tr = table.getElementsByTagName("tr");
-    for (i = 1; i < tr.length; i++) {
-      td = tr[i].getElementsByTagName("td")[7];
-      if (td) {
-        txtValue = td.textContent || td.innerText;
-        if (txtValue == '1' || txtValue == '2') {
-          inventoryCount++
-        }
-      }
-    };
-    allItem();
-  } number_item();
-
 function allItem() {
     fetch(`/api/item/allItemAdmin`, {
       method: 'GET'
@@ -32,7 +15,6 @@ function allItem() {
         return r;
       }, Object.create(null));
       const newData = Object.values(container_data);
-      console.log(newData);
       for (let i = 0; i < newData.length; i++) {
         const containerNumber = newData[i][0].container.container_number;
         containerMap.set(containerNumber, newData[i]);
@@ -43,54 +25,47 @@ function allItem() {
       for (let i = 1; i < tr.length; i++) {
         var skuCount = 0;
         const container_number = tr[i].getElementsByTagName('td')[2].innerHTML;
+        const status = tr[i].getElementsByTagName('td')[7].innerText;
         const container = tr[i].getElementsByTagName('td')[2];
         const sku = tr[i].getElementsByTagName('td')[3];
         const qty = tr[i].getElementsByTagName('td')[4];
+        if (status == 1) {
+          tr[i].getElementsByTagName('td')[7].innerHTML = "Received";
+          inventoryCount++
+        } else if (status == 2) {
+          tr[i].getElementsByTagName('td')[7].innerHTML = "Requested";
+          inventoryCount++
+        } else if (status == 3) {
+          tr[i].getElementsByTagName('td')[7].innerHTML = "Shipped"
+        } else if (status == 4) {
+          tr[i].getElementsByTagName('td')[7].innerHTML = "XC pre-billed"
+        } else {
+          tr[i].getElementsByTagName('td')[7].innerHTML = "Pending"
+        };
         if(containerMap.get(container_number)){
           containerMap.get(container_number).forEach(item => {
-          skuCount = skuCount + item.qty_per_sku;
-          const singleSKU = document.createElement('div');
-          const singleQty = document.createElement('div');
-          singleSKU.innerHTML = item.item_number;
-          singleQty.innerHTML = item.qty_per_sku;
-          sku.appendChild(singleSKU);
-          qty.appendChild(singleQty)
-        })
-      } else {
-        if (container_number.substring(0,2) != "AC") {
-          emptyArr.push(tr[i]);
-          inventoryCount--
-          tr[i].style.display = 'none';
+            skuCount = skuCount + item.qty_per_sku;
+            const singleSKU = document.createElement('div');
+            const singleQty = document.createElement('div');
+            singleSKU.innerHTML = item.item_number;
+            singleQty.innerHTML = item.qty_per_sku;
+            sku.appendChild(singleSKU);
+            qty.appendChild(singleQty)
+          })
+        } else {
+          if (container_number.substring(0,2) != "AC") {
+            emptyArr.push(tr[i]);
+            inventoryCount--
+            tr[i].style.display = 'none';
+          }
         }
-      }
       container.innerHTML = container.innerHTML + ` <small>(${skuCount})</small>`;
       };
       emptyArr.forEach(i => i.remove())
-      numberOfItem.innerHTML = inventoryCount
+      numberOfItem.innerHTML = inventoryCount;
+      document.getElementById('loader').remove();
+      status_trigger(6)
     })
-};
-
-// document.getElementById('inventory_btn').click();
-
-// var loader = document.getElementById('loader');
-
-//status filter functions
-var table = document.getElementById("myTable");
-var rows = table.rows;
-console.log(rows.length);
-for (i = 1; i < rows.length; i++){
-  var data_status = rows[i].cells[7].innerText;
-    if (data_status == 1) {
-      rows[i].cells[7].innerHTML = "Received"
-    } else if (data_status == 2) {
-      rows[i].cells[7].innerHTML = "Requested"
-    } else if (data_status == 3) {
-      rows[i].cells[7].innerHTML = "Shipped"
-    } else if (data_status == 4) {
-      rows[i].cells[7].innerHTML = "XC pre-billed"
-    } else {
-      rows[i].cells[7].innerHTML = "Pending"
-    }
 };
 function clear_noFile_radio() {
   const no_file = document.getElementById("label_not_required");
@@ -222,3 +197,4 @@ function reset_filter() {
    }
  }
 };
+allItem();

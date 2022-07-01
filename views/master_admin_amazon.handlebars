@@ -1,5 +1,6 @@
 {{#if admin}}
 <link rel="stylesheet" href="css/table.css">
+<link rel="stylesheet" href="css/loader.css">
 <div class="uk-overflow-auto">
 <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
 <div class="uk-margin uk-overflow-auto">
@@ -23,9 +24,6 @@
             </button>
             </div>
 
-            {{!-- <div class="uk-navbar-item">
-                <a href="" class="btn btn-success">Labeling</a>
-            </div> --}}
 
             <div class="uk-navbar-item">
                 <form class="uk-search uk-search-default">
@@ -39,6 +37,9 @@
     {{!-- </nav> --}}
     </div>
 </div>
+
+    <div class="loader" id="loader"></div>
+
     <div class="container">
         <table class="uk-table uk-table-small uk-table-divider myTable shadow-sm" id="myTable">
             <thead>

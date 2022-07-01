@@ -1,5 +1,6 @@
 {{#if admin}}
 <link rel="stylesheet" href="css/table_china.css">
+<link rel="stylesheet" href="css/loader.css">
 <div class="uk-overflow-auto">
     <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
     <div class="uk-margin">
@@ -31,6 +32,7 @@
         </div>
     {{!-- </nav> --}}
     </div>
+    <div class="loader" id="loader"></div>
      <div class="container">
         <table class="uk-table uk-table-small uk-table-divider myTable shadow-sm" id="myTable">
             <thead>
@@ -103,7 +105,6 @@
     </script>
 
 <script src="javascript/admin_table.js"></script>
-<script src="javascript/admin_home.js"></script>
 {{else}}
 <script src="javascript/client_redirect.js"></script>
 <img class="uk-align-center" src="https://i0.wp.com/wirthconsulting.org/wp-content/uploads/2018/02/forbidden1.jpg?w=346&ssl=1" alt="">
