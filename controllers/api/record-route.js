@@ -39,4 +39,47 @@ router.post('/request_china', withAuth, (req, res) => {
 
   });
 });
+router.post('/record_create', withAuth, (req, res) => {
+  Record.create({
+    user_id: req.body.user_id,
+    ref_number: req.body.ref_number,
+    sub_number: req.body.sub_number,
+    qty_from: req.body.qty_from,
+    qty_to: req.body.qty_to,
+    status_from: req.body.status_from,
+    status_to: req.body.status_to,
+    action: req.body.action,
+    action_notes: req.body.action_notes,
+    date: req.body.date,
+    type: req.body.type,
+    bill: req.body.bill
+  })
+  .then(dbRecordData => {
+      res.json(dbRecordData)
+    })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json(err);
+
+  });
+});
+// router.post('/newcontainer_amazon', withAuth, (req, res) => {
+//   Record.create({
+//     user_id: req.body.user_id,
+//     ref_number: req.body.ref_number,
+//     status_to: req.body.status_to,
+//     action: req.body.action,
+//     date: req.body.date,
+//     action_notes: req.body.action_notes,
+//     type: req.body.type
+//   })
+//   .then(dbRecordData => {
+//       res.json(dbRecordData)
+//     })
+//   .catch(err => {
+//     console.log(err);
+//     res.status(500).json(err);
+
+//   });
+// });
 module.exports = router;
