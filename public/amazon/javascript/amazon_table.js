@@ -1,20 +1,76 @@
 console.log('amazon_ table.js');
-var loader = document.getElementById('loader');
-var table = document.getElementById("myTable");
-var rows = table.rows;
-for (i = 1; i < rows.length; i++){
-  var data_status = parseInt(rows[i].cells[6].innerText);
-    if (data_status == 1) {
-      rows[i].cells[6].innerHTML = "存货"
-    } else if (data_status == 2) {
-      rows[i].cells[6].innerHTML = "通知寄出"
-    } else if (data_status == 3) {
-      rows[i].cells[6].innerHTML = "完成出货"
-    } else if (data_status == 4) {
-      rows[i].cells[6].innerHTML = "汇整"
+const locationAddress = location.href.split('/');
+const account_id = locationAddress[locationAddress.length-1];
+const containerTable = document.getElementById('myTable');
+const numberOfItem = document.getElementById('numberOfInventory');
+const rows = containerTable.rows;
+var inventoryCount = 0;
+var containerMap = new Map();
+const init = () => {
+  for (i = 1; i < rows.length; i++){
+    var data_status = parseInt(rows[i].cells[6].innerText);
+      if (data_status == 1) {
+        inventoryCount++;
+        rows[i].cells[6].innerHTML = "存货"
+      } else if (data_status == 2) {
+        inventoryCount++;
+        rows[i].cells[6].innerHTML = "通知寄出"
+      } else if (data_status == 3) {
+        rows[i].cells[6].innerHTML = "完成出货"
+      } else if (data_status == 4) {
+        rows[i].cells[6].innerHTML = "汇整"
+      } else {
+        rows[i].cells[6].innerHTML = "挂单"
+      }
+  };
+  allItem();
+};
+function allItem() {
+  fetch(`/api/item/allItem/${account_id}`, {
+    method: 'GET'
+  }).then(function (response) {
+    return response.json();
+  }).then(function (data) {
+    const container_data = data.reduce((r, a) => {
+      r[a.container.container_number] = r[a.container.container_number] || [];
+      r[a.container.container_number].push(a);
+      return r;
+    }, Object.create(null));
+    const newData = Object.values(container_data);
+    for (let i = 0; i < newData.length; i++) {
+      const containerNumber = newData[i][0].container.container_number;
+      containerMap.set(containerNumber, newData[i]);
+    };
+    var tr;
+    var emptyArr = [];
+    tr = containerTable.getElementsByTagName('tr');
+    for (let i = 1; i < tr.length; i++) {
+      var skuCount = 0;
+      const container_number = tr[i].getElementsByTagName('td')[1].innerHTML;
+      const sku = tr[i].getElementsByTagName('td')[2];
+      const qty = tr[i].getElementsByTagName('td')[3];
+      if(containerMap.get(container_number) && container_number.substring(0,1) != "T"){
+      containerMap.get(container_number).forEach(item => {
+        skuCount = skuCount + item.qty_per_sku;
+        const singleSKU = document.createElement('div');
+        const singleQty = document.createElement('div');
+        singleSKU.innerHTML = item.item_number;
+        singleQty.innerHTML = item.qty_per_sku;
+        sku.appendChild(singleSKU);
+        qty.appendChild(singleQty)
+      })
     } else {
-      rows[i].cells[6].innerHTML = "挂单"
+      emptyArr.push(tr[i]);
+      inventoryCount--
+      tr[i].style.display = 'none';
     }
+    tr[i].getElementsByTagName('td')[1].innerHTML = tr[i].getElementsByTagName('td')[1].innerHTML + ` <small>(${skuCount})</small>`;
+    };
+    emptyArr.forEach(i => i.remove())
+    numberOfItem.innerHTML = inventoryCount;
+    document.getElementById('loader').remove();
+    status_trigger(6)
+  })
 };
 function clear_noFile_radio() {
   const no_file = document.getElementById("label_not_required");
@@ -146,3 +202,4 @@ function reset_filter() {
    }
  }
 };
+init()

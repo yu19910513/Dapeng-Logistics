@@ -1,20 +1,30 @@
 console.log(location.href, 'account table.js');
-var table = document.getElementById("myTable");
-var rows = table.rows;
-for (i = 1; i < rows.length; i++){
-  var data_status = parseInt(rows[i].cells[10].innerText);
-  if (data_status == 1) {
-    rows[i].cells[10].innerHTML = "存货"
-  } else if (data_status == 2) {
-    rows[i].cells[10].innerHTML = "通知寄出"
-  } else if (data_status == 3) {
-    rows[i].cells[10].innerHTML = "完成出货"
-  } else if (data_status == 98) {
-    rows[i].cells[10].innerHTML = "汇整"
-  } else {
-    rows[i].cells[10].innerHTML = "挂单"
-  }
-};
+const table = document.getElementById("myTable");
+const numberOfItem = document.getElementById('numberOfInventory');
+const rows = table.rows;
+var inventoryCount = 0;
+
+const init = () => {
+  for (i = 1; i < rows.length; i++){
+    var data_status = parseInt(rows[i].cells[10].innerText);
+      if (data_status == 1) {
+        inventoryCount++;
+        rows[i].cells[10].innerHTML = "存货"
+      } else if (data_status == 2) {
+        inventoryCount++;
+        rows[i].cells[10].innerHTML = "通知寄出"
+      } else if (data_status == 3) {
+        rows[i].cells[10].innerHTML = "完成出货"
+      } else if (data_status == 98) {
+        rows[i].cells[10].innerHTML = "汇整"
+      } else {
+        rows[i].cells[10].innerHTML = "挂单"
+      }
+  };
+  numberOfItem.innerHTML = inventoryCount;
+  document.getElementById('loader').remove();
+  status_trigger(6);
+}
 
 //////sort by column
 function sortTable(n) {
@@ -53,7 +63,6 @@ function sortTable(n) {
     }
   }
 };
-
 //////sort by status
 function status_trigger(n) {
   if (n == 2) {
@@ -84,6 +93,7 @@ function show_all() {
   d = "完成出货".toUpperCase();
   table = document.getElementById("myTable");
   tr = table.getElementsByTagName("tr");
+
   for (i = 0; i < tr.length; i++) {
     td = tr[i].getElementsByTagName("td")[10];
     if (td) {
@@ -141,3 +151,5 @@ function reset_filter() {
    }
  }
 };
+
+init();
