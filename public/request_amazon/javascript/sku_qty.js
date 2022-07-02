@@ -69,7 +69,7 @@ function allItem() {
         document.getElementById('noSign').style.display = '';
       }
     })
-  };
+};
 allItem();
 //helper tools
 function validationSKU(container_id, item_id, qty_per_sku) {
@@ -196,90 +196,89 @@ function findContainerId(c_number, s3, objArr) {
   }).then(function (data) {
       console.log('container_id fetched');
      const containerID = data.id
-     itemCreate(objArr, s3, containerID);
+     itemCreate(objArr, s3, containerID, c_number);
   })
 };
-function itemCreate(objArr, s3, id) {
+
+var itemCounter = 0;
+var itemCollection = 'Colletion: ';
+function itemCreate(objArr, s3, id, container_number) {
   console.log('itemCreate');
+  const promises = [];
   for (let i = 0; i < objArr.length; i++) {
-    const item = objArr[i];
-    item.container_id = id;
-    loadingItems(item);
+    objArr[i].container_id = id;
+    promises.push(loadingItems(objArr[i]));
+    promises.push(record_item(objArr[i], container_number));
   };
-  upload_file(s3)
+  Promise.all(promises).then(() => {
+    upload_file(s3, container_number)
+  }).catch((e) => {console.log(e)})
 };
-function loadingItems(data) {
-  fetch('/api/item/new', {
+async function loadingItems(data) {
+  const response = await fetch('/api/item/new', {
       method: 'post',
       body: JSON.stringify(data),
       headers: {'Content-Type': 'application/json'}
   });
+  if (response.ok) {
+    itemCollection += `${data.item_number}(${data.qty_per_sku})`;
+    itemCounter += data.qty_per_sku;
+  }
 };
-function upload_file(e) {
+function upload_file(e, container_number) {
+  const promises_2 = [];
   const file = document.getElementById('label').files[0];
   const file_2 = document.getElementById('label_2').files[0];
-
   if (!file_2 && file) {
-    upload_framwork(file, e)
+    promises_2.push(record_container(itemCounter, itemCollection, container_number, e, '1'));
+    promises_2.push(upload_framwork(file, e))
   } else if (!file && file_2) {
-    upload_framwork(file_2, e)
+    promises_2.push(record_container(itemCounter, itemCollection, container_number, e, '1'));
+    promises_2.push(upload_framwork(file_2, e))
   } else if (file && file_2) {
-    upload2F_framwork(file, file_2, e)
+    promises_2.push(record_container(itemCounter, itemCollection, container_number, e, '2'));
+    promises_2.push(upload_framwork(file, e))
+    promises_2.push(upload2F_framwork_file2(file_2, e))
+  } else {
+    promises_2.push(record_container(itemCounter, itemCollection, container_number, e, '0'));
+  }
+  if (promises_2.length) {
+    Promise.all(promises_2).then(() => {
+      loader.style.display = 'none';
+      document.location.reload();
+    }).catch((e) => {console.log(e)})
   } else {
     loader.style.display = 'none';
-    // alert('Status updated successfully! No file was attached.出货通知已传送成功，无夹带档案');
     document.location.reload();
   }
 };
 async function upload_framwork(file, e) {
   let formData = new FormData();
-    formData.append('file', file);
-    formData.append('s3',e)
-    const response = await fetch(`/api/container/upload`, {
-      method: 'POST',
-      body: formData
-    });
-    if (response.ok) {
-      console.log(response);
-      loader.style.display = 'none';
-      // alert('Status updated successfully! 出货通知已传送成功! 一份档案已接收');
-      document.location.reload();
-    } else {
-      alert(response.statusText);
-    }
-};
-async function upload2F_framwork(file, file_2, e) {
-  let formData = new FormData();
-    formData.append('file', file);
-    formData.append('s3',e)
-
-    const response = await fetch(`/api/container/upload`, {
-      method: 'POST',
-      body: formData
-    });
-    if (response.ok) {
-      upload2F_framwork_file2(file_2, e)
-    } else {
-      alert(response.statusText);
-    }
+  formData.append('file', file);
+  formData.append('s3',e)
+  const response = await fetch(`/api/container/upload`, {
+    method: 'POST',
+    body: formData
+  });
+  if (response.ok) {
+    console.log(response);
+  } else {
+    alert(response.statusText);
+  }
 };
 async function upload2F_framwork_file2(file, e) {
   let formData = new FormData();
-    formData.append('file', file);
-    formData.append('s3',e)
-
-    const response = await fetch(`/api/container/upload_2`, {
-      method: 'POST',
-      body: formData
-    });
-    if (response.ok) {
-      console.log(response);
-      loader.style.display = 'none';
-      // alert('Status updated successfully! Two files uploaded 上传成功，两份档案已接收');
-      document.location.reload();
-    } else {
-      alert(response.statusText);
-    }
+  formData.append('file', file);
+  formData.append('s3',e)
+  const response = await fetch(`/api/container/upload_2`, {
+    method: 'POST',
+    body: formData
+  });
+  if (response.ok) {
+    console.log(response);
+  } else {
+    alert(response.statusText);
+  }
 };
 //////// update masterBox ////////
 function updateMasterItem (arr) {
@@ -305,7 +304,6 @@ function removeZeroItem(data) {
     headers: {'Content-Type': 'application/json'}
 });
 };
-
 function selectAll(id) {
   const eachContainer = document.getElementById((`container_${id}`));
   const checkbox = eachContainer.getElementsByTagName('input');
@@ -317,8 +315,6 @@ function selectAll(id) {
     }
   }
 };
-
-
 ////// request init & pre check ////////
 function validation_request() {
   const file = document.getElementById('label').files[0];
@@ -330,6 +326,7 @@ function validation_request() {
     preCheckPage(file, file_2)
   }
 };
+var accountName;
 function preCheckPage(file, file_2) {
   var fileName, fileName_2;
   var confirmationArr = [];
@@ -338,6 +335,7 @@ function preCheckPage(file, file_2) {
   var table = document.getElementById("myTable");
   var selectedSkus = table.querySelectorAll(".text-danger");
   for (var i = 0; i < selectedSkus.length; i++) {
+    accountName = selectedSkus[i].parentElement.parentElement.getElementsByTagName('td')[1].innerText;
     var eachBox;
     const eachSkuInfo = selectedSkus[i].getAttribute('id').split('_');
     const container_id = parseInt(eachSkuInfo[0]);
@@ -465,4 +463,57 @@ function check_amazon() {
   } else {
    return
   }
+};
+/////record//////
+const record_item = async (itemData, container_number) => {
+  const ref_number = itemData.item_number;
+  const sub_number = container_number;
+  const status_from = 1;
+  const status_to = 2;
+  const qty_to = itemData.qty_per_sku;
+  const type = 11;
+  const date = new Date().toISOString().split('T')[0];
+  const action = `Client Requesting Item (Acct: ${accountName})`;
+  const response = await fetch(`/api/record/record_create_client`, {
+    method: 'POST',
+    body: JSON.stringify({
+      qty_to,
+      sub_number,
+      ref_number,
+      status_from,
+      status_to,
+      date,
+      type,
+      action
+    }),
+    headers: {
+        'Content-Type': 'application/json'
+    }
+  });
+};
+const record_container = async (count, collection, container_number, file_code, numberOfFile) => {
+  const ref_number = container_number;
+  const sub_number = file_code;
+  const status_to = 2;
+  const qty_to = count;
+  const action = `Client Creating Container (Acct: ${accountName})`;
+  const action_notes = `${collection} <${numberOfFile} files>`;
+  const type = 11;
+  const date = new Date().toISOString().split('T')[0];
+  const response = await fetch(`/api/record/record_create_client`, {
+    method: 'POST',
+    body: JSON.stringify({
+      ref_number,
+      sub_number,
+      status_to,
+      qty_to,
+      action,
+      action_notes,
+      type,
+      date
+    }),
+    headers: {
+        'Content-Type': 'application/json'
+    }
+  });
 }
