@@ -223,7 +223,7 @@ async function loadingItems(data) {
       headers: {'Content-Type': 'application/json'}
   });
   if (response.ok) {
-    itemCollection += `${data.item_number}(${data.qty_per_sku})`;
+    itemCollection += `${data.item_number}(${data.qty_per_sku}), `;
     itemCounter += data.qty_per_sku;
   }
 };
@@ -552,7 +552,7 @@ const record_container = async (count, collection, container_number, file_code, 
   const status_to = 2;
   const qty_to = count;
   const action = `Client Creating Container (Acct: ${accountName})`;
-  const action_notes = `${collection} <${numberOfFile} files>`;
+  const action_notes = `${collection}${numberOfFile} file(s)`;
   const type = 11;
   const date = new Date().toISOString().split('T')[0];
   const response = await fetch(`/api/record/record_create_client`, {
