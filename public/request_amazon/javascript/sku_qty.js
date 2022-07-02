@@ -132,6 +132,9 @@ function GetSelected() {
     master_item.id = item_id;
     master_item.qty_per_sku = master_qty;
     master_item.container_id = container_id;
+    master_item.container_number = container_number;
+    master_item.item_number = item_number;
+    master_item.qty_from = original_qty;
     masterArr.push(master_item);
     ////// EACH requested obj to insert into a new container
     var requested_item = new Object();
@@ -164,8 +167,7 @@ function GetSelected() {
     requestedContainer.container_number = `REQ-${code}`
    };
   if (requestedObjArr.length) {
-    updateMasterItem(masterArr);
-    createContainer(requestedObjArr, requestedContainer);
+    updateMasterItem(masterArr, requestedObjArr, requestedContainer);
   } else {
     loader.style.display = 'none';
     alert('You need to select at least one box! 您需要选择至少一个箱货')
@@ -241,16 +243,11 @@ function upload_file(e, container_number) {
     promises_2.push(upload2F_framwork_file2(file_2, e))
   } else {
     promises_2.push(record_container(itemCounter, itemCollection, container_number, e, '0'));
-  }
-  if (promises_2.length) {
-    Promise.all(promises_2).then(() => {
-      loader.style.display = 'none';
-      document.location.reload();
-    }).catch((e) => {console.log(e)})
-  } else {
+  };
+  Promise.all(promises_2).then(() => {
     loader.style.display = 'none';
     document.location.reload();
-  }
+  }).catch((e) => {console.log(e)})
 };
 async function upload_framwork(file, e) {
   let formData = new FormData();
@@ -281,28 +278,34 @@ async function upload2F_framwork_file2(file, e) {
   }
 };
 //////// update masterBox ////////
-function updateMasterItem (arr) {
+function updateMasterItem (arr, requestedObjArr, requestedContainer) {
+  const promises_init = [];
   for (let i = 0; i < arr.length; i++) {
     const item = arr[i];
     if (item.qty_per_sku < 1) {
-      removeZeroItem(item)
+      promises_init.push(removeZeroItem(item));
+      promises_init.push(record_itemRemove(item));
     } else {
-      updateRemainderItem(item)
+      promises_init.push(updateRemainderItem(item));
+      promises_init.push(record_itemUpdate(item));
     }
-  }
+  };
+  Promise.all(promises_init).then(() => {
+    createContainer(requestedObjArr, requestedContainer);
+  }).catch((e) => {console.log(e)})
 };
-function updateRemainderItem(data) {
-  fetch(`/api/item/updateQty_ExistedItemId/${data.container_id}&${data.id}`, {
+async function updateRemainderItem(data) {
+  const response = await fetch(`/api/item/updateQty_ExistedItemId/${data.container_id}&${data.id}`, {
     method: 'PUT',
     body: JSON.stringify(data),
     headers: {'Content-Type': 'application/json'}
-});
+  });
 };
-function removeZeroItem(data) {
-  fetch(`/api/item/destroy/${data.id}`, {
+async function removeZeroItem(data) {
+  const response = await fetch(`/api/item/destroy/${data.id}`, {
     method: 'DELETE',
     headers: {'Content-Type': 'application/json'}
-});
+  });
 };
 function selectAll(id) {
   const eachContainer = document.getElementById((`container_${id}`));
@@ -491,6 +494,58 @@ const record_item = async (itemData, container_number) => {
     }
   });
 };
+const record_itemRemove = async (itemData) => {
+  const ref_number = itemData.item_number;
+  const sub_number = itemData.container_number;
+  const status_from = 1;
+  const status_to = 99;
+  const qty_to = 0;
+  const type = 1;
+  const date = new Date().toISOString().split('T')[0];
+  const action = `System Removing Item @ Amazon Request Queue`;
+  const response = await fetch(`/api/record/record_create_client`, {
+    method: 'POST',
+    body: JSON.stringify({
+      ref_number,
+      sub_number,
+      status_from,
+      status_to,
+      qty_to,
+      type,
+      date,
+      action
+    }),
+    headers: {
+        'Content-Type': 'application/json'
+    }
+  });
+};
+const record_itemUpdate = async (itemData) => {
+  const ref_number = itemData.item_number;
+  const sub_number = itemData.container_number;
+  const status_from = 1;
+  const qty_from = itemData.qty_from;
+  const qty_to = itemData.qty_per_sku;
+  const type = 1;
+  const date = new Date().toISOString().split('T')[0];
+  const action = `System Updating Item @ Amazon Request Queue`;
+  const response = await fetch(`/api/record/record_create_client`, {
+    method: 'POST',
+    body: JSON.stringify({
+      ref_number,
+      sub_number,
+      status_from,
+      qty_from,
+      qty_to,
+      date,
+      type,
+      action
+    }),
+    headers: {
+        'Content-Type': 'application/json'
+    }
+  });
+};
 const record_container = async (count, collection, container_number, file_code, numberOfFile) => {
   const ref_number = container_number;
   const sub_number = file_code;
@@ -516,4 +571,4 @@ const record_container = async (count, collection, container_number, file_code, 
         'Content-Type': 'application/json'
     }
   });
-}
+};
