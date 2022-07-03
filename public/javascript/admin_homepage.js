@@ -5,6 +5,7 @@ const mode = document.getElementById('mode');
 const boxInput = document.getElementById("boxInput");
 const containerInput = document.getElementById('containerInput');
 const record_dashboard = document.getElementById('record_dashboard');
+const log_body = document.getElementById('log_body');
 var receivedCount = 0;
 var requestedCount = 0;
 var pendingCount = 0;
@@ -945,7 +946,7 @@ function advanceSearch() {
   }
 };
 
-var n_L = 3;
+var n_L = 100;
 var pass_id;
 const record_fetch = async (n) => {
   n?n=n:n=n_L;
@@ -961,17 +962,29 @@ const record_fetch = async (n) => {
 const execution = (data) => {
   component_reset();
   pass_id = data[0].id;
-  data.forEach(i => component(i));
+  [data[0], data[1], data[2]].forEach(i => {
+    i?component(i):console.log('no 3 datas');
+  });
+  data.forEach(i =>component_log(i));
 }
 const component = (data) => {
   const tr = document.createElement('tr');
   record_dashboard.appendChild(tr);
-  const status = `from ${status_converter(data.status_from)} to ${status_converter(data.status_to)}`;
+  const status = `${status_converter(data.status_from)} => ${status_converter(data.status_to)}`;
   tr.innerHTML = sub_component(data.user.name) + sub_component(data.ref_number) + sub_component(data.action) + sub_component(status);
 };
+const component_log = (i) => {
+  const tr = document.createElement('tr');
+  log_body.appendChild(tr);
+  const status = `${status_converter(i.status_from)} => ${status_converter(i.status_to)}`;
+  const qty = `${i.qty_from} => ${i.qty_to}`;
+  tr.innerHTML = sub_component_full(i.user.name) + sub_component_full(i.ref_number, 'primary') + sub_component_full(i.sub_number) + sub_component_full(i.action) + sub_component_full(i.action_notes) + sub_component_full(qty) + sub_component_full(status);
+}
 const component_reset = () => {
   const all_tr = record_dashboard.querySelectorAll('tr');
   all_tr.length ? all_tr.forEach(i => i.remove()): null;
+  const log_tr = log_body.querySelectorAll('tr');
+  log_tr.length ? log_tr.forEach(i => i.remove()): null;
 }
 const sub_component = (sub_data) => {
   return `<td class="uk-animation-slide-right">${sub_data}</td>`
@@ -986,30 +999,12 @@ const status_converter = (i) => {
 }
 ////// init ////////
 const init = () => {
-  record_fetch(3);
+  record_fetch(100);
   allItem();
   xcContainer();
   startTime();
 };
 
-const log_body = document.getElementById('log_body')
-const log_fetch = async (n) => {
-  const all_tr = log_body.querySelectorAll('tr');
-  all_tr.length ? all_tr.forEach(i => i.remove()): null;
-  await fetch(`/api/record/dashboard_admin/${n}`, {
-    method: 'GET'
-  }).then((r) => {
-    return r.json();
-  }).then((d) => {
-    d.forEach(i=> {
-      const tr = document.createElement('tr');
-      log_body.appendChild(tr);
-      const status = `${status_converter(i.status_from)} => ${status_converter(i.status_to)}`;
-      const qty = `${i.qty_from} => ${i.qty_to}`;
-      tr.innerHTML = sub_component_full(i.user.name) + sub_component_full(i.ref_number, 'primary') + sub_component_full(i.sub_number) + sub_component_full(i.action) + sub_component_full(i.action_notes) + sub_component_full(qty) + sub_component_full(status);
-    })
-  })
-};
 const sub_component_full = (sub_data, color) => {
   return `<td class="uk-animation-slide-top col-3 text-${color}" style="word-wrap: break-word">${sub_data}</td>`
 };
