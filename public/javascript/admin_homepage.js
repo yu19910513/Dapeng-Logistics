@@ -1004,7 +1004,7 @@ const log_fetch = async (n) => {
     d.forEach(i=> {
       const tr = document.createElement('tr');
       log_body.appendChild(tr);
-      const status = `from ${status_converter(i.status_from)} to ${status_converter(i.status_to)}`;
+      const status = `${status_converter(i.status_from)} => ${status_converter(i.status_to)}`;
       const qty = `${i.qty_from} => ${i.qty_to}`;
       tr.innerHTML = sub_component_full(i.user.name) + sub_component_full(i.ref_number, 'primary') + sub_component_full(i.sub_number) + sub_component_full(i.action) + sub_component_full(i.action_notes) + sub_component_full(qty) + sub_component_full(status);
     })
