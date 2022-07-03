@@ -1,16 +1,44 @@
 {{#if admin}}
 <link rel="stylesheet" href="../css/loader.css">
-    <p class="uk-heading-line uk-text-right uk-margin-small-right"><span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
-    <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item active">Pending Count: <span id="pending_c"></span> </li>
-                <li class="breadcrumb-item active">Inventory Count: <span id="inventory_c"></span> </li>
-             </ol>
-        </nav>
-  <div class="uk-child-width-expand@s uk-card-body uk-animation-slide-left-small" uk-grid>
-    <div class="uk-grid-item-match">
-          <div class="uk-card uk-card-default uk-card-body uk-width-1-3@m rounded">
+<div class="uk-heading-line uk-text-right uk-margin-small-right">
+  <a href="#modal-full" uk-toggle uk-icon="icon: database" onclick="log_fetch(100)"></a>
+</div>
+<div id="modal-full" class="uk-modal-full" uk-modal>
+    <div class="uk-modal-dialog">
+        <button class="uk-modal-close-full uk-close-large" type="button" uk-close></button>
+        <div class="uk-grid-collapse uk-flex-middle" uk-grid>
+            <div class="uk-padding-large text-center">
+                <h1 class="lead"><b>Record Logs</b></h1>
+                <span id="clock" class="mb-2"></span>
+                <table class="table table-sm table-striped mt-2 mb-2" style="table-layout: fixed; width: 100%">
+                  <thead>
+                    <tr>
+                      <th scope="col">User</th>
+                      <th scope="col">Ref_Number</th>
+                      <th scope="col">Sub_Number</th>
+                      <th scope="col">Action</th>
+                      <th scope="col">Action Notes</th>
+                      <th scope="col">Qty</th>
+                      <th scope="col">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="log_body">
+                  </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active">Pending Count: <span id="pending_c"></span> </li>
+        <li class="breadcrumb-item active">Inventory Count: <span id="inventory_c"></span> </li>
+      </ol>
+    </nav>
+    <div class="uk-child-width-expand@s uk-card-body uk-animation-slide-left-small" uk-grid>
+      <div class="uk-grid-item-match">
+        <div class="uk-card uk-card-default uk-card-body uk-width-1-3@m rounded">
             <h3 class="lead" onclick="reset()" uk-tooltip="title: click to reset 重置; pos: top-left"><b>Master Functions</b></h3>
             <a class="btn btn-outline-warning btn-sm shadow-sm mt-1" href="/admin/master_page" id="homepage">Home Page</a>
             <button class="btn btn-sm btn-outline-dark shadow-sm mt-1" uk-toggle="target: #modal-skuSearch" onclick="clientListing()" uk-tooltip="只限搜寻亞马逊回流货物">SKU Search</button>
@@ -45,16 +73,27 @@
               <input type="date" id="update_date_select" class="uk-input uk-form-primary rounded uk-form-small uk-form-width-small mt-1" placeholder='mm/dd/yyyy'>
               <button class='btn btn-sm btn-primary mt-1' onclick="finalConfirmation()" uk-icon="check"></button>
             </div>
-          </div>
-          {{!-- <div class="uk-card bg-light shadow-sm ml-1 uk-card-body uk-width-2-3@m rounded border-dark">
-              <h3 class="uk-text-default">Client Message:</h3>
-          </div> --}}
+        </div>
+        <div class="uk-card bg-light shadow-sm ml-1 uk-card-body uk-width-2-3@m rounded border-dark">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th scope="col">User</th>
+                    <th scope="col">Number</th>
+                    <th scope="col">Action</th>
+                    <th scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="record_dashboard">
+                </tbody>
+              </table>
+        </div>
     </div>
-  </div>
+    </div>
 
-  {{!-- modal- for sku search ***********************--}}
-{{!-- search form --}}
-<div id="modal-skuSearch" uk-modal>
+    {{!-- modal- for sku search ***********************--}}
+    {{!-- search form --}}
+    <div id="modal-skuSearch" uk-modal>
     <div class="uk-modal-dialog">
         <button class="uk-modal-close-default" type="button" uk-close></button>
         <div class="uk-modal-header">
@@ -87,9 +126,9 @@
             <a href="#searchResult" class="uk-button uk-button-primary" uk-toggle onclick="searchBySku()">Search</a>
         </div>
     </div>
-</div>
-{{!-- search outcome --}}
-<div id="searchResult" uk-modal>
+    </div>
+    {{!-- search outcome --}}
+    <div id="searchResult" uk-modal>
     <div class="uk-modal-dialog">
         <button class="uk-modal-close-default" type="button" uk-close onclick="location.reload()"></button>
         <div class="uk-modal-header">
@@ -112,9 +151,9 @@
             <a href="#modal-skuSearch" class="uk-button uk-button-primary" uk-toggle onclick="unattachTr()">Return</a>
         </div>
     </div>
-</div>
-{{!-- bulk search --}}
-<div id="modal-bulkSearch" uk-modal>
+    </div>
+    {{!-- bulk search --}}
+    <div id="modal-bulkSearch" uk-modal>
     <div class="uk-modal-dialog">
         <button class="uk-modal-close-default" type="button" uk-close onclick="location.reload()"></button>
         <div class="uk-modal-header">
@@ -141,9 +180,9 @@
           <a href="#bulkSearchResult" class="uk-button uk-button-primary" uk-toggle onclick="searchByBulkSku()">Search</a>
         </div>
     </div>
-</div>
-{{!-- bulk search outcome --}}
-<div id="bulkSearchResult" class='uk-modal-container' uk-modal>
+    </div>
+    {{!-- bulk search outcome --}}
+    <div id="bulkSearchResult" class='uk-modal-container' uk-modal>
     <div class="uk-modal-dialog">
         <button class="uk-modal-close-default" type="button" uk-close onclick="location.reload()"></button>
         <div class="uk-modal-header">
@@ -166,33 +205,25 @@
             <a href="#modal-bulkSearch" class="uk-button uk-button-primary" uk-toggle onclick="resetBulkResult()">Return</a>
         </div>
     </div>
-</div>
-{{!-- <div class="text-end">
-   <button class="badge alert-secondary shadow-sm" id="advanceSearch" onclick="advanceSearch()" uk-tooltip="advanced search">...</button>
-</div> --}}
-{{!-- modal- for sku search ***********************--}}
- <div id="advanceHide">
-  <div class="badge bg-success shadow-sm" id="badge" onclick="modeChange()"><span id="mode">C</span> Mode</div>
-  <form class="uk-search uk-search-large" id="boxInput">
+    </div>
+    {{!-- modal- for sku search ***********************--}}
+    <div id="advanceHide">
+      <div class="badge bg-success shadow-sm" id="badge" onclick="modeChange()"><span id="mode">C</span> Mode</div>
+        <form class="uk-search uk-search-large" id="boxInput">
     <span uk-search-icon></span>
     <input class="uk-search-input" type="search" placeholder="China Box Search" id="myBoxInput" onkeyup="box_searching()">
-  </form>
-  <form class="uk-search uk-search-large" id="containerInput" style="display: none;">
+        </form>
+        <form class="uk-search uk-search-large" id="containerInput" style="display: none;">
     <span uk-search-icon></span>
     <input class="uk-search-input" type="search" placeholder="Amazon Box Search" id="myContainerInput" onkeyup="container_searching()">
-  </form>
- </div>
-{{!-- advance search function --}}
- <div id="advanceShow" style="display: none">
-   <h1>nothing here yet</h1>
- </div>
-</div>
-{{!-- loader --}}
+        </form>
+    </div>
+    {{!-- loader --}}
     <div id="loader" style="display: none;">
       <h1 class="text-center">Updating <span id="numberOfItems"></span>...</h1>
       <div class="loader container"></div>
     </div>
-{{!-- notes --}}
+    {{!-- notes --}}
     <div class="container" id="boxTable" style="display: none;">
       <small id="searchNote" class="text-primary"></small>
 {{!-- box table --}}
@@ -215,7 +246,7 @@
             </tbody>
       </table>
     </div>
-{{!-- notes 2 --}}
+    {{!-- notes 2 --}}
     <div class="container" id="containerTable" style="display: none;">
       <small id="containerSearchNote" class="text-primary"></small>
 {{!-- contianer table --}}
@@ -237,7 +268,6 @@
       </table>
     </div>
 </div>
-
 <script src="../javascript/admin_homepage.js"></script>
 {{else}}
 <script src="javascript/client_redirect.js"></script>

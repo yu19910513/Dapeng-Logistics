@@ -87,4 +87,42 @@ router.post('/record_create_client', withAuth, (req, res) => {
 
   });
 });
+router.get('/dashboard_admin/:number', withAuth, async (req, res) => {
+  try {
+    const recordData = await Record.findAll({
+      limit: parseInt(req.params.number),
+      order: [
+        ["id", "DESC"],
+      ],
+      attributes: [
+        'id',
+        "user_id",
+        "ref_number",
+        "sub_number",
+        "qty_from",
+        "qty_to",
+        "status_from",
+        "status_to",
+        "action",
+        "action_notes",
+        "date",
+        "type",
+        "bill",
+      ],
+      include: [
+        {
+          model: User,
+          attributes: [
+            'name'
+          ]
+        }
+      ]
+    })
+    const records = recordData.map(record => record.get({ plain: true }));
+    res.json(records);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+});
 module.exports = router;
