@@ -250,9 +250,9 @@ function findContainerId(c_number) {
     })
 };
 
-var promises = [];
 function itemCreate() {
     console.log('itemCreate');
+    const promises = [];
     var rows = sku_table.rows;
     var itemCollection = 'Collection: ';
     var itemCollectionCount = 0;
@@ -284,7 +284,7 @@ async function loadingItems(data, row) {
     });
     if (response.ok) {
         console.log(`inserted ${data.item_number}`);
-        row.setAttribute('class','bg-secondary');
+        row?row.setAttribute('class','bg-secondary'):console.log('refill mode');
     } else {
         alert('error occurs; please inform developers!')
     }
@@ -303,7 +303,6 @@ function resetBoxSku() {
         itemCount = 0;
         skuMap.clear();
         masterCheck();
-        promises = [];
     }
 };
 function unattach() {
@@ -369,8 +368,8 @@ function validation(c, a) {
         return true
     }
 };
-function updateCost(cost, id) {
-    fetch(`/api/container/updateCost/${cost}&${id}`, {
+async function updateCost(cost, id) {
+    await fetch(`/api/container/updateCost/${cost}&${id}`, {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'}
     });
@@ -494,6 +493,7 @@ function modeChange() {
 };
 var quickContainerObj = new Object();
 function quickReceiving() {
+    const promises = [];
     const scannedBox = scanned_item.value.trim().toUpperCase();
     if (scannedBox.substring(0,2) == 'AM' && scannedBox.length == 8) {
         fetch(`/api/container/amazon_container/${scannedBox}`, {
@@ -503,6 +503,7 @@ function quickReceiving() {
         }).then(function (data) {
             quickContainerObj.user_id = data.user_id;
             quickContainerObj.account_id = data.account_id;
+            quickContainerObj.accountname = data.account.name;
             quickContainerObj.container_id = data.id;
             quickContainerObj.cost = data.cost;
             quickContainerObj.container_number = scannedBox;
@@ -515,13 +516,15 @@ function quickReceiving() {
         if (quickContainerObj.user_id) {
             quickContainerObj.cost++;
             quickContainerObj.item_number = scannedBox;
-            updateCost(quickContainerObj.cost, quickContainerObj.container_id);
-            duplicatationValidator(quickContainerObj);
-            // loadingItems(quickContainerObj);
-            scanned_item.value = null;
-            const newsku = document.createElement('div');
-            inserted_item.prepend(newsku);
-            newsku.innerHTML = `Insert <b>${scannedBox}</b> into <b>${quickContainerObj.container_number}</b>`
+            promises.push(updateCost(quickContainerObj.cost, quickContainerObj.container_id));
+            promises.push(record_container_refill(quickContainerObj))
+            promises.push(duplicatationValidator(quickContainerObj));
+            Promise.all(promises).then(() => {
+                scanned_item.value = null;
+                const newsku = document.createElement('div');
+                inserted_item.prepend(newsku);
+                newsku.innerHTML = `Insert <b>${scannedBox}</b> into <b>${quickContainerObj.container_number}</b>`
+            }).catch((e) => {console.log(e)})
         } else {
             alert('You need to scan the existed amazon box first!');
             scanned_item.value = null;
@@ -535,25 +538,25 @@ function delay(fn){
     timer = setTimeout(fn, 100)
 };
 
-var itemchecker = false
-function duplicatationValidator(obj) {
-    fetch(`/api/item/findAllPerContainer/${obj.container_id}`, {
+async function duplicatationValidator(obj) {
+    const promises = [];
+    await fetch(`/api/item/itemValidation/${obj.item_number}&${obj.container_id}`, {
         method: 'GET'
-    }).then(function (response) {
-        return response.json();
-    }).then(function (item) {
-        for (let i = 0; i < item.length; i++) {
-            var uniqueItemN = item[i];
-            if(uniqueItemN.item_number == obj.item_number) {
-                uniqueItemN.qty_per_sku++
-                updateExistedItem(obj, uniqueItemN.qty_per_sku);
-                itemchecker = true
-            };
+    }).then((response) => {
+        if (response.status != 200) {
+            return null;
+        } else {return response.json()}
+    }).then((data) => {
+        if(data) {
+            const newQty = data.qty_per_sku + 1;
+            promises.push(updateExistedItem(obj, newQty));
+            promises.push(record_item_refill(obj, newQty))
+        } else {
+            promises.push(loadingItems(obj));
+            promises.push(record_item_recreate(obj))
         };
-        if (itemchecker == false) {
-            loadingItems(obj);
-        } itemchecker = false;
-    });
+        Promise.all(promises)
+    })
 };
 async function updateExistedItem(obj, newSkuQ) {
     const load = await fetch(`/api/item/updateQty_ExistedItem/${obj.container_id}&${obj.item_number}`, {
@@ -667,6 +670,37 @@ const record_container = async (containerData, itemCollection, count) => {
         console.log('record container fetched!');
     }
 };
+const record_container_refill = async (containerData) => {
+    const ref_number = containerData.container_number;
+    const user_id = containerData.user_id;
+    const status_from = 1;
+    const status_to = 1;
+    const qty_to = 1;
+    const date = new Date().toISOString().split('T')[0];
+    const action = `Admin Refill Container(for Acct: ${containerData.accountname})`;
+    const action_notes = `Collection: ${containerData.item_number}(1)`;
+    const type = 1;
+    const response = await fetch(`/api/record/record_create`, {
+      method: 'POST',
+      body: JSON.stringify({
+          user_id,
+          ref_number,
+          status_from,
+          status_to,
+          qty_to,
+          date,
+          action,
+          action_notes,
+          type
+      }),
+      headers: {
+          'Content-Type': 'application/json'
+      }
+    });
+    if (response.ok) {
+        console.log('record container fetched! (refill mode)');
+    }
+};
 const record_item = async (itemData) => {
     var account;
     if (newAccount.name) {
@@ -680,6 +714,68 @@ const record_item = async (itemData) => {
     const date = new Date().toISOString().split('T')[0];
     const action = `Admin Creating Item(for Acct: ${account})`
     const sub_number = amazon_box.container_number;
+    const type = 1;
+    const status_to = 1;
+    const response = await fetch(`/api/record/record_create`, {
+      method: 'POST',
+      body: JSON.stringify({
+          user_id,
+          qty_to,
+          status_to,
+          ref_number,
+          date,
+          action,
+          sub_number,
+          type
+      }),
+      headers: {
+          'Content-Type': 'application/json'
+      }
+    });
+    if (response.ok) {
+        console.log('record item fetched!');
+    }
+};
+const record_item_refill = async (itemData, newQty) => {
+    const ref_number = itemData.item_number;
+    const sub_number = itemData.container_number;
+    const user_id = itemData.user_id;
+    const qty_from = newQty -1;
+    const qty_to = newQty;
+    const date = new Date().toISOString().split('T')[0];
+    const action = `Admin Refill Old Item(for Acct: ${itemData.accountname})`;
+    const status_from = 1;
+    const type = 1;
+    const status_to = 1;
+    const response = await fetch(`/api/record/record_create`, {
+      method: 'POST',
+      body: JSON.stringify({
+          user_id,
+          qty_from,
+          qty_to,
+          status_to,
+          status_from,
+          ref_number,
+          date,
+          action,
+          sub_number,
+          type
+      }),
+      headers: {
+          'Content-Type': 'application/json'
+      }
+    });
+    if (response.ok) {
+        console.log('record item fetched! (refill mode)');
+    }
+};
+const record_item_recreate = async (itemData) => {
+    const ref_number = itemData.item_number;
+    const sub_number = itemData.container_number;
+    const user_id = itemData.user_id;
+    const qty_to = 1;
+    const date = new Date().toISOString().split('T')[0];
+    const action = `Admin Refill New Item(for Acct: ${itemData.accountname})`
     const type = 1;
     const status_to = 1;
     const response = await fetch(`/api/record/record_create`, {

@@ -921,4 +921,26 @@ router.put(`/reversal_archive/:item_number`, withAuth, (req, res) => {
       res.status(500).json(err);
     });
 });
+
+router.get('/itemValidation/:item_number&:container_id', withAuth, async (req, res) => {
+  try {
+    const itemData = await Item.findOne({
+      where: {
+        item_number: req.params.item_number,
+        container_id: req.params.container_id
+      },
+      attributes: [
+        'id',
+        'qty_per_sku'
+      ],
+    });
+    const data = itemData.get({plain: true});
+    res.json(data);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+
+});
+
 module.exports = router;
