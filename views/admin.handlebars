@@ -1,5 +1,6 @@
 {{#if admin}}
 <link rel="stylesheet" href="../css/loader.css">
+<link rel="stylesheet" href="../css/dashboard.css">
 <div class="uk-heading-line uk-text-right uk-margin-small-right">
   <a href="#modal-full" uk-toggle uk-icon="icon: database"></a>
 </div>
@@ -12,7 +13,7 @@
                 <span id="clock" class="mb-2"></span>
                 <table class="table table-sm table-striped mt-2 mb-2" style="table-layout: fixed; width: 100%">
                   <thead>
-                    <tr>
+                    <tr style="word-wrap: break-word">
                       <th scope="col">User</th>
                       <th scope="col">Ref_Number</th>
                       <th scope="col">Sub_Number</th>
@@ -74,7 +75,7 @@
               <button class='btn btn-sm btn-primary mt-1' onclick="finalConfirmation()" uk-icon="check"></button>
             </div>
         </div>
-        <div class="uk-card bg-light shadow-sm ml-1 uk-card-body uk-width-2-3@m rounded border-dark">
+        <div class="uk-card bg-light shadow-sm ml-1 uk-card-body uk-width-2-3@m rounded border-dark" id="info_dashbaord">
               <table class="table table-sm">
                 <thead>
                   <tr>
