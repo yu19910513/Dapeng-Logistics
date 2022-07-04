@@ -987,7 +987,7 @@ const component_reset = () => {
   log_tr.length ? log_tr.forEach(i => i.remove()): null;
 }
 const sub_component = (sub_data) => {
-  return `<td class="uk-animation-slide-right">${sub_data}</td>`
+  return `<td class="uk-animation-slide-right-small">${sub_data}</td>`
 };
 const status_converter = (i) => {
   return ( i == 0 ? 'pending'
@@ -1006,7 +1006,7 @@ const init = () => {
 };
 
 const sub_component_full = (sub_data, color) => {
-  return `<td class="uk-animation-slide-top col-3 text-${color}" style="word-wrap: break-word">${sub_data}</td>`
+  return `<td class="uk-animation-slide-top uk-animation-fast col-3 text-${color}" style="word-wrap: break-word">${sub_data}</td>`
 };
 function startTime() {
   const today = new Date();
