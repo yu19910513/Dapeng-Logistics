@@ -2,4 +2,9 @@
     #info_dashbaord {
         display: none;
     }
+    #nav_bar {
+        background-image: url("../media/logistics_animation.gif");
+        background-size: cover;
+        background-position: center;
+    }
 }
