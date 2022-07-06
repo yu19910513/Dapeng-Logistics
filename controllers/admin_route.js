@@ -2,7 +2,6 @@ const router = require('express').Router();
 const sequelize = require('../config/connection');
 const {User, Account, Batch, Box, Container, Item} = require('../models');
 const {withAuth, adminAuth} = require('../utils/auth');
-
 //admin page
 //admin home page
 router.get('/', withAuth, async (req, res) => {
@@ -13,7 +12,6 @@ router.get('/', withAuth, async (req, res) => {
     res.status(500).json(err);
   }
 });
-
 router.get('/master_page', withAuth, async (req, res) => {
   try {
     const boxData = await Box.findAll({
@@ -85,7 +83,6 @@ router.get('/master_page', withAuth, async (req, res) => {
   }
 
 });
-
 router.get('/master_page_amazon', withAuth, async (req, res) => {
   try {
     const containerDB = await Container.findAll({
@@ -152,7 +149,6 @@ router.get('/master_page_amazon', withAuth, async (req, res) => {
   }
 
 });
-
 //admin bulk barcode for china shipment
 router.get('/batch/:id', withAuth, async (req, res) => {
   try {
@@ -215,7 +211,6 @@ router.get('/batch/:id', withAuth, async (req, res) => {
     res.status(500).json(err);
   }
 });
-
 //admin single barcode for china shipment
 router.get('/box/:id', withAuth, async (req, res) => {
     try {
@@ -275,7 +270,6 @@ router.get('/box/:id', withAuth, async (req, res) => {
       res.status(500).json(err);
     }
 });
-
 router.get('/container/:id', withAuth, async (req, res) => {
   try {
     const containerData = await Container.findAll({
@@ -323,6 +317,30 @@ router.get('/container/:id', withAuth, async (req, res) => {
     console.log(err);
     res.status(500).json(err);
   }
+});
+router.get(`/sku_modification`, withAuth, async (req, res) => {
+  try {
+    const userData = await User.findAll({
+      where: {
+        admin: false
+      },
+      attributes: [
+        'id',
+        'name',
+      ],
+    })
+    const users = userData.map(user => user.get({ plain: true }));
+    res.render('sku_modification', {
+      users,
+      loggedIn: true,
+      admin: req.session.admin,
+      name: req.session.name,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 })
 
-  module.exports = router
+
+module.exports = router

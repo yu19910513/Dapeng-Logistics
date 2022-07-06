@@ -1,15 +1,15 @@
 <tr>
-    {{#if box_number}}
-        <td class="text-danger">{{user.name}}: {{account.name}}</td>
-        <td>{{box_number}}</td>
-        <td><a>{{description}}</a></td>
-        <td>{{notes}}</td>
-        <td><button uk-icon="icon: reply"></button></td>
-    {{else}}
-        <td class="text-success">{{user.name}}: {{account.name}}</td>
-        <td>{{container_number}}</td>
-        <td><a>{{description}}</a></td>
-        <td>{{notes}}</td>
-        <td><button uk-icon="icon: reply"></button></td>
-    {{/if}}
+  {{#if box_number}}
+    <td class="text-danger">{{user.name}}: {{account.name}}</td>
+    <td>{{box_number}}</td>
+    <td><a>{{description}}</a></td>
+    <td>{{notes}}</td>
+    <td><button uk-icon="icon: reply"></button></td>
+  {{else}}
+    <td class="text-success">{{user.name}}: {{account.name}}</td>
+    <td>{{container_number}}</td>
+    <td><a>{{description}}</a></td>
+    <td>{{notes}}</td>
+    <td><button uk-icon="icon: reply"></button></td>
+  {{/if}}
 </tr>

@@ -1,0 +1,21 @@
+{{#if admin}}
+  <div class="container mt-2">
+    <form class="row gy-2 gx-3 align-items-center">
+      <div class="col-auto">
+        <label class="visually-hidden" for="autoSizingSelect">Preference</label>
+        <select class="form-select" id="autoSizingSelect">
+          <option value="0" selected>Choose...</option>
+            {{#each users as |user|}}
+              {{> userOption user }}
+            {{/each}}
+        </select>
+      </div>
+      <div class="col-auto">
+        <button onclick="location.reload()" class="btn btn-success btn-sm">Reset</button>
+      </div>
+    </form>
+  </div>
+  <script src="javascript/sku_modification.js"></script>
+{{else}}
+  <script src="javascript/client_redirect.js"></script>
+{{/if}}
