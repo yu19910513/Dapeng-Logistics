@@ -1,19 +1,27 @@
 {{#if admin}}
-  <div class="container mt-2">
-    <form class="row gy-2 gx-3 align-items-center">
-      <div class="col-auto">
+  <div class="container mt-4">
+    <div class="row justify-content-md-center">
+    <div class="col-lg-4 col-md-6 col-sm-10">
+    <form class="col gy-2 gx-3 align-items-center">
+      <div>
         <label class="visually-hidden" for="autoSizingSelect">Preference</label>
-        <select class="form-select" id="autoSizingSelect">
-          <option value="0" selected>Choose...</option>
+        <select class="uk-select" id="autoSizingSelect">
+          <option value="0" selected>Client...</option>
             {{#each users as |user|}}
               {{> userOption user }}
             {{/each}}
         </select>
       </div>
-      <div class="col-auto">
-        <button onclick="location.reload()" class="btn btn-success btn-sm">Reset</button>
+      <div class="uk-margin" uk-margin>
+         <div uk-form-custom="target: true">
+            <input type="file" id="label" accept="image/*, .pdf" multiple>
+            <input class="uk-input uk-form-width-medium" type="text" placeholder="Select file(s)" disabled>
+        </div>
+        <button class="uk-button uk-button-default" onclick="trigger()">Submit</button>
       </div>
     </form>
+    </div>
+  </div>
   </div>
   <script src="javascript/sku_modification.js"></script>
 {{else}}

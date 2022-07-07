@@ -1255,6 +1255,12 @@ router.get('/pdf/:key', (req, res) => {
   readStream.pipe(res)
 });
 
+router.get('/image/:key', (req, res) => {
+  const key = req.params.key;
+  const readStream = getFile(key);
+  readStream.pipe(res)
+});
+
 //client single barcode page
 router.get('/box/:id', withAuth, async (req, res) => {
   try {
@@ -2234,4 +2240,4 @@ router.get('/dq_handle_admin/:code&:xc_box&:detailarr', withAuth, async (req, re
   }
 })
 
-  module.exports = router
+module.exports = router
