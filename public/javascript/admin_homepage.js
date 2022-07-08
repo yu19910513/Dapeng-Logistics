@@ -946,17 +946,21 @@ function advanceSearch() {
   }
 };
 
-var n_L = 100;
-var pass_id;
+
+var pass_id,logChecker;
 const record_fetch = async (n) => {
-  n?n=n:n=n_L;
+  var logPass = true;
+  const log = parseInt(document.getElementById('logNumber').value);
+  log==logChecker?logPass=true:logPass=false;
+  logChecker=log;
+  log<1||!log?n=1:n=log;
   await fetch(`/api/record/dashboard_admin/${n}`, {
     method: 'GET'
   }).then((r) => {
     return r.json();
   }).then((d) => {
     const topItemId = d[0].id;
-    pass_id == topItemId ? console.log('no new feed') : execution(d);
+    pass_id==topItemId&&logPass?console.log('no new feed'):execution(d);
   })
 };
 const execution = (data) => {
