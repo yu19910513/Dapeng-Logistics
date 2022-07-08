@@ -17,6 +17,7 @@ var user_id, account_id;
 var selectedSkuArr = [];
 var skuArr = [];
 var printCheck = false;
+var skuChecker = false;
 if (!localStorage.getItem('sp_number')) {
     localStorage.setItem('sp_number', 0)
 } else {
@@ -402,15 +403,14 @@ function eachBoxContent (arr, input) {
     }
 
 };
-
 const modify = (element) => {
     element.setAttribute('class','text-dark');
     const newSku = element.innerText.toUpperCase().trim();
     console.log(newSku);
     modifiable(newSku, element);
 };
-
 const modifiable = async (number, element) => {
+    skuChecker = false
     await fetch(`/api/document/validation/${number}`, {
         method: 'GET',
         headers: {'Content-Type': 'application/json'}
@@ -422,12 +422,36 @@ const modifiable = async (number, element) => {
         }
       }).then((d) => {
         if (d) {
-            console.log(d.file);
+            const image = document.createElement('img');
+            // const embed = document.createElement('embed');
+            image.src = `/image/${d.file}`;
+            // embed.src = `/image/${d.file}`;
+            // image.onerror = switchpdf(embed);
+            image.style.breakAfter='always';
+            document.getElementById('image_placeholder').prepend(image);
             element.innerText = element.innerText.toUpperCase().trim();
-            element.setAttribute('class','text-success')
+            element.setAttribute('class','text-success');
         }
       })
 };
+// const switchpdf = (obj) => {
+//     document.getElementById('image_placeholder').prepend(obj);
+// }
+const printImage = () => {
+    skuChecker = true;
+    const hideables = [
+        document.getElementById('assignFunction'),
+        document.getElementById('notesFunction'),
+        document.getElementById('topline'),
+        document.getElementById('creator_form')
+    ];
+    document.getElementById('image_placeholder').style.display = '';
+    hideables.forEach(i => i.style.display = 'none')
+    window.print();
+    document.getElementById('image_placeholder').style.display = 'none';
+    hideables.forEach(i => i.style.display = '');
+    // document.getElementById('image_placeholder').querySelectorAll('img').forEach(i => i.remove());
+}
 //helper function to make radnom code
 function makeid(length) {
     var result           = '';
@@ -441,8 +465,6 @@ function makeid(length) {
 };
 var pad = "000";
 var ans = pad.substring(0, pad.length - localStorage.getItem('sp_number').length) + localStorage.getItem('sp_number');
-// const major_length = container_id.length + ans.length;
-// var instance = container_id + new Date().valueOf().toString().substring(2 + major_length,13) + ans;
 var instance = container_id + makeid(3) + ans;
 pre_shipN.innerHTML = `SP${instance}`;
 document.getElementById('image').src = `http://bwipjs-api.metafloor.com/?bcid=code128&text=SP${instance}`;
@@ -484,15 +506,16 @@ async function updateQty(data) {
         headers: {'Content-Type': 'application/json'}
     });
 };
-
 function pre_create_checker() {
+    if (!document.getElementById('image_placeholder').querySelector('img')) {
+        skuChecker = true;
+    };
     if (printCheck) {
-        shippmentCreate()
+        skuChecker?shippmentCreate():printImage()
     } else {
         printable();
     }
 };
-
 const alt_step = document.getElementById('alt_step')
 function alter() {
     alt_step.disabled = true;
@@ -504,7 +527,6 @@ function alter() {
     document.getElementById('creator_form').setAttribute('class', 'shadow p-2 py-3 mt-2 rounded border border-danger bg-warning');
     masterCheck ();
 };
-
 function deleteConfirm() {
     const id = container_id;
     const code =  prompt(`Please enter the passcode to confirm the DELETION of REQ/TEMP box (id: ${id})`);

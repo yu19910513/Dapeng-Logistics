@@ -1,5 +1,10 @@
 {{#if admin}}
-<p class="uk-heading-line uk-text-right uk-margin-small-right" id="topline"><a onclick="deleteConfirm()" class="border border-danger rounded-circle" uk-icon="icon: trash" uk-tooltip="Remove remaining items and destroy the REQ box"></a> <span>logged in as <span class="uk-text-bold uk-label uk-label-success">{{name}}</span></span></p>
+<div class="uk-heading-line uk-text-right uk-margin-small-right" id="topline">
+  <div>
+    <a onclick="deleteConfirm()" uk-icon="icon: trash" uk-tooltip="Remove remaining items and destroy the REQ box"></a>
+    <a onclick="printImage()" uk-icon="icon: tag" id="printSku" uk-tooltip="Print new sku label"></a>
+  </div>
+</div>
 
 <div class="container col-md-5 col-sm-8" id="notesFunction">
 <div class="mb-2 card border-info p-2" uk-tooltip="Scan the targeted box first, then scan requested sku(s). If the client requested the whole box, scan the box twice to select all requested items" ><span class="lead">Notes:</span> <span id="notes"></spans></div>
@@ -54,7 +59,7 @@
                 </div>
 
                 <div class="form-group mt-3">
-                    <table class="uk-table uk-table-small uk-table-divider bg-light shadow-sm" id="sku_table">
+                    <table class="uk-table uk-table-small uk-table-divider bg-light shadow-sm" id="sku_table" style="table-layout: fixed; width: 100%">
                         <thead>
                             <tr>
                                 <th>SKU</th>
@@ -68,6 +73,8 @@
                 <a id="fake" class="btn btn-secondary mt-3 text-white col-12">Not Ready to Seal</a>
                 <h2 id="totalItem" class="text-center"></h2>
                 </div>
+      </form>
+      <form class="p-2 py-3 mt-2" id="image_placeholder" style="display: none;">
       </form>
     </div>
   </div>
