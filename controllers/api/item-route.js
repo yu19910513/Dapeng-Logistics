@@ -876,26 +876,55 @@ router.get('/statusTWO/:type', withAuth, async (req, res) => {
 
 });
 
-router.put(`/client_archive/:item_number`, withAuth, (req, res) => {
-  Item.update({
+router.put(`/client_archive/:item_number`, withAuth, async (req, res) => {
+  try {
+    const itemData = await Item.findAll({
+      where: {
+        item_number: req.params.item_number,
+      },
+      attributes: [
+        'id'
+      ],
+      include: [
+        {
+          model: Container,
+          where: {
+            status: 1,
+            type: 1
+          },
+          attributes: [
+            'id'
+          ]
+        }
+      ]
+    });
+    const items = itemData.map(i => i.get({ plain: true }));
+    const idArr = [];
+    items.forEach(i => idArr.push(i.id));
+    Item.update({
       item_number: req.body.item_number
-    },
+      },
       {
       where: {
-        item_number: req.params.item_number
-      }
+        id: idArr,
+      },
     })
     .then(dbItemData => {
       if (!dbItemData[0]) {
         res.status(404).json({ message: 'This item does not exist!' });
         return;
       }
+      console.log(dbItemData);
       res.json(dbItemData);
     })
     .catch(err => {
       console.log(err);
       res.status(500).json(err);
     });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
 router.put(`/reversal_archive/:item_number`, withAuth, (req, res) => {
