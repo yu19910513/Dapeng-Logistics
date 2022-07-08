@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const sequelize = require('../config/connection');
-const {User, Account, Batch, Box, Container, Item} = require('../models');
+const {User, Account, Batch, Box, Container, Item, Document} = require('../models');
 const {withAuth, adminAuth} = require('../utils/auth');
 //admin page
 //admin home page
@@ -328,9 +328,34 @@ router.get(`/sku_modification`, withAuth, async (req, res) => {
         'id',
         'name',
       ],
+    });
+    const dData = await Document.findAll({
+      limit: 30,
+      order: [
+        ["id", "DESC"],
+      ],
+      where: {
+        type: 1,
+        status: 0
+      },
+      attributes: [
+        'id',
+        'references',
+        'date',
+        'file'
+      ],
+      include:
+      {
+        model: User,
+        attributes: [
+          'name'
+        ]
+      }
     })
     const users = userData.map(user => user.get({ plain: true }));
+    const documents = dData.map(d => d.get({ plain: true }));
     res.render('sku_modification', {
+      documents,
       users,
       loggedIn: true,
       admin: req.session.admin,

@@ -4,9 +4,9 @@
     <div class="col-lg-4 col-md-6 col-sm-10">
     <form class="col gy-2 gx-3 align-items-center">
       <div>
-        <label class="visually-hidden" for="autoSizingSelect">Preference</label>
+        <label class="uk-form-label" for="form-stacked-text">Targeted Client</label>
         <select class="uk-select" id="autoSizingSelect">
-          <option value="0" selected>Client...</option>
+          <option value="0" selected>Choose...</option>
             {{#each users as |user|}}
               {{> userOption user }}
             {{/each}}
@@ -17,11 +17,31 @@
             <input type="file" id="label" accept="image/*, .pdf" multiple>
             <input class="uk-input uk-form-width-medium" type="text" placeholder="Select file(s)" disabled>
         </div>
-        <button class="uk-button uk-button-default" onclick="trigger()">Submit</button>
+        <a class="uk-button uk-button-default" id="uploadBtn" onclick="trigger()">Upload</a>
+        <a class="uk-button uk-button-secondary" id="fake" type="button" disabled style="display: none;">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+        </a>
       </div>
     </form>
     </div>
-  </div>
+    </div>
+    <hr>
+  <table class="table table-sm table-striped" style="table-layout: fixed; width: 100%">
+  <thead>
+    <tr>
+      <th scope="col"><b>Client</b></th>
+      <th scope="col"><b>Ref #</b></th>
+      <th scope="col"><b>File</b></th>
+      <th scope="col"><b>Date</b></th>
+      <th scope="col" class="text-danger"><b><u><a onclick="withAuth()">Delete</a></u></b></th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each documents as |document|}}
+        {{> documentList document }}
+    {{/each}}
+  </table>
   </div>
   <script src="javascript/sku_modification.js"></script>
 {{else}}

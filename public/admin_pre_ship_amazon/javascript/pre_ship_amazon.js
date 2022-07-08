@@ -363,6 +363,7 @@ function eachBoxContent (arr, input) {
                 const newBoxQty = document.createElement('td');
                 newBoxSku.setAttribute('id', boxSku);
                 newBoxQty.setAttribute('id', `${boxSku}q`);
+                newBoxSku.setAttribute('onkeyup',`modify(${boxSku})`)
                 newTr.appendChild(newBoxSku);
                 newTr.appendChild(newBoxQty);
                 tdSkuArr.push(boxSku);
@@ -386,6 +387,7 @@ function eachBoxContent (arr, input) {
             newBoxSku.setAttribute('contenteditable', true);
             newBoxSku.setAttribute('id', input);
             // newBoxSku.setAttribute('onkeyup', `idChanger(${input})`);
+            newBoxSku.setAttribute('onkeyup',`modify(${input})`)
             const newBoxQty = document.createElement('td');
             newBoxQty.setAttribute('id', `${input}q`)
             sku_list.appendChild(newTr);
@@ -401,6 +403,31 @@ function eachBoxContent (arr, input) {
 
 };
 
+const modify = (element) => {
+    element.setAttribute('class','text-dark');
+    const newSku = element.innerText.toUpperCase().trim();
+    console.log(newSku);
+    modifiable(newSku, element);
+};
+
+const modifiable = async (number, element) => {
+    await fetch(`/api/document/validation/${number}`, {
+        method: 'GET',
+        headers: {'Content-Type': 'application/json'}
+    }).then((r) => {
+        if (r.status != 200) {
+            return null
+        } else {
+            return r.json();
+        }
+      }).then((d) => {
+        if (d) {
+            console.log(d.file);
+            element.innerText = element.innerText.toUpperCase().trim();
+            element.setAttribute('class','text-success')
+        }
+      })
+};
 //helper function to make radnom code
 function makeid(length) {
     var result           = '';

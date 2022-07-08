@@ -21,7 +21,8 @@ router.post('/upload', upload.single('file'), async (req, res) => {
             file: key,
             date: new Date().valueOf(),
             references: ref,
-            user_id:id
+            user_id:id,
+            type: 1
         },
         )
         .then(() => {
@@ -33,4 +34,42 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     }
 });
 
+router.get('/validation/:reference', async (req, res) => {
+    try {
+        const documentData = await Document.findOne({
+            where: {
+              references: req.params.reference,
+              type: 1
+            },
+            attributes: [
+              'id',
+              'references',
+              'file'
+            ],
+          });
+          const data = documentData.get({plain: true});
+          res.json(data);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
+    }
+});
+
+router.delete('/remove/:id', withAuth, async (req, res) => {
+    try {
+        const action = await Document.destroy({
+            where: {
+                id: req.params.id
+            }
+        });
+        if (action) {
+            res.json(action)
+        } else {
+            res.status(404).json({ message: 'No Document found with this id' });
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
+    }
+});
 module.exports = router;
