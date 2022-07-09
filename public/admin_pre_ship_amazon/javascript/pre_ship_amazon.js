@@ -427,7 +427,7 @@ const modifiable = async (number, element) => {
             image.src = `/image/${d.file}`;
             // embed.src = `/image/${d.file}`;
             // image.onerror = switchpdf(embed);
-            image.style.breakAfter='always';
+            image.style.pageBreakAfter='always';
             document.getElementById('image_placeholder').prepend(image);
             element.innerText = element.innerText.toUpperCase().trim();
             element.setAttribute('class','text-success');

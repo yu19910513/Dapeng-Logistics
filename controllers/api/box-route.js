@@ -798,5 +798,33 @@ router.put('/dateUpdate_bill_shipped', withAuth, (req, res) => {
     });
 });
 
+router.get('/dq_count', withAuth, async(req, res) => {
+  try {
+    const boxData = await Box.findAll({
+      where: {
+        status: 4,
+        cost: '0.00'
+      },
+      attributes: [
+        'id'
+      ]
+    });
+    const containerData = await Container.findAll({
+      where: {
+        status: 4,
+        cost: '0.00'
+      },
+      attributes: [
+        'id'
+      ]
+    });
+    const xc_boxes = boxData.map(box => box.get({ plain: true }));
+    const xc_containers = containerData.map(container => container.get({ plain: true }));
+    const number = xc_boxes.length + xc_containers.length
+    res.json(number);
+  } catch (error) {
+    res.status(500).json(error)
+  }
+});
 
-  module.exports = router;
+module.exports = router;
