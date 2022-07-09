@@ -61,5 +61,31 @@ const withAuth = () => {
   } else {
     alert('Invalid code!')
   }
-}
+};
 init();
+
+
+///////////sku mapping////////////
+const old_group = document.getElementById('oldskugroups');
+const new_group = document.getElementById('newskugroups');
+const fake_map = document.getElementById('fake_map');
+const mapBtn = document.getElementById('mapBtn');
+var oldData, newData;
+const formateCheck = () => {
+  oldData = rs(old_group.value.trim());
+  newData = rs(new_group.value.trim());
+  oldData.length==newData.length&&oldData.length>0?mapBtn.className='uk-button uk-button-primary':mapBtn.className='uk-button uk-button-danger';
+};
+const mapping = () => {
+
+};
+//helper function
+const rs = (str) => {
+  if (str) {
+    if (str[str.length-1]==',') {
+      str = str.substring(0,str.length-1);
+      return str.replace(/\s/g, '').trim().split(',')
+    }
+    return str.replace(/\s/g, '').trim().split(',')
+  } return [];
+};//remove space

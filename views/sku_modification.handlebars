@@ -1,8 +1,10 @@
 {{#if admin}}
-  <div class="container mt-4">
-    <div class="row justify-content-md-center">
-    <div class="col-lg-4 col-md-6 col-sm-10">
-    <form class="col gy-2 gx-3 align-items-center">
+<div class="container mt-4">
+  <div class="row justify-content-md-center">
+    <div class="col-lg-5 col-md-6 col-sm-10">
+      <div>
+        <h2 class="lead text-primary" uk-icon="icon: upload"></h2>
+      <form class="gy-2 gx-3 align-items-center">
       <div>
         <label class="uk-form-label" for="form-stacked-text">Targeted Client</label>
         <select class="uk-select" id="autoSizingSelect">
@@ -23,11 +25,31 @@
             Loading...
         </a>
       </div>
-    </form>
+      </form>
+      </div>
+      <hr>
+      <div>
+        <h2 class="lead text-primary" uk-icon="icon: grid"></h2>
+        <form>
+         <div class="form-group">
+            <label class="uk-form-label" for="form-stacked-text">Old SKU Groups</label>
+            <textarea class="form-control" id="oldskugroups" rows="2" onkeyup="formateCheck()" placeholder="sku1, sku2, sku3..."></textarea>
+          </div>
+          <div class="form-group mt-2">
+            <label class="uk-form-label" for="form-stacked-text">New SKU Groups</label>
+            <textarea class="form-control" id="newskugroups" rows="2" onkeyup="formateCheck()"></textarea>
+          </div>
+          <div class="uk-margin" uk-margin>
+              <a class="uk-button uk-button-danger" id="mapBtn" onclick="mapping()">Link</a>
+              <a class="uk-button uk-button-secondary" id="fake_map" type="button" disabled style="display: none;">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Mapping...
+              </a>
+          </div>
+        </form>
+      </div>
     </div>
-    </div>
-    <hr>
-    <hr>
+    <div class="col-lg-7 col-md-6 col-sm-10">
   <table class="table table-sm table-striped" style="table-layout: fixed; width: 100%">
   <thead>
     <tr>
@@ -43,7 +65,9 @@
         {{> documentList document }}
     {{/each}}
   </table>
+    </div>
   </div>
+</div>
   <script src="javascript/sku_modification.js"></script>
 {{else}}
   <script src="javascript/client_redirect.js"></script>
