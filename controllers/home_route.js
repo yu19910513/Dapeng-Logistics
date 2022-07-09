@@ -4,6 +4,7 @@ const sequelize = require('../config/connection');
 const {User, Account, Batch, Box, Container, Item} = require('../models');
 const {withAuth, adminAuth} = require('../utils/auth');
 const { uploadFile, getFile} = require('../utils/s3');
+const {getFile_admin} = require('../utils/s3_file');
 
 router.get('/', withAuth, async (req, res) => {
   try {
@@ -1257,7 +1258,7 @@ router.get('/pdf/:key', (req, res) => {
 
 router.get('/image/:key', (req, res) => {
   const key = req.params.key;
-  const readStream = getFile(key);
+  const readStream = getFile_admin(key);
   readStream.pipe(res)
 });
 

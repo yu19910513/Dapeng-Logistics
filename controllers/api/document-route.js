@@ -3,7 +3,7 @@ const {User, Account, Batch, Box, Container, Item, Record, Document} = require('
 const {withAuth} = require('../../utils/auth');
 const multer = require('multer');
 const upload = multer({dest: 'uploads/'});
-const { uploadFile, getFile} = require('../../utils/s3');
+const {uploadFile_admin} = require('../../utils/s3_file');
 const fs = require('fs');
 const util = require('util');
 const { log } = require('console');
@@ -14,7 +14,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
         const file = req.file;
         const ref = req.body.ref;
         const id = req.body.user_id;
-        const result = await uploadFile(file);
+        const result = await uploadFile_admin(file);
         await unlinkFile(file.path);
         const key = result.Key;
         Document.create({
