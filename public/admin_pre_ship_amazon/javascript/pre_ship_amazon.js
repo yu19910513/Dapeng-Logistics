@@ -348,6 +348,7 @@ function masterCheck () {
 };
 var skuQtyMap = new Map();
 var tdSkuArr = [];
+var placeholder;
 function eachBoxContent (arr, input) {
     if (arr) {
         const tdPerRow = arr.querySelectorAll('td');
@@ -369,12 +370,13 @@ function eachBoxContent (arr, input) {
                 newTr.appendChild(newBoxQty);
                 tdSkuArr.push(boxSku);
                 skuQtyMap.set(boxSku, parseInt(boxQty));
-                newBoxSku.innerHTML = boxSku;
+                newBoxSku.innerHTML = skuFilter(boxSku);
                 newBoxQty.innerHTML = boxQty;
-
+                placeholder = skuFilter(boxSku,parseInt(boxQty)-1)
             } else {
                 skuQtyMap.set(boxSku, skuQtyMap.get(boxSku)+ parseInt(boxQty))
                 document.getElementById(`${boxSku}q`).innerHTML = skuQtyMap.get(boxSku);
+                placeholder = skuFilter(boxSku,parseInt(boxQty));
             }
         } else {
             error();
@@ -394,11 +396,12 @@ function eachBoxContent (arr, input) {
             sku_list.appendChild(newTr);
             newTr.appendChild(newBoxSku);
             newTr.appendChild(newBoxQty);
-            newBoxSku.innerHTML = input;
+            newBoxSku.innerHTML = skuFilter(input);
             newBoxQty.innerHTML = skuQtyMap.get(input)
         } else {
             skuQtyMap.set(input, skuQtyMap.get(input)+1)
             document.getElementById(`${input}q`).innerHTML = skuQtyMap.get(input);
+            placeholder = skuFilter(input);
         }
     }
 
@@ -428,12 +431,75 @@ const modifiable = async (number, element) => {
             // embed.src = `/image/${d.file}`;
             // image.onerror = switchpdf(embed);
             image.style.pageBreakAfter='always';
-            document.getElementById('image_placeholder').prepend(image);
+            document.getElementById('image_placeholder').appendChild(image);
             element.innerText = element.innerText.toUpperCase().trim();
             element.setAttribute('class','text-success');
         }
       })
 };
+
+var oldsku,newsku
+const filterLoader = async (n) => {
+    await fetch(`/api/record/skufilter/${n}`, {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        mainArr = JSON.parse(data[0].action_notes).split('=>')
+        oldsku = mainArr[0].split(',');
+        newsku = mainArr[1].split(',');
+    })
+}
+filterLoader(1);
+const skuFilter = (input, n) => {
+    const index = oldsku.indexOf(input);
+    if (index>-1 && filterAuthFunction()) {
+        imgAttach(newsku[index], n);
+        return newsku[index]
+    } else {
+        return input
+    }
+};
+const imgAttach = async (number,n) => {
+    skuChecker = false
+    await fetch(`/api/document/validation/${number}`, {
+        method: 'GET',
+        headers: {'Content-Type': 'application/json'}
+    }).then((r) => {
+        if (r.status != 200) {
+            console.log('no file found');
+            return null
+        } else {
+            return r.json();
+        }
+      }).then((d) => {
+        if (d) {
+            if(n) {
+                for (let i = 0; i < n; i++) {
+                    const image = document.createElement('img');
+                    image.src = `/image/${d.file}`;
+                    image.style.pageBreakAfter='always';
+                    document.getElementById('image_placeholder').appendChild(image);
+                }
+            } else {
+                const image = document.createElement('img');
+                image.src = `/image/${d.file}`;
+                image.style.pageBreakAfter='always';
+                document.getElementById('image_placeholder').appendChild(image);
+            }
+        } else {
+            console.log('no file found');
+        }
+      })
+};
+const allowCheckBox = document.getElementById('allowFilter');
+const filterAuthFunction = () => {
+    if (allowCheckBox.checked) {
+        return true
+    } else {
+        return false
+    }
+}
 // const switchpdf = (obj) => {
 //     document.getElementById('image_placeholder').prepend(obj);
 // }

@@ -125,5 +125,24 @@ router.get('/dashboard_admin/:number', withAuth, async (req, res) => {
       res.status(500).json(err);
     }
 });
+router.get('/skufilter/:number', withAuth, async (req, res) => {
+  try {
+    const recordData = await Record.findAll({
+      limit: parseInt(req.params.number),
+      order: [
+        ["id", "DESC"],
+      ],
+      attributes: [
+        "sub_number",
+        "action_notes"
+      ]
+    })
+    const records = recordData.map(record => record.get({ plain: true }));
+    res.json(records);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+});
 
 module.exports = router;
