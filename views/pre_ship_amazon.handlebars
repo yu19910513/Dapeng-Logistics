@@ -1,9 +1,22 @@
 {{#if admin}}
 <div class="uk-heading-line uk-text-right uk-margin-small-right" id="topline">
   <div>
-    <a onclick="deleteConfirm()" uk-icon="icon: trash" uk-tooltip="Remove remaining items and destroy the REQ box"></a>
+    <a onclick="deleteConfirm()" uk-icon="icon: trash" uk-tooltip="Remove remaining items and destroy the REQ box" class="text-danger"></a>
     <a href="/admin/sku_modification" uk-icon="icon: cloud-upload" uk-tooltip="sku files upload"></a>
     <a onclick="printImage()" uk-icon="icon: tag" id="printSku" uk-tooltip="Print new sku label"></a>
+    <a uk-icon="icon: album" class="text-primary " uk-tooltip="Change sku filter" data-bs-toggle="offcanvas" href="#skuFilterChange" role="button" aria-controls="skuFilterChange"></a>
+  </div>
+</div>
+
+{{!-- offcanvas --}}
+<div class="offcanvas offcanvas-start" tabindex="-1" id="skuFilterChange" aria-labelledby="skuFilterChangeLabel">
+  <div class="offcanvas-header">
+    <h6 class="offcanvas-title">Mapping Filters</h6>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+      <div id="mapping options" class="form-check">
+      </div>
   </div>
 </div>
 

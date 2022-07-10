@@ -450,13 +450,36 @@ const filterLoader = async (n) => {
         }
     }).then(function (data) {
         if (data.length) {
-            mainArr = JSON.parse(data[0].action_notes).split('=>')
+            loadingFilterOp(data);
+            var mainArr = JSON.parse(data[0].action_notes).split('=>')
             oldsku = mainArr[0].split(',');
             newsku = mainArr[1].split(',');
         }
     })
+};
+const mapinngOptions = document.getElementById('mapping options')
+const loadingFilterOp = (dataArr) => {
+    dataArr.forEach(i => {
+      const input = document.createElement('input');
+      const label = document.createElement('label');
+      label.className = 'form-check-label';
+      label.innerText =i.action_notes;
+      input.className = 'form-check-input';
+      input.type = 'radio';
+      input.name = 'mappingOptions';
+      input.value = i.action_notes;
+      input.setAttribute('onclick',`initskuchange(${i.action_notes})`);
+      label.appendChild(input);
+    mapinngOptions.appendChild(label);
+    })
 }
-filterLoader(1);
+const initskuchange = (str) => {
+    console.log(`swtich to ${str}`);
+    var arr = str.split('=>');
+    oldsku = arr[0].split(',');
+    newsku = arr[1].split(',');
+}
+
 const skuFilter = (input, n) => {
     const index = oldsku.indexOf(input);
     if (index>-1 && filterAuthFunction()) {
@@ -610,3 +633,4 @@ function deleteConfirm() {
         alert('Incorrect passcode!')
     }
 };
+filterLoader(20);
