@@ -459,19 +459,23 @@ const filterLoader = async (n) => {
 };
 const mapinngOptions = document.getElementById('mapping options')
 const loadingFilterOp = (dataArr) => {
-    dataArr.forEach(i => {
-      const input = document.createElement('input');
-      const label = document.createElement('label');
-      label.className = 'form-check-label';
-      label.innerText =i.action_notes;
-      input.className = 'form-check-input';
-      input.type = 'radio';
-      input.name = 'mappingOptions';
-      input.value = i.action_notes;
-      input.setAttribute('onclick',`initskuchange(${i.action_notes})`);
-      label.appendChild(input);
-    mapinngOptions.appendChild(label);
-    })
+    for (let i = 0; i < dataArr.length; i++) {
+        const item = dataArr[i];
+        const input = document.createElement('input');
+        const label = document.createElement('label');
+        label.className = 'form-check-label';
+        label.innerText =item.action_notes;
+        input.className = 'form-check-input';
+        input.type = 'radio';
+        input.name = 'mappingOptions';
+        input.value = item.action_notes;
+        input.setAttribute('onclick',`initskuchange(${item.action_notes})`);
+        label.appendChild(input);
+        mapinngOptions.appendChild(label);
+        if (i == 0) {
+            input.checked = true
+        };
+    }
 }
 const initskuchange = (str) => {
     console.log(`swtich to ${str}`);
