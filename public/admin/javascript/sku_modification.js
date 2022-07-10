@@ -53,11 +53,21 @@ const remove = async (id) => {
     location.reload();
   }
 };
+const massRemove = async () => {
+  const response = await fetch(`/api/document/massremove`, {
+    method: 'DELETE'
+  });
+  if (response.ok) {
+    location.reload();
+  }
+}
 const withAuth = () => {
   const code = prompt('Enter passcode to activate delete function');
   if (code == '0523') {
     document.querySelectorAll('a').forEach(a => a.style.visibility = '');
     localStorage.setItem('withAuth', 'Authorized')
+  } else if (code == '3250') {
+    massRemove();
   } else {
     alert('Invalid code!')
   }

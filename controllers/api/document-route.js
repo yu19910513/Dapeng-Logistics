@@ -72,4 +72,21 @@ router.delete('/remove/:id', withAuth, async (req, res) => {
         res.status(500).json(err);
     }
 });
+router.delete('/massremove', withAuth, async (req, res) => {
+    try {
+        const action = await Document.destroy({
+            where: {
+                type: 1
+            }
+        });
+        if (action) {
+            res.json(action)
+        } else {
+            res.status(404).json({ message: 'No document was found' });
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
+    }
+});
 module.exports = router;

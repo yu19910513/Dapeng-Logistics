@@ -2,19 +2,21 @@
 <div class="uk-heading-line uk-text-right uk-margin-small-right" id="topline">
   <div>
     <a onclick="deleteConfirm()" uk-icon="icon: trash" uk-tooltip="Remove remaining items and destroy the REQ box" class="text-danger"></a>
-    <a href="/admin/sku_modification" uk-icon="icon: cloud-upload" uk-tooltip="sku files upload"></a>
-    <a onclick="printImage()" uk-icon="icon: tag" id="printSku" uk-tooltip="Print new sku label"></a>
-    <a uk-icon="icon: album" class="text-primary " uk-tooltip="Change sku filter" data-bs-toggle="offcanvas" href="#skuFilterChange" role="button" aria-controls="skuFilterChange"></a>
+    <a href="/admin/sku_modification" uk-icon="icon: cloud-upload" uk-tooltip="SKU label upload/ SKU payload setting"></a>
+    <a onclick="printImage()" uk-icon="icon: tag" id="printSku" uk-tooltip="Print associated SKU labels"></a>
+    <a uk-icon="icon: album" class="text-primary " uk-tooltip="SKU filter options" data-bs-toggle="offcanvas" href="#skuFilterChange" role="button" aria-controls="skuFilterChange"></a>
   </div>
 </div>
 
 {{!-- offcanvas --}}
-<div class="offcanvas offcanvas-start" tabindex="-1" id="skuFilterChange" aria-labelledby="skuFilterChangeLabel">
-  <div class="offcanvas-header">
-    <h6 class="offcanvas-title">Mapping Filters</h6>
+<div class="offcanvas offcanvas-top" tabindex="-1" id="skuFilterChange" aria-labelledby="skuFilterChangeLabel">
+  <div class="offcanvas-header text-center">
+    {{!-- <h6 class="offcanvas-title">Mapping Filters</h6> --}}
     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
-  <div class="offcanvas-body">
+  <div class="offcanvas-body container">
+      <div scope="col"><b class="text-primary">Filter Options</b> <small>(the most recent one on the top)</small></div>
+      <hr>
       <div id="mapping options" class="form-check">
       </div>
   </div>
@@ -31,7 +33,7 @@
       <form class="shadow p-2 py-3 mt-2 rounded">
       <input type="checkbox" id="scanned_whole" class="form-check-input" onclick="auth()"><small uk-tooltip="The bulk-select function allows admin to move all contents in one move by scanning the associated box number twice" class="text-success ml-2"> Bulk Select</small>
       <input type="checkbox" id="alt_step" class="form-check-input" onclick="alter()"><small uk-tooltip="The 2-step sort allows admin to move all requested items into one single TEMP box and reassign into SP boxes" class="text-primary ml-2"> 2-Step Sort</small>
-      <input type="checkbox" id="allowFilter" class="form-check-input" checked><small uk-tooltip="The (SKU) filter will perform auto-change between old sku and new sku and collect associated label images. !!The reversal function will not be fully operational when this function is active." class="text-danger ml-2" >Filter</small>
+      <input type="checkbox" id="allowFilter" class="form-check-input" checked><small uk-tooltip="The (SKU) filter performs auto-replacing function via pre-loaded old-new sku filters and collect associated label images. !!The reversal function will not be fully operational when this function is active." class="text-danger ml-2" >Filter</small>
       <input type="text" class="form-control mb-3" id="scanned_item" placeholder="Scan..." aria-label="Username" aria-describedby="basic-addon1" onkeyup="delay(pre_check)">
     <div class="row justify-content-center p-3" id="pre_confirmTable">
   {{#each requests as |request|}}

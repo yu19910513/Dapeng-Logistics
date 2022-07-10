@@ -1,9 +1,10 @@
 {{#if admin}}
+<p class="uk-heading-line px-4"><a onclick="history.back()" uk-icon="icon: arrow-left" class="rounded-circle bg-success text-white" uk-tooltip="back to the previous page"></a></p>
 <div class="container mt-4">
   <div class="row justify-content-md-center">
     <div class="col-lg-5 col-md-6 col-sm-10">
       <div>
-        <h2 class="lead text-primary" uk-icon="icon: upload"></h2>
+        <h2 class="lead text-primary" uk-icon="icon: upload">SKU Labels Upload </h2>
       <form class="gy-2 gx-3 align-items-center">
       <div>
         <label class="uk-form-label" for="form-stacked-text">Targeted Client</label>
@@ -29,15 +30,15 @@
       </div>
       <hr>
       <div>
-        <h2 class="lead text-primary" uk-icon="icon: grid"></h2>
+        <h2 class="lead text-primary" uk-icon="icon: git-fork">SKU Linking </h2>
         <form>
          <div class="form-group">
             <label class="uk-form-label" for="form-stacked-text">Old SKU Groups</label>
-            <textarea class="form-control" id="oldskugroups" rows="2" onkeyup="formateCheck()" placeholder="sku1, sku2, sku3..."></textarea>
+            <textarea class="form-control" id="oldskugroups" rows="2" onkeyup="formateCheck()" placeholder="OldSku1, OldSku2, OldSku3..."></textarea>
           </div>
           <div class="form-group mt-2">
             <label class="uk-form-label" for="form-stacked-text">New SKU Groups</label>
-            <textarea class="form-control" id="newskugroups" rows="2" onkeyup="formateCheck()"></textarea>
+            <textarea class="form-control" id="newskugroups" rows="2" onkeyup="formateCheck()" placeholder="NewSku1, NewSku2, NewSku3..."></textarea>
           </div>
           <div class="uk-margin" uk-margin>
               <a class="uk-button uk-button-danger" id="mapBtn" onclick="mapping()">Link</a>
@@ -57,7 +58,7 @@
       <th scope="col"><b>Ref #</b></th>
       <th scope="col"><b>File</b></th>
       <th scope="col"><b>Date</b></th>
-      <th scope="col" class="text-danger"><b><u><a onclick="withAuth()">Delete</a></u></b></th>
+      <th scope="col" class="text-danger"><b><u><a onclick="withAuth()" uk-tooltip="Enter the passcode to activate single delete function; enter the reversed code to clear out all SKU files">Delete</a></u></b></th>
     </tr>
   </thead>
   <tbody>

@@ -460,18 +460,24 @@ const filterLoader = async (n) => {
 const mapinngOptions = document.getElementById('mapping options')
 const loadingFilterOp = (dataArr) => {
     for (let i = 0; i < dataArr.length; i++) {
+        const tr = document.createElement('tr');
+        const td_1 = document.createElement('td');
+        const td_2 = document.createElement('td');
         const item = dataArr[i];
         const input = document.createElement('input');
         const label = document.createElement('label');
         label.className = 'form-check-label';
-        label.innerText =item.action_notes;
+        label.innerHTML =item.action_notes;
         input.className = 'form-check-input';
         input.type = 'radio';
         input.name = 'mappingOptions';
         input.value = item.action_notes;
         input.setAttribute('onclick',`initskuchange(${item.action_notes})`);
-        label.appendChild(input);
-        mapinngOptions.appendChild(label);
+        tr.appendChild(td_1);
+        tr.appendChild(td_2);
+        td_1.appendChild(input);
+        td_2.appendChild(label);
+        mapinngOptions.appendChild(tr);
         if (i == 0) {
             input.checked = true
         };
@@ -637,4 +643,4 @@ function deleteConfirm() {
         alert('Incorrect passcode!')
     }
 };
-filterLoader(20);
+filterLoader(10);
