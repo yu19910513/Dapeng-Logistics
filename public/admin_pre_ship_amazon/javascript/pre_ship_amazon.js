@@ -443,11 +443,17 @@ const filterLoader = async (n) => {
     await fetch(`/api/record/skufilter/${n}`, {
         method: 'GET'
     }).then(function (response) {
-        return response.json();
+        if (response.status != 200){
+            return null
+        } else {
+            return response.json();
+        }
     }).then(function (data) {
-        mainArr = JSON.parse(data[0].action_notes).split('=>')
-        oldsku = mainArr[0].split(',');
-        newsku = mainArr[1].split(',');
+        if (data.length) {
+            mainArr = JSON.parse(data[0].action_notes).split('=>')
+            oldsku = mainArr[0].split(',');
+            newsku = mainArr[1].split(',');
+        }
     })
 }
 filterLoader(1);
@@ -467,7 +473,7 @@ const imgAttach = async (number,n) => {
         headers: {'Content-Type': 'application/json'}
     }).then((r) => {
         if (r.status != 200) {
-            console.log('no file found');
+            error();
             return null
         } else {
             return r.json();
@@ -488,7 +494,7 @@ const imgAttach = async (number,n) => {
                 document.getElementById('image_placeholder').appendChild(image);
             }
         } else {
-            console.log('no file found');
+            alert(`missing label image for ${number}`)
         }
       })
 };

@@ -129,6 +129,9 @@ router.get('/skufilter/:number', withAuth, async (req, res) => {
   try {
     const recordData = await Record.findAll({
       limit: parseInt(req.params.number),
+      where: {
+        type: 50
+      },
       order: [
         ["id", "DESC"],
       ],
