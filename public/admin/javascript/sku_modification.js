@@ -85,7 +85,7 @@ var ready = false;
 const formateCheck = () => {
   oldData = rs(old_group.value.trim());
   newData = rs(new_group.value.trim());
-  oldData.length==newData.length&&oldData.length>0?(mapBtn.className='uk-button uk-button-primary', ready=true):mapBtn.className='uk-button uk-button-danger';
+  oldData.length==newData.length&&oldData.length>0?(mapBtn.className='uk-button uk-button-primary', ready=true):(mapBtn.className='uk-button uk-button-danger', ready=false);
 };
 const mapping = () => {
   if (ready) {
