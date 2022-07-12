@@ -491,7 +491,8 @@ const initskuchange = (str) => {
 }
 
 const skuFilter = (input, n) => {
-    const index = oldsku.indexOf(input);
+    var index;
+    oldsku?index=oldsku.indexOf(input):index=-1;
     if (index>-1 && filterAuthFunction()) {
         imgAttach(newsku[index], n);
         return newsku[index]
