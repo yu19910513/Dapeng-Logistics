@@ -554,6 +554,7 @@ const printImage = () => {
     document.getElementById('image_placeholder').style.display = '';
     hideables.forEach(i => i.style.display = 'none')
     window.print();
+    document.getElementById('image_placeholder').querySelectorAll('img').forEach(i => i.remove());
     document.getElementById('image_placeholder').style.display = 'none';
     hideables.forEach(i => i.style.display = '');
     // document.getElementById('image_placeholder').querySelectorAll('img').forEach(i => i.remove());
