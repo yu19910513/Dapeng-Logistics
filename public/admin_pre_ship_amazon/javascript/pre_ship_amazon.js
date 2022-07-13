@@ -10,6 +10,7 @@ const height = document.getElementById('new_hei');
 const weight = document.getElementById('new_wei');
 const width = document.getElementById('new_wid');
 const newContainerTable = document.getElementById('sku_table');
+var xcQtyCount = 0;
 var item_numberMap = new Map();
 var id_qtyMap = new Map();
 var iidArr = [];
@@ -18,6 +19,7 @@ var selectedSkuArr = [];
 var skuArr = [];
 var printCheck = false;
 var skuChecker = false;
+var getXCchecker = false;
 if (!localStorage.getItem('sp_number')) {
     localStorage.setItem('sp_number', 0)
 } else {
@@ -48,7 +50,7 @@ function supplemental () {
             window.location.replace('/admin_move_main_amazon');
         }
     })
-};supplemental();
+};
 
 function itemIdCollection() {
     fetch(`/api/item/findAllPerContainer/${container_id}`, {
@@ -249,13 +251,69 @@ async function boxCreate(data) {
         body: JSON.stringify(data),
         headers: { 'Content-Type': 'application/json' }
       });
-
       if (response.ok) {
        console.log("amazon box inserted");
+       xcQtyCount>0?xcCreate(data):console.log('no label change');;
        findContainerId(data.container_number);
       } else {
         alert('try again')
    }
+};
+const xcCreate = async (data) => {
+    if (getXCchecker) {
+        const newfba = `LR${container_id}`
+        const response = await fetch('/api/container/xc_LabelChangeUpdate', {
+            method: 'PUT',
+            body: JSON.stringify({
+                fba:newfba,
+                qty_of_fee: xcQtyCount,
+                description: `AM Relabel Services - ${xcQtyCount} Items`,
+                notes: `Label Change (Qty: ${xcQtyCount}); Batch# ${container_id}`,
+
+            }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        response.ok?console.log('xc_charge updated sucessfully'):console.log('fail to update the xc_chagre');
+    } else {
+        const ref_code = "AC" + parseInt(String(new Date().valueOf() + Math.floor(1000000000 + Math.random() * 9000000000)).substring(4, 11));
+        const response = await fetch('/api/container/xc_LabelChange', {
+            method: 'post',
+            body: JSON.stringify({
+                user_id: data.user_id,
+                account_id: data.account_id,
+                container_number: ref_code,
+                qty_of_fee: xcQtyCount,
+                description: `AM Relabel Services - ${xcQtyCount} Items`,
+                notes: `Label Change (Qty: ${xcQtyCount}); Batch# ${container_id}`,
+                fba: 'LR' + container_id,
+            }),
+            headers: { 'Content-Type': 'application/json' }
+          });
+          if (response.ok) {
+           console.log("new xc_charge is inserted");
+          } else {
+            alert('try again')
+       }
+    }
+};
+
+const getXC = async () => {
+    await fetch(`/api/container/fba/LR${container_id}`, {
+        method: 'GET'
+    }).then(function (response) {
+        if (response.status != 200) {
+            return null
+        } else {
+            return response.json();
+        };
+    }).then(function (data) {
+        if (data) {
+            getXCchecker = true;
+            xcQtyCount = parseInt(data.qty_of_fee);
+            console.log(xcQtyCount);
+        };
+        console.log(getXCchecker);
+    })
 };
 function findContainerId(c_number) {
     console.log('getting container_id');
@@ -516,12 +574,14 @@ const imgAttach = async (number,n) => {
         if (d) {
             if(n) {
                 for (let i = 0; i < n; i++) {
+                    xcQtyCount++;
                     const image = document.createElement('img');
                     image.src = `/image/${d.file}`;
                     image.style.pageBreakAfter='always';
                     document.getElementById('image_placeholder').appendChild(image);
                 }
             } else {
+                xcQtyCount++;
                 const image = document.createElement('img');
                 image.src = `/image/${d.file}`;
                 image.style.pageBreakAfter='always';
@@ -529,7 +589,7 @@ const imgAttach = async (number,n) => {
             }
         } else {
             alert(`missing label image for ${number}`)
-        }
+        };
       })
 };
 const allowCheckBox = document.getElementById('allowFilter');
@@ -645,4 +705,7 @@ function deleteConfirm() {
         alert('Incorrect passcode!')
     }
 };
+
+supplemental();
+getXC();
 filterLoader(10);

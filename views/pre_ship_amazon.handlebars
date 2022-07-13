@@ -33,7 +33,7 @@
       <form class="shadow p-2 py-3 mt-2 rounded">
       <input type="checkbox" id="scanned_whole" class="form-check-input" onclick="auth()"><small uk-tooltip="The bulk-select function allows admin to move all contents in one move by scanning the associated box number twice" class="text-success ml-2"> Bulk Select</small>
       <input type="checkbox" id="alt_step" class="form-check-input" onclick="alter()"><small uk-tooltip="The 2-step sort allows admin to move all requested items into one single TEMP box and reassign into SP boxes" class="text-primary ml-2"> 2-Step Sort</small>
-      <input type="checkbox" id="allowFilter" class="form-check-input" checked><small uk-tooltip="The (SKU) filter performs auto-replacing function via pre-loaded old-new sku filters and collect associated label images. !!The reversal function will not be fully operational when this function is active." class="text-danger ml-2" >Filter</small>
+      <input type="checkbox" id="allowFilter" class="form-check-input" checked><small uk-tooltip="The (SKU) filter performs auto-replacing function via pre-loaded old-new sku filters and collect associated label images. !!The reversal function will not be fully operational when this function is active." class="text-danger ml-2" > Filter</small>
       <input type="text" class="form-control mb-3" id="scanned_item" placeholder="Scan..." aria-label="Username" aria-describedby="basic-addon1" onkeyup="delay(pre_check)">
     <div class="row justify-content-center p-3" id="pre_confirmTable">
   {{#each requests as |request|}}

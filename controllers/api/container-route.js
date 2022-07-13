@@ -26,8 +26,55 @@ router.get('/', withAuth, async (req, res) => {
     console.log(err);
     res.status(500).json(err);
   }
-})
-
+});
+router.get('/fba/:key', withAuth, async (req, res) => {
+  try {
+    const singleContainer = await Container.findOne({
+      where: {
+        fba: req.params.key,
+        type: 4,
+        status: 4
+      },
+      attributes: [
+        'id',
+        'qty_of_fee'
+      ],
+    });
+    const data = singleContainer.get({plain: true});
+    res.json(data);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+router.put('/xc_LabelChangeUpdate', withAuth, (req, res) => {
+  Container.update(
+    {
+      qty_of_fee: req.body.qty_of_fee,
+      description: req.body.description,
+      notes: req.body.notes,
+      cost: 0
+    },
+    {
+      where: {
+        fba: req.body.fba,
+        status: 4
+      }
+    }
+    )
+    .then(dbContainerData => {
+      if (!dbContainerData[0]) {
+        res.status(404).json({ message: 'This Container does not exist!' });
+        return;
+      }
+      res.json(dbContainerData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+//xc_LabelChangeUpdate
 router.put('/account_merge', withAuth, (req, res) => {
     Container.update({
         account_id: req.body.account_id_2
@@ -983,5 +1030,31 @@ router.put('/xc_addCharge/:container_number', withAuth, (req, res) => {
       console.log(err);
       res.status(500).json(err);
     });
+});
+
+router.post('/xc_LabelChange', withAuth, (req, res) => {
+  Container.create({
+    requested_date: new Date().toLocaleDateString("en-US"),
+    container_number: req.body.container_number,
+    account_id: req.body.account_id,
+    user_id: req.body.user_id,
+    description: req.body.description,
+    fba: req.body.fba,
+    notes: req.body.notes,
+    qty_of_fee: req.body.qty_of_fee,
+    unit_fee: 0,
+    weight: 0,
+    length: 0,
+    width: 0,
+    height: 0,
+    cost: 0,
+    status: 4,
+    type: 4
+  }, {returning: true})
+      .then(dbContainerData => res.json(dbContainerData))
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
 });
 module.exports = router;
