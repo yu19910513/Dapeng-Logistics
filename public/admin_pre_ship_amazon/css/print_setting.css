@@ -8,4 +8,10 @@
     #box_bar {
         page-break-before: always;
     }
+    img {
+        display: block;
+        page-break-before: auto;
+        page-break-after: auto; 
+        page-break-inside: avoid;
+    }
 }
