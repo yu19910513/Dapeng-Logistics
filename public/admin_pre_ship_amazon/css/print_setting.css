@@ -11,7 +11,10 @@
     img {
         display: block;
         page-break-before: auto;
-        page-break-after: auto; 
+        page-break-after: auto;
         page-break-inside: avoid;
     }
+}
+@page {
+    size: auto;
 }
