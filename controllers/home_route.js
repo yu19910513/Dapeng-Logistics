@@ -1001,7 +1001,72 @@ router.get('/admin_move_main_amazon', withAuth, async (req, res) => {
       return r;
     }, Object.create(null));
     const requests = Object.values(requestsBatch);
-    res.render('dynamic_move_amazon', {requests, loggedIn: true, admin: req.session.admin, name: req.session.name, confirm: false});
+    res.render('dynamic_move_amazon', {requests, loggedIn: true, admin: req.session.admin, name: req.session.name, confirm: false, type_2: false});
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+
+});
+
+//admin request-handling page amazon (process skipping)
+router.get('/admin_move_main_amazon_type_2', withAuth, async (req, res) => {
+  try {
+    const itemData = await Item.findAll({
+      attributes: [
+        'id',
+        'item_number',
+        'qty_per_sku',
+        'container_id',
+        'account_id',
+        'user_id',
+        'description'
+      ],
+      include: [
+        {
+          model: Container,
+          where: {
+            status:2,
+            type: [0,2]
+          },
+          attributes: [
+            'id',
+            'container_number',
+            'description',
+            'cost',
+            'requested_date',
+            'received_date',
+            'location',
+            'file',
+            'file_2',
+            'notes',
+            's3',
+            'fba'
+          ]
+        },
+        {
+          model: Account,
+          attributes: [
+            'name'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'id',
+            'name',
+          ]
+        }
+      ]
+    });
+    const items = itemData.map(item => item.get({ plain: true }));
+    const requestsBatch = items.reduce(function (r, a) {
+      r[a.container_id] = r[a.container_id] || [];
+      r[a.container_id].push(a);
+      return r;
+    }, Object.create(null));
+    const requests = Object.values(requestsBatch);
+    res.render('dynamic_move_amazon', {requests, loggedIn: true, admin: req.session.admin, name: req.session.name, confirm: false, type_2: true});
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
