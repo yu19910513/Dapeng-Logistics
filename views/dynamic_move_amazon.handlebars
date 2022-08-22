@@ -64,7 +64,10 @@
 {{#if confirm}}
 <script src="javascript/amazon_label_confirmation.js"></script>
 {{else}}
-<script src="javascript/amazon_label_handle.js"></script>
+  {{#if type_2}}
+  {{else}}
+    <script src="javascript/amazon_label_handle.js"></script>
+  {{/if}}
 {{/if}}
 {{else}}
 <script src="javascript/client_redirect.js"></script>
