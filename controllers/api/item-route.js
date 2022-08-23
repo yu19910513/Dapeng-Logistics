@@ -972,4 +972,26 @@ router.get('/itemValidation/:item_number&:container_id', withAuth, async (req, r
 
 });
 
+router.put(`/rewireClientRequest/:item_id&:container_id`, withAuth, (req, res) => {
+  Item.update({
+      container_id: req.params.container_id
+    },
+      {
+      where: {
+        id: req.params.item_id
+      }
+    })
+    .then(dbItemData => {
+      if (!dbItemData[0]) {
+        res.status(404).json({ message: 'This item does not exist!' });
+        return;
+      }
+      res.json(dbItemData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
+
 module.exports = router;

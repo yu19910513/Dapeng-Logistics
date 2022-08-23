@@ -1,10 +1,12 @@
-<div class="px-1 py-1 col-lg-6 col-md-6 col-sm-10 uk-animation-slide-top-small card_collection" id="thisCard_{{0.container_id}}">
-<div class="card bg-dark shadow-sm text-center text-light" id="{{0.container_id}}">
+<div class="px-1 py-1 col-lg-4 col-md-6 col-sm-10 uk-animation-slide-top-small card_collection" id="thisCard_{{0.container_id}}">
+<div class="card bg-dark shadow-sm text-center text-light" id="{{0.container_id}}" style="background-image:url('https://w0.peakpx.com/wallpaper/420/416/HD-wallpaper-black-wall-clen-black-wall-only-black-thumbnail.jpg');">
     <div class="lead mt-2">#{{0.container.container_number}}</div>
     <h5 class="card-title mt-3">{{0.user.name}} - {{0.account.name}}</h5>
     <p>Requested Date: {{0.container.requested_date}}</p>
  <div class="card-body">
      <a onclick="deleteConfirm(`{{0.container_id}}`)" class="border border-warning rounded-circle" uk-icon="icon: trash"></a>
+     <a onclick="mergeConfirm(`{{0.container_id}}`)" class="border border-warning rounded-circle" uk-icon="icon: shrink"></a>
+     <a onclick="reverseConfirm(`{{0.container_id}}`)" class="border border-warning rounded-circle" uk-icon="icon: reply"></a>
      {{#if 0.container.file}}
         <a href="/pdf/{{0.container.file}}" class="btn btn-success btn-sm">File #1</a>
         {{#if 0.container.file_2}}

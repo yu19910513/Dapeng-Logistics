@@ -375,8 +375,10 @@ const beforeRefresh = () => {
  }
 }
 
+
+var startPoint = 0;
+var endPoint = 0;
 async function self_destroy(container_id) {
-    localStorage.removeItem('sp_number');
     const id = container_id;
     const response = await fetch(`/api/container/destroyBulk`, {
         method: 'DELETE',
@@ -388,8 +390,44 @@ async function self_destroy(container_id) {
         }
     });
     if (response.ok) {
-        alert('this requested container has been confirmed for shipping!');
-        window.location.replace('/admin_move_main_amazon');
+        console.log('self-delete done');
+        location.reload();
     }
 
+};
+const reverseConfirm = (container_id) => {
+    fetch(`/api/item/findAllPerContainer/${container_id}`, {
+        method: 'GET'
+    }).then((response) => {
+        return response.json();
+    }).then((data) => {
+        for (let i = 0; i < data.length; i++) {
+            startPoint++;
+            const container_number = data[i].description.split(':')[0];
+            const itemId = data[i].id;
+            fetch(`/api/container/amazon_container/${container_number}`, {
+                method: 'GET'
+            }).then((r) => {
+                return r.json();
+            }).then((d) => {
+                const parentContainerId = d.id
+                reverse_Back_To_Parent_Box(parentContainerId, itemId, container_id)
+            })
+        }
+    })
+};
+const reverse_Back_To_Parent_Box = async (container_id, item_id, delete_id) => {
+    const response = await fetch(`/api/item/rewireClientRequest/${item_id}&${container_id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (response.ok) {
+        console.log('REVERSED SUCCESSFULLY');
+        endPoint++;
+        if (endPoint == startPoint) {
+            self_destroy(delete_id)
+        }
+    }
 };
