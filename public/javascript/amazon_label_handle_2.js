@@ -36,7 +36,7 @@ function makeid(length) {
     }
    return result;
 };
-const id_generator = (parent, num, qty_per_box, item_number) => {
+const id_generator = (parent, num, qty_per_box, item_number, qpb, qpu) => {
     var pad = "000";
     var ans = pad.substring(0, pad.length - num.toString().length) + num.toString();
     var instance = parseInt(parent.id) + makeid(3) + ans;
@@ -50,7 +50,7 @@ const id_generator = (parent, num, qty_per_box, item_number) => {
     tr.appendChild(td_2);
     td.innerHTML = `SP${instance}`;
     td_1.innerHTML = item_number;
-    td_2.innerHTML = qty_per_box;
+    td_2.innerHTML = `<b>${qty_per_box}</b> (${qpu} x ${qpb})`;
     spMap.set(`SP${instance}`, item_number);
     skuNewMap.set(item_number, qty_per_box);
     spArr.push(`SP${instance}`);
@@ -62,24 +62,105 @@ const skuNewMap = new Map();//create new item
 const spMap = new Map();//create new relation with item
 const evt_trigger = (item_number, int, container_id, item_id) => {
     console.log(item_number, int);
-    const qty_ans = prompt(`Total Qty: ${int} of ${item_number}. How many per SP box?`);
+    var merging_ratio = prompt(`Total Quantity: ${int} items of ${item_number}. How many item will be merged into EACH UNIT (choose a whole number between 1 to ${int}; default: 1 item = 1 unit)?`).trim();//important question
+    if (parseInt(merging_ratio)>0 && parseInt(merging_ratio)<=int) {
+        merging_ratio=parseInt(merging_ratio)
+    } else {
+        merging_ratio=1
+    }
+    var qty_ans = prompt(`Total Units: ${parseInt(int/merging_ratio)} units of packed (${merging_ratio}) ${item_number}. How many units will be placed into EACH SP BOX  (choose a whole number between 1 to ${parseInt(int/merging_ratio)}; default: 1 box)?`).trim();//important question
+    if (parseInt(qty_ans)>0 && parseInt(qty_ans)*merging_ratio <= int) {
+        qty_ans=parseInt(qty_ans)
+    } else {
+        qty_ans=1
+    }
     const thisCard = document.getElementById(`radio_${item_id}_${container_id}`).parentElement.parentElement.parentElement.parentElement.parentElement;
     const create_form = thisCard.querySelector('form');
     const tbody = create_form.querySelector('tbody');
-    if (parseInt(qty_ans)>0 && parseInt(qty_ans)<= int) {
-        skuArr.push(item_id);
-        const cardCollection = document.querySelectorAll('.card_collection');
-        cardCollection.forEach(i => {i.id==`thisCard_${container_id}`?console.log('keep'):i.remove();});
-        const number_of_box =  Math.floor(int/parseInt(qty_ans));
-        const remainder = int % parseInt(qty_ans);
-        skuOldMap.set(item_id, remainder);
-        for (let i = 0; i < number_of_box; i++) {
-            id_generator(tbody, i, qty_ans, item_number);
+    skuArr.push(item_id);
+    const cardCollection = document.querySelectorAll('.card_collection');
+    cardCollection.forEach(i => {i.id==`thisCard_${container_id}`?console.log('keep'):i.remove();});
+    const number_of_box =  Math.floor(int/(qty_ans*merging_ratio));
+    const remainder = int % (qty_ans*merging_ratio);
+    skuOldMap.set(item_id, remainder);
+    for (let i = 0; i < number_of_box; i++) {
+        id_generator(tbody, i, (qty_ans*merging_ratio), skuFilter(item_number), qty_ans, merging_ratio);
+    };
+    remainder>0?alert(`${remainder} items are insufficient for another SP box or unit`):null;
+    document.getElementById(`qty_${item_id}`).innerHTML = remainder;
+    create_form.style.display = '';
+    console.log(`The end of the calculation for ${item_number}`);
+    document.getElementById(`radio_${item_id}_${container_id}`).onclick = null;
+}
+///////////
+var oldsku,newsku
+const filterLoader = async (n) => {
+    await fetch(`/api/record/skufilter/${n}`, {
+        method: 'GET'
+    }).then(function (response) {
+        if (response.status != 200){
+            return null
+        } else {
+            return response.json();
+        }
+    }).then(function (data) {
+        if (data.length) {
+            loadingFilterOp(data);
+            var mainArr = JSON.parse(data[0].action_notes).split('=>')
+            oldsku = mainArr[0].split(',');
+            newsku = mainArr[1].split(',');
+        }
+    })
+};
+const mapinngOptions = document.getElementById('mapping options')
+const loadingFilterOp = (dataArr) => {
+    for (let i = 0; i < dataArr.length; i++) {
+        const tr = document.createElement('tr');
+        const td_1 = document.createElement('td');
+        const td_2 = document.createElement('td');
+        const item = dataArr[i];
+        const input = document.createElement('input');
+        const label = document.createElement('label');
+        label.className = 'form-check-label';
+        label.innerHTML =item.action_notes;
+        input.className = 'form-check-input';
+        input.type = 'radio';
+        input.name = 'mappingOptions';
+        input.value = item.action_notes;
+        input.setAttribute('onclick',`initskuchange(${item.action_notes})`);
+        tr.appendChild(td_1);
+        tr.appendChild(td_2);
+        td_1.appendChild(input);
+        td_2.appendChild(label);
+        mapinngOptions.appendChild(tr);
+        if (i == 0) {
+            input.checked = true//default checked filter is the most recent linkage
         };
-        remainder>0?alert(`${remainder} left outside the box`):null;
-        create_form.style.display = '';
-        document.getElementById(`radio_${item_id}_${container_id}`).onclick = null;
-    } else {
-        alert('invalid number!')
     }
 }
+const initskuchange = (str) => {
+    console.log(`swtich to ${str}`);
+    var arr = str.split('=>');
+    oldsku = arr[0].split(',');
+    newsku = arr[1].split(',');
+}
+
+const skuFilter = (input) => {
+    var index;
+    oldsku?index=oldsku.indexOf(input):index=-1;
+    if (index>-1 && filterAuthFunction()) {
+        return newsku[index]
+    } else {
+        return input
+    }
+};
+const allowCheckBox = document.getElementById('allowFilter');
+const filterAuthFunction = () => {
+    if (allowCheckBox.checked) {
+        return true
+    } else {
+        return false
+    }
+}
+
+filterLoader (5);
