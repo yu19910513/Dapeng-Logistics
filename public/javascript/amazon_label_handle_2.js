@@ -1,4 +1,5 @@
 console.log("type_2");
+const promises = [];
 function deleteConfirm(id) {
     const code =  prompt(`Please enter the passcode to confirm the deletion of REQ box (id: ${id})`);
     if (code == '0523') {
@@ -62,6 +63,7 @@ const skuNewMap = new Map();//create new item
 const spMap = new Map();//create new relation with item
 const evt_trigger = (item_number, int, container_id, item_id) => {
     console.log(item_number, int);
+    getXC(container_id)
     var merging_ratio = prompt(`Total Quantity: ${int} items of ${item_number}. How many item will be merged into EACH UNIT (choose a whole number between 1 to ${int}; default: 1 item = 1 unit)?`).trim();//important question
     if (parseInt(merging_ratio)>0 && parseInt(merging_ratio)<=int) {
         merging_ratio=parseInt(merging_ratio)
@@ -84,7 +86,7 @@ const evt_trigger = (item_number, int, container_id, item_id) => {
     const remainder = int % (qty_ans*merging_ratio);
     skuOldMap.set(item_id, remainder);
     for (let i = 0; i < number_of_box; i++) {
-        id_generator(tbody, i, (qty_ans*merging_ratio), skuFilter(item_number), qty_ans, merging_ratio);
+        id_generator(tbody, i, (qty_ans*merging_ratio), skuFilter(item_number, qty_ans*merging_ratio), qty_ans, merging_ratio);
     };
     remainder>0?alert(`${remainder} items are insufficient for another SP box or unit`):null;
     document.getElementById(`qty_${item_id}`).innerHTML = remainder;
@@ -150,15 +152,19 @@ const initskuchange = (str, id) => {
     newsku = arr[1].split(',');
 }
 
-const skuFilter = (input) => {
+///main sku replacement occurs here
+const skuFilter = (input, n) => {
     var index;
     oldsku?index=oldsku.indexOf(input):index=-1;
     if (index>-1 && filterAuthFunction() && newsku[index]) {
+        xcQtyCount = xcQtyCount + n;
         return newsku[index]
     } else {
         return input
     }
 };
+
+///filter yes or no
 const allowCheckBox = document.getElementById('allowFilter');
 const filterAuthFunction = () => {
     if (allowCheckBox.checked) {
@@ -166,6 +172,224 @@ const filterAuthFunction = () => {
     } else {
         return false
     }
+};
+
+
+////master check function//////
+let length, height, weight, width;
+function masterCheck () {
+    length = document.getElementById('new_len');
+    height = document.getElementById('new_hei');
+    weight = document.getElementById('new_wei');
+    width = document.getElementById('new_wid');
+    if (length.value && height.value && weight.value && width.value) {
+        document.getElementById('order_pre-check').style.display = '';
+        document.getElementById('fake').style.display = 'none';
+        printCheck = false;
+    } else {
+        document.getElementById('order_pre-check').style.display = 'none'
+        document.getElementById('fake').style.display = '';
+    }
+};
+
+//////get additional charge
+var xcQtyCount = 0;
+var xcExist = false;
+const getXC = async (container_id) => {
+    await fetch(`/api/container/fba/LR${container_id}`, {
+        method: 'GET'
+    }).then(function (response) {
+        if (response.status != 200) {
+            return null
+        } else {
+            return response.json();
+        };
+    }).then(function (data) {
+        if (data) {
+            xcExist = true;
+            xcQtyCount = parseInt(data.qty_of_fee);
+            console.log(xcQtyCount);
+        };
+        console.log('no xc yet');
+    })
+};
+filterLoader (10);
+
+const shipment_init = (container_id, user_id, account_id) => {
+    const foregin_key = new Object();
+    foregin_key.container_id = container_id;
+    foregin_key.user_id = user_id;
+    foregin_key.account_id = account_id;
+    for (let i = 0; i < spArr.length; i++) {
+       shippmentCreate(spArr[i], foregin_key)
+    };
+    update_init();
+    xcQtyCount>0?promises.push(xcGenerator(foregin_key)):console.log('no label change');
+    Promise.all(promises).then(() => {
+        console.log('done');
+    }).catch((e) => {console.log(e)})
+
+};
+
+function shippmentCreate(sp_number, foregin_key) {
+    const sp_box = new Object();
+    sp_box.length = length.value.trim()*2.54;
+    sp_box.width = width.value.trim()*2.54;
+    sp_box.height = height.value.trim()*2.54;
+    sp_box.weight = weight.value.trim()*0.45;
+    sp_box.volume = sp_box.width*sp_box.height*sp_box.length;
+    sp_box.container_number = sp_number;
+    sp_box.type = 3;
+    sp_box.user_id = foregin_key.user_id;
+    sp_box.account_id = foregin_key.account_id;
+    sp_box.tracking = foregin_key.container_id;
+    promises.push(boxCreate(sp_box))
+};
+async function boxCreate(data) {
+    console.log('boxCreate');
+    boxCreateIndex++;
+    const response = await fetch('/api/container/amazon_box', {
+        method: 'post',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+      });
+      if (response.ok) {
+       console.log("amazon box inserted");
+       findContainerId(data);
+      } else {
+        alert('try again')
+   }
+};
+const xcGenerator = async (data) => {
+    if (xcExist) {
+        const newfba = `LR${data.container_id}`
+        const response = await fetch('/api/container/xc_LabelChangeUpdate', {
+            method: 'PUT',
+            body: JSON.stringify({
+                fba:newfba,
+                qty_of_fee: xcQtyCount,
+                description: `AM Relabel Services - ${xcQtyCount} Items: ${JSON.stringify(spArr)}`,////could be more deatil
+                notes: `Label Change (Qty: ${xcQtyCount}); Batch# ${data.container_id}`,
+
+            }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        response.ok?console.log('xc_charge updated sucessfully'):console.log('fail to update the xc_chagre');
+    } else {
+        const ref_code = "AC" + parseInt(String(new Date().valueOf() + Math.floor(1000000000 + Math.random() * 9000000000)).substring(4, 11));
+        const response = await fetch('/api/container/xc_LabelChange', {
+            method: 'post',
+            body: JSON.stringify({
+                user_id: data.user_id,
+                account_id: data.account_id,
+                container_number: ref_code,
+                qty_of_fee: xcQtyCount,
+                description: `AM Relabel Services - ${xcQtyCount} Items`,
+                notes: `Label Change (Qty: ${xcQtyCount}); Batch# ${data.container_id}`,
+                fba: 'LR' + data.container_id,
+            }),
+            headers: { 'Content-Type': 'application/json' }
+          });
+          if (response.ok) {
+           console.log("new xc_charge is inserted");
+          } else {
+            alert('try again')
+       }
+    }
+};
+function findContainerId(sp_object) {
+    console.log('getting container_id');
+    fetch(`/api/container/amazon_container/${sp_object.container_number}`, {
+        method: 'GET'
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        console.log('container_id fetched');
+        sp_object.id = data.id
+        console.log(data.id);
+        itemCreate(sp_object)
+    })
+};
+function itemCreate(sp) {
+    console.log('itemCreate');
+    const item = new Object()
+    item.item_number = spMap.get(sp.container_number);
+    item.qty_per_sku = parseInt(skuNewMap.get(item.item_number));
+    item.user_id = sp.user_id;
+    item.account_id = sp.account_id;
+    item.container_id = sp.id;
+    item.description = sp.description;
+    promises.push(loadingItems(item))
+};
+async function loadingItems(data) {
+    finishlineIndex++;
+    const response = await fetch('/api/item/new', {
+        method: 'post',
+        body: JSON.stringify(data),
+        headers: {'Content-Type': 'application/json'}
+    });
+    if (response.ok) {
+        console.log('finished new item insert');
+        beforeRefresh();
+    }
+};
+
+const update_init = () => {
+    console.log('update qty/remove 0-qty item init!');
+    for (let j = 0; j < skuArr.length; j++) {
+        const item_id = skuArr[j];
+        if (skuOldMap.get(item_id) == 0) {
+           promises.push(deleteItem(item_id))
+        } else {
+           promises.push(updateItem(item_id))
+        }
+    }
+};
+const deleteItem = async (item_id) => {
+    console.log('bulk removal');
+    const response = await fetch(`/api/item/bulkDestroy/`, {
+      method: 'DELETE',
+      body: JSON.stringify({
+        id: item_id
+        }),
+      headers: {'Content-Type': 'application/json'}
+    });
+    response.ok?console.log("item with id: " + item_id + " removed"):console.log('failed to remove 0-qty item');
+};
+const updateItem = async (item_id) => {
+    const response = await fetch(`/api/item/updateQtyPerItemId/${item_id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          qty_per_sku: skuOldMap.get(item_id)
+          }),
+        headers: {'Content-Type': 'application/json'}
+    });
+    response.ok?console.log(`item qty with id ${item_id} has been updated to ${skuOldMap.get(item_id)}`):console.log("failed to update qty");
 }
 
-filterLoader (10);
+var boxCreateIndex = 0;
+var finishlineIndex = 0;
+const beforeRefresh = () => {
+ if (boxCreateIndex == finishlineIndex) {
+    location.reload();
+ }
+}
+
+async function self_destroy(container_id) {
+    localStorage.removeItem('sp_number');
+    const id = container_id;
+    const response = await fetch(`/api/container/destroyBulk`, {
+        method: 'DELETE',
+        body: JSON.stringify({
+            id: id
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (response.ok) {
+        alert('this requested container has been confirmed for shipping!');
+        window.location.replace('/admin_move_main_amazon');
+    }
+
+};
