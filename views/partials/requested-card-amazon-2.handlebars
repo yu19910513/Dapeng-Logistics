@@ -1,11 +1,10 @@
-<div class="px-1 py-1 col-lg-4 col-md-6 col-sm-10 uk-animation-slide-top-small" id="requested_card">
+<div class="px-1 py-1 col-lg-4 col-md-6 col-sm-10 uk-animation-slide-top-small card_collection" id="thisCard_{{0.container_id}}">
 <div class="card bg-dark shadow-sm text-center text-light" id="{{0.container_id}}">
     <div class="lead mt-2">#{{0.container.container_number}}</div>
     <h5 class="card-title mt-3">{{0.user.name}} - {{0.account.name}}</h5>
     <p>Requested Date: {{0.container.requested_date}}</p>
  <div class="card-body">
      <a onclick="deleteConfirm(`{{0.container_id}}`)" class="border border-warning rounded-circle" uk-icon="icon: trash"></a>
-     <a href="/admin_pre_ship_amazon/{{0.container_id}}" class="btn btn-outline-primary btn-sm">Proceed</a>
      {{#if 0.container.file}}
         <a href="/pdf/{{0.container.file}}" class="btn btn-success btn-sm">File #1</a>
         {{#if 0.container.file_2}}
@@ -23,6 +22,7 @@
          <table class="uk-table uk-table-small uk-table-divider myTable" id="myTable">
             <thead>
                 <tr>
+                    <th>Select</th>
                     <th>SKU</th>
                     <th>QTY</th>
                     <th>Box#: Location</th>
@@ -30,11 +30,51 @@
             </thead>
             <tbody>
                 {{#each this as |item|}}
-                    {{> card-content-amazon item }}
+                    {{> card-content-amazon-2 item }}
                 {{/each}}
             <tbody>
          </table>
-         <a href="/admin_pre_ship_amazon/{{0.container_id}}" class="btn btn-primary btn-sm">Proceed</a>
+        <form class="shadow p-2 py-3 mt-2 rounded border border-info" style="display: none">
+            <div class="py-2">
+                <a id="order_pre-check" class="btn btn-primary mt-3 text-white col-12" style="display: none;" onclick="pre_create_checker()">Ready to Seal</a>
+                <a id="fake" class="btn btn-secondary mt-3 text-white col-12">Not Ready</a>
+            </div>
+            <hr>
+            <div class="mb-2 text-center lead">
+            </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="length">Length</label>
+                            <input type="number" class="form-control" id="new_len" placeholder="inch" onkeyup="masterCheck()">
+                        </div>
+                        <div class="col">
+                            <label for="width">Width</label>
+                            <input type="number" class="form-control" id="new_wid" placeholder="inch" onkeyup="masterCheck()">
+                        </div>
+                        <div class="col">
+                            <label for="height">Height</label>
+                            <input type="number" class="form-control" id="new_hei" placeholder="inch" onkeyup="masterCheck()">
+                        </div>
+                        <div class="col">
+                            <label for="weight">Weight</label>
+                            <input type="number" class="form-control" id="new_wei" placeholder="lb" onkeyup="masterCheck()">
+                        </div>
+                    </div>
+                <div class="form-group mt-3">
+                    <table class="uk-table uk-table-small uk-table-divider bg-light shadow-sm" style="table-layout: fixed; width: 100%">
+                        <thead>
+                            <tr>
+                                <th>SP Box#</th>
+                                <th>SKU</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="{{0.container_id}}">
+                        </tbody>
+                    </table>
+                </div>
+        </form>
+
         </div>
     </li>
 </ul>
