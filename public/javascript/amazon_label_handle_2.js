@@ -106,9 +106,6 @@ const filterLoader = async (n) => {
     }).then(function (data) {
         if (data.length) {
             loadingFilterOp(data);
-            var mainArr = JSON.parse(data[0].action_notes).split('=>')
-            oldsku = mainArr[0].split(',');
-            newsku = mainArr[1].split(',');
         }
     })
 };
@@ -127,19 +124,27 @@ const loadingFilterOp = (dataArr) => {
         input.type = 'radio';
         input.name = 'mappingOptions';
         input.value = item.action_notes;
-        input.setAttribute('onclick',`initskuchange(${item.action_notes})`);
+        input.setAttribute('onclick',`initskuchange(${item.action_notes}, ${item.id})`);
         tr.appendChild(td_1);
         tr.appendChild(td_2);
         td_1.appendChild(input);
         td_2.appendChild(label);
         mapinngOptions.appendChild(tr);
-        if (i == 0) {
+        if (i == 0 && !localStorage.getItem('filter_history')) {
+            localStorage.setItem('filter_history', item.id)
             input.checked = true//default checked filter is the most recent linkage
-        };
+            initskuchange(JSON.parse(item.action_notes), item.id)
+        } else {
+            if (item.id == localStorage.getItem('filter_history')) {
+                input.checked = true;
+                initskuchange(JSON.parse(item.action_notes), item.id)
+            }
+        }
     }
 }
-const initskuchange = (str) => {
+const initskuchange = (str, id) => {
     console.log(`swtich to ${str}`);
+    localStorage.setItem('filter_history', id)
     var arr = str.split('=>');
     oldsku = arr[0].split(',');
     newsku = arr[1].split(',');
@@ -148,7 +153,7 @@ const initskuchange = (str) => {
 const skuFilter = (input) => {
     var index;
     oldsku?index=oldsku.indexOf(input):index=-1;
-    if (index>-1 && filterAuthFunction()) {
+    if (index>-1 && filterAuthFunction() && newsku[index]) {
         return newsku[index]
     } else {
         return input
@@ -163,4 +168,4 @@ const filterAuthFunction = () => {
     }
 }
 
-filterLoader (5);
+filterLoader (10);

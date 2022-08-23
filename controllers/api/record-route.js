@@ -136,6 +136,7 @@ router.get('/skufilter/:number', withAuth, async (req, res) => {
         ["id", "DESC"],
       ],
       attributes: [
+        "id",
         "sub_number",
         "action_notes"
       ]
