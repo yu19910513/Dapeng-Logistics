@@ -53,7 +53,7 @@ const id_generator = (parent, num, qty_per_box, item_number, qpb, qpu) => {
     td_1.innerHTML = item_number;
     td_2.innerHTML = `<b>${qty_per_box}</b> (${qpu} x ${qpb})`;
     spMap.set(`SP${instance}`, item_number);
-    skuNewMap.set(item_number, qty_per_box);
+    skuNewMap.set(`SP${instance}${item_number}`, qty_per_box);
     spArr.push(`SP${instance}`);
 }
 const skuArr = [];//check old items
@@ -314,7 +314,7 @@ function itemCreate(sp) {
     console.log('itemCreate');
     const item = new Object()
     item.item_number = spMap.get(sp.container_number);
-    item.qty_per_sku = parseInt(skuNewMap.get(item.item_number));
+    item.qty_per_sku = parseInt(skuNewMap.get(`${sp.container_number}${item.item_number}`));
     item.user_id = sp.user_id;
     item.account_id = sp.account_id;
     item.container_id = sp.id;
