@@ -996,4 +996,29 @@ router.put(`/rewireClientRequest/:item_id&:container_id`, withAuth, (req, res) =
     });
 });
 
+router.get('/emptyContainerSearch/:jsonArr', withAuth, async (req, res) => {
+  try {
+    const idArr = JSON.parse(req.params.jsonArr);
+    console.log(idArr);
+    const itemData = await Item.findAll({
+      where: {
+        container_id: idArr
+      },
+      attributes: [
+        'id',
+        'item_number',
+        'user_id',
+        'account_id',
+        'container_id'
+      ]
+    });
+    const items = itemData.map(i => i.get({ plain: true }));
+    res.json(items);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+
+});
+
 module.exports = router;

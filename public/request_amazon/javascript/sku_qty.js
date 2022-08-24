@@ -106,6 +106,7 @@ function containerValidation(id) {
 var requestedObjArr = [];
 var requestedItemIdArr = [];
 var masterArr = [];
+var masterContainerIdArr = [];//to update shipped_date to containers which are empty after the request, so that it can be only billed once for storage fee afterwards
 function GetSelected() {
   const code = new Date().valueOf();
   var fba = document.getElementById('amazon_ref').value.trim()
@@ -118,7 +119,7 @@ function GetSelected() {
     const container_id = parseInt(eachSkuInfo[0]);
     const item_id = parseInt(eachSkuInfo[1]);
     const original_qty = parseInt(eachSkuInfo[2]);
-
+    masterContainerIdArr.push(container_id);
     const location = locationRef.get(container_id);
     const container_number = containerRef.get(container_id);
     const selectedAcccountId = containerMap.get(container_number)[0].account_id;
@@ -291,7 +292,7 @@ function updateMasterItem (arr, requestedObjArr, requestedContainer) {
     }
   };
   Promise.all(promises_init).then(() => {
-    createContainer(requestedObjArr, requestedContainer);
+    shipped_date_labeling(requestedObjArr, requestedContainer);
   }).catch((e) => {console.log(e)})
 };
 async function updateRemainderItem(data) {
@@ -572,3 +573,39 @@ const record_container = async (count, collection, container_number, file_code, 
     }
   });
 };
+
+
+const shipped_date_labeling = (requestedObjArrD, requestedContainerD) => {
+  const shipped_date = new Date().toLocaleDateString("en-US");
+  fetch(`/api/item/emptyContainerSearch/${JSON.stringify(masterContainerIdArr)}`, {
+    method: 'GET'
+  }).then(function (response) {
+    return response.json();
+  }).then(function (data) {
+    for (let r = 0; r < data.length; r++) {
+      const containerId = data[r].container_id;
+      masterContainerIdArr = masterContainerIdArr.filter(i => i != containerId);
+    }
+    if (masterContainerIdArr.length) {
+      const shippedPromises = [];
+      shippedPromises.push(updateShippedDate(masterContainerIdArr, shipped_date));
+      Promise.all(shippedPromises).then(() => {
+        createContainer(requestedObjArrD, requestedContainerD);
+      }).catch((e) => {console.log(e)})
+    } else {
+      console.log('no empty box! :)');
+      createContainer(requestedObjArrD, requestedContainerD);
+    }
+  })
+};
+const updateShippedDate = async (id, shipped_date) => {
+  const response = await fetch(`/api/container/shipped_date_labeling`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      shipped_date: shipped_date,
+      id: id
+    }),
+    headers: {'Content-Type': 'application/json'}
+  });
+  response.ok?console.log(`updated the ending date to box id: ${id}`):console.log('failed to update');
+}

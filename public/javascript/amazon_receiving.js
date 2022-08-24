@@ -603,7 +603,7 @@ function removeEmptyContainer() {
                 if(!allContainerArr.includes(container.id)) {
                     if ([0,2].includes(container.type)) {
                         emptyArr.push(container.id)
-                    } else if (parseInt(container.cost) == 0 && container.type == 1 && container.bill_storage) {
+                    } else if (parseInt(container.cost) == 0 && container.type == 1 && container.bill_storage && container.shipped_date) {
                         emptyArr.push(container.id)
                     }
                 }; //cost == 0 means the empty box has been recently billed and ready to get reset
