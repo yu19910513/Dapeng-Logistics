@@ -404,16 +404,31 @@ const reverseConfirm = (container_id) => {
         for (let i = 0; i < data.length; i++) {
             startPoint++;
             const container_number = data[i].description.split(':')[0];
-            const itemId = data[i].id;
             fetch(`/api/container/amazon_container/${container_number}`, {
                 method: 'GET'
             }).then((r) => {
                 return r.json();
             }).then((d) => {
                 const parentContainerId = d.id
-                reverse_Back_To_Parent_Box(parentContainerId, itemId, container_id)
+                duplicatationValidator(data[i], parentContainerId, container_id)
             })
         }
+    })
+};
+async function duplicatationValidator(obj, ContainerId, oldContainerId) {
+    await fetch(`/api/item/itemValidation/${obj.item_number}&${ContainerId}`, {
+        method: 'GET'
+    }).then((response) => {
+        if (response.status != 200) {
+            return null;
+        } else {return response.json()}
+    }).then((data) => {
+        if(data) {
+            const newQty = data.qty_per_sku + obj.qty_per_sku;
+            updateExistedItem(data, newQty, oldContainerId)
+        } else {
+            reverse_Back_To_Parent_Box(ContainerId, obj.id, oldContainerId)
+        };
     })
 };
 const reverse_Back_To_Parent_Box = async (container_id, item_id, delete_id) => {
@@ -424,7 +439,23 @@ const reverse_Back_To_Parent_Box = async (container_id, item_id, delete_id) => {
         }
     });
     if (response.ok) {
-        console.log('REVERSED SUCCESSFULLY');
+        console.log('REVERSED SUCCESSFULLY (rewire)');
+        endPoint++;
+        if (endPoint == startPoint) {
+            self_destroy(delete_id)
+        }
+    }
+};
+async function updateExistedItem(obj, newSkuQ, delete_id) {
+    const payload = await fetch(`/api/item/updateQty_ExistedItem/${obj.container_id}&${obj.item_number}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+            qty_per_sku: newSkuQ
+        }),
+        headers: {'Content-Type': 'application/json'}
+    })
+    if (payload.ok) {
+        console.log('REVERSED SUCCESSFULLY (update)');
         endPoint++;
         if (endPoint == startPoint) {
             self_destroy(delete_id)

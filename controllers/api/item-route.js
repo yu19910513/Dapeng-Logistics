@@ -959,6 +959,8 @@ router.get('/itemValidation/:item_number&:container_id', withAuth, async (req, r
         container_id: req.params.container_id
       },
       attributes: [
+        'container_id',
+        'item_number',
         'id',
         'qty_per_sku'
       ],
