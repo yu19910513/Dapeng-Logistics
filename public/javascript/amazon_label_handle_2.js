@@ -431,6 +431,7 @@ async function duplicatationValidator(obj, ContainerId, oldContainerId) {
         };
     })
 };
+const repeated = [];
 const reverse_Back_To_Parent_Box = async (container_id, item_id, delete_id) => {
     const response = await fetch(`/api/item/rewireClientRequest/${item_id}&${container_id}`, {
         method: 'PUT',
@@ -440,9 +441,14 @@ const reverse_Back_To_Parent_Box = async (container_id, item_id, delete_id) => {
     });
     if (response.ok) {
         console.log('REVERSED SUCCESSFULLY (rewire)');
-        endPoint++;
-        if (endPoint == startPoint) {
-            self_destroy(delete_id)
+        if (!repeated.includes(container_id)) {
+            repeated.push(container_id)
+            unlabelShippedDate(container_id, delete_id);
+        } else {
+            endPoint++;
+            if (endPoint == startPoint) {
+                self_destroy(delete_id)
+            }
         }
     }
 };
@@ -462,3 +468,14 @@ async function updateExistedItem(obj, newSkuQ, delete_id) {
         }
     }
 };
+const unlabelShippedDate = async (id, delete_id) => {
+    const response = await fetch(`/api/container/shipped_date_unlabeling/${id}`, {
+      method: 'PUT'
+    });
+    if (response.ok) {
+        endPoint++;
+        if (endPoint == startPoint) {
+            self_destroy(delete_id)
+        }
+    }
+}

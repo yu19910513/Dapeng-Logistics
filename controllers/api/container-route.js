@@ -1079,4 +1079,27 @@ router.put('/shipped_date_labeling', withAuth, (req, res) => {
       res.status(500).json(err);
     });
 });
+
+router.put('/shipped_date_unlabeling/:id', withAuth, (req, res) => {
+  console.log(req.params.id);
+  Container.update({
+    shipped_date: null
+    },
+    {
+      where: {
+        id: req.params.id
+      }
+    })
+    .then(dbContainerData => {
+      if (!dbContainerData[0]) {
+        res.status(404).json({ message: 'This Container does not exist!' });
+        return;
+      }
+      res.json(dbContainerData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+});
 module.exports = router;
