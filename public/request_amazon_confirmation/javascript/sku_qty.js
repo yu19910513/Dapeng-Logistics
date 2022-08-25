@@ -40,8 +40,8 @@ const init = () => {
       for (let i = 0; i < newData.length; i++) {
         // const containerNumber = newData[i][0].container.container_number;
         // containerMap.set(containerNumber, newData[i]);
-        const containerNumber = newData[i][0].container_id;
-        containerMap.set(id, newData[i]);
+        const containerId = newData[i][0].container_id;
+        containerMap.set(containerId, newData[i]);
       };
       var tr;
       tr = containerTable.getElementsByTagName('tr');
