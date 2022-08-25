@@ -40,7 +40,7 @@ const init = () => {
       for (let i = 0; i < newData.length; i++) {
         // const containerNumber = newData[i][0].container.container_number;
         // containerMap.set(containerNumber, newData[i]);
-        const containerNumber = newData[i][0].container.id;
+        const containerNumber = newData[i][0].container_id;
         containerMap.set(id, newData[i]);
       };
       var tr;
