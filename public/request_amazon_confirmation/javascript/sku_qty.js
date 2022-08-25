@@ -38,24 +38,27 @@ const init = () => {
       }, Object.create(null));
       const newData = Object.values(container_data);
       for (let i = 0; i < newData.length; i++) {
-        const containerNumber = newData[i][0].container.container_number;
-        containerMap.set(containerNumber, newData[i]);
+        // const containerNumber = newData[i][0].container.container_number;
+        // containerMap.set(containerNumber, newData[i]);
+        const containerNumber = newData[i][0].container.id;
+        containerMap.set(id, newData[i]);
       };
       var tr;
       tr = containerTable.getElementsByTagName('tr');
       var emptyBoxArr = [];
       for (let i = 1; i < tr.length; i++) {
+        const its_container_id = tr[i].id.split('_')[1];
         const container_number = tr[i].getElementsByTagName('td')[2].innerHTML;
         const status = tr[i].getElementsByTagName('td')[7];
         const sku = tr[i].getElementsByTagName('td')[3];
         const qty = tr[i].getElementsByTagName('td')[4];
-        if(containerMap.get(container_number)){
+        if(containerMap.get(its_container_id)){
           tr[i].getElementsByTagName("td")[6].innerHTML =  Math.ceil(parseFloat(tr[i].getElementsByTagName("td")[6].innerText)*2.2)
           var sizeData  = tr[i].getElementsByTagName("td")[5].innerText.split('x');
           sizeData = sizeData.map(n => parseFloat(n)*0.394);
           tr[i].getElementsByTagName("td")[5].innerHTML = `${(sizeData[0]).toFixed(1)} x ${(sizeData[1]).toFixed(1)} x ${(sizeData[2]).toFixed(1)}`;
           status.innerHTML = "请夹带运输标签与确认";
-          containerMap.get(container_number).forEach(item => {
+          containerMap.get(its_container_id).forEach(item => {
           const singleSKU = document.createElement('div');
           const singleQty = document.createElement('div');
           singleSKU.innerHTML = item.item_number;
