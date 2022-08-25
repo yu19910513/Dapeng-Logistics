@@ -227,6 +227,8 @@ async function updateReqContainer(container_id) {
 
 var amazon_box = new Object();
 function shippmentCreate() {
+    document.getElementById('order_pre-check').style.display = 'none';
+    document.getElementById('spinner').style.display = '';
     amazon_box.length = length.value.trim()*2.54;
     amazon_box.width = width.value.trim()*2.54;
     amazon_box.height = height.value.trim()*2.54;
@@ -635,11 +637,13 @@ function makeid(length) {
    }
    return result;
 };
-var pad = "000";
-var ans = pad.substring(0, pad.length - localStorage.getItem('sp_number').length) + localStorage.getItem('sp_number');
-var instance = container_id + makeid(3) + ans;
-pre_shipN.innerHTML = `SP${instance}`;
-document.getElementById('image').src = `http://bwipjs-api.metafloor.com/?bcid=code128&text=SP${instance}`;
+const id_and_barcode_generator = () => {
+    var pad = "000";
+    var ans = pad.substring(0, pad.length - localStorage.getItem('sp_number').length) + localStorage.getItem('sp_number');
+    var instance = container_id + makeid(3) + ans;
+    pre_shipN.innerHTML = `SP${instance}`;
+    document.getElementById('image').src = `http://bwipjs-api.metafloor.com/?bcid=code128&text=SP${instance}`;
+}
 
 function removeItem() {
     console.log('preparing removal');
@@ -711,6 +715,7 @@ function deleteConfirm() {
     }
 };
 
+id_and_barcode_generator();
 supplemental();
 getXC();
 filterLoader(10);
