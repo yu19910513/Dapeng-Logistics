@@ -40,7 +40,7 @@ const init = () => {
       for (let i = 0; i < newData.length; i++) {
         // const containerNumber = newData[i][0].container.container_number;
         // containerMap.set(containerNumber, newData[i]);
-        const containerId = newData[i][0].container_id;
+        const containerId = newData[i][0].container.id;
         containerMap.set(containerId, newData[i]);
       };
       var tr;
@@ -53,6 +53,7 @@ const init = () => {
         const sku = tr[i].getElementsByTagName('td')[3];
         const qty = tr[i].getElementsByTagName('td')[4];
         if(containerMap.get(its_container_id)){
+          console.log(its_container_id, container_number);
           tr[i].getElementsByTagName("td")[6].innerHTML =  Math.ceil(parseFloat(tr[i].getElementsByTagName("td")[6].innerText)*2.2)
           var sizeData  = tr[i].getElementsByTagName("td")[5].innerText.split('x');
           sizeData = sizeData.map(n => parseFloat(n)*0.394);

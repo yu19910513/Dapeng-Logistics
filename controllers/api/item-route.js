@@ -223,6 +223,7 @@ router.get('/allItem', withAuth, async (req, res) => {
         {
           model: Container,
           attributes: [
+            'id',
             's3',
             'notes',
             'id',
