@@ -73,13 +73,6 @@ const skuOldMap = new Map();//update old inventory
 const skuNewMap = new Map();//create new item
 const spMap = new Map();//create new relation with item
 
-
-// int = 4000
-// merging = 3 : 500 units (1-1000); 510 1333
-// qty_ans = 11 : 25 boxes (1-500); 25 121
-// pallet_ratio = 5 : 5 pallets (1-25) 24
-// = 5 pallets; each pallet has 5 boxes, each box has 20 units of 2 packed unit
-
 const evt_trigger = (item_number, int, container_id, item_id) => {
     console.log(item_number, int);
     getXC(container_id)
@@ -111,6 +104,7 @@ const evt_trigger = (item_number, int, container_id, item_id) => {
     cardCollection.forEach(i => {i.id==`thisCard_${container_id}`?console.log('keep'):i.remove();});
     const resultInfo = document.createElement('div');
     document.getElementById(`thisCard_${container_id}`).prepend(resultInfo);
+    document.getElementById(`thisCard_${container_id}`).className = 'col-6 card_collection uk-animation-fade';
     const totalPallet = Math.floor(totalBox/pallet_ratio);
     const masterTotalBox = totalPallet*pallet_ratio;
     const itemsPerPallet = merging_ratio*qty_ans*pallet_ratio;
