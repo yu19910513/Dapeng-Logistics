@@ -548,7 +548,7 @@ const loadingFilterOp = (dataArr) => {
     }
 }
 const initskuchange = (str, id) => {
-    console.log(`swtich to ${str}`);
+    console.log(`switch to ${str}`);
     localStorage.setItem('filter_history', id)
     var arr = str.split('=>');
     oldsku = arr[0].split(',');
@@ -595,7 +595,7 @@ const imgAttach = async (number,n) => {
                 document.getElementById('image_placeholder').appendChild(image);
             }
         } else {
-            alert(`missing label image for ${number}`)
+            document.getElementById('alert').innerHTML = `<h3>NO IMAGE ATTACHED WITH THIS SKU CHANGE: ${number}</h3>`;
         };
       })
 };
