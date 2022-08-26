@@ -4,9 +4,10 @@
     <h5 class="card-title mt-3">{{0.user.name}} - {{0.account.name}}</h5>
     <p>Requested Date: {{0.container.requested_date}}</p>
  <div class="card-body">
-     <a onclick="deleteConfirm(`{{0.container_id}}`)" class="border border-warning rounded-circle" uk-icon="icon: trash"></a>
-     <a onclick="mergeConfirm(`{{0.container_id}}`)" class="border border-warning rounded-circle" uk-icon="icon: shrink"></a>
-     <a onclick="reverseConfirm(`{{0.container_id}}`)" class="border border-warning rounded-circle" uk-icon="icon: reply"></a>
+     <a onclick="masterFunction(`{{0.container_id}}`, `delete`)" class="border border-warning rounded-circle" uk-icon="icon: trash; ratio: 1.2" uk-tooltip="Delete"></a>
+     <a onclick="masterFunction(`{{0.container_id}}`, `merge`)" class="border border-warning rounded-circle" uk-icon="icon: shrink; ratio: 1.2" uk-tooltip="Combine"></a>
+     <a onclick="masterFunction(`{{0.container_id}}`, `reverse`)" class="border border-warning rounded-circle" uk-icon="icon: reply; ratio: 1.2" uk-tooltip="Reverse"></a>
+     <hr>
      {{#if 0.container.file}}
         <a href="/pdf/{{0.container.file}}" class="btn btn-success btn-sm">File #1</a>
         {{#if 0.container.file_2}}
@@ -15,7 +16,19 @@
     {{else}}
         <a href="" class="btn btn-danger btn-sm">No File</a>
     {{/if}}
+    <a href="#notes_{{0.container_id}}"  class="btn btn-light btn-sm" uk-toggle>Notes</a>
 </div>
+
+<!-- Notes -->
+
+<!-- This is the modal -->
+<div id="notes_{{0.container_id}}" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <h2 class="uk-modal-title">Notes</h2>
+        <p>{{0.container.notes}}</p>
+    </div>
+</div>
+<!-- Notes -->
 
 <ul uk-accordion="multiple: true">
     <li class="uk-close">

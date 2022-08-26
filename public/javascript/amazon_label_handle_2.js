@@ -1,12 +1,20 @@
 console.log("type_2");
 const promises = [];
-function deleteConfirm(id) {
-    const code =  prompt(`Please enter the passcode to confirm the deletion of REQ box (id: ${id})`);
+function masterFunction(id, type) {
+    const code =  prompt(`Please enter the passcode to confirm the ${type.toUpperCase()} of REQ box (id: ${id})`);
     if (code == '0523') {
-        if (confirm('Friednly reminder: all items assocaited with this REQ box will be removed!')) {
-            updateReqContainer(id);
+        if (type == 'delete') {
+            if (confirm('Friednly reminder: all items assocaited with this REQ box will be removed!')) {
+                updateReqContainer(id);
+            }
+        } else if (type == 'reverse') {
+            if (confirm('Friednly reminder: all items assocaited with this REQ box will be returned back to original AM boxes!')) {
+                reverseConfirm(id)
+            }
+        } else if (type == 'merge') {
+            console.log('merge function here');
         }
-    } else {
+    } else if (code && code != '0523') {
         alert('Incorrect passcode!')
     }
 };
