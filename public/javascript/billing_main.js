@@ -94,8 +94,8 @@ function xc_next(user_id) {
             for (let b = 0; b < selectedData.length; b++) {
                 xc_billing(selectedData, b);
             };
-            xcharge_total_2.innerHTML = total_xc_charge;
-            xcharge_total.innerHTML = total_xc_charge;
+            xcharge_total_2.innerHTML = total_xc_charge.toFixed(2);
+            xcharge_total.innerHTML = total_xc_charge.toFixed(2);
             const subtotal = parseFloat(all_total.innerHTML) + total_xc_charge;
             all_total.innerHTML = subtotal.toFixed(2);
         };

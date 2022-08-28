@@ -13,7 +13,9 @@ function masterFunction(id, type) {
                 reverseConfirm(id)
             }
         } else if (type == 'merge') {
-           alreadyCalculated?combinePostCal(id):combinePreCal(id);
+            if (confirm('Friednly reminder: all items which get merged from will permanently be disconnected from their original boxes!')) {
+                alreadyCalculated?combinePostCal(id):combinePreCal(id);
+            }
         }
     } else if (code && code != '0523') {
         alert('Incorrect passcode!')
@@ -43,7 +45,7 @@ const combinePreCal = (id) => {
         if (duplicateArr.length) {
             removeItems(duplicateArr, id, itemsArr, itemQtyMap)
         } else {
-            alert('nothing to merge')
+            alert('The merging function is not valid in this request card!')
         }
     })
 }
@@ -80,7 +82,22 @@ const mergeExistedItem = async (container_id, item_number, qty) => {
 
 const combinePostCal = (id) => {
     console.log('postCal');
+    document.querySelectorAll('tr').forEach(i => {
+        i.draggable = true;
+    })
 }
+const drag = (ev) => {
+    console.log(ev.target.id);
+    ev.dataTransfer.setData("text", ev.target.id);
+};
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    ev.target.appendChild(document.getElementById(data));
+  }
 
 async function updateReqContainer(container_id) {
     const id = container_id;
