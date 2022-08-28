@@ -1,5 +1,6 @@
 console.log("type_2");
 const promises = [];
+var alreadyCalculated = false;
 function masterFunction(id, type) {
     const code =  prompt(`Please enter the passcode to confirm the ${type.toUpperCase()} of REQ box (id: ${id})`);
     if (code == '0523') {
@@ -12,12 +13,75 @@ function masterFunction(id, type) {
                 reverseConfirm(id)
             }
         } else if (type == 'merge') {
-            console.log('merge function here');
+           alreadyCalculated?combinePostCal(id):combinePreCal(id);
         }
     } else if (code && code != '0523') {
         alert('Incorrect passcode!')
     }
 };
+
+const combinePreCal = (id) => {
+    fetch(`/api/item/findAllPerContainer/${id}`, {
+        method: 'GET'
+    }).then((response) => {
+        return response.json();
+    }).then((items) => {
+        const itemsArr = [];
+        const duplicateArr = [];
+        var itemQtyMap = new Map();
+        for (let b = 0; b < items.length; b++) {
+            const item = items[b];
+            const index = itemsArr.indexOf(item.item_number);
+            if (index < 0) {
+                itemsArr.push(item.item_number);
+                itemQtyMap.set(item.item_number, item.qty_per_sku)
+            } else {
+                itemQtyMap.set(item.item_number, itemQtyMap.get(item.item_number) + item.qty_per_sku)
+                duplicateArr.push(item.id)
+            }
+        }
+        if (duplicateArr.length) {
+            removeItems(duplicateArr, id, itemsArr, itemQtyMap)
+        } else {
+            alert('nothing to merge')
+        }
+    })
+}
+const removeItems = async (removeables, container_id, itemsArr, itemQMap) => {
+    const update_promises = [];
+    const response = await fetch(`/api/item/bulkDestroy/`, {
+        method: 'DELETE',
+        body: JSON.stringify({
+            id: removeables
+        }),
+        headers: { 'Content-Type': 'application/json' }
+    });
+    if (response.ok) {
+        for (let p = 0; p < itemsArr.length; p++) {
+            const item_number = itemsArr[p];
+            const qty_per_sku = itemQMap.get(item_number);
+            update_promises.push(mergeExistedItem(container_id, item_number, qty_per_sku))
+        };
+        Promise.all(promises).then(() => {
+            location.reload();
+        }).catch((e) => {console.log(e)})
+    }
+}
+
+const mergeExistedItem = async (container_id, item_number, qty) => {
+    const payload = await fetch(`/api/item/updateQty_ExistedItem/${container_id}&${item_number}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+            qty_per_sku: qty
+        }),
+        headers: {'Content-Type': 'application/json'}
+    })
+}
+
+const combinePostCal = (id) => {
+    console.log('postCal');
+}
+
 async function updateReqContainer(container_id) {
     const id = container_id;
     const response = await fetch(`/api/container/destroyBulk`, {
@@ -129,6 +193,7 @@ const evt_trigger = (item_number, int, container_id, item_id) => {
     create_form.style.display = '';
     console.log(`The end of the calculation for ${item_number}`);
     document.getElementById(`radio_${item_id}_${container_id}`).onclick = null;
+    alreadyCalculated = true;
 }
 ///////////
 var oldsku,newsku
