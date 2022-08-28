@@ -87,7 +87,6 @@ const combinePostCal = (id) => {
     })
 }
 const drag = (ev) => {
-    console.log(ev.target.id);
     ev.dataTransfer.setData("text", ev.target.id);
 };
 function allowDrop(ev) {
@@ -95,9 +94,17 @@ function allowDrop(ev) {
 }
 function drop(ev) {
     ev.preventDefault();
-    var data = ev.dataTransfer.getData("text");
-    ev.target.appendChild(document.getElementById(data));
-  }
+    var data = ev.dataTransfer.getData("text").split('_')[1];
+    !skuArr.includes(data)?skuArr.push(data):console.log('array already has it (qty update)');
+    const target_id = ev.target.parentElement.id.split('_')[1];
+    !skuArr.includes(target_id)?skuArr.push(target_id):console.log('array already has it (qty update)');
+    const target_qty = parseInt(document.getElementById(`qty_${target_id}`).innerHTML);
+    const targetNewQty = target_qty + parseInt(document.getElementById(`qty_${data}`).innerText);
+    document.getElementById(`qty_${target_id}`).innerHTML = targetNewQty;
+    document.getElementById(`qty_${data}`).innerHTML = 0;
+    skuOldMap.set(data, 0);
+    skuOldMap.set(target_id, targetNewQty);
+}
 
 async function updateReqContainer(container_id) {
     const id = container_id;
@@ -154,24 +161,26 @@ const skuOldMap = new Map();//update old inventory
 const skuNewMap = new Map();//create new item
 const spMap = new Map();//create new relation with item
 
-const evt_trigger = (item_number, int, container_id, item_id) => {
-    console.log(item_number, int);
+const evt_trigger = (item_number, int, container_id, item_id, ev) => {
+    ev.preventDefault();
+    const parentId = ev.target.parentElement.parentElement.id.split('_')[1];
+    int = parseInt(document.getElementById(`qty_${parentId}`).innerHTML);
     getXC(container_id)
-    var merging_ratio = prompt(`Total Quantity: ${int} items of ${item_number}. How many item will be merged into EACH UNIT (choose a whole number between 1 to ${int}; default: 1 item = 1 unit)?`).trim();//important question
+    var merging_ratio = prompt(`Total Quantity: ${int} items of ${item_number}. How many item will be merged into EACH UNIT (choose a whole number between 1 to ${int}; default: 1 item = 1 unit)?`);//important question
     if (parseInt(merging_ratio)>0 && parseInt(merging_ratio)<=int) {
         merging_ratio=parseInt(merging_ratio)
     } else {
         merging_ratio=1
     }
     const totalUnit = Math.floor(int/merging_ratio);
-    var qty_ans = prompt(`Total Units: ${totalUnit} units of packed (${merging_ratio}) ${item_number}. How many units will be placed into EACH SP BOX  (choose a whole number between 1 to ${totalUnit}; default: 1 box)?`).trim();//important question
+    var qty_ans = prompt(`Total Units: ${totalUnit} units of packed (${merging_ratio}) ${item_number}. How many units will be placed into EACH SP BOX  (choose a whole number between 1 to ${totalUnit}; default: 1 box)?`);//important question
     if (parseInt(qty_ans)>0 && parseInt(qty_ans)*merging_ratio <= int) {
         qty_ans=parseInt(qty_ans)
     } else {
         qty_ans=1
     }
     const totalBox = Math.floor(totalUnit/qty_ans);
-    var pallet_ratio = prompt(`Total Boxes: ${totalBox} boxes of boxed (${qty_ans} units of packed ${merging_ratio} ${item_number}). How many SP boxes will be placed into EACH PALLET  (choose a whole number between 1 to ${totalBox}; default: 1 pallet)?`).trim();//important question
+    var pallet_ratio = prompt(`Total Boxes: ${totalBox} boxes of boxed (${qty_ans} units of packed ${merging_ratio} ${item_number}). How many SP boxes will be placed into EACH PALLET  (choose a whole number between 1 to ${totalBox}; default: 1 pallet)?`);//important question
     if (parseInt(pallet_ratio)>0 && pallet_ratio*qty_ans*merging_ratio <= int) {
         pallet_ratio=parseInt(pallet_ratio)
     } else {
@@ -180,7 +189,7 @@ const evt_trigger = (item_number, int, container_id, item_id) => {
     const thisCard = document.getElementById(`radio_${item_id}_${container_id}`).parentElement.parentElement.parentElement.parentElement.parentElement;
     const create_form = thisCard.querySelector('form');
     const tbody = create_form.querySelector('tbody');
-    skuArr.push(item_id);
+    !skuArr.includes(item_id)?skuArr.push(item_id):console.log(item_id + "already exists");
     const cardCollection = document.querySelectorAll('.card_collection');
     cardCollection.forEach(i => {i.id==`thisCard_${container_id}`?console.log('keep'):i.remove();});
     const resultInfo = document.createElement('div');
@@ -209,7 +218,7 @@ const evt_trigger = (item_number, int, container_id, item_id) => {
     document.getElementById(`qty_${item_id}`).innerHTML = masterRemainder;
     create_form.style.display = '';
     console.log(`The end of the calculation for ${item_number}`);
-    document.getElementById(`radio_${item_id}_${container_id}`).onclick = null;
+    // document.getElementById(`radio_${item_id}_${container_id}`).onclick = null;
     alreadyCalculated = true;
 }
 ///////////
