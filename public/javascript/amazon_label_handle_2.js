@@ -95,15 +95,17 @@ function allowDrop(ev) {
 function drop(ev) {
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text").split('_')[1];
-    !skuArr.includes(data)?skuArr.push(data):console.log('array already has it (qty update)');
     const target_id = ev.target.parentElement.id.split('_')[1];
-    !skuArr.includes(target_id)?skuArr.push(target_id):console.log('array already has it (qty update)');
-    const target_qty = parseInt(document.getElementById(`qty_${target_id}`).innerHTML);
-    const targetNewQty = target_qty + parseInt(document.getElementById(`qty_${data}`).innerText);
-    document.getElementById(`qty_${target_id}`).innerHTML = targetNewQty;
-    document.getElementById(`qty_${data}`).innerHTML = 0;
-    skuOldMap.set(data, 0);
-    skuOldMap.set(target_id, targetNewQty);
+    if (data != target_id) {
+        !skuArr.includes(data)?skuArr.push(data):console.log('array already has "from id" (qty update)');
+        !skuArr.includes(target_id)?skuArr.push(target_id):console.log('array already has "to to" (qty update)');
+        const target_qty = parseInt(document.getElementById(`qty_${target_id}`).innerHTML);
+        const targetNewQty = target_qty + parseInt(document.getElementById(`qty_${data}`).innerText);
+        document.getElementById(`qty_${target_id}`).innerHTML = targetNewQty;
+        document.getElementById(`qty_${data}`).innerHTML = 0;
+        skuOldMap.set(data, 0);
+        skuOldMap.set(target_id, targetNewQty);
+    }
 }
 
 async function updateReqContainer(container_id) {
@@ -359,6 +361,8 @@ const shipment_init = (container_id, user_id, account_id) => {
 };
 
 function shippmentCreate(sp_number, foregin_key) {
+    document.getElementById('order_pre-check').style.display = 'none';
+    document.getElementById('spinner').style.display = '';
     const sp_box = new Object();
     sp_box.length = length.value.trim()*2.54;
     sp_box.width = width.value.trim()*2.54;
