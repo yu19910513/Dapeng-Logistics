@@ -183,14 +183,17 @@
             <button
               class="btn btn-secondary mt-2 uk-modal-close"
               onclick="reset()"
-            >Cancel</button>
+            >取消</button>
 
             <button
               class="btn btn-primary mt-2 text-white"
               id="export-btn"
               onclick="exportData()"
               disabled
-            >Export Data</button>
+            >送出</button>
+            <button class="btn btn btn-success mt-2 text-white" id="spinner" style="display: none">建档中...
+              <div class="spinner-border text-light" role="status"></div>
+            </button>
             {{! <div id="modal-full" class="uk-modal-full" uk-modal>
                         <div class="uk-modal-dialog">
                             <button class="uk-modal-close-full uk-close-large" type="button" uk-close></button>

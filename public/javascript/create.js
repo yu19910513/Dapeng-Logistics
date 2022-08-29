@@ -220,7 +220,7 @@ function boxInsertExistedAccount() {
         promises.push(record(orderdata));
     };
     Promise.all(promises).then(() => {
-        alert('Orders Placed!');
+        // alert('Orders Placed!');
         window.location.replace(`/batch/${batch_map.get(asn)}`)
     }).catch((e) => {console.log(e)})
 };
@@ -250,16 +250,18 @@ function boxInsertNewAccount() {
         promises.push(record(newBox));
     };
     Promise.all(promises).then(() => {
-        alert('Orders Placed!');
+        // alert('Orders Placed!');
         window.location.replace(`/batch/${batch_map.get(asn)}`)
     }).catch((e) => {console.log(e)})
 };
 function exportData() {
     if (dimensionChecker()) {
+        document.getElementById('export-btn').style.display = 'none';
+        document.getElementById('spinner').style.display = '';
         const total_box = parseInt(localStorage.getItem('total_box'));
         if (savedAccount != "Create New Account") {
             loadingBatch1({asn, pending_date, total_box, savedAccount_id});
-            }else {
+        }else {
             loadingAccount({name: account.value.trim(), prefix: prefix.value.toUpperCase()});
         }
     } else {
