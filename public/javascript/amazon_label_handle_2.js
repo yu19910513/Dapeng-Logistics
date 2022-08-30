@@ -345,6 +345,8 @@ const getXC = async (container_id) => {
 filterLoader (10);
 
 const shipment_init = (container_id, user_id, account_id) => {
+    const pallet_batch = prompt('Add a pallet number (optional)?');
+    pallet_batch?container_id=container_id+`p${pallet_batch}`:container_id=container_id;
     const foregin_key = new Object();
     foregin_key.container_id = container_id;
     foregin_key.user_id = user_id;
