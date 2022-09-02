@@ -138,18 +138,34 @@ function makeid(length) {
 //bpp: # box/pallet
 //upb: # unit/box
 //ipu: # item/unit
-const id_generator = (parent, num, item_number, upb, ipu, bpp) => {
+const putBack = (id, n, sp, ev) => {
+    console.log('before change: ' + spArr);
+    console.log('before change: ' + skuOldMap.get(id) + ` + ${n}`);
+    ev.preventDefault();
+    ev.target.parentElement.parentElement.remove();
+    const returnQty = parseInt(document.getElementById(`qty_${id}`).innerHTML) + parseInt(n);
+    document.getElementById(`qty_${id}`).innerHTML = returnQty;
+    spArr = spArr.filter(i => i != sp);
+    skuOldMap.set(id, skuOldMap.get(id) + n);
+    masterCheck ();
+    console.log('after change: ' + spArr);
+    console.log('after change: ' + skuOldMap.get(id));
+}
+const id_generator = (parent, num, item_number, upb, ipu, bpp, oldItemId) => {
     var pad = "000";
     var ans = pad.substring(0, pad.length - num.toString().length) + num.toString();
     var instance = parseInt(parent.id) + makeid(3) + ans;
+    const select = document.createElement('td');
     const tr = document.createElement('tr');
     const td = document.createElement('td');
     const td_1 = document.createElement('td');
     const td_2 = document.createElement('td');
     parent.appendChild(tr);
+    tr.appendChild(select);
     tr.appendChild(td);
     tr.appendChild(td_1);
     tr.appendChild(td_2);
+    select.innerHTML = `<a class="text-danger" onclick="putBack('${oldItemId}', ${upb*ipu}, 'SP${instance}', event)">&#10060</a>`
     td.innerHTML = `SP${instance}`;
     td_1.innerHTML = item_number;
     td_2.innerHTML = `<b>${upb}</b>`;
@@ -157,11 +173,11 @@ const id_generator = (parent, num, item_number, upb, ipu, bpp) => {
     skuNewMap.set(`SP${instance}${item_number}`, upb);
     spArr.push(`SP${instance}`);
 }
-const skuArr = [];//check old items
-const spArr = [];//create a series of new SP box
-const skuOldMap = new Map();//update old inventory
-const skuNewMap = new Map();//create new item
-const spMap = new Map();//create new relation with item
+var skuArr = [];//check old items
+var spArr = [];//create a series of new SP box
+var skuOldMap = new Map();//update old inventory
+var skuNewMap = new Map();//create new item
+var spMap = new Map();//create new relation with item
 
 const evt_trigger = (item_number, int, container_id, item_id, ev) => {
     ev.preventDefault();
@@ -204,7 +220,7 @@ const evt_trigger = (item_number, int, container_id, item_id, ev) => {
     const masterRemainder = Math.floor(((int/(merging_ratio*qty_ans*pallet_ratio)) - totalPallet)*itemsPerPallet);
     skuOldMap.set(item_id, masterRemainder);
     for (let i = 0; i < masterTotalBox; i++) {
-        id_generator(tbody, i, skuFilter(item_number, unitsPerPallet*totalPallet), qty_ans, merging_ratio, pallet_ratio);
+        id_generator(tbody, i, skuFilter(item_number, unitsPerPallet*totalPallet), qty_ans, merging_ratio, pallet_ratio, item_id);
     };
     resultInfo.innerHTML = `<ul class="text-success">
         <h4>Fact Check: <i class="text-primary">${item_number}</i></h4>
@@ -219,9 +235,10 @@ const evt_trigger = (item_number, int, container_id, item_id, ev) => {
     masterRemainder>0?alert(`${masterRemainder} items are insufficient for another pallet`):null;
     document.getElementById(`qty_${item_id}`).innerHTML = masterRemainder;
     create_form.style.display = '';
-    console.log(`The end of the calculation for ${item_number}`);
+    console.log(`The end of the calculation for ${item_number}; remainder = ${skuOldMap.get(item_id)}`);
     // document.getElementById(`radio_${item_id}_${container_id}`).onclick = null;
     alreadyCalculated = true;
+    masterCheck();
 }
 ///////////
 var oldsku,newsku
@@ -311,7 +328,8 @@ function masterCheck () {
     height = document.getElementById('new_hei');
     weight = document.getElementById('new_wei');
     width = document.getElementById('new_wid');
-    if (length.value && height.value && weight.value && width.value) {
+    const bigTable = document.getElementsByClassName('bigTable');
+    if (length.value && height.value && weight.value && width.value && bigTable[0].querySelectorAll('td').length) {
         document.getElementById('order_pre-check').style.display = '';
         document.getElementById('fake').style.display = 'none';
         printCheck = false;

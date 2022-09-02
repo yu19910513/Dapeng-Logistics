@@ -77,15 +77,17 @@
                         </div>
                     </div>
                 <div class="form-group mt-3">
-                    <table class="uk-table uk-table-small uk-table-divider bg-light shadow-sm" style="table-layout: fixed; width: 100%">
+                    <table class="uk-table uk-table-small uk-table-divider bg-light shadow-sm">
+                        {{!-- style="table-layout: fixed; width: 100%" --}}
                         <thead>
                             <tr>
+                                <th>Put Back</th>
                                 <th>SP Box#</th>
                                 <th>SKU</th>
                                 <th uk-tooltip="# items per box (# items per UNIT x # units per BOX)">Quantity</th>
                             </tr>
                         </thead>
-                        <tbody id="{{0.container_id}}">
+                        <tbody id="{{0.container_id}}" class="bigTable">
                         </tbody>
                     </table>
                 </div>
