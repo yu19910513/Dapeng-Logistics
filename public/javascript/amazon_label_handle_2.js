@@ -81,6 +81,7 @@ const mergeExistedItem = async (container_id, item_number, qty) => {
 }
 
 const combinePostCal = (id) => {
+    UIkit.notification({message: 'The drag & drop merger is initiated', pos: 'top-center'})
     console.log('postCal');
     document.querySelectorAll('tr').forEach(i => {
         i.draggable = true;
@@ -138,9 +139,11 @@ function makeid(length) {
 //bpp: # box/pallet
 //upb: # unit/box
 //ipu: # item/unit
-const putBack = (id, n, sp, ev) => {
+const putBack = (id, n, sp, ev, bpp, indexPal) => {
+    console.log('before change (pallet count): ' + palletCount);
     console.log('before change: ' + spArr);
     console.log('before change: ' + skuOldMap.get(id) + ` + ${n}`);
+    console.log('b4: ' + indexArr);
     ev.preventDefault();
     ev.target.parentElement.parentElement.remove();
     const returnQty = parseInt(document.getElementById(`qty_${id}`).innerHTML) + parseInt(n);
@@ -148,10 +151,21 @@ const putBack = (id, n, sp, ev) => {
     spArr = spArr.filter(i => i != sp);
     skuOldMap.set(id, skuOldMap.get(id) + n);
     masterCheck ();
+    palletCount-=(1/bpp);
+    indexArr = indexArr.filter(i => i != indexPal);
     console.log('after change: ' + spArr);
     console.log('after change: ' + skuOldMap.get(id));
+    console.log('after change (pallet count): ' + palletCount);
+    console.log('after: ' + indexArr);
+    const nextClick = document.querySelector(`.index${indexPal}`)
+    nextClick?nextClick.click():console.log(`put back all box associated with P${indexPal}`);
 }
+var indexP = 1;
+var indexCount = 0;
+var spPalletMap = new Map();
+var indexArr = [];
 const id_generator = (parent, num, item_number, upb, ipu, bpp, oldItemId) => {
+    indexCount++;
     var pad = "000";
     var ans = pad.substring(0, pad.length - num.toString().length) + num.toString();
     var instance = parseInt(parent.id) + makeid(3) + ans;
@@ -160,27 +174,36 @@ const id_generator = (parent, num, item_number, upb, ipu, bpp, oldItemId) => {
     const td = document.createElement('td');
     const td_1 = document.createElement('td');
     const td_2 = document.createElement('td');
+    const td_3 = document.createElement('td');
     parent.appendChild(tr);
     tr.appendChild(select);
     tr.appendChild(td);
     tr.appendChild(td_1);
     tr.appendChild(td_2);
-    select.innerHTML = `<a class="text-danger" onclick="putBack('${oldItemId}', ${upb*ipu}, 'SP${instance}', event)">&#10060</a>`
+    tr.appendChild(td_3)
+    select.innerHTML = `<a class="text-danger index${indexP}" onclick="putBack('${oldItemId}', ${upb*ipu}, 'SP${instance}', event, '${bpp}', ${indexP})">&#10060</a>`
     td.innerHTML = `SP${instance}`;
     td_1.innerHTML = item_number;
     td_2.innerHTML = `<b>${upb}</b>`;
+    td_3.innerHTML = `P${indexP}`;
     spMap.set(`SP${instance}`, item_number);
     skuNewMap.set(`SP${instance}${item_number}`, upb);
+    spPalletMap.set(`SP${instance}`, indexP);
     spArr.push(`SP${instance}`);
+    indexArr.includes(indexP)?console.log(indexP + "already in array"):indexArr.push(indexP);
+    if (indexCount == bpp) {
+        indexP++;
+        indexCount = 0;
+    }
 }
 var skuArr = [];//check old items
 var spArr = [];//create a series of new SP box
 var skuOldMap = new Map();//update old inventory
 var skuNewMap = new Map();//create new item
 var spMap = new Map();//create new relation with item
-
 const evt_trigger = (item_number, int, container_id, item_id, ev) => {
     ev.preventDefault();
+    indexCount = 0;
     const parentId = ev.target.parentElement.parentElement.id.split('_')[1];
     int = parseInt(document.getElementById(`qty_${parentId}`).innerHTML);
     getXC(container_id)
@@ -219,9 +242,12 @@ const evt_trigger = (item_number, int, container_id, item_id, ev) => {
     const unitsPerPallet = qty_ans*pallet_ratio;
     const masterRemainder = Math.floor(((int/(merging_ratio*qty_ans*pallet_ratio)) - totalPallet)*itemsPerPallet);
     skuOldMap.set(item_id, masterRemainder);
+    palletCount+=totalPallet;
+    //100/4 = 25
     for (let i = 0; i < masterTotalBox; i++) {
         id_generator(tbody, i, skuFilter(item_number, unitsPerPallet*totalPallet), qty_ans, merging_ratio, pallet_ratio, item_id);
     };
+    // palletMap.set(skuFilter(item_number,0), totalPallet);
     resultInfo.innerHTML = `<ul class="text-success">
         <h4>Fact Check: <i class="text-primary">${item_number}</i></h4>
         <li>${merging_ratio} old items for 1 new unit (new sku)</li>
@@ -362,9 +388,56 @@ const getXC = async (container_id) => {
 };
 filterLoader (10);
 
+
+var palletCount = 0;
+// var palletMap = new Map();
+var palletized = true;
+var applyAll = false;
 const shipment_init = (container_id, user_id, account_id) => {
-    const pallet_batch = prompt('Add a pallet number (optional)?');
-    pallet_batch?container_id=container_id+`p${pallet_batch}`:container_id=container_id;
+    if (palletized) {
+        const pallet_modal_btn = document.getElementById(`pallet_confirm_btn${container_id}`);
+        const pallet_modal_content = document.getElementById(`pallet_confirm_${container_id}`).querySelector('ul');
+        pallet_modal_content.querySelectorAll('li').forEach(i => i.remove());
+        palletCount = Math.round(palletCount);
+        for (let p = 0; p < indexArr.length; p++) {
+            const pNumber = indexArr[p];
+            const list = document.createElement('li');
+            pallet_modal_content.appendChild(list);
+            const plength = 48;
+            const pwidth = 40;
+            const pheight = (height.value.trim()*spArr.length/palletCount).toFixed(2);
+            const pweight = (weight.value.trim()*spArr.length/palletCount + 30).toFixed(2);
+            list.innerHTML = `<div class="row">
+            <div class="col">
+                <h5>P${pNumber}</h5>
+            </div>
+            <div class="col">
+                <label for="length">Length</label>
+                <input type="number" class="form-control pallet_length" id='${pNumber}_len' value='${plength}' placeholder="inch">
+            </div>
+            <div class="col">
+                <label for="width">Width</label>
+                <input type="number" class="form-control pallet_width" id='${pNumber}_wid' value='${pwidth}' placeholder="inch">
+            </div>
+            <div class="col">
+                <label for="height">Height</label>
+                <input type="number" class="form-control pallet_height" id='${pNumber}_hei' value='${pheight}' placeholder="inch">
+            </div>
+            <div class="col">
+                <label for="weight">Weight</label>
+                <input type="number" class="form-control pallet_weight" id='${pNumber}_wei' value='${pweight}' placeholder="lb">
+            </div>
+        </div>`
+        }
+        pallet_modal_btn.click();
+    } else {
+        const pallet_batch = prompt('Add a pallet number (optional)?');
+        pallet_batch?container_id=container_id+`p${pallet_batch}`:container_id=container_id;
+        shipment_next(container_id, user_id, account_id)
+    }
+};
+
+const shipment_next = (container_id, user_id, account_id) => {
     const foregin_key = new Object();
     foregin_key.container_id = container_id;
     foregin_key.user_id = user_id;
@@ -377,8 +450,7 @@ const shipment_init = (container_id, user_id, account_id) => {
     Promise.all(promises).then(() => {
         console.log('done');
     }).catch((e) => {console.log(e)})
-
-};
+}
 
 function shippmentCreate(sp_number, foregin_key) {
     document.getElementById('order_pre-check').style.display = 'none';

@@ -7,6 +7,7 @@
      <a onclick="masterFunction(`{{0.container_id}}`, `delete`)" class="border border-warning rounded-circle" uk-icon="icon: trash; ratio: 1.2" uk-tooltip="Delete"></a>
      <a onclick="masterFunction(`{{0.container_id}}`, `merge`)" class="border border-warning rounded-circle" uk-icon="icon: shrink; ratio: 1.2" uk-tooltip="Combine"></a>
      <a onclick="masterFunction(`{{0.container_id}}`, `reverse`)" class="border border-warning rounded-circle" uk-icon="icon: reply; ratio: 1.2" uk-tooltip="Reverse"></a>
+     <a class="border border-warning rounded-circle" id="pallet_confirm_btn{{0.container_id}}" href="#pallet_confirm_{{0.container_id}}" uk-toggle uk-icon="icon: thumbnails; ratio: 1.2" uk-tooltip="Palletize" style="display: none"></a>
      <hr>
      {{#if 0.container.file}}
         <a href="/pdf/{{0.container.file}}" class="btn btn-success btn-sm">File #1</a>
@@ -27,7 +28,16 @@
     </div>
 </div>
 <!-- Notes -->
-
+{{!-- Pallet Confirmation --}}
+<div id="pallet_confirm_{{0.container_id}}" class="uk-modal-container" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <h4 class="text-center lead">Pallet List</h4>
+        <ul class="uk-list uk-list-circle">
+        </ul>
+        </div>
+</div>
+{{!-- Pallet Confirmation --}}
 <ul uk-accordion="multiple: true">
     <li class="uk-close">
         <a class="uk-accordion-title" href="/admin_pre_ship_amazon/{{0.container_id}}"></a>
@@ -85,6 +95,7 @@
                                 <th>SP Box#</th>
                                 <th>SKU</th>
                                 <th uk-tooltip="# items per box (# items per UNIT x # units per BOX)">Quantity</th>
+                                <th>Pallet#</th>
                             </tr>
                         </thead>
                         <tbody id="{{0.container_id}}" class="bigTable">
