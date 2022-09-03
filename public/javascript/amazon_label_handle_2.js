@@ -190,7 +190,7 @@ const id_generator = (parent, num, item_number, upb, ipu, bpp, oldItemId) => {
     skuNewMap.set(`SP${instance}${item_number}`, upb);
     spPalletMap.set(`SP${instance}`, indexP);
     spArr.push(`SP${instance}`);
-    indexArr.includes(indexP)?console.log(indexP + "already in array"):indexArr.push(indexP);
+    indexArr.includes(indexP)?console.log(indexP + " already in array"):indexArr.push(indexP);
     if (indexCount == bpp) {
         indexP++;
         indexCount = 0;
@@ -391,8 +391,8 @@ filterLoader (10);
 
 var palletCount = 0;
 // var palletMap = new Map();
-var palletized = true;
-var applyAll = false;
+var palletized = true;//************ */
+var applyAll = true;//************* */
 const shipment_init = (container_id, user_id, account_id) => {
     if (palletized) {
         const pallet_modal_btn = document.getElementById(`pallet_confirm_btn${container_id}`);
@@ -413,19 +413,19 @@ const shipment_init = (container_id, user_id, account_id) => {
             </div>
             <div class="col">
                 <label for="length">Length</label>
-                <input type="number" class="form-control pallet_length" id='${pNumber}_len' value='${plength}' placeholder="inch">
+                <input type="number" class="form-control pallet_length" id='${pNumber}_len' value='${plength}' placeholder="inch" onkeyup="sync(event)">
             </div>
             <div class="col">
                 <label for="width">Width</label>
-                <input type="number" class="form-control pallet_width" id='${pNumber}_wid' value='${pwidth}' placeholder="inch">
+                <input type="number" class="form-control pallet_width" id='${pNumber}_wid' value='${pwidth}' placeholder="inch" onkeyup="sync(event)">
             </div>
             <div class="col">
                 <label for="height">Height</label>
-                <input type="number" class="form-control pallet_height" id='${pNumber}_hei' value='${pheight}' placeholder="inch">
+                <input type="number" class="form-control pallet_height" id='${pNumber}_hei' value='${pheight}' placeholder="inch" onkeyup="sync(event)">
             </div>
             <div class="col">
                 <label for="weight">Weight</label>
-                <input type="number" class="form-control pallet_weight" id='${pNumber}_wei' value='${pweight}' placeholder="lb">
+                <input type="number" class="form-control pallet_weight" id='${pNumber}_wei' value='${pweight}' placeholder="lb" onkeyup="sync(event)">
             </div>
         </div>`
         }
@@ -433,11 +433,28 @@ const shipment_init = (container_id, user_id, account_id) => {
     } else {
         const pallet_batch = prompt('Add a pallet number (optional)?');
         pallet_batch?container_id=container_id+`p${pallet_batch}`:container_id=container_id;
-        shipment_next(container_id, user_id, account_id)
+        shipment_next(container_id, user_id, account_id, null)
     }
 };
 
-const shipment_next = (container_id, user_id, account_id) => {
+const sync = (ev) => {
+    ev.preventDefault();
+    if (applyAll) {
+        for (let k = 0; k < document.getElementsByClassName(ev.target.className).length; k++) {
+            const element = document.getElementsByClassName(ev.target.className)[k];
+            element.value = ev.target.value;
+        }
+    }
+}
+
+const shipment_next = (container_id, user_id, account_id, event) => {
+    if (event) {
+        event.preventDefault();
+        event.target.style.display = 'none';
+        document.getElementById('spinner_2').style.display = '';
+    }
+    document.getElementById('order_pre-check').style.display = 'none';
+    document.getElementById('spinner').style.display = '';
     const foregin_key = new Object();
     foregin_key.container_id = container_id;
     foregin_key.user_id = user_id;
@@ -453,8 +470,6 @@ const shipment_next = (container_id, user_id, account_id) => {
 }
 
 function shippmentCreate(sp_number, foregin_key) {
-    document.getElementById('order_pre-check').style.display = 'none';
-    document.getElementById('spinner').style.display = '';
     const sp_box = new Object();
     sp_box.length = length.value.trim()*2.54;
     sp_box.width = width.value.trim()*2.54;
@@ -465,7 +480,16 @@ function shippmentCreate(sp_number, foregin_key) {
     sp_box.type = 3;
     sp_box.user_id = foregin_key.user_id;
     sp_box.account_id = foregin_key.account_id;
-    sp_box.tracking = foregin_key.container_id;
+    if (palletized) {
+        const pi = spPalletMap.get(sp_number); //pallet index
+        const phei = document.getElementById(`${pi}_hei`).value;
+        const pwid = document.getElementById(`${pi}_wid`).value;
+        const pleng = document.getElementById(`${pi}_len`).value;
+        const pwei = document.getElementById(`${pi}_wei`).value;
+        sp_box.tracking = `${foregin_key.container_id}*${pi}*${pleng}*${pwid}*${phei}*${pwei}*${makeid(4)}`
+    } else {
+        sp_box.tracking = foregin_key.container_id;
+    }
     promises.push(boxCreate(sp_box))
 };
 async function boxCreate(data) {
