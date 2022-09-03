@@ -717,6 +717,8 @@ router.post('/amazon_box', withAuth, (req, res) => {
     tracking: req.body.tracking,
     type: req.body.type,
     status: status,
+    custom_1: req.body.custom_1,
+    custom_2: req.body.custom_2,
     description: description,
     received_date: new Date().toLocaleDateString("en-US"),
     requested_date: requested_date

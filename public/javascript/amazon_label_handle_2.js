@@ -139,11 +139,12 @@ function makeid(length) {
 //bpp: # box/pallet
 //upb: # unit/box
 //ipu: # item/unit
-const putBack = (id, n, sp, ev, bpp, indexPal) => {
+const putBack = (id, n, sp, ev, bpp, indexPal, old_item_n, new_item_n, upb) => {
     console.log('before change (pallet count): ' + palletCount);
     console.log('before change: ' + spArr);
     console.log('before change: ' + skuOldMap.get(id) + ` + ${n}`);
-    console.log('b4: ' + indexArr);
+    console.log('before change (pallet numbers): ' + indexArr);
+    console.log('before change (xc qty count): ' + xcQtyCount);
     ev.preventDefault();
     ev.target.parentElement.parentElement.remove();
     const returnQty = parseInt(document.getElementById(`qty_${id}`).innerHTML) + parseInt(n);
@@ -156,15 +157,21 @@ const putBack = (id, n, sp, ev, bpp, indexPal) => {
     console.log('after change: ' + spArr);
     console.log('after change: ' + skuOldMap.get(id));
     console.log('after change (pallet count): ' + palletCount);
-    console.log('after: ' + indexArr);
-    const nextClick = document.querySelector(`.index${indexPal}`)
-    nextClick?nextClick.click():console.log(`put back all box associated with P${indexPal}`);
+    console.log('after change (pallet numbers): ' + indexArr);
+    if (old_item_n != new_item_n) {
+        xcQtyCount -= upb;
+        console.log('after change (xc qty count): ' + xcQtyCount);
+    }
+    const nextClick = document.querySelector(`.index${indexPal}`);
+    if (palletized) {
+        nextClick?nextClick.click():console.log(`put back all box associated with P${indexPal}`);
+    }
 }
 var indexP = 1;
 var indexCount = 0;
 var spPalletMap = new Map();
 var indexArr = [];
-const id_generator = (parent, num, item_number, upb, ipu, bpp, oldItemId) => {
+const id_generator = (parent, num, item_number, upb, ipu, bpp, oldItemId, oldItemNumber) => {
     indexCount++;
     var pad = "000";
     var ans = pad.substring(0, pad.length - num.toString().length) + num.toString();
@@ -181,11 +188,13 @@ const id_generator = (parent, num, item_number, upb, ipu, bpp, oldItemId) => {
     tr.appendChild(td_1);
     tr.appendChild(td_2);
     tr.appendChild(td_3)
-    select.innerHTML = `<a class="text-danger index${indexP}" onclick="putBack('${oldItemId}', ${upb*ipu}, 'SP${instance}', event, '${bpp}', ${indexP})">&#10060</a>`
+    select.innerHTML = `<a class="text-danger index${indexP}" onclick="putBack('${oldItemId}', ${upb*ipu}, 'SP${instance}', event, '${bpp}', ${indexP}, '${oldItemNumber}', '${item_number}', ${upb})">&#10060</a>`
     td.innerHTML = `SP${instance}`;
     td_1.innerHTML = item_number;
     td_2.innerHTML = `<b>${upb}</b>`;
-    td_3.innerHTML = `P${indexP}`;
+    if (palletized) {
+        td_3.innerHTML = `P${indexP}`;
+    }
     spMap.set(`SP${instance}`, item_number);
     skuNewMap.set(`SP${instance}${item_number}`, upb);
     spPalletMap.set(`SP${instance}`, indexP);
@@ -232,7 +241,7 @@ const evt_trigger = (item_number, int, container_id, item_id, ev) => {
     const tbody = create_form.querySelector('tbody');
     !skuArr.includes(item_id)?skuArr.push(item_id):console.log(item_id + "already exists");
     const cardCollection = document.querySelectorAll('.card_collection');
-    cardCollection.forEach(i => {i.id==`thisCard_${container_id}`?console.log('keep'):i.remove();});
+    cardCollection.forEach(i => {i.id==`thisCard_${container_id}`?console.log('one card focus mode'):i.remove();});
     const resultInfo = document.createElement('div');
     document.getElementById(`thisCard_${container_id}`).prepend(resultInfo);
     document.getElementById(`thisCard_${container_id}`).className = 'col-6 card_collection uk-animation-fade';
@@ -244,8 +253,9 @@ const evt_trigger = (item_number, int, container_id, item_id, ev) => {
     skuOldMap.set(item_id, masterRemainder);
     palletCount+=totalPallet;
     //100/4 = 25
+    const new_item_number = skuFilter(item_number, unitsPerPallet*totalPallet);
     for (let i = 0; i < masterTotalBox; i++) {
-        id_generator(tbody, i, skuFilter(item_number, unitsPerPallet*totalPallet), qty_ans, merging_ratio, pallet_ratio, item_id);
+        id_generator(tbody, i, new_item_number, qty_ans, merging_ratio, pallet_ratio, item_id, item_number);
     };
     // palletMap.set(skuFilter(item_number,0), totalPallet);
     resultInfo.innerHTML = `<ul class="text-success">
@@ -330,6 +340,7 @@ const skuFilter = (input, n) => {
     oldsku?index=oldsku.indexOf(input):index=-1;
     if (index>-1 && filterAuthFunction() && newsku[index]) {
         xcQtyCount = xcQtyCount + n;
+        console.log("xc qty count + "+xcQtyCount);
         return newsku[index]
     } else {
         return input
@@ -338,6 +349,7 @@ const skuFilter = (input, n) => {
 
 ///filter yes or no
 const allowCheckBox = document.getElementById('allowFilter');
+const palletizeCheckBox = document.getElementById("palletizeCheckBox");
 const filterAuthFunction = () => {
     if (allowCheckBox.checked) {
         return true
@@ -345,6 +357,24 @@ const filterAuthFunction = () => {
         return false
     }
 };
+const palletizeAuthFunction = () => {
+    if (palletizeCheckBox.checked) {
+        palletized = true
+    } else {
+        palletized = false;
+        console.log('turn off palletization');
+    }
+};
+const applyAllAuthFunction = (id) => {
+    const applyAllCheckBox = document.getElementById(`applyAllCheckBox${id}`);
+    if (applyAllCheckBox.checked) {
+        applyAll = true;
+        console.log('apply all ON');
+    } else {
+        applyAll = false;
+        console.log('apply all OFF');
+    }
+}
 
 
 ////master check function//////
@@ -379,11 +409,16 @@ const getXC = async (container_id) => {
         };
     }).then(function (data) {
         if (data) {
-            xcExist = true;
-            xcQtyCount = parseInt(data.qty_of_fee);
-            console.log(xcQtyCount);
-        };
-        console.log('no xc yet');
+            if (!xcExist) {
+                xcExist = true;
+                xcQtyCount+= parseInt(data.qty_of_fee);
+                console.log(`xc qty count (history pulls ${parseInt(data.qty_of_fee)}) associated with this Req: ${xcQtyCount}`);
+            } else {
+                console.log(`current xc qty count: ${xcQtyCount}`);
+            }
+        } else {
+            console.log('no xc yet');
+        }
     })
 };
 filterLoader (10);
@@ -445,8 +480,16 @@ const sync = (ev) => {
             element.value = ev.target.value;
         }
     }
+    if (ev.target.value<0) {
+        ev.target.value=1;
+        error();
+        UIkit.notification({message: 'The input value should be greater than 0', pos: 'top-center'});
+    }
 }
-
+function error() {
+    var audio = new Audio('../media/wrong.mp3');
+    audio.play();
+  };
 const shipment_next = (container_id, user_id, account_id, event) => {
     if (event) {
         event.preventDefault();
@@ -480,15 +523,17 @@ function shippmentCreate(sp_number, foregin_key) {
     sp_box.type = 3;
     sp_box.user_id = foregin_key.user_id;
     sp_box.account_id = foregin_key.account_id;
+    sp_box.tracking = foregin_key.container_id
     if (palletized) {
         const pi = spPalletMap.get(sp_number); //pallet index
         const phei = document.getElementById(`${pi}_hei`).value;
         const pwid = document.getElementById(`${pi}_wid`).value;
         const pleng = document.getElementById(`${pi}_len`).value;
         const pwei = document.getElementById(`${pi}_wei`).value;
-        sp_box.tracking = `${foregin_key.container_id}*${pi}*${pleng}*${pwid}*${phei}*${pwei}*${makeid(4)}`
+        sp_box.custom_1 = `${pi}*${pleng}*${pwid}*${phei}*${pwei}*${makeid(4)}`;
+        console.log(`${pi}*${pleng}*${pwid}*${phei}*${pwei}*${makeid(4)}`);
     } else {
-        sp_box.tracking = foregin_key.container_id;
+        sp_box.costum_1 = null;;
     }
     promises.push(boxCreate(sp_box))
 };
@@ -509,7 +554,7 @@ async function boxCreate(data) {
 };
 const xcGenerator = async (data) => {
     if (xcExist) {
-        const newfba = `LR${data.container_id}`
+        const newfba = `LR${data.container_id}`;
         const response = await fetch('/api/container/xc_LabelChangeUpdate', {
             method: 'PUT',
             body: JSON.stringify({

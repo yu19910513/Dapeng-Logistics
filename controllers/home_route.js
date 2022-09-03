@@ -287,6 +287,7 @@ router.get('/request_amazon_confirmation', withAuth, async (req, res) => {
         'file',
         'file_2',
         'fba',
+        'custom_1',
         'bill_received',
         'bill_storage',
         'bill_shipped'
@@ -1094,7 +1095,8 @@ router.get('/admin_confirm_amazon', withAuth, async (req, res) => {
         'file_2',
         'notes',
         's3',
-        'fba'
+        'fba',
+        'custom_1'
       ],
       include: [
         {
@@ -1636,6 +1638,9 @@ router.get('/request_amazon_confirmation/:id', withAuth, async (req, res) => {
         status: 1,
         type: 3
       },
+      order: [
+        ['custom_1', 'ASC']
+      ],
       attributes: [
         'id',
         'user_id',
@@ -1660,6 +1665,7 @@ router.get('/request_amazon_confirmation/:id', withAuth, async (req, res) => {
         'file',
         'file_2',
         'fba',
+        'custom_1',
         'bill_received',
         'bill_storage',
         'bill_shipped'

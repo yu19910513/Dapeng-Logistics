@@ -46,3 +46,21 @@ async function statusChange(tracking) {
 function unattach(number) {
     number.querySelectorAll('li').forEach(i => i.remove())
 };
+
+const pallet_info_revise = () => {
+    const tables = document.querySelectorAll('table');
+    tables.forEach(table => {
+        const row = table.rows;
+        for (let i = 1; i < row.length; i++) {
+            if (row[i].cells[0].querySelector('small')) {
+            const element = row[i].cells[0].querySelector('small').innerText;
+            const elementArr = element.split('*');
+            const index = elementArr[0];
+            const pId = elementArr[5];
+            row[i].cells[0].querySelector('small').innerHTML = `P${index}-${pId}`
+            }
+        }
+    })
+};
+
+pallet_info_revise();

@@ -292,4 +292,40 @@ function check_amazon() {
   }
 }
 
-init()
+const pallet_info = () => {
+  var non_repeatArr = [];
+  const table = document.querySelector('table');
+  const row = table.rows;
+  for (let i = 1; i < row.length; i++) {
+    const element = row[i].cells[8].innerText;
+    if (element) {
+      const elementArr = element.split('*');
+      const pallet_index = elementArr[0];
+      const pallet_length = elementArr[1];
+      const pallet_width = elementArr[2];
+      const pallet_height = elementArr[3];
+      const pallet_weight = elementArr[4];
+      const pallet_id = elementArr[5];
+      const new_index = newIndex(pallet_index);
+      if (!non_repeatArr.includes(new_index)) {
+        row[i].cells[8].innerHTML = `托盘号<b>${new_index}</b>-${pallet_id}: ${pallet_length} x ${pallet_width} x ${pallet_height}, ${pallet_weight}`;
+        non_repeatArr.push(new_index);
+      } else {
+        row[i].cells[8].innerHTML = `托盘号<b>${new_index}</b>-${pallet_id}`;
+      }
+    }
+  };
+  sortTable(8)
+}
+
+const newIndex = (string) => {
+  const num = string.length;
+  if (num == 2) {
+    return `0${string}`
+  } else if (num == 1) {
+    return `00${string}`
+  } return string
+}
+
+init();
+pallet_info();

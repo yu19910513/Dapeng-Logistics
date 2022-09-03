@@ -31,6 +31,7 @@
 {{!-- Pallet Confirmation --}}
 <div id="pallet_confirm_{{0.container_id}}" class="uk-modal-container" uk-modal>
     <div class="uk-modal-dialog uk-modal-body">
+        <input type="checkbox" id="applyAllCheckBox{{0.container_id}}" class="form-check-input" checked onclick="applyAllAuthFunction({{0.container_id}})"><small uk-tooltip="" class="text-primary ml-2" > Apply All</small>
         <button class="uk-modal-close-default" type="button" uk-close></button>
         <h4 class="text-center lead">Pallet List</h4>
         <ul class="uk-list uk-list-circle">

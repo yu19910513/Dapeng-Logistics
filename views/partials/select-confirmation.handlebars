@@ -8,7 +8,15 @@
   <td onclick="selectAll({{id}})">{{container_number}}</td>
   <td></td>
   <td></td>
+  {{#if custom_1}}
   <td>{{length}} x {{height}} x {{width}}</td>
   <td>{{weight}}</td>
   <td>{{status}}</td>
+  <td class="text-primary">{{custom_1}}</td>
+  {{else}}
+  <td class="text-primary">{{length}} x {{height}} x {{width}}</td>
+  <td>{{weight}}</td>
+  <td>{{status}}</td>
+  <td></td>
+  {{/if}}
 </tr>
