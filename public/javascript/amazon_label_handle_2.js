@@ -512,6 +512,8 @@ const shipment_next = (container_id, user_id, account_id, event) => {
     }).catch((e) => {console.log(e)})
 }
 
+const piArr=[];
+const piMap = new Map();
 function shippmentCreate(sp_number, foregin_key) {
     const sp_box = new Object();
     sp_box.length = length.value.trim()*2.54;
@@ -530,8 +532,16 @@ function shippmentCreate(sp_number, foregin_key) {
         const pwid = document.getElementById(`${pi}_wid`).value;
         const pleng = document.getElementById(`${pi}_len`).value;
         const pwei = document.getElementById(`${pi}_wei`).value;
-        sp_box.custom_1 = `${pi}*${pleng}*${pwid}*${phei}*${pwei}*${makeid(4)}`;
-        console.log(`${pi}*${pleng}*${pwid}*${phei}*${pwei}*${makeid(4)}`);
+        if (!piArr.includes(pi)) {
+            piArr.push(pi);
+            const uuid = makeid(4);
+            sp_box.custom_1 = `${pi}*${pleng}*${pwid}*${phei}*${pwei}*${uuid}`;
+            console.log(`${pi}*${pleng}*${pwid}*${phei}*${pwei}*${uuid}`);
+            piMap.set(pi, uuid);
+        } else {
+            sp_box.custom_1 = `${pi}*${pleng}*${pwid}*${phei}*${pwei}*${piMap.get(pi)}`;
+            console.log(`${pi}*${pleng}*${pwid}*${phei}*${pwei}*${piMap.get(pi)}`);
+        }
     } else {
         sp_box.costum_1 = null;;
     }

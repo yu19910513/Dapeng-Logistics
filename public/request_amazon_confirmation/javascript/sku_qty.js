@@ -307,15 +307,15 @@ const pallet_info = () => {
       const pallet_weight = elementArr[4];
       const pallet_id = elementArr[5];
       const new_index = newIndex(pallet_index);
-      if (!non_repeatArr.includes(new_index)) {
+      const uuid = `${new_index}-${pallet_id}`;
+      if (!non_repeatArr.includes(uuid)) {
         row[i].cells[8].innerHTML = `托盘号<b>${new_index}</b>-${pallet_id}: ${pallet_length} x ${pallet_width} x ${pallet_height}, ${pallet_weight}`;
-        non_repeatArr.push(new_index);
+        non_repeatArr.push(uuid);
       } else {
         row[i].cells[8].innerHTML = `托盘号<b>${new_index}</b>-${pallet_id}`;
       }
     }
   };
-  sortTable(8)
 }
 
 const newIndex = (string) => {
