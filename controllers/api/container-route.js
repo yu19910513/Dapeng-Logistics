@@ -37,7 +37,9 @@ router.get('/fba/:key', withAuth, async (req, res) => {
       },
       attributes: [
         'id',
-        'qty_of_fee'
+        'qty_of_fee',
+        'description',
+        'notes'
       ],
     });
     const data = singleContainer.get({plain: true});

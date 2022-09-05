@@ -266,18 +266,19 @@
       <table
         class="uk-table uk-table-small uk-table-divider bg-light shadow border border-danger"
         id="xTable"
+         style="table-layout: fixed; width: 100%"
       >
         <thead>
           <tr>
-            <th onclick="sortXTable(0)">Date</th>
-            <th onclick="sortXTable(1)">User</th>
-            <th onclick="sortXTable(2)">Account</th>
+            <th onclick="sortXTable(0)" style="width: 10%">Date</th>
+            <th onclick="sortXTable(1)" style="width: 10%">User</th>
+            <th onclick="sortXTable(2)" style="width: 10%">Account</th>
             <th style="display: none;">Billing ID</th>
-            <th onclick="sortXTable(4)">FBA#</th>
-            <th onclick="sortXTable(5)">Description</th>
-            <th>Qty</th>
-            <th>Unit Charge</th>
-            <th>Total Cost</th>
+            <th onclick="sortXTable(4)" style="width: 10%">FBA#</th>
+            <th onclick="sortXTable(5)" style="width: 30%">Description</th>
+            <th style="width: 8%">Qty</th>
+            <th style="width: 8%">Unit Charge</th>
+            <th style="width: 8%">Total Cost</th>
           </tr>
         </thead>
         <tbody id="xcharge_table">

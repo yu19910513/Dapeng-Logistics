@@ -160,6 +160,7 @@ const putBack = (id, n, sp, ev, bpp, indexPal, old_item_n, new_item_n, upb) => {
     console.log('after change (pallet numbers): ' + indexArr);
     if (old_item_n != new_item_n) {
         xcQtyCount -= upb;
+        skuRecord = skuRecord.filter(i => i != `${old_item_n}=>${new_item_n}`)
         console.log('after change (xc qty count): ' + xcQtyCount);
     }
     const nextClick = document.querySelector(`.index${indexPal}`);
@@ -335,12 +336,14 @@ const initskuchange = (str, id) => {
 }
 
 ///main sku replacement occurs here
+var skuRecord = [];
 const skuFilter = (input, n) => {
     var index;
     oldsku?index=oldsku.indexOf(input):index=-1;
     if (index>-1 && filterAuthFunction() && newsku[index]) {
         xcQtyCount = xcQtyCount + n;
         console.log("xc qty count + "+xcQtyCount);
+        !skuRecord.includes(`${input}=>${newsku[index]}`)?skuRecord.push(`${input}=>${newsku[index]}`):console.log(`${input}=>${newsku[index]} + 1`);
         return newsku[index]
     } else {
         return input
@@ -398,6 +401,7 @@ function masterCheck () {
 //////get additional charge
 var xcQtyCount = 0;
 var xcExist = false;
+var xcObject = new Object();
 const getXC = async (container_id) => {
     await fetch(`/api/container/fba/LR${container_id}`, {
         method: 'GET'
@@ -412,6 +416,8 @@ const getXC = async (container_id) => {
             if (!xcExist) {
                 xcExist = true;
                 xcQtyCount+= parseInt(data.qty_of_fee);
+                xcObject.notes = data.notes;
+                xcObject.description = data.description;
                 console.log(`xc qty count (history pulls ${parseInt(data.qty_of_fee)}) associated with this Req: ${xcQtyCount}`);
             } else {
                 console.log(`current xc qty count: ${xcQtyCount}`);
@@ -565,13 +571,14 @@ async function boxCreate(data) {
 const xcGenerator = async (data) => {
     if (xcExist) {
         const newfba = `LR${data.container_id}`;
+        var itemDescription=JSON.parse(xcObject.description.split('Items: ')[1]);
         const response = await fetch('/api/container/xc_LabelChangeUpdate', {
             method: 'PUT',
             body: JSON.stringify({
                 fba:newfba,
                 qty_of_fee: xcQtyCount,
-                description: `AM Relabel Services - ${xcQtyCount} Items: ${JSON.stringify(spArr)}`,////could be more deatil
-                notes: `Label Change (Qty: ${xcQtyCount}); Batch# ${data.container_id}`,
+                description: `AM Relabel Services - ${xcQtyCount} Items: ${JSON.stringify(skuRecord.concat(itemDescription))}`,////could be more deatil
+                notes: `Label Change (Qty: ${xcQtyCount}); Batch# ${data.container_id}; Date: ${new Date().toLocaleDateString("en-US")}`,
 
             }),
             headers: { 'Content-Type': 'application/json' }
@@ -586,8 +593,8 @@ const xcGenerator = async (data) => {
                 account_id: data.account_id,
                 container_number: ref_code,
                 qty_of_fee: xcQtyCount,
-                description: `AM Relabel Services - ${xcQtyCount} Items`,
-                notes: `Label Change (Qty: ${xcQtyCount}); Batch# ${data.container_id}`,
+                description: `AM Relabel Services - ${xcQtyCount} Items: ${JSON.stringify(skuRecord)}`,
+                notes: `Label Change (Qty: ${xcQtyCount}); Batch# ${data.container_id}; Date: ${new Date().toLocaleDateString("en-US")}`,
                 fba: 'LR' + data.container_id,
             }),
             headers: { 'Content-Type': 'application/json' }

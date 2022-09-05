@@ -349,6 +349,7 @@ function xc_billing(data, i) {
     const container_number = document.createElement('td');
     const fba = document.createElement('td');
     const description = document.createElement('td');
+    description.style = "word-wrap: break-word";
     const qty_of_fee = document.createElement('td');
     const unit_fee = document.createElement('td');
     const cost = document.createElement('td');

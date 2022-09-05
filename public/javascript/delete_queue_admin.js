@@ -8,17 +8,23 @@ for (let i = 1; i < rows.length; i++) {
     const requested_items = aTagArr[i-1].innerText;
     const amazon_or_sku = requested_items.substring(0,2);
     if (china_or_amazon == 'text-danger') {
-        const chinaAPI = `chinabox&${box_number}&${requested_items.split(',').join('-x-')}`;
-        aTagArr[i-1].href = `/dq_handle_admin/${chinaAPI}`;
-        rows[i].querySelector('button').setAttribute('onclick',`reversal('c','${requested_items}','${box_number}')`);
-    } else if (amazon_or_sku == 'AM' && !alphaChecker(requested_items)){
-        const amazonAPI = `container&${box_number}&${requested_items.split(',').join('-x-')}`;
-        aTagArr[i-1].href = `/dq_handle_admin/${amazonAPI}`;
-        rows[i].querySelector('button').setAttribute('onclick',`reversal('a','${requested_items}','${box_number}')`);
+      const chinaAPI = `chinabox&${box_number}&${requested_items.split(',').join('-x-')}`;
+      aTagArr[i-1].href = `/dq_handle_admin/${chinaAPI}`;
+      rows[i].querySelector('button').setAttribute('onclick',`reversal('c','${requested_items}','${box_number}')`);
+    } else if (amazon_or_sku == 'AM' && !alphaChecker(requested_items)) {
+      const amazonAPI = `container&${box_number}&${requested_items.split(',').join('-x-')}`;
+      aTagArr[i-1].href = `/dq_handle_admin/${amazonAPI}`;
+      rows[i].querySelector('button').setAttribute('onclick',`reversal('a','${requested_items}','${box_number}')`);
     } else {
+      if (requested_items.substring(0,19) == 'AM Relabel Services') {
+        const relabelAPI = `container&${box_number}&${requested_items.split(',').join('-x-')}`;
+        aTagArr[i-1].href = `/dq_handle_admin/${relabelAPI}`;
+        rows[i].querySelector('button').setAttribute('onclick',`reversal('l', null,'${box_number}')`);
+      } else {
         const skuAPI = `sku&${box_number}&${requested_items.split(',').join('-x-')}`;
         aTagArr[i-1].href = `/dq_handle_admin/${skuAPI}`;
         rows[i].querySelector('button').setAttribute('onclick',`reversal('s','${requested_items}','${box_number}')`);
+      }
     }
 };
 function alphaChecker(string) {
@@ -28,13 +34,15 @@ function alphaChecker(string) {
 
 ///reversal function///
 function reversal(code, string, ref_number) {
+  const promises = [];
+  if(code != "l") {
     const arr = string.split(',');
-    const promises = [];
     arr.forEach(i => promises.push(reverseReq(code,i)))
-    promises.push(removeXC(code, ref_number))
-    Promise.all(promises).then(() => {
-        location.reload();
-    }).catch((e) => {console.log(e)})
+  }
+  promises.push(removeXC(code, ref_number))
+  Promise.all(promises).then(() => {
+      location.reload();
+  }).catch((e) => {console.log(e)})
 };
 const removeXC = async (code, ref_number) => {
     if (code == 'c') {
@@ -43,7 +51,7 @@ const removeXC = async (code, ref_number) => {
             headers: { 'Content-Type': 'application/json' }
           });
           if (response.ok) {
-            console.log(`${ref_number} is reversed back to status 1!`)
+            console.log(`boxes associated with ${ref_number} is reversed back to status 1!`)
           } else {
             alert('try again')
         }
@@ -53,7 +61,7 @@ const removeXC = async (code, ref_number) => {
             headers: { 'Content-Type': 'application/json' }
           });
           if (response.ok) {
-            console.log(`${ref_number} is reversed back to status 1!`)
+            console.log(`items associated with ${ref_number} is reversed back to status 1!`)
           } else {
             alert('try again')
         }
