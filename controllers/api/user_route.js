@@ -502,6 +502,7 @@ router.get('/billing_per_user_a/:user_id', withAuth, async (req, res) => {
         'volume',
         'status',
         'fba',
+        'custom_1',
         'bill_received',
         'bill_shipped',
         'bill_storage'
