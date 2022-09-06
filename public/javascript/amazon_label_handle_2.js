@@ -531,7 +531,6 @@ function shippmentCreate(sp_number, foregin_key) {
     sp_box.type = 3;
     sp_box.user_id = foregin_key.user_id;
     sp_box.account_id = foregin_key.account_id;
-    sp_box.tracking = foregin_key.container_id
     if (palletized) {
         const pi = spPalletMap.get(sp_number); //pallet index
         const phei = document.getElementById(`${pi}_hei`).value;
@@ -544,8 +543,10 @@ function shippmentCreate(sp_number, foregin_key) {
             sp_box.custom_1 = `${pi}*${pleng}*${pwid}*${phei}*${pwei}*${uuid}`;
             console.log(`${pi}*${pleng}*${pwid}*${phei}*${pwei}*${uuid}`);
             piMap.set(pi, uuid);
+            sp_box.tracking = `${foregin_key.container_id}_${uuid}`;
         } else {
             sp_box.custom_1 = `${pi}*${pleng}*${pwid}*${phei}*${pwei}*${piMap.get(pi)}`;
+            sp_box.tracking = `${foregin_key.container_id}_${piMap.get(pi)}`;
             console.log(`${pi}*${pleng}*${pwid}*${phei}*${pwei}*${piMap.get(pi)}`);
         }
     } else {
