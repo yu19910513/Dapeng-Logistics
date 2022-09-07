@@ -79,10 +79,27 @@ const init = () => {
     })
 };
 var selectBoxId = [];
+function siblingTracker (tracking) {
+  tracking = tracking.split('_')[0];
+  return $(`tr[class*=${tracking}]`);
+};
+const palletSwitch = (ev) => {
+  ev.preventDefault();
+  if (ev.target.innerHTML == 'Req') {
+    selectPerPallet = true;
+    ev.target.innerHTML = 'Pal';
+    ev.target.className = 'btn btn-white border-primary text-primary btn-sm shadow-sm'
+  } else {
+    selectPerPallet = false;
+    ev.target.innerHTML = 'Req';
+    ev.target.className = 'btn btn-white border-success text-success btn-sm shadow-sm'
+  }
+}
+var selectPerPallet = true;
 function selectBatch (tracking) {
   selectBoxId = [];
-  const allSiblingBoxes = document.getElementsByClassName(tracking);
-  console.log(allSiblingBoxes, tracking);
+  var allSiblingBoxes;
+  selectPerPallet?allSiblingBoxes = document.getElementsByClassName(tracking):allSiblingBoxes=siblingTracker(tracking);
   for (let i = 0; i < allSiblingBoxes.length; i++) {
     const eachCheckBox = allSiblingBoxes[i].getElementsByTagName('input')[0];
     const eachContainerId = parseInt(eachCheckBox.parentElement.parentElement.getAttribute('id').split('_')[1]);
