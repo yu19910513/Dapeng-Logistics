@@ -148,7 +148,8 @@ function next(user_id) {
                 shippedBoxArr.push(pageData[k].container_number)
             }
         };
-        var shipped_charge = shippedCount*shipping_cost.value;
+        var shipped_charge = shippedCount*shipping_cost.value + (20*palletArr.length);
+        console.log(`Total shipping fee: $${shippedCount*shipping_cost.value} + ($20/Pallet x $${palletArr.length} Pallets)`);
         shipping_total.innerHTML = shipped_charge;
         shipping_total_2.innerHTML = shipped_charge;
 
