@@ -551,7 +551,8 @@ function shippmentCreate(sp_number, foregin_key) {
             console.log(`${pi}*${pleng}*${pwid}*${phei}*${pwei}*${piMap.get(pi)}`);
         }
     } else {
-        sp_box.costum_1 = null;;
+        sp_box.costum_1 = null;
+        sp_box.tracking = foregin_key.container_id
     }
     promises.push(boxCreate(sp_box))
 };
