@@ -739,6 +739,7 @@ router.put('/amazon_label_submission', withAuth, (req, res) => {
       notes: req.body.notes,
       s3: req.body.s3,
       fba: req.body.fba,
+      custom_2: req.body.custom_2,
       description: 'Labels submitted. Await labeling'
     },
     {
