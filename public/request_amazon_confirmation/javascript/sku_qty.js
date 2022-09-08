@@ -85,31 +85,76 @@ function siblingTracker (tracking) {
 };
 const palletSwitch = (ev) => {
   ev.preventDefault();
-  if (ev.target.innerHTML == 'Req') {
-    selectPerPallet = true;
-    ev.target.innerHTML = 'Pal';
-    ev.target.className = 'btn btn-white border-primary text-primary btn-sm shadow-sm'
-  } else {
+  if (ev.target.innerHTML == '自由选择模式') {
+    UIkit.notification({message: '转换至: 全相连模式', pos: 'top-left'});
+    selectIndividual = false;
     selectPerPallet = false;
-    ev.target.innerHTML = 'Req';
+    ev.target.innerHTML = '全相连模式';
+    ev.target.className = 'btn btn-white border-danger text-danger btn-sm shadow-sm'
+  } else if (ev.target.innerHTML == '全相连模式') {
+    UIkit.notification({message: '转换至: 托盘模式', pos: 'top-left'});
+    selectIndividual = false;
+    selectPerPallet = true;
+    ev.target.innerHTML = '托盘模式';
     ev.target.className = 'btn btn-white border-success text-success btn-sm shadow-sm'
+  } else {
+    UIkit.notification({message: '转换至: 自由模式', pos: 'top-left'})
+    selectIndividual = true;
+    ev.target.innerHTML = '自由选择模式';
+    ev.target.className = 'btn btn-white border-primary text-primary btn-sm shadow-sm'
   }
 }
 var selectPerPallet = true;
-function selectBatch (tracking) {
-  selectBoxId = [];
-  var allSiblingBoxes;
-  selectPerPallet?allSiblingBoxes = document.getElementsByClassName(tracking):allSiblingBoxes=siblingTracker(tracking);
-  for (let i = 0; i < allSiblingBoxes.length; i++) {
-    const eachCheckBox = allSiblingBoxes[i].getElementsByTagName('input')[0];
-    const eachContainerId = parseInt(eachCheckBox.parentElement.parentElement.getAttribute('id').split('_')[1]);
-    selectBoxId.push(eachContainerId);
-    eachCheckBox.parentElement.setAttribute('class','border border-success rounded shadow-sm')
-    eachCheckBox.checked = true
-  }
-  const allOtherBoxes = document.querySelectorAll('tbody input');
-  for (let k = 0; k < allOtherBoxes.length; k++) {
-    allOtherBoxes[k].disabled = true
+var selectIndividual = true;
+function selectBatch (tracking, ev) {
+  if (!selectIndividual) {
+    var allSiblingBoxes;
+    selectPerPallet?allSiblingBoxes = document.getElementsByClassName(tracking):allSiblingBoxes=siblingTracker(tracking);
+    for (let i = 0; i < allSiblingBoxes.length; i++) {
+      const eachCheckBox = allSiblingBoxes[i].getElementsByTagName('input')[0];
+      const eachContainerId = parseInt(eachCheckBox.parentElement.parentElement.getAttribute('id').split('_')[1]);
+      selectBoxId.push(eachContainerId);
+      eachCheckBox.parentElement.setAttribute('class','border border-success rounded shadow-sm')
+      eachCheckBox.checked = true
+    }
+    const allOtherBoxes = document.querySelectorAll('tbody input');
+    for (let k = 0; k < allOtherBoxes.length; k++) {
+      allOtherBoxes[k].disabled = true
+    }
+  } else {
+    if (tracking.includes("_")) {
+      if(!ev.target.checked) {
+        var allSiblingBoxes=document.getElementsByClassName(tracking);
+        for (let i = 0; i < allSiblingBoxes.length; i++) {
+          const eachCheckBox = allSiblingBoxes[i].getElementsByTagName('input')[0];
+          const eachContainerId = parseInt(eachCheckBox.parentElement.parentElement.getAttribute('id').split('_')[1]);
+          selectBoxId = selectBoxId.filter(a => a != eachContainerId);
+          eachCheckBox.parentElement.className = null;
+          eachCheckBox.checked = false
+        }
+        console.log(selectBoxId);
+      } else {
+        var allSiblingBoxes=document.getElementsByClassName(tracking);
+        for (let i = 0; i < allSiblingBoxes.length; i++) {
+          const eachCheckBox = allSiblingBoxes[i].getElementsByTagName('input')[0];
+          const eachContainerId = parseInt(eachCheckBox.parentElement.parentElement.getAttribute('id').split('_')[1]);
+          selectBoxId.push(eachContainerId);
+          eachCheckBox.parentElement.setAttribute('class','border border-success rounded shadow-sm')
+          eachCheckBox.checked = true
+        }
+        console.log(selectBoxId);
+      }
+    } else {
+      if(ev.target.checked) {
+        const individualId = parseInt(ev.target.parentElement.parentElement.getAttribute('id').split('_')[1]);
+        selectBoxId.push(individualId);
+        console.log(selectBoxId);
+      } else {
+        const individualId = parseInt(ev.target.parentElement.parentElement.getAttribute('id').split('_')[1]);
+        selectBoxId = selectBoxId.filter(b=>b!=individualId);
+        console.log(selectBoxId);
+      }
+    }
   }
 }
 //helper function

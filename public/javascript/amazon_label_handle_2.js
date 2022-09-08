@@ -365,6 +365,7 @@ const palletizeAuthFunction = () => {
         palletized = true
     } else {
         palletized = false;
+        palletizeCheckBox.disabled = true;//need more test before allowing on and off
         console.log('turn off palletization');
     }
 };
