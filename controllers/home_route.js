@@ -1096,7 +1096,8 @@ router.get('/admin_confirm_amazon', withAuth, async (req, res) => {
         'notes',
         's3',
         'fba',
-        'custom_1'
+        'custom_1',
+        'custom_2'
       ],
       include: [
         {
