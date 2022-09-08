@@ -85,22 +85,25 @@ function siblingTracker (tracking) {
 };
 const palletSwitch = (ev) => {
   ev.preventDefault();
-  if (ev.target.innerHTML == '自由选择模式') {
+  if (ev.target.id == 'ind') {
     UIkit.notification({message: '转换至: 全相连模式', pos: 'top-left'});
     selectIndividual = false;
     selectPerPallet = false;
     ev.target.innerHTML = '全相连模式';
+    ev.target.id = 'req';
     ev.target.className = 'btn btn-white border-danger text-danger btn-sm shadow-sm'
-  } else if (ev.target.innerHTML == '全相连模式') {
+  } else if (ev.target.id == 'req') {
     UIkit.notification({message: '转换至: 托盘模式', pos: 'top-left'});
     selectIndividual = false;
     selectPerPallet = true;
+    ev.target.id = 'pal';
     ev.target.innerHTML = '托盘模式';
     ev.target.className = 'btn btn-white border-success text-success btn-sm shadow-sm'
   } else {
     UIkit.notification({message: '转换至: 自由模式', pos: 'top-left'})
     selectIndividual = true;
     ev.target.innerHTML = '自由选择模式';
+    ev.target.id = 'ind';
     ev.target.className = 'btn btn-white border-primary text-primary btn-sm shadow-sm'
   }
 }
@@ -113,10 +116,11 @@ function selectBatch (tracking, ev) {
     for (let i = 0; i < allSiblingBoxes.length; i++) {
       const eachCheckBox = allSiblingBoxes[i].getElementsByTagName('input')[0];
       const eachContainerId = parseInt(eachCheckBox.parentElement.parentElement.getAttribute('id').split('_')[1]);
-      selectBoxId.push(eachContainerId);
+      !selectBoxId.includes(eachContainerId)?selectBoxId.push(eachContainerId):console.log(eachContainerId+" already in the array");
       eachCheckBox.parentElement.setAttribute('class','border border-success rounded shadow-sm')
       eachCheckBox.checked = true
     }
+    console.log(selectBoxId);
     const allOtherBoxes = document.querySelectorAll('tbody input');
     for (let k = 0; k < allOtherBoxes.length; k++) {
       allOtherBoxes[k].disabled = true
@@ -147,11 +151,13 @@ function selectBatch (tracking, ev) {
     } else {
       if(ev.target.checked) {
         const individualId = parseInt(ev.target.parentElement.parentElement.getAttribute('id').split('_')[1]);
+        ev.target.parentElement.className = 'border border-success rounded shadow-sm';
         selectBoxId.push(individualId);
         console.log(selectBoxId);
       } else {
         const individualId = parseInt(ev.target.parentElement.parentElement.getAttribute('id').split('_')[1]);
         selectBoxId = selectBoxId.filter(b=>b!=individualId);
+        ev.target.parentElement.className = null;
         console.log(selectBoxId);
       }
     }
@@ -160,6 +166,7 @@ function selectBatch (tracking, ev) {
 //helper function
 function resetCheckBox() {
   const allOtherBoxes = document.querySelectorAll('tbody input');
+  selectBoxId = [];
   for (let k = 0; k < allOtherBoxes.length; k++) {
     allOtherBoxes[k].parentElement.setAttribute('class', '')
     allOtherBoxes[k].disabled = false;
