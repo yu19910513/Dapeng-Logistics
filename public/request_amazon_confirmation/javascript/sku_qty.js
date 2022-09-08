@@ -188,6 +188,7 @@ function GetSelected() {
     confirmationBatch.fba = fba;
     confirmationBatch.notes = notes;
     confirmationBatch.status = 2;
+    confirmationBatch.custom_2 = Math.floor(Math.random()*16777215).toString(16);
     updateContainer(confirmationBatch, s3)
   } else {
     alert('no container was selected! please try again!');
