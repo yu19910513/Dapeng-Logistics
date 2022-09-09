@@ -175,6 +175,14 @@ function resetCheckBox() {
 };
 
 //init of submission
+function getRandomColor() {
+  var letters = 'BCDEF'.split('');
+  var color = '#';
+  for (var i = 0; i < 6; i++ ) {
+      color += letters[Math.floor(Math.random() * letters.length)];
+  }
+  return color;
+}
 function GetSelected() {
   if (selectBoxId.length) {
     var confirmationBatch = new Object()
@@ -188,7 +196,7 @@ function GetSelected() {
     confirmationBatch.fba = fba;
     confirmationBatch.notes = notes;
     confirmationBatch.status = 2;
-    confirmationBatch.custom_2 = Math.floor(Math.random()*16777215).toString(16);
+    confirmationBatch.custom_2 = getRandomColor();
     updateContainer(confirmationBatch, s3)
   } else {
     alert('no container was selected! please try again!');
