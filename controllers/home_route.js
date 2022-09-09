@@ -1131,6 +1131,62 @@ router.get('/admin_confirm_amazon', withAuth, async (req, res) => {
 
 });
 
+router.get('/admin_confirm_amazon_ez', withAuth, async (req, res) => {
+  try {
+    const containerData = await Container.findAll({
+      where: {
+        status:2,
+        type: 3
+      },
+      attributes: [
+        'id',
+        'tracking',
+        'container_number',
+        'description',
+        'cost',
+        'requested_date',
+        'received_date',
+        'location',
+        'file',
+        'file_2',
+        'notes',
+        's3',
+        'fba',
+        'custom_1',
+        'custom_2'
+      ],
+      include: [
+        {
+          model: Account,
+          attributes: [
+            'name',
+            'id'
+          ]
+        },
+        {
+          model: User,
+          attributes: [
+            'id',
+            'name',
+          ]
+        }
+      ]
+    });
+    const containers = containerData.map(container => container.get({ plain: true }));
+    const requestsBatch = containers.reduce(function (r, a) {
+      r[a.custom_2] = r[a.custom_2] || [];
+      r[a.custom_2].push(a);
+      return r;
+    }, Object.create(null));
+    const confirms = Object.values(requestsBatch);
+    res.render('dynamic_move_amazon', {confirms, loggedIn: true, admin: req.session.admin, name: req.session.name, confirm: true});
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+
+});
+
 //render single pre-ship scanning page
 router.get('/admin_pre_ship', withAuth, (req, res) => {
   try {

@@ -5,6 +5,10 @@
   {{#if confirm}}
   <a href="/admin_move_main_amazon" class="badge bg-secondary shadow-sm">Amazon Request</a>
   <a href="/admin_confirm_amazon" class="badge bg-info shadow-sm">Amazon Confirm ({{confirms.length}})</a>
+  {{!-- <hr> --}}
+  <a href="/admin_confirm_amazon_ez" uk-tooltip="EZ Button// combine cards with the same color into one; each card represents each confirmation from customer">
+   <img src="https://static.wixstatic.com/media/ea0298_9b5f9e1903994759bbac882f3ca147f3~mv2.jpg/v1/fill/w_288,h_175,al_c,q_90/ea0298_9b5f9e1903994759bbac882f3ca147f3~mv2.jpg" alt="easy btn" width="100" height="120">
+  </a>
   {{else}}
     {{#if type_2}}
       <a href="/admin_move_main_amazon" class="badge bg-info shadow-sm">Amazon Request ({{requests.length}})</a>
@@ -12,6 +16,7 @@
       <hr>
       <a href="/admin_move_main_amazon" class="btn btn-sm bg-info shadow-sm">Quick Mode <b>ON</b></a>
       <a uk-icon="icon: album; ratio: 2" class="text-primary px-1" uk-tooltip="SKU filter options" data-bs-toggle="offcanvas" href="#skuFilterChange" role="button" aria-controls="skuFilterChange"></a>
+       <a href="/admin/sku_modification" uk-icon="icon: cloud-upload; ratio: 2" uk-tooltip="sku files upload"></a>
 
       {{!-- offcanvas --}}
       <div class="offcanvas offcanvas-top" tabindex="-1" id="skuFilterChange" aria-labelledby="skuFilterChangeLabel">
