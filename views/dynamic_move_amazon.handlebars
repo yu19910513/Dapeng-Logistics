@@ -51,14 +51,25 @@
 <div class="container">
   <div class="row">
   {{#if confirm}}
-    {{#each confirms as |confirm|}}
-      {{> confirm-card-amazon confirm }}
+    {{#if ez}}
+      {{#each confirms as |confirm|}}
+        {{> confirm-card-amazon-ez confirm }}
+      {{else}}
+        <h1 class="lead text-center">Great! You have completed all of the ship-out confirmation!</h1>
+        <div class="col-4 uk-align-center mt-2">
+          <a href="/" class="uk-button uk-button-default text-center" uk-icon="home"></a>
+        </div>
+      {{/each}}
     {{else}}
-    <h1 class="lead text-center">Great! You have completed all of the ship-out confirmation!</h1>
-    <div class="col-4 uk-align-center mt-2">
-      <a href="/" class="uk-button uk-button-default text-center" uk-icon="home"></a>
-    </div>
-    {{/each}}
+      {{#each confirms as |confirm|}}
+        {{> confirm-card-amazon confirm }}
+      {{else}}
+        <h1 class="lead text-center">Great! You have completed all of the ship-out confirmation!</h1>
+        <div class="col-4 uk-align-center mt-2">
+          <a href="/" class="uk-button uk-button-default text-center" uk-icon="home"></a>
+        </div>
+      {{/each}}
+    {{/if}}
   {{else}}
     {{#if type_2}}
     {{!-- for quick handling of amazon request --}}

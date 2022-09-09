@@ -15,29 +15,47 @@ function skuseeker(id, number) {
  })
 };
 
-async function statusChange(tracking) {
-    var description;
-    const input = document.getElementById(`input${tracking}`).value;
+async function statusChange(tracking, custom_2) {
+    var description, input;
+    tracking?input=document.getElementById(`input${tracking}`).value:input=document.getElementById(`input${custom_2}`).value;
     if (!input) {
         description = `All tasks completed; shipped.`
     } else {
         description = input;
     };
     if(confirm(`Ready to confirm shipping? Ending Date for billing will be set as ${today}. Admin Notes: ${description}`)){
-        const response = await fetch(`/api/container/post-label`, {
-            method: 'PUT',
-            body: JSON.stringify({
-                shipped_date: today,
-                tracking: tracking,
-                status: 3,
-                type: 3,
-                description: description
-              }),
-            headers: {'Content-Type': 'application/json'}
-        });
-        if (response.ok) {
-            alert('Success!')
-            location.reload()
+        if(tracking != null) {
+            const response = await fetch(`/api/container/post-label`, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    shipped_date: today,
+                    tracking: tracking,
+                    status: 3,
+                    type: 3,
+                    description: description
+                }),
+                headers: {'Content-Type': 'application/json'}
+            });
+            if (response.ok) {
+                alert('Success!')
+                location.reload()
+            }
+        } else {
+            const response = await fetch(`/api/container/post-label-ez`, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    shipped_date: today,
+                    custom_2: custom_2,
+                    status: 3,
+                    type: 3,
+                    description: description
+                }),
+                headers: {'Content-Type': 'application/json'}
+            });
+            if (response.ok) {
+                alert('Success!')
+                location.reload()
+            }
         }
     }
 };

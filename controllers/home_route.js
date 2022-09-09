@@ -1123,7 +1123,7 @@ router.get('/admin_confirm_amazon', withAuth, async (req, res) => {
       return r;
     }, Object.create(null));
     const confirms = Object.values(requestsBatch);
-    res.render('dynamic_move_amazon', {confirms, loggedIn: true, admin: req.session.admin, name: req.session.name, confirm: true});
+    res.render('dynamic_move_amazon', {confirms, loggedIn: true, admin: req.session.admin, name: req.session.name, confirm: true, ez: false});
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
@@ -1179,7 +1179,7 @@ router.get('/admin_confirm_amazon_ez', withAuth, async (req, res) => {
       return r;
     }, Object.create(null));
     const confirms = Object.values(requestsBatch);
-    res.render('dynamic_move_amazon', {confirms, loggedIn: true, admin: req.session.admin, name: req.session.name, confirm: true});
+    res.render('dynamic_move_amazon', {confirms, loggedIn: true, admin: req.session.admin, name: req.session.name, confirm: true, ez: true});
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
