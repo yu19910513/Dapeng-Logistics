@@ -5,6 +5,7 @@ const {User, Account, Batch, Box, Container, Item} = require('../models');
 const {withAuth, adminAuth} = require('../utils/auth');
 const { uploadFile, getFile} = require('../utils/s3');
 const {getFile_admin} = require('../utils/s3_file');
+const { Op } = require("sequelize");
 
 router.get('/', withAuth, async (req, res) => {
   try {
@@ -1075,12 +1076,15 @@ router.get('/admin_move_main_amazon_type_2', withAuth, async (req, res) => {
 
 });
 
-router.get('/admin_confirm_amazon', withAuth, async (req, res) => {
+router.get('/admin_confirm_amazon_ez', withAuth, async (req, res) => {
   try {
     const containerData = await Container.findAll({
       where: {
         status:2,
-        type: 3
+        type: 3,
+        custom_1: {
+          [Op.not]: null
+        }
       },
       attributes: [
         'id',
@@ -1131,7 +1135,7 @@ router.get('/admin_confirm_amazon', withAuth, async (req, res) => {
 
 });
 
-router.get('/admin_confirm_amazon_ez', withAuth, async (req, res) => {
+router.get('/admin_confirm_amazon', withAuth, async (req, res) => {
   try {
     const containerData = await Container.findAll({
       where: {

@@ -314,16 +314,20 @@ function received_billing(pageData, i) {
 const palletArr = [];
 function shipped_billing(pageData, i) {
     var palletInnerText;
+    var palletChargeText;
     if (pageData[i].custom_1) {
         const uniqueId = `${pageData[i].custom_1.split('*')[0]}-${pageData[i].custom_1.split('*')[5]}`;
         if (!palletArr.includes(uniqueId)) {
             palletArr.push(uniqueId);
-            palletInnerText =  `<small>P${uniqueId}</small><br><b id="${uniqueId}" class="text-primary">+$20</b>`
+            palletInnerText =  `<small id="${uniqueId}">P${uniqueId}</small>`;
+            palletChargeText = `$20`;
         } else {
             palletInnerText = `<a href="#${uniqueId}"><small>P${uniqueId}</small></a>`
+            palletChargeText = null;
         }
     } else {
         palletInnerText = null;
+        palletChargeText = null;
     }
     const container = document.createElement('tr');
     shipped_table.appendChild(container);
@@ -334,6 +338,7 @@ function shipped_billing(pageData, i) {
     const description = document.createElement('td');
     const shipped_date = document.createElement('td');
     const pallet = document.createElement('td');
+    const pallet_charge = document.createElement('td');
     const cost = document.createElement('td');
     container.appendChild(user);
     container.appendChild(account);
@@ -342,6 +347,7 @@ function shipped_billing(pageData, i) {
     container.appendChild(description);
     container.appendChild(shipped_date);
     container.appendChild(pallet);
+    container.appendChild(pallet_charge);
     container.appendChild(cost);
     user.innerHTML = pageData[i].user.name;
     account.innerHTML = pageData[i].account.name;
@@ -349,7 +355,8 @@ function shipped_billing(pageData, i) {
     fba.innerHTML = pageData[i].fba;
     description.innerHTML = pageData[i].description;
     shipped_date.innerHTML = pageData[i].shipped_date;
-    pallet.innerHTML = palletInnerText
+    pallet.innerHTML = palletInnerText;
+    pallet_charge.innerHTML = palletChargeText;
     cost.innerHTML = `$${shipping_cost.value}`;
 };
 

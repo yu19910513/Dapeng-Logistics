@@ -81,4 +81,18 @@ const pallet_info_revise = () => {
     })
 };
 
+const arr = location.href.split('_');
+const index = arr.indexOf('amazon');
+if (arr[index+1] && arr[index+1][0] == 'e') {
+    UIkit.notification({
+        message: 'Pallet Only Mode ON',
+        status: 'primary',
+        pos: 'top-right',
+        timeout: 2000
+    });
+    document.getElementById('palletMode').innerHTML = "ON";
+    document.getElementById('palletMode').parentElement.className = "btn btn-sm bg-info shadow-sm text-dark";
+    document.getElementById('palletMode').parentElement.href = '/admin_confirm_amazon';
+};
+
 pallet_info_revise();

@@ -863,7 +863,7 @@ router.get('/statusTWO/:type', withAuth, async (req, res) => {
             type: type
           },
           attributes: [
-            'tracking'
+            'custom_2'
           ]
         },
       ]

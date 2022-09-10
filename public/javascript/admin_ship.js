@@ -12,12 +12,12 @@ async function info(n) {
     }).then(function (data) {
        if (n == 3) {
         const requestsBatch = data.reduce(function (r, a) {
-            r[a.container.tracking] = r[a.container.tracking] || [];
-            r[a.container.tracking].push(a);
+            r[a.container.custom_2] = r[a.container.custom_2] || [];
+            r[a.container.custom_2].push(a);
             return r;
           }, Object.create(null));
-          const trackings = Object.values(requestsBatch);
-        document.getElementById('aConfirm').innerHTML = trackings.length;
+          const requestQty = Object.values(requestsBatch);
+        document.getElementById('aConfirm').innerHTML = requestQty.length;
        } else if (n == 2) {
         const requestsBatch = data.reduce(function (r, a) {
             r[a.container_id] = r[a.container_id] || [];

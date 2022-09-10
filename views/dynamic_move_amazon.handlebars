@@ -5,9 +5,9 @@
   {{#if confirm}}
   <a href="/admin_move_main_amazon" class="badge bg-secondary shadow-sm">Amazon Request</a>
   <a href="/admin_confirm_amazon" class="badge bg-info shadow-sm">Amazon Confirm ({{confirms.length}})</a>
-  {{!-- <hr> --}}
-  <a href="/admin_confirm_amazon_ez" uk-tooltip="EZ Button// combine cards with the same color into one; each card represents each confirmation from customer">
-   <img src="https://static.wixstatic.com/media/ea0298_9b5f9e1903994759bbac882f3ca147f3~mv2.jpg/v1/fill/w_288,h_175,al_c,q_90/ea0298_9b5f9e1903994759bbac882f3ca147f3~mv2.jpg" alt="easy btn" width="100" height="120">
+  <hr>
+  <a href="/admin_confirm_amazon_ez" class="btn btn-sm btn-outline-primary shadow-sm" uk-tooltip="The pallet-only filter allows admin to perform final confirmation on requested pallets individually">
+    Pallet Mode <b id="palletMode">OFF</b></a>
   </a>
   {{else}}
     {{#if type_2}}
