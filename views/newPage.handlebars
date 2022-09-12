@@ -1,0 +1,11 @@
+
+<h1 id="header">Hello</h1>
+<div id='allclient'>
+        {{#each clientdata as |single|}}
+                {{> clientCard single }}
+            {{else}}
+                not client found
+            {{/each}}
+</div>
+<script src="javascript/whatever.js"></script>
+{{/if}}
