@@ -606,14 +606,14 @@ function removeEmptyContainer() {
                     if ([0,2].includes(container.type)) {
                         emptyArr.push(container.id);
                         testOtherArr.push(container.container_number);
-                    } else if (parseInt(container.cost) == 0 && container.type == 1 && container.bill_storage) {
+                    } else if (parseInt(container.cost) == 0 && container.type == 1 && container.bill_storage && !container.shipped_date) {
                         testAMArr.push(container.container_number);
                         emptyArr.push(container.id)
                     }
                 }; //cost == 0 means the empty box has been recently billed and ready to get reset
             };
-            console.log("empty AM boxes: " + testAMArr);
-            console.log("other empty boxes: " + testOtherArr)
+            console.log(`empty AM boxes ${testAMArr.length}: ` + testAMArr);
+            console.log(`other empty boxes ${testOtherArr.length}: ` + testOtherArr)
             if (!emptyArr.length) {
                 alert('No empty container was found in the database')
             } else {
