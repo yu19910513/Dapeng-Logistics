@@ -577,10 +577,9 @@ if (localStorage.getItem('amazon_mode') == 'Q') {
     document.getElementById('badge').click();
 }
 
-
-var allContainerArr = [];
-var emptyArr = [];
 function removeEmptyContainer() {
+    var allContainerArr = [];
+    var emptyArr = [];
     fetch(`/api/item/allItemAdmin`, {
         method: 'GET'
       }).then(function (response) {
