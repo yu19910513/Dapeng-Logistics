@@ -264,6 +264,9 @@ router.get('/request_amazon_confirmation', withAuth, async (req, res) => {
         status: 1,
         type: 3
       },
+      order: [
+        ['custom_1', 'ASC']
+      ],
       attributes: [
         'id',
         'user_id',
