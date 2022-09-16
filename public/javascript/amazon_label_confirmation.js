@@ -183,7 +183,7 @@ const record_container = async (id, count, collection, sp_box_number, secondary_
           'Content-Type': 'application/json'
       }
     });
-  };
+};
 
 
 pallet_info_revise();

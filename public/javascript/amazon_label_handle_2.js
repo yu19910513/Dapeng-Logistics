@@ -378,9 +378,7 @@ const applyAllAuthFunction = (id) => {
         applyAll = false;
         console.log('apply all OFF');
     }
-}
-
-
+};
 ////master check function//////
 let length, height, weight, width;
 function masterCheck () {
@@ -398,7 +396,6 @@ function masterCheck () {
         document.getElementById('fake').style.display = '';
     }
 };
-
 //////get additional charge
 var xcQtyCount = 0;
 var xcExist = false;
@@ -429,8 +426,6 @@ const getXC = async (container_id) => {
     })
 };
 filterLoader (10);
-
-
 var palletCount = 0;
 // var palletMap = new Map();
 var palletized = true;//************ */
@@ -492,7 +487,7 @@ const sync = (ev) => {
         error();
         UIkit.notification({message: 'The input value should be greater than 0', pos: 'top-center'});
     }
-}
+};
 function error() {
     var audio = new Audio('../media/wrong.mp3');
     audio.play();
@@ -517,7 +512,7 @@ const shipment_next = (container_id, user_id, account_id, event) => {
     Promise.all(promises).then(() => {
         console.log('done');
     }).catch((e) => {console.log(e)})
-}
+};
 
 const piArr=[];
 const piMap = new Map();
@@ -791,3 +786,14 @@ const unlabelShippedDate = async (id, delete_id) => {
         }
     }
 }
+/**
+ * AM = 1
+ * Req = 11;
+ * Req reverse = 10
+ * SP = 12;
+ * SP create = 121
+ * SP final confirm = 129;
+ * China = 0 (create and request);
+ * China Confirm  = -100;
+ * Mapping = 50
+ * */
